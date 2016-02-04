@@ -44,11 +44,6 @@ public:
     void setSections(int sectionsNumber);
 
 
-    /*!
-    @brief sets actual playhead value directly. Thread-safe.
-    @param newPlayhead playhead value to set
-    */ 
-    void setPlayhead(double newPlayhead);
   
     /*!
     @brief pause the playhead and stop emitting messages and updating the playhead. Thread-safe.
@@ -93,6 +88,14 @@ protected:
     void releaseResources() override ;
     
 private:
+
+
+    /*!
+    @brief sets actual playhead value directly. Thread-safe.
+    @param newPlayhead playhead value to set
+    */ 
+    void setPlayhead(double newPlayhead);
+    
     double playHead;
     double playHeadEnd;
     double tempo;
