@@ -40,7 +40,7 @@ void ofApp::setup(){
     cout<<"finished patching\n";
     
     //-----------------init audio-------------
-    expectedBufferSize = 128;
+    expectedBufferSize = 512;
     sampleRate = 44100.0;
     
     ofxPDSPSetup(expectedBufferSize, sampleRate);

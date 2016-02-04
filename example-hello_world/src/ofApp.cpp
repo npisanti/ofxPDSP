@@ -31,8 +31,9 @@ void ofApp::setup(){
     cout<<"finished patching\n";
     
     //----------------------AUDIO SETUP-------------
-    int expectedBufferSize = 512;
-    double sampleRate = 44100.0;   
+    int expectedBufferSize = 512; // 512 is the minimum for the raspberry Pi to work
+                                // if you are using JACK you have to set this number to the bufferSize you set in JACK
+    double sampleRate = 44100.0; // on Windows you have to set this to the system sample rate, usually 44100hz
     
     // this set all the modules buffers at the right dimension
     // never forget this call, or you will get a segfault as soon as pdsp start processing
@@ -41,7 +42,7 @@ void ofApp::setup(){
     // standard oF calls
     ofSoundStreamListDevices();
     audioStream.setDeviceID(0);
-    audioStream.setup(this, 2, 0, static_cast<int>(sampleRate), expectedBufferSize, 2);
+    audioStream.setup(this, 2, 0, static_cast<int>(sampleRate), expectedBufferSize, 3); // 3 buffers queue is the minimum for the rPi to work
 }
 
 //--------------------------------------------------------------

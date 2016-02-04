@@ -35,13 +35,13 @@ void ofApp::setup(){
     
     //----------------------AUDIO SETUP-------------
     expectedBufferSize = 512;
-    sampleRate = 44100.0;   //on windows you have to set this to system sample rate
+    sampleRate = 44100.0;
 
     ofxPDSPSetup(expectedBufferSize, sampleRate);
   
     ofSoundStreamListDevices();
     audioStream.setDeviceID(0);
-    audioStream.setup(this, 2, 0, static_cast<int>(sampleRate), expectedBufferSize, 2);
+    audioStream.setup(this, 2, 0, static_cast<int>(sampleRate), expectedBufferSize, 3);
     
     // start playing
     music.scoregen.play();

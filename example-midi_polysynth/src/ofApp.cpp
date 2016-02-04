@@ -41,7 +41,7 @@ void ofApp::setup(){
     bufferSize = 512;
     sampleRate = 44100.0;
 
-    ofxPDSPSetup(bufferSize, sampleRate); // INITS ALL THE UNITS, forget this and you got segfaults
+    ofxPDSPSetup(bufferSize, sampleRate);
     
     audioStream.setDeviceID(0);       
     audioStream.setup(this, 2, 0, static_cast<int>(sampleRate), bufferSize, 3);
@@ -62,18 +62,6 @@ void ofApp::setup(){
     gui.setDefaultFillColor(ofColor(0,90,90));
     gui.setDefaultBackgroundColor(ofColor(0,0,0));    
     
-    //gui.setDefaultHeight(32);
-
-
-    /*
-    gui.add(voices[0].pwUI.parameter);
-    gui.add(voices[0].pwmUI.parameter);    
-    gui.add(voices[0].pwmSpeedUI.parameter);   
-    gui.add(voices[0].cutoffUI.parameter);
-    gui.add(voices[0].resoUI.parameter);
-    gui.add(voices[0].modAttackUI.parameter);
-    gui.add(voices[0].modReleaseUI.parameter);
-    */
     chorusUI.setName("chorus parameters");
     chorusUI.add(chorusSpeed.parameter);
     chorusUI.add(chorusDepth.parameter);

@@ -52,7 +52,7 @@ void ofApp::setup(){
     ofSoundStreamListDevices();
     
     audioStream.setDeviceID(0);
-    audioStream.setup(this, 2, 2, static_cast<int>(sampleRate), expectedBufferSize, 2);
+    audioStream.setup(this, 2, 2, static_cast<int>(sampleRate), expectedBufferSize, 3);
     
     // if ofSoundStreamListDevices() lists different devices for in and out you need to make something like this 
     //audioStream.setDeviceID(0);
