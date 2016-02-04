@@ -1,0 +1,88 @@
+
+void process (int bufferSize) NOEXCEPT override{ 
+    
+    int inputBufferState;
+    const float* inputBuffer = processInput(in_signal, inputBufferState);
+
+    if(inputBufferState==AudioRate){
+            
+        int par1BufferState;
+        const float* par1Buffer = processInput(in_par1, par1BufferState);
+        int par2BufferState;
+        const float* par2Buffer = processInput(in_par2, par2BufferState);
+        int par3BufferState;
+        const float* par3Buffer = processInput(in_par3, par3BufferState);
+
+        int switcher = par1BufferState + par2BufferState*4 + par3BufferState*16;
+
+        //process once
+        switch (switcher & 21) {
+        case 0 : 
+            process_once<false, false, false>( par1Buffer, par2Buffer, par3Buffer  );
+            break;
+        case 1 : 
+            process_once<true, false, false>( par1Buffer, par2Buffer, par3Buffer );
+            break;
+        case 4 :
+            process_once<false, true, false>( par1Buffer, par2Buffer, par3Buffer  );
+            break;
+        case 5 :
+            process_once<true, true, false>( par1Buffer, par2Buffer, par3Buffer  );
+            break;        
+        case 16 : 
+            process_once<false, false, true>( par1Buffer, par2Buffer, par3Buffer );
+            break;
+        case 17 :
+            process_once<true, false, true>( par1Buffer, par2Buffer, par3Buffer );
+            break;
+        case 20 : 
+            process_once<false, true, true>( par1Buffer, par2Buffer, par3Buffer );
+            break;
+        case 21 : 
+            process_once<true, true, true>( par1Buffer, par2Buffer, par3Buffer );
+            break;
+        default:
+            break;
+        }
+            
+        //process audio rate
+        switch ( switcher & 42 ) {
+        case 0 :
+            process_audio<false, false, false>(inputBuffer, par1Buffer, par2Buffer, par3Buffer, bufferSize);
+            break;
+        case 2 : 
+            process_audio<true, false, false>(inputBuffer, par1Buffer, par2Buffer, par3Buffer, bufferSize);
+            break;
+        case 8 : 
+            process_audio<false, true, false>(inputBuffer, par1Buffer, par2Buffer, par3Buffer, bufferSize);
+            break;
+        case 10 : 
+            process_audio<true, true, false>(inputBuffer, par1Buffer, par2Buffer, par3Buffer, bufferSize);
+            break;
+        case 32 : 
+            process_audio<false, false, true>(inputBuffer, par1Buffer, par2Buffer, par3Buffer, bufferSize);
+            break;
+        case 34 : 
+            process_audio<true, false, true>(inputBuffer, par1Buffer, par2Buffer, par3Buffer, bufferSize);
+            break;
+        case 40 : 
+            process_audio<false, true, true>(inputBuffer, par1Buffer, par2Buffer, par3Buffer, bufferSize);
+            break;
+        case 42 : 
+            process_audio<true, true, true>(inputBuffer, par1Buffer, par2Buffer, par3Buffer, bufferSize);
+            break;
+        default:
+            break;
+        }
+    }else{
+            setOutputToZero(output);
+    }
+} // END PROCESS
+    
+
+//then make your processing with those functions
+template<bool par1Change, bool par2Change, bool par3Change>
+void process_once( const float* par1Buffer, const float* par2Buffer, const float* par3Buffer)NOEXCEPT;
+
+template<bool par1AR, bool par2AR, bool par3AR>
+void process_audio(const float* inputBuffer, const float* par1Buffer, const float* par2Buffer, const float* par3Buffer, int bufferSize)NOEXCEPT;

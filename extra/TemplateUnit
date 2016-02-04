@@ -1,0 +1,97 @@
+
+
+#ifndef INSERTYOURUNITNAMEHERE_H_INCLUDED
+#define INSERTYOURUNITNAMEHERE_H_INCLUDED
+
+#include "../pdspCore.h" //change if needed
+
+namespace pdsp{
+    
+class TemplateUnit : public Unit{
+    
+public:
+        TemplateUnit();
+
+        Patchable& set(float value);
+        float meter_output();
+        
+        OutputNode output;
+        InputNode in_signal;
+        InputNode in_par1;
+        InputNode in_par2;
+        
+protected:
+        
+        void prepareUnit ( int expectedBufferSize, double sampleRate ) override;
+        void releaseResources () override;
+        
+        void process (int bufferSize) NOEXCEPT override{ //MOVE THIS INTO .cpp
+            
+            int inputBufferState;
+            const float* inputBuffer = processInput(in_signal, inputBufferState);
+
+            if(inputBufferState==AudioRate){
+                    
+                    int par1BufferState;
+                    const float* par1Buffer = processInput(in_par1, par1BufferState);
+                    int par2BufferState;
+                    const float* par2Buffer = processInput(in_par2, par2BufferState);
+
+                    int switcher = par1BufferState + par2BufferState*4;
+
+                    //process once
+                    switch (switcher & 21) {
+                    case 0 : //unchanged, unchanged, unchanged
+                            process_once<false, false>( par1Buffer, par2Buffer );
+                            break;
+                    case 1 : //changed, unchanged, unchanged
+                            process_once<true, false>( par1Buffer, par2Buffer );
+                            break;
+                    case 4 : //unchanged, changed, unchanged
+                            process_once<false, true>( par1Buffer, par2Buffer );
+                            break;
+                    case 5 : //changed, changed, unchanged
+                            process_once<true, true>( par1Buffer, par2Buffer );
+                            break;
+                    default:
+                            break;
+                    }
+                        
+                    //process audio rate
+                    switch ( switcher & 42 ) {
+                    case 0 : //unchanged, unchanged, unchanged
+                            process_audio<false, false>(inputBuffer, par1Buffer, par2Buffer, bufferSize);
+                            break;
+                    case 2 : //changed, unchanged, unchanged
+                            process_audio<true, false>(inputBuffer, par1Buffer, par2Buffer, bufferSize);
+                            break;
+                    case 8 : //unchanged, changed, unchanged
+                            process_audio<false, true>(inputBuffer, par1Buffer, par2Buffer, bufferSize);
+                            break;
+                    case 10 : //changed, changed, unchanged
+                            process_audio<true, true>(inputBuffer, par1Buffer, par2Buffer, bufferSize);
+                            break;
+                    default:
+                            break;
+                    }
+            }else{
+                    setOutputToZero(output);
+            }
+        } // END PROCESS
+        
+
+private:
+        std::atomic<float> meter1;
+        
+        template<bool par1Change, bool par2Change>
+        void process_once( const float* par1Buffer, const float* par2Buffer)NOEXCEPT;
+
+        template<bool par1AR, bool par2AR>
+        void process_audio(const float* inputBuffer, const float* par1Buffer, const float* par2Buffer, int bufferSize) NOEXCEPT;
+
+
+};    
+        
+}//END NAMESPACE
+
+#endif // INSERTYOURUNITNAMEHERE_H_INCLUDED

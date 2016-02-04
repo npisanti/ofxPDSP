@@ -1,0 +1,17 @@
+<channel_strip>
+	<compressor_parameters>
+		<comp_threshold>-20</comp_threshold>
+		<GR_meter>0</GR_meter>
+		<comp_attack__ms_>10</comp_attack__ms_>
+		<comp_release__ms_>50</comp_release__ms_>
+	</compressor_parameters>
+	<delays_parameters>
+		<delay_send>-30</delay_send>
+		<delay_L_time>200</delay_L_time>
+		<delay_R_time>300</delay_R_time>
+		<delay_feedback>0.5</delay_feedback>
+		<delay_damping>0.5</delay_damping>
+	</delays_parameters>
+	<channel_volume>0</channel_volume>
+<channel_strip/>
+</channel_strip>

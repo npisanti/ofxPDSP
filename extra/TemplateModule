@@ -1,0 +1,43 @@
+
+#ifndef YOURMODULENAME_H_INCLUDED
+#define YOURMODULENAME_H_INCLUDED
+
+#include "../pdspCore.h" //change if needed
+// also include all the needed Units
+
+namespace pdsp{
+
+class TemplateModule : public Patchable {
+    
+public:
+
+    TemplateModule(){ patch(); };
+    TemplateModule(const TemplateModule &other){ patch(); };
+    TemplateModule& operator=(const TemplateModule &other){ patch(); return *this; };
+
+    float meter_something();
+    
+private:
+
+    void patch(){        
+        this->clearAllAddedNodes();
+    
+        //addUnitInput( "", in );
+
+        resetInputToDefault();
+        
+        //addUnitOutput( "", out );
+        
+        resetOutputToDefault();
+
+        //now connect things
+
+        // unit >> another_unit
+    
+    }
+    
+};
+
+} //END NAMESPACE
+
+#endif // YOURMODULENAME_H_INCLUDED

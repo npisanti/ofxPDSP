@@ -1,0 +1,184 @@
+
+// GrainCloud.h
+// ofxPDSP
+// Nicola Pisanti, MIT License, 2016
+
+#ifndef PDSP_MODULE_GRAINCLOUD_H_INCLUDED
+#define PDSP_MODULE_GRAINCLOUD_H_INCLUDED
+
+#include "../../DSP/pdspCore.h"
+#include "../../DSP/utility/OneMinusInput.h"
+#include <string>
+#include "TriggeredGrain.h"
+
+namespace pdsp{
+
+    /*!
+    @brief A "cloud" of really short sampled segments
+    */     
+    
+class GrainCloud : public Patchable {
+
+
+    class MultiGrainTrigger : public Unit {
+    public:
+
+        MultiGrainTrigger(int outputs);
+        
+        std::vector<OutputNode> outs;
+    
+    private:
+        void prepareUnit( int expectedBufferSize, double sampleRate ) override;
+        void releaseResources () override {};
+        void process (int bufferSize) noexcept override;
+        
+        InputNode in_distance_ms;
+        InputNode in_jitter_ms;
+        
+        int counter;
+        float sampleRateMult;
+        int currentOut; 
+        int outputs;
+    };
+    
+
+public:
+
+    GrainCloud(int voices);
+    GrainCloud();
+    GrainCloud(const GrainCloud &other);
+    GrainCloud& operator=(const GrainCloud &other);
+
+    /*!
+    @brief returns the last processed envelope amplitude value. This method is thread-safe.
+    */
+    float meter_env(int voice);
+    
+    /*!
+    @brief returns a value from 0.0f to 1.0f that broadly rapresent the "playhead" of the current sample. This method is thread-safe.
+    */ 
+    float meter_position(int voice);
+
+    /*!
+    @brief Sets "position" as selected input and returns this module ready to be patched. This is the default input. Send a value between 0.0f and 1.0f to control the position of the grains inside the sample.
+    */ 
+    Patchable& in_position();
+    
+    /*!
+    @brief Sets "length" as selected input and returns this module ready to be patched. Controls the grain length in milliseconds.
+    */ 
+    Patchable& in_length();
+    
+    /*!
+    @brief Sets "pitch" as selected input and returns this module ready to be patched. Controls the grain pitch in semitones.
+    */
+    Patchable& in_pitch();
+    
+    /*!
+    @brief Sets "select" as selected input and returns this module ready to be patched. Select the sample to stream from the ones previously added.
+    */
+    Patchable& in_select();    
+    
+    /*!
+    @brief Sets "density" as selected input and returns this module ready to be patched. Controls the density of the graincloud by reducing the distance between grain retriggerings. 
+    */    
+    Patchable& in_density();
+    
+    /*!
+    @brief Sets "distance_jitter" as selected input and returns this module ready to be patched. Controls a random value in millisecond that is added to the time between grain retriggerings.
+    */ 
+    Patchable& in_distance_jitter();
+    
+    /*!
+    @brief Sets "position_jitter" as selected input and returns this module ready to be patched. Grain position jitter control relative to the sample length. 0.0f = no jitter, 1.0f = position jitter as long as the entire sample lenght.
+    */ 
+    Patchable& in_position_jitter();
+    
+    /*!
+    @brief Sets "pitch_jitter" as selected input and returns this module ready to be patched. Grain pitch jitter in semitones.
+    */ 
+    Patchable& in_pitch_jitter();
+    
+    /*!
+    @brief Sets "direction" as selected input and returns this module ready to be patched. A positive value makes the grains play forward, a negative in reverse.
+    */ 
+    Patchable& in_direction();
+    
+    /*!
+    @brief Sets "L" as selected output and returns this Unit ready to be patched. This is the default output. This is the left graincloud output.
+    */ 
+    Patchable& out_L();
+
+    /*!
+    @brief Sets "R" as selected output and returns this Unit ready to be patched. This is the right graincloud output.
+    */ 
+    Patchable& out_R();    
+    
+    /*!
+    @brief returns the number of voices used for the graincloud.
+    */ 
+    int getVoicesNum() const;
+
+    /*!
+    @brief adds a pointer to a SampleBuffer to an internal array of SampleBuffer pointers
+    @param[in] newSample pointer to a SampleBuffer
+    */ 
+    void addSample(SampleBuffer* newSample);
+    
+    /*!
+    @brief Sets the SampleBuffer pointer at the given index to a new pointer.
+    @param[in] samplePointer pointer to a sample buffer with a loaded file inside
+    @param[in] index index of the position of the sample to set inside the sample pointers table
+    */ 
+    void setSample(SampleBuffer* samplePointer, int index=0);
+    
+    /*!
+    @brief sets the envelope window shape, optionally the resolution of the table.
+    @param[in] type window type
+    @param[in] window_length window length, if not specified 1024
+    */    
+    void setWindowType(Window_t type, int window_length=1024 );
+
+    /*!
+    @brief change the type of the Interpolator used by the Sampler. Some Interpolator sounds better, others are cheaper for the cpu.
+    @param[in] type you can choose between different interpolators, check types.h
+    */
+    void setInterpolatorType(Interpolator_t type);    
+    
+private:
+
+    void patch();
+    
+    //PatchNode       grainLength;
+    
+    PatchNode       ctrl_start;
+    PatchNode       ctrl_grain_length;
+    PatchNode       ctrl_pitch;
+    PatchNode       ctrl_select;
+    PatchNode       ctrl_direction;
+    
+    PatchNode       ctrl_pitch_jit;
+    PatchNode       ctrl_pos_jit_scale;
+    PatchNode       ctrl_pos_jit;    
+    
+    OneMinusInput   ctrl_density;
+    
+    MultiGrainTrigger   triggers;
+    
+    std::vector<TriggeredGrain> streams;
+    
+    Amp     density_amp;
+    
+    Amp     outL;
+    Amp     outR;
+    
+    int voices;
+     
+};
+
+} //END NAMESPACE
+
+
+
+
+#endif // PDSP_MODULE_GRAINCLOUD_H_INCLUDED
