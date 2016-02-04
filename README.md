@@ -24,3 +24,4 @@ At the moment ofxPDSP is still a testing stage, so some features may not work on
 
 Nicola Pisanti, MIT License 2016. 
 For FFT the AudioFFT wrapper is used, Copyright (c) 2013 [HiFi-LoFi](https://github.com/HiFi-LoFi)
+
