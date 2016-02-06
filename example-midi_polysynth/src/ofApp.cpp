@@ -1,5 +1,8 @@
 #include "ofApp.h"
 
+// midi controlled polysynth example
+// you need a midi keyboard for trying this! 
+// remember also to select the right midi port and audio output device, as ususal.
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -69,7 +72,7 @@ void ofApp::setup(){
     gui.setup("panel");
     gui.add(voices[0].synthUI);
     gui.add(chorusUI);
-    gui.setPosition(220, 20);    
+    gui.setPosition(400, 20);    
 }
 
 //--------------------------------------------------------------
@@ -100,14 +103,14 @@ void ofApp::draw(){
     int xBase = 20;
     ofDrawBitmapString("osc pitches", xBase, 26);
     for(int i=0; i<voicesNum; ++i){
-        drawMeter( voices[i].oscillator.meter_pitch(), 36.f, 84.f, xBase, 30, 20, 150); 
+        drawMeter( voices[i].oscillator.meter_pitch(), 36.f, 84.f, xBase, 30, 20, 200); 
         xBase+=40;
     }
     // draw mod envelope meters
-    xBase = 20;
-    ofDrawBitmapString("mod envs", xBase, 206);
+    xBase += 30;
+    ofDrawBitmapString("mod envs", xBase, 26);
     for(int i=0; i<voicesNum; ++i){
-        drawMeter( voices[i].modEnv.meter_output(), 0.05f, 1.0f, xBase, 210, 20, 150); 
+        drawMeter( voices[i].modEnv.meter_output(), 0.05f, 1.0f, xBase, 30, 20, 200); 
         xBase+=40;
     }
 

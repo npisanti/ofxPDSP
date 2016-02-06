@@ -39,7 +39,7 @@ void SynthVoice::patch(){
                                     resoUI.set("resonance", 0.0f, 0.0f, 1.0f)  >> filter.in_reso();
      
      modAttackUI.set("mod env attack", 400.0f, 0.0f, 1200.0f) >> modEnv.in_attack();
-     modReleaseUI.set("mod env release", 400.0f, 0.0f, 1200.0f) >> modEnv.in_release();
+     modReleaseUI.set("mod env release", 900.0f, 0.0f, 1200.0f) >> modEnv.in_release();
      
     (voiceTrigger >> (ampEnv.set(200.0f, 400.0f, 1.0f, 600.0f ) * 0.1f)) >> voiceAmp.in_mod();
     

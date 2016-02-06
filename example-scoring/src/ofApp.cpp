@@ -7,7 +7,6 @@
 void ofApp::setup(){
     
     //-------------------GRAPHIC SETUP--------------
-    ofSetWindowShape(480, 360);
     ofBackground(0);
     ofDisableAntiAliasing();
     ofSetFrameRate(60);
