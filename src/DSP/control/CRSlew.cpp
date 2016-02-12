@@ -33,7 +33,8 @@ pdsp::Patchable& pdsp::CRSlew::set(float slewTime, float initValue){
 }
 
 void pdsp::CRSlew::prepareUnit( int expectedBufferSize, double sampleRate ) {      
-       prepareSlew(sampleRate, slewInitValue);       
+       prepareSlew(sampleRate, slewInitValue);   
+       meter.store(slewInitValue);    
 }
 
 void pdsp::CRSlew::releaseResources (){}
@@ -56,5 +57,10 @@ void pdsp::CRSlew::process (int bufferSize) noexcept {
             setControlRateOutput(output, slewLastValue);
         }
     }
+    meter.store(slewLastValue);
+}
 
+
+float pdsp::CRSlew::meter_out() const {
+    return meter.load();
 }

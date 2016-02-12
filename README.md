@@ -16,12 +16,11 @@ Requires [ofxMidi](https://github.com/danomatika/ofxMidi) and [ofxSIMDFloats.](h
 
 TODO:
 At the moment ofxPDSP is still a testing stage, so some features may not work on your platform yet and the API could be subject to change. Here is also a list of things todo:
-- Natively load audio files on Windows and OSX with ofxAudioDecoder
-- Android testing and example
 - Algorithmic reverb module, cheap enough to run on the rPi
 - AllPassInterpolator
 - Sequencer midi sync
+- Android testing and example
 
 Nicola Pisanti, MIT License 2016. 
 For FFT the AudioFFT wrapper is used, Copyright (c) 2013 [HiFi-LoFi](https://github.com/HiFi-LoFi)
-
+For loading audio file on OSX [libaudiodecoder](https://github.com/asantoni/libaudiodecoder) is used, Copyright (c) 2010-2012 Albert Santoni, Bill Good, RJ Ryan.

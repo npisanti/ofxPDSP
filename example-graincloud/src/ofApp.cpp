@@ -15,7 +15,7 @@ void ofApp::setup(){
     
     // sampleData is an instance of pdsp::SampleBuffer
     sampleData.setVerbose(true); 
-    sampleData.load("data/dreadlock_ride2.wav"); // at the moment this will work only on linux
+    sampleData.load("data/dreadlock_ride2.wav"); // at the moment this will work only on linux and osx
     cloud.setWindowType(pdsp::Triangular); // select the shape of the grain envelope
             // available windows: Rectangular, Triangular, Hann, Hamming, Blackman, BlackmanHarris, SineWindow, Welch
     cloud.setSample(&sampleData); // give to the pdsp::GrainCloud the reference to the sample
@@ -133,28 +133,26 @@ void ofApp::mouseMoved(int x, int y ){
 
 }
 
+
 //--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button){
+void ofApp::controlOn(int x, int y){
     ofMap(x, uiX, uiMaxX, 0.0f, 1.0f, true) >> posX;
     ofMap(y, uiY, uiMaxY, 0.25f, 0.0f) >> jitY;
     
-    if(x > uiX && x<uiMaxX && y>uiY && y<uiMaxY){
-        controlX = x;
-        controlY = y;
-    }
-}
-
-//--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button){
-    ofMap(x, uiX, uiMaxX, 0.0f, 1.0f, true) >> posX;
-    ofMap(y, uiY, uiMaxY, 50.0f, 0.0f) >> jitY;
-
     if(x > uiX && x<uiMaxX && y>uiY && y<uiMaxY){
         1.0f >> ampSlew;
         drawGrains = true;
         controlX = x;
         controlY = y;
     }
+}
+
+void ofApp::mouseDragged(int x, int y, int button){
+    controlOn(x, y);
+}
+
+void ofApp::mousePressed(int x, int y, int button){
+    controlOn(x, y);
 }
 
 //--------------------------------------------------------------

@@ -13,6 +13,8 @@
 
 #if (defined(PDSP_USE_LIBSNDFILE) || defined(__linux))
     #include <sndfile.hh>
+#elif defined(__APPLE__) 
+    #include "../../../libs/libaudiodecoder/audiodecoder.h"
 #endif
 
 #include <cstring>

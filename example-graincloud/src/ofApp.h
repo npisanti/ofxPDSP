@@ -13,6 +13,8 @@ class ofApp : public ofBaseApp{
         void exit();
 		void audioOut(ofSoundBuffer &outBuffer);
         
+        void controlOn(int x, int y);
+        
 		void keyPressed(int key);
 		void keyReleased(int key);
 		void mouseMoved(int x, int y );

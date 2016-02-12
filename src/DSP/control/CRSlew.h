@@ -45,6 +45,11 @@ public:
         @brief Sets "signal" as selected output and return this Unit ready to be patched. This is the default output. This is the slewed output.
         */ 
         Patchable& out_signal();
+    
+        /*!
+        @brief returns the actual output value. Thread-safe.
+        */ 
+        float meter_out() const;
         
 private:
         OutputNode output;
@@ -54,6 +59,7 @@ private:
         void releaseResources () override ;
         void process (int bufferSize) noexcept override;
 
+        std::atomic<float> meter;
 };    
 
 } // pdsp namespace end

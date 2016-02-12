@@ -109,7 +109,7 @@ public:
     
     
     /*!
-    @brief Immediately launch the selected pattern, with the given launch timings options. Thread-safe.
+    @brief Immediately launch the selected pattern, with the given launch timings options. Thread-safe. Also execute the launched cell's prepareScore() routine immediately.
     @param[in] index index of the patter to set inside the ScoreSection. This has to be a valid index. A negative index stops the playing of this section (you can perform quantized stopping if quantizeLaunch = true ).
     @param[in] legato if true the launched pattern playhead does not start from 0.0f but take the value from the already playing pattern. If not given as argument, it is assumed false.
     @param[in] quantizeLaunch if true the next pattern launch is quantized to the bars, if false the pattern is lanched as soon as possible.  If not given as argument, it is assumed false.

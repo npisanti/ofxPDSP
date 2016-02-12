@@ -18,7 +18,7 @@ meta:
 	ADDON_NAME = ofxPDSP
 	ADDON_DESCRIPTION = Patchable DSP library addon for openFrameworks
 	ADDON_AUTHOR = Nicola Pisanti
-	ADDON_TAGS = "audio" "synthesis" "music" "dsp"
+	ADDON_TAGS = "audio" "synthesis" "music" "dsp" "sound"
 	ADDON_URL = http://github.com/npisanti/ofxPDSP
 
 common:
@@ -69,16 +69,22 @@ common:
 	# ADDON_INCLUDES_EXCLUDE =
 	
 linux64:
-	
+    # when parsing the file system looking for sources exclude this for all or
+    # a specific platform
+    ADDON_SOURCES_EXCLUDE = libs/libaudiodecoder/%
 	
 linux:
-
+    # when parsing the file system looking for sources exclude this for all or
+    # a specific platform
+    ADDON_SOURCES_EXCLUDE = libs/libaudiodecoder/%
 	
 msys2:
 
 	
 vs:
-
+    # when parsing the file system looking for sources exclude this for all or
+    # a specific platform
+    ADDON_SOURCES_EXCLUDE = libs/libaudiodecoder/%
 	
 linuxarmv6l:
 
@@ -96,6 +102,6 @@ android/armeabi-v7a:
 
 osx:
 
-    
+
 ios:
 

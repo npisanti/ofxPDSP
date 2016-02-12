@@ -3,21 +3,20 @@
 #include <iostream>
 
 pdsp::SampleBuffer::SampleBuffer()  {
-        filePath = "file not loaded";
-        buffer = nullptr;
-        channels = 0;
-        length = 0;
-        fileSampleRate = 11050.0f;
-        verbose = false;
-        //ratesRatio = 0.0f;
-        mono = 0;
+    filePath = "file not loaded";
+    buffer = nullptr;
+    channels = 0;
+    length = 0;
+    fileSampleRate = 11050.0f;
+    verbose = false;
+    mono = 0;
 }
 
 
 pdsp::SampleBuffer::~SampleBuffer(){
-        if(loaded()){
-                unLoad();
-        }
+    if(buffer!=nullptr){
+        unLoad();
+    }
 }
 
 void pdsp::SampleBuffer::setVerbose(bool verbose){
@@ -25,31 +24,36 @@ void pdsp::SampleBuffer::setVerbose(bool verbose){
 }
         
 void pdsp::SampleBuffer::setMonoChannel(int monoChannelIndex){
-        if (monoChannelIndex<0) {
-                mono = 0;
-        }else if(monoChannelIndex>=channels){
-                mono = channels-1;
-        }
+    if (monoChannelIndex<0) {
+        mono = 0;
+    }else if(monoChannelIndex>=channels){
+        mono = channels-1;
+    }
 }
 
 
 void pdsp::SampleBuffer::unLoad(){
+
+    for(int i=0; i<channels; ++i){
+        ofx_deallocate_aligned(buffer[i]);
+    }
+    delete [] buffer;
     
-        for(int i=0; i<channels; ++i){
-            ofx_deallocate_aligned(buffer[i]);
-        }
-        delete [] buffer;
-        
-        filePath = "file not loaded";
-        buffer = nullptr;
-        channels = 0;
-        length = 0;
-        fileSampleRate = 11050.0f;
-        //ratesRatio = 0.0f;
+    filePath = "file not loaded";
+    buffer = nullptr;
+    channels = 0;
+    length = 0;
+    fileSampleRate = 11050.0f;
+    //ratesRatio = 0.0f;
 }
 
 bool pdsp::SampleBuffer::loaded(){
-        return (buffer!=nullptr);
+	if (buffer != nullptr) {
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 
@@ -144,58 +148,58 @@ void pdsp::SampleBuffer::load( std::string filePath ){
         this->filePath = error;
     }
 
-/*
-    const char * filePath_c = filePath.c_str();  
+#elif defined(__APPLE__) 
     
-    if(verbose) std::cout<< "[pdsp] loading audio file: "<<filePath<<"\n";
+    AudioDecoder * fileHandle = new AudioDecoder(filePath);
     
-    SNDFILE *sf;
-    SF_INFO info;
+    int loadState = fileHandle->open();
+    
+    if(loadState == AUDIODECODER_OK){
+        double sampleRate = static_cast<double>(fileHandle->sampleRate());
 
-    sf = sf_open(filePath_c,SFM_READ, &info);
-
-    if (sf == NULL)
-    {
-        std::string error = "[pdsp] error opening file\n";
-        if(verbose) std::cout<<error;
-        this->filePath = error;   
+        std::cout<< " testing channels:"<<fileHandle->channels()<<"\n";
+        std::cout<< " testing length:"<<fileHandle->numSamples()<<"\n";
+        int channels = fileHandle->channels();
+        int waveLength = fileHandle->numSamples() / channels;
+        
+        float* samples;
+        
+        try
+        {
+            samples = new float [channels * waveLength];
+        }
+        catch (std::bad_alloc& ba)
+        {
+            std::string error = "error loading file: bad_alloc caught: ";
+            error += ba.what();
+            error +="\n";
+            if(verbose) std::cout<<"[pdsp]"<< error<<"\n";
+            this->filePath = error;
+            delete fileHandle;
+            return; //abort
+        }
+        
+        fileHandle->read ( channels * waveLength, samples);
+        
+        this->load(samples, sampleRate, waveLength, channels);
+        this->filePath = filePath;
+        
+        delete [] samples;
+        
+    }else{
+        std::string error =  "error opening file";
+        if(verbose) std::cout<<"[pdsp] "<<error<<"\n";
+        this->filePath = error;
+        delete fileHandle;
         return;
     }
-
-    double sampleRate = static_cast<double>(info.samplerate);
-    int waveLength = info.frames;
-    int channels = info.channels;
-
-
-    float* samples;
-    long   totalFrames = channels * waveLength;
     
-    try
-    {
-        samples = new float [totalFrames];
-    }
-    catch (std::bad_alloc& ba)
-    {
-        std::string error = "[pdsp] bad_alloc caught: ";
-        error += ba.what();
-        error +="\n";
-        if(verbose) std::cout<< error;
-        this->filePath = error;
-        return; //abort
-    }
-        
-    sf_readf_float (sf, samples, totalFrames) ;
+#else 
 
-    this->load(samples, sampleRate, channels, waveLength, filePath);
-    
-    delete [] samples;
-    sf_close (sf);
-*/
-
-#else
     std::cout<<"[pdsp] loading file unsuccessful, libsndfile.h not included when compiling\n";
 	std::cout << "[pdsp] if you want direct load function, #define PDSP_USE_LIBSNDFILE in flags.h and then include and link libsndfile in your project\n";
     this->filePath = "impossible to load file";
+    
 #endif
     
 }
