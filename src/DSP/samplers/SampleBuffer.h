@@ -25,7 +25,7 @@ namespace pdsp {
     /*!
     @brief Contains the data loaded from an audio file.
 
-    This is a class that contains data loaded from an audio file (or created in any other way). It is used by units that require samples like Sampler, FDLConvolver or TableOsc. It uses libsndfile to load audio file from path so if you want to use it you have to link libsndfile to your project, go in flags.h and uncomment #define PDSP_USE_LIBSNDFILE. You also use any method you have on you platform for getting an interleaved or a mono array of floats and load it with  load( float* interleavedBuffer, double sampleRate, int length, int channels=1 )
+    This is a class that contains data loaded from an audio file (or created in any other way). It is used by units that require samples like Sampler, FDLConvolver or TableOsc. On Windows it uses libsndfile to load audio file from path so if you want to use it you have to link libsndfile to your project, go in flags.h and uncomment #define PDSP_USE_LIBSNDFILE. You also use any method you have on you platform for getting an interleaved or a mono array of floats and load it with  load( float* interleavedBuffer, double sampleRate, int length, int channels=1 )
     
     */
 

@@ -8,7 +8,7 @@ ofxPDSP is an audio DSP addon/library for openFrameworks. It is based on those d
 - Cross-platform code: works on Linux, OSX, Windows, iOS, Android (only on ARM processors with NEON instructions).
 
 It includes a good selection of modules ready to be used, like antialiasied oscillators and VA filters, an FFT convolver, analog-sounding envelopes, delays, noise generators, a sampler and a graincloud module, biquad equalizers (normal and 2x oversampled), units for dynamic processing, units for oversampling/downsampling and a framework for writing and sequencing generative music.
-You can find a doxygenerated [documentation of the modules here.](http://npisanti.com/ofxPDSP/index.html)
+You can find a doxygenerated [documentation of the modules here.](http://npisanti.com/ofxPDSP/index.html) and a [series of tutorials here](https://github.com/npisanti/ofxPDSP/wiki).
 
 On top of that some other classes that uses openFrameworks for adding midi in/out, waveform plotting and manage GUIs.
 
@@ -16,11 +16,11 @@ Requires [ofxMidi](https://github.com/danomatika/ofxMidi) and [ofxSIMDFloats.](h
 
 TODO:
 At the moment ofxPDSP is still a testing stage, so some features may not work on your platform yet and the API could be subject to change. Here is also a list of things todo:
-- Algorithmic reverb module, cheap enough to run on the rPi
-- AllPassInterpolator
-- Sequencer midi sync
-- Android testing and example
+- Algorithmic reverb module, cheap enough to run on the rPi.
+- AllPassInterpolator.
+- Sequencer midi sync.
+- Android testing and example.
 
-Nicola Pisanti, MIT License 2016. 
-For FFT the AudioFFT wrapper is used, Copyright (c) 2013 [HiFi-LoFi](https://github.com/HiFi-LoFi)
+Nicola Pisanti, MIT License 2016.  
+For FFT the AudioFFT wrapper is used, Copyright (c) 2013 [HiFi-LoFi](https://github.com/HiFi-LoFi).  
 For loading audio file on OSX [libaudiodecoder](https://github.com/asantoni/libaudiodecoder) is used, Copyright (c) 2010-2012 Albert Santoni, Bill Good, RJ Ryan.

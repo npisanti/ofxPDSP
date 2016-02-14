@@ -22,8 +22,8 @@ void ofApp::setup(){
     
     // an oscillator with nothing connected to in_pitch() will play A4 = 440hz
     // the * operator when used before patching scales the output signal
-    osc.out_sine() * 0.20f >> pdspEngine.channels[0]; // connect to left output channel
-    osc.out_sine() * 0.20f >> pdspEngine.channels[1]; // connect to right right channel
+    osc.out_sine() * 0.25f >> engine.channels[0]; // connect to left output channel
+    osc.out_sine() * 0.25f >> engine.channels[1]; // connect to right right channel
 
     // decomment this for setting the oscillator pitch to another fixed value
     // 81.0f >> osc.in_pitch();
@@ -59,7 +59,7 @@ void ofApp::draw(){
 void ofApp::audioOut(ofSoundBuffer &outBuffer) {
     // when the audioOut callback is executed this method recursively process the connected module network
     // and then copy the result to the output buffer
-    pdspEngine.processAndCopyInterleaved(outBuffer.getBuffer().data(), outBuffer.getNumChannels(), outBuffer.getNumFrames());
+    engine.processAndCopyInterleaved(outBuffer.getBuffer().data(), outBuffer.getNumChannels(), outBuffer.getNumFrames());
 }
 
 //--------------------------------------------------------------

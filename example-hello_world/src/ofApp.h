@@ -26,8 +26,9 @@ class ofApp : public ofBaseApp{
 		void audioOut(ofSoundBuffer &outBuffer);
         ofSoundStream   audioStream;
         
-        pdsp::Processor         pdspEngine;
-        
+        // pdsp modules
+        pdsp::Processor         engine;
         pdsp::VAOscillator      osc;
+        pdsp::LFO               lfo;
 
 };
