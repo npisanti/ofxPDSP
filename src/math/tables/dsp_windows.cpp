@@ -25,7 +25,7 @@ float* pdsp::windowTriangular( int len, int L_offset ){
         table[i] = static_cast<float>( 1.0 - fabs((n - (N-1.0)*0.5 ) / (L*0.5)) );
     }
     
-    table[len] = table[len-1];
+    table[len] = table[0];
     return table;
 }
 
@@ -41,7 +41,7 @@ float* pdsp::windowHann( int len ) {
         table[i] = static_cast<float>( (1.0 - cos((M_TAU_DOUBLE*n) / (N-1.0)) ) * 0.5 );
     }
     
-    table[len] = table[len-1];
+    table[len] = table[0];
     return table;
 }
 
@@ -60,7 +60,7 @@ float* pdsp::windowHamming( int len, double alpha) {
         table[i] = static_cast<float>( alpha - (beta * cos((M_TAU_DOUBLE*n) / (N-1.0)) ) );
     }
     
-    table[len] = table[len-1];
+    table[len] = table[0];
     return table;
 }
 
@@ -84,7 +84,7 @@ float* pdsp::windowBlackman( int len, double alpha) {
                                       );
     }
     
-    table[len] = table[len-1];
+    table[len] = table[0];
     return table;
     
 }
@@ -105,7 +105,7 @@ float* pdsp::windowBlackmanHarris( int len) {
                                       - 0.01168*cos((3.0*M_TAU_DOUBLE*n) / (N-1.0))
                                       );
     }
-    table[len] = table[len-1];
+    table[len] = table[0];
     return table;
     
 }
@@ -121,7 +121,7 @@ float* pdsp::windowSine( int len){
         
         table[i] = static_cast<float>( sin((M_PI_DOUBLE*n) / (N-1.0)) );
     }
-    table[len] = table[len-1];
+    table[len] = table[0];
     return table;
 
 }
@@ -138,7 +138,7 @@ float* pdsp::windowWelch(int len){
         double b = (n-a)/a;
         table[i] = static_cast<float>(1.0-(b*b));
     }
-    table[len] = table[len-1];
+    table[len] = table[0];
     return table;
 }
 

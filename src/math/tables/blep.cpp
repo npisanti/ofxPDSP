@@ -78,9 +78,6 @@ namespace pdsp{
             xn_z1 = temp;
         }
 
-
-        table[len] = table[len-1]; //guard point
-
         //NORMALIZE
         //normalize once
         normalizeBufferPrecise(table, len+1);
@@ -106,27 +103,9 @@ namespace pdsp{
                 table[i] += 1.0f;
             }
         }
+        
+        table[len] = table[0]; //guard point
 
-        /*checker
-
-        table[len] = 0.0f;
-        String info = "";
-        usleep(200);
-        int min = 2048-256;
-        int max = min + 512;
-        for(int i=min; i<max; ++i){
-            info << " | ";
-            info << String(table[i]);
-
-            if( i==2047){
-                info<<"| ------- INDEX 2047 ------ |";
-
-            }
-
-
-        }
-        Logger::writeToLog(info);
-        */
         return table;
 
 

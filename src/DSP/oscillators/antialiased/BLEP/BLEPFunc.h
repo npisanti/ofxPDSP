@@ -3,7 +3,7 @@
 // ofxPDSP
 // Nicola Pisanti, MIT License, 2016
 
-// Based onWill Pirke's book "Designing Software Synthesizer Plugins in c++".
+// Based on Will Pirke's book "Designing Software Synthesizer Plugins in c++", but working only on falling edges.
 
 
 #ifndef PDSP_OSC_BLEPFUNC_H_INCLUDED
@@ -17,20 +17,20 @@ namespace pdsp{
 
 
     //--------------------BLEP CODE------------------------------------------------
- 	inline float BLEPn(const float* BLEPTable, float tableFakeLen,
-		float modulo, float inc, float height,
-		bool risingEdge, float pointsPerSide, bool interpolate = false){
+ 	inline_f float BLEPn(const float* BLEPTable, const float &tableFakeLen,
+		const float &modulo, const float &inc, const float &height,
+		const float &pointsPerSide, const int &pointsPerSide_int, bool interpolate, const float &tableCenter, const float & oneSlashPointPerSide){
 
-		float BLEP = 0.0; //return value
-		float t = 0.0; //distance from discontinuity
-        float tableCenter = tableFakeLen * 0.5 - 1.0;
+		float BLEP = 0.0f; //return value
+		float t = 0.0f; //distance from discontinuity
+
 
 		//LEFT side of the edge
 		//-1 < t < 0
-		for (int i = 1; i <= static_cast<int>(pointsPerSide); ++i){
-			if (modulo > 1.0 - static_cast<float>(i)* inc){
-				t = (modulo - 1.0) / (pointsPerSide * inc);		//calculate distance
-				float index = (1.0 + t)*tableCenter; //residual index location
+		for (int i = 1; i <= pointsPerSide_int; ++i){
+			if (modulo > 1.0f - static_cast<float>(i) * inc){
+				t = (modulo - 1.0f) * (oneSlashPointPerSide * inc);		//calculate distance
+				float index = (1.0f + t)*tableCenter; //residual index location
 				if (interpolate){
 					int index_int = static_cast<int> (index);
 					float fract = index - index_int;
@@ -39,16 +39,18 @@ namespace pdsp{
 				else{
 					BLEP = BLEPTable[static_cast<int>(index)]; //truncation
 				}
-				if (!risingEdge) BLEP *= -1.0;
-				return BLEP*height;
+
+                BLEP *= -1.0f; // always falling edge
+                BLEP *= height;
+				return BLEP;
 			}
 		}
 		//RIGHT side of the edge
 		//0 <= t < 1
-		for (int i = 1; i <= static_cast<int>(pointsPerSide); ++i){
-			if (modulo < static_cast<float>(i)* inc){
-				t = modulo / (pointsPerSide * inc);		//calculate the distance
-				float index = t*tableCenter + (tableCenter + 1.0); //residual index location
+		for (int i = 1; i <= pointsPerSide_int; ++i){
+			if (modulo < static_cast<float>(i) * inc){
+				t = modulo * (oneSlashPointPerSide * inc);		//calculate the distance
+				float index = t*tableCenter + (tableCenter + 1.0f); //residual index location
 				if (interpolate){
 					int index_int = static_cast<int>(index);
 					float fract = index - index_int;
@@ -58,41 +60,38 @@ namespace pdsp{
 				else{
 					BLEP = BLEPTable[static_cast<int>(index)];
 				}
-				if (!risingEdge) BLEP += -1.0;
-				return BLEP * height;
+
+                BLEP *= -1.0f; // always falling edge
+                BLEP *= height;
+				return BLEP;
 			}
 		}
 
 		return 0.0; //no BLEP residual
 	}   
-    
-	inline void BLEP4096WaveformDSP(int bufferSize, float* outputBuffer, const float* phaseBuffer, float inc,
-		const float* BLEPTable, bool risingEdge, float pointsPerSide, bool interpolate = false){		
-		for (int n = 0; n < bufferSize; ++n){
-			outputBuffer[n] += BLEPn(BLEPTable, 4096.0, phaseBuffer[n], inc, 1.0, risingEdge, pointsPerSide, interpolate);
-		}
-	}
-
-	inline void BLEP4096FMWaveformDSP(int bufferSize, float* outputBuffer, const float* phaseBuffer, const float* incBuffer,
-		const float* BLEPTable, bool risingEdge, float pointsPerSide, bool interpolate = false){
-		for (int n = 0; n < bufferSize; ++n){
-			outputBuffer[n] += BLEPn(BLEPTable, 4096.0, phaseBuffer[n], fabs(incBuffer[n]), 1.0, risingEdge, pointsPerSide, interpolate);
-		}
-	}
 
     inline void BLEPWaveformDSP(int bufferSize, float* outputBuffer, const float* phaseBuffer, float inc,
-                                    const float* BLEPTable, bool risingEdge, float pointsPerSide, float tableLength, bool interpolate = false){
-                                        
+                                    const float* BLEPTable, float pointsPerSide, float tableFakeLen, bool interpolate = false){
+        float tableCenter = tableFakeLen * 0.5f - 1.0f;
+        int pointsPerSide_i = static_cast<int>(pointsPerSide);
         float absinc = fabs(inc);
+        float oneSlashPointPerSide = 1.0f / pointsPerSide;
+        
         for (int n = 0; n < bufferSize; ++n){
-            outputBuffer[n] += BLEPn(BLEPTable, tableLength, phaseBuffer[n], absinc, 1.0, risingEdge, pointsPerSide, interpolate);
+            outputBuffer[n] += BLEPn(BLEPTable, tableFakeLen, phaseBuffer[n], absinc, 1.0f, pointsPerSide, pointsPerSide_i, interpolate, tableCenter, oneSlashPointPerSide);
         }
     }
     
     inline void BLEPFMWaveformDSP(int bufferSize, float* outputBuffer, const float* phaseBuffer, const float* incBuffer,
-                                      const float* BLEPTable, bool risingEdge, float pointsPerSide, float tableLength, bool interpolate = false){
+                                      const float* BLEPTable, float pointsPerSide, float tableFakeLen, bool interpolate = false){
+        
+        float tableCenter = tableFakeLen * 0.5f - 1.0f;
+        int pointsPerSide_i = static_cast<int>(pointsPerSide);
+        float oneSlashPointPerSide = 1.0f / pointsPerSide;     
+
         for (int n = 0; n < bufferSize; ++n){
-            outputBuffer[n] += BLEPn(BLEPTable, tableLength, phaseBuffer[n], fabs(incBuffer[n]), 1.0, risingEdge, pointsPerSide, interpolate);
+
+            outputBuffer[n] += BLEPn(BLEPTable, tableFakeLen, phaseBuffer[n], fabs(incBuffer[n]), 1.0f, pointsPerSide, pointsPerSide_i, interpolate, tableCenter, oneSlashPointPerSide);
         }
     }
 	//--------------------------------  ----------------------------------------------------

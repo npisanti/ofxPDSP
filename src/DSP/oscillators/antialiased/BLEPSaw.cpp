@@ -36,12 +36,12 @@ void pdsp::BLEPSaw::oscillate( float* outputBuffer, const float* phaseBuffer, in
     if (incBufferState == AudioRate){ //phase increment is always changing
 
             BLEPFMWaveformDSP(bufferSize, outputBuffer, phaseBuffer, incBuffer,
-                              blepTable->buffer, false, blepTable->points, blepTable->length_f, interpolateBLEP);
+                              blepTable->buffer, blepTable->points, blepTable->length_f, interpolateBLEP);
 
     }else { //phase increment is always the same
 
             BLEPWaveformDSP(bufferSize, outputBuffer, phaseBuffer, incBuffer[0],
-                            blepTable->buffer, false, blepTable->points, blepTable->length_f, interpolateBLEP);
+                            blepTable->buffer, blepTable->points, blepTable->length_f, interpolateBLEP);
 
     }
 

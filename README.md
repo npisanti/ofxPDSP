@@ -8,7 +8,7 @@ ofxPDSP is an audio DSP addon/library for openFrameworks. It is based on those d
 - Cross-platform code: works on Linux, OSX, Windows, iOS, Android (only on ARM processors with NEON instructions).
 
 It includes a good selection of modules ready to be used, like antialiasied oscillators and VA filters, an FFT convolver, analog-sounding envelopes, delays, noise generators, a sampler and a graincloud module, biquad equalizers (normal and 2x oversampled), units for dynamic processing, units for oversampling/downsampling and a framework for writing and sequencing generative music.
-You can find a doxygenerated [documentation of the modules here.](http://npisanti.com/ofxPDSP/index.html) and a [series of tutorials here](https://github.com/npisanti/ofxPDSP/wiki).
+You can find a doxygenerated [documentation of the modules here](http://npisanti.com/ofxPDSP/index.html) and a [series of tutorials here](https://github.com/npisanti/ofxPDSP/wiki).
 
 On top of that some other classes that uses openFrameworks for adding midi in/out, waveform plotting and manage GUIs.
 
