@@ -67,5 +67,11 @@ void setInitOversample(int initOversample){
         Preparable::initOversampleLevel = initOversample;
 }
  
+ 
+ 
+double Preparable::getGlobalSampleRate() {
+    return globalSampleRate;
+}
+ 
 }//END NAMESPACE
 

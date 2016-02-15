@@ -42,6 +42,8 @@ class Preparable{
 public:
     Preparable();
         
+    static double getGlobalSampleRate();
+    
 protected:
     /*!
     @cond HIDDEN_SYMBOLS

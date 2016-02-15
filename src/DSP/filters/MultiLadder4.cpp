@@ -207,17 +207,6 @@ void pdsp::MultiLadder4::process_audio(const float* inputBuffer, const float* cu
                 float u;
                 
                 u = (inputBuffer[n] - K*sigma) * alpha0; 
-                /*
-                if(resoAR){ // reso dependent
-                        // u = inputBuffer[n]  * (1.0f+resoBuffer[n]); // decomment for passband gain compensation
-                        // u = (u - resoBuffer[n]*sigma) * alpha0; // decomment for passband gain compensation, and comment next
-                        u = (inputBuffer[n] - resoBuffer[n]*sigma) * alpha0; 
-                }else{
-                        // u = inputBuffer[n]   * (1.0f+resoBuffer[0]); // decomment for passband gain compensation
-                        // u = (u - resoBuffer[0]*sigma) * alpha0; // decomment for passband gain compensation, and comment next
-                        u = (inputBuffer[n] - resoBuffer[0]*sigma) * alpha0; 
-                }
-                */ 
                 
                 
                 //first stage

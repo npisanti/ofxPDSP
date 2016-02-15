@@ -18,7 +18,7 @@
 #endif
 
 #include <cstring>
-
+#include <string>
 
 namespace pdsp {
 
@@ -61,6 +61,13 @@ public:
     @brief returns true if data has been loaded into the SampleBuffer
     */ 
     bool    loaded();
+    
+    /*!
+    @brief inits the SampleBuffer with an empty table (all the values set to 0.0f)
+    @param[in] tableLen size of the table in samples
+    @param[in] numTables number of tables to init
+    */
+    void    init( int tableLen, int numTables=1 );
     
     /*!
     @brief some Units automatically select one channel if more than one are loaded. This set this default channel.

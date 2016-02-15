@@ -20,3 +20,11 @@ void pdsp::PitchToFreq::formulaAudioRate(float* &output, const float* &input, co
 void pdsp::PitchToFreq::setTuning(float tuningFrequency){
     freqCalculationMultiplier = pow(2.0, -69.0/12.0) * tuningFrequency;
 }
+
+
+float pdsp::PitchToFreq::eval(float value){
+    float fc;
+    vect_calculateIncrement(&fc, &value, freqCalculationMultiplier , 1);
+    //vect_pitchToFreq(&fc, &x, 1);
+    return fc;
+}

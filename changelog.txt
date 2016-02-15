@@ -1,4 +1,10 @@
 
+v0.1.2
+    - added AllPassDelay unit
+    - added OneBarTimeMs unit
+    - added FreqToMs unit
+    - corrected envelopes trigger sensitivy behavior    
+    
 v0.1.1
     - added native audio loading on OSX using libaudiodecoder
     - corrected behavior for example-graincloud

@@ -47,13 +47,11 @@ namespace pdsp{
 		}
 
 		inline_f void Attack(int& stageSwitch, int nextStageId){
-
-			envelopeOutput = attackOffset + envelopeOutput*attackCoeff;
 			if (envelopeOutput > intensity || attackTimeMs <= 0.0f){
-				//envelopeOutput = intensity;  //decativated for changint intensity
 				stageSwitch = nextStageId;
-			}
-
+			}else{
+                envelopeOutput = attackOffset + envelopeOutput*attackCoeff;
+            }
 		}
 
 		virtual ~AttackStage(){};

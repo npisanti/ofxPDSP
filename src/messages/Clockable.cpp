@@ -8,7 +8,7 @@ float pdsp::Clockable::globalTempo = 120.0f;
 double pdsp::Clockable::clockBaseSampleRate = 44100.0f;
 float pdsp::Clockable::masterInc = 120.0 / (44100.0 * (60.0 * 4.0));  
 float pdsp::Clockable::globalBarPosition = 0.0f;
-
+float pdsp::Clockable::barTimeMs = 60000 * 0.25f / 120.0f;
 /*
 void pdsp::Clockable::setGlobalFramePosition( long framePosition){
     globalFramePosition = framePosition;
@@ -44,14 +44,16 @@ void pdsp::Clockable::updateMasterInc(){
     masterInc = (static_cast<double>(globalTempo)  / ((60.0 * 4.0) * clockBaseSampleRate) ) ;
 }
 
-
 void pdsp::Clockable::setTempo(float tempo){
     globalTempo = tempo;
+    barTimeMs = (60000.0f * 4.0f) / tempo; // * 0.25f is for 4/4
     updateMasterInc();
 }
 
-
-
+float pdsp::Clockable::getOneBarTimeMs(){
+    return barTimeMs;
+}
+    
 float pdsp::Clockable::getBarsPerSample(){
     return masterInc;
 }

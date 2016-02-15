@@ -14,13 +14,6 @@ On top of that some other classes that uses openFrameworks for adding midi in/ou
 
 Requires [ofxMidi](https://github.com/danomatika/ofxMidi) and [ofxSIMDFloats.](https://github.com/npisanti/ofxSIMDFloats)
 
-TODO:
-At the moment ofxPDSP is still a testing stage, so some features may not work on your platform yet and the API could be subject to change. Here is also a list of things todo:
-- Algorithmic reverb module, cheap enough to run on the rPi.
-- AllPassInterpolator.
-- Sequencer midi sync.
-- Android testing and example.
-
 Nicola Pisanti, MIT License 2016.  
 For FFT the AudioFFT wrapper is used, Copyright (c) 2013 [HiFi-LoFi](https://github.com/HiFi-LoFi).  
 For loading audio file on OSX [libaudiodecoder](https://github.com/asantoni/libaudiodecoder) is used, Copyright (c) 2010-2012 Albert Santoni, Bill Good, RJ Ryan.

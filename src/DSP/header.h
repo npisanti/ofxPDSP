@@ -74,6 +74,7 @@
 
 #include "delays/MainDelay.h"
 #include "delays/DampedDelay.h"
+#include "delays/AllPassDelay.h"
 
 #include "envelopes/ADSR.h"
 #include "envelopes/AHR.h"
@@ -84,6 +85,8 @@
 #include "utility/PitchToFreq.h"
 #include "utility/BipolarToUnipolar.h"
 #include "utility/MaxValue.h"
+#include "utility/OneBarTimeMs.h"
+#include "utility/FreqToMs.h"
 
 #include "convolution/FDLConvolver.h"
 

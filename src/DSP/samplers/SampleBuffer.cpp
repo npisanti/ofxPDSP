@@ -82,8 +82,11 @@ void pdsp::SampleBuffer::load( float* interleavedBuffer, double sampleRate, int 
     for(int n=0; n<channelLength; ++n){
         for(int k=0; k<channels; ++k){
             toReturn[k][n] = interleavedBuffer[n*channels + k];
-        }
+        }       
     }
+    for(int k=0; k<channels; ++k){
+        toReturn[k][channelLength] = 0.0f; // set guard point to zero
+    }    
     if(verbose) std::cout <<"[pdsp] copying file to SampleBuffer\n";
     
     
@@ -96,7 +99,6 @@ void pdsp::SampleBuffer::load( float* interleavedBuffer, double sampleRate, int 
     this->length = channelLength;
     this->fileSampleRate = sampleRate;
 
-    
     if(verbose) std::cout <<"[pdsp] file correctly loaded into SampleBuffer\n";
     if(verbose) std::cout << "[pdsp] sample rate: "<<this->fileSampleRate<<" | length: "<<this->length<<" | channels: "<<this->channels<<"\n";
 }
@@ -202,4 +204,45 @@ void pdsp::SampleBuffer::load( std::string filePath ){
     
 #endif
     
+}
+
+
+void pdsp::SampleBuffer::init( int tableLen, int numTables ){
+    
+    float ** newTables;
+    newTables = new float*[numTables];
+    
+    for(int i=0; i<numTables; ++i){
+        ofx_allocate_aligned(newTables[i], tableLen+1); //guard point for linear interpolation
+        
+        if(newTables[i] == nullptr){
+            for(int j = 0; j<i; j++){ //deallocate already allocated vectors
+                ofx_deallocate_aligned(newTables[j]);
+            }
+            delete [] newTables;
+            std::string error = "[pdsp] memory low, impossible to init tables\n";
+            if (verbose) std::cout << error;
+            this->filePath = error;
+            return; //abort
+        }
+    }
+    
+    if(verbose) std::cout <<"[pdsp] done array allocations for SampleBuffer init\n";
+   
+    for(int i=0; i<numTables; ++i){
+        for(int n=0; n<=tableLen; ++n){
+            newTables[i][n] = 0.0f;
+        }       
+    }
+
+    if(verbose) std::cout <<"[pdsp] SampleBuffer buffer initialized\n";  
+    
+    this->buffer = newTables;
+    this->channels = numTables;
+    this->length = tableLen;
+    this->fileSampleRate = Preparable::getGlobalSampleRate();
+    
+    std::string info = std::to_string(tableLen);
+    info += " samples buffer\n";
+    this->filePath = info;
 }

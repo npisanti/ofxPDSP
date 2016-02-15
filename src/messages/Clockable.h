@@ -25,11 +25,18 @@ public:
     */       
     static float getBarsPerSample();
     
+    
     /*!
     @brief returns the global transport playhead in bars
     */           
     static float getGlobalBarPosition();
 
+
+    /*!
+    @brief returns the time in milliseconds for one bar.
+    */           
+    static float getOneBarTimeMs();
+    
 
     /*!
     @brief returns true if the transport is not stopped or paused
@@ -47,6 +54,8 @@ private:
     static void setTempo(float tempo);
 
     static float globalBarPosition;
+
+    static float barTimeMs;    
 
     static bool playing;
     static float globalTempo;

@@ -26,6 +26,11 @@ public:
     */   
     static void setTuning(float tuningFrequency);
     
+    /** 
+    @brief static function to convert pitch to freq without constructing an object
+    @param[in] value pitch to convert to freq
+    */    
+    static float eval(float value);
            
 private:
         
