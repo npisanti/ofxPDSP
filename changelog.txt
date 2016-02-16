@@ -1,9 +1,10 @@
 
-v0.1.2
+v0.1.2.1
     - added AllPassDelay unit
     - added OneBarTimeMs unit
     - added FreqToMs unit
-    - corrected envelopes trigger sensitivy behavior    
+    - corrected envelopes trigger sensitivy behavior and time settings
+    - added init() method to SampleBuffer 
     
 v0.1.1
     - added native audio loading on OSX using libaudiodecoder

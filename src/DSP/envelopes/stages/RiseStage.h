@@ -39,6 +39,7 @@ protected:
 
         virtual void setRiseTime(float riseTimeMs, float nextStageLevel){
                 this->riseNextStageLevel = nextStageLevel;
+                if(riseTimeMs <= 0.0f){ riseTimeMs = PDSP_MIN_ENVSTAGE_MS; } // to avoid divide by zero into coeff calculations
                 this->riseTimeMs = riseTimeMs;
                 calculateRiseTime();
         }
@@ -51,7 +52,7 @@ protected:
 
         inline_f void Rise(int& stageSwitch, int nextStageId){
                 envelopeOutput = riseOffset + envelopeOutput*riseCoeff;
-                if (envelopeOutput >= riseNextStageLevel || riseTimeMs <= 0.0f){
+                if (envelopeOutput >= riseNextStageLevel ){ // || riseTimeMs <= 0.0f removed
                         //envelopeOutput = riseNextStageLevel; //decativated for changint intensity
                         stageSwitch = nextStageId;
                 }

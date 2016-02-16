@@ -18,8 +18,8 @@ namespace pdsp{
 	public:
 
 		AttackStage(){
-			attackTimeMs = 50.0;
-			attackTCO = 0.99999; //digital 
+			attackTimeMs = 50.0f;
+			attackTCO = 0.99999f; //digital 
 			calculateAttackTime();
 		};
 
@@ -36,6 +36,7 @@ namespace pdsp{
 		float attackOffset;
 	
 		void setAttackTime(float attackTimeMs){
+            if(attackTimeMs <= 0.0f){ attackTimeMs = PDSP_MIN_ENVSTAGE_MS; } // to avoid divide by zero into coeff calculations
 			this->attackTimeMs = attackTimeMs;
 			calculateAttackTime();
 		};
@@ -47,10 +48,11 @@ namespace pdsp{
 		}
 
 		inline_f void Attack(int& stageSwitch, int nextStageId){
-			if (envelopeOutput > intensity || attackTimeMs <= 0.0f){
+			if (envelopeOutput >= intensity ){
 				stageSwitch = nextStageId;
 			}else{
-                envelopeOutput = attackOffset + envelopeOutput*attackCoeff;
+                envelopeOutput = attackOffset + envelopeOutput*attackCoeff;   
+                envelopeOutput = (envelopeOutput > intensity) ? intensity : envelopeOutput; // this should be compiled into branchless code
             }
 		}
 

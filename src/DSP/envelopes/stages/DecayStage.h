@@ -36,6 +36,7 @@ protected:
 
         virtual void setDecayTime(float decayTimeMs, float nextStageLevel){
                 this->decayNextStageLevel = nextStageLevel;
+                if(decayTimeMs <= 0.0f){ decayTimeMs = PDSP_MIN_ENVSTAGE_MS; } // to avoid divide by zero into coeff calculations
                 this->decayTimeMs = decayTimeMs;
                 calculateDecayTime();
         }
@@ -48,7 +49,7 @@ protected:
 
         inline_f void Decay(int& stageSwitch, int nextStageId){
                 envelopeOutput = decayOffset + envelopeOutput*decayCoeff;
-                if (envelopeOutput <= decayNextStageLevel || decayTimeMs <= 0.0f){
+                if (envelopeOutput <= decayNextStageLevel ){ // || decayTimeMs <= 0.0f removed
                         //envelopeOutput = decayNextStageLevel; //decativated for changint intensity
                         stageSwitch = nextStageId;
                 }

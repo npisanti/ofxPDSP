@@ -43,7 +43,7 @@ protected:
 
         inline_f void Hold(int& stageSwitch, int nextStageId){
                 envelopeOutput = holdLevel;
-                if (counter++ <= holdSamples || holdTimeMs <= 0.0f){
+                if (counter++ <= holdSamples ){ // || holdTimeMs <= 0.0f
                         stageSwitch = nextStageId;
                 }
         }

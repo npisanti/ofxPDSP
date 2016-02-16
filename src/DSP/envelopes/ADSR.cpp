@@ -125,24 +125,7 @@ void pdsp::ADSR::process(int bufferSize) noexcept{
                 break;
             
             default: break;
-        }
-
-        /*
-        if(trigBufferState!=AudioRate){
-                if (stageSwitch == off){ //more likely first
-                    
-                }else
-                if (stageSwitch == sustainStage){
-                    
-                }
-                else{
-                    
-                }
-                                    
-        }else{
-                   
-        } 
-        */      
+        }   
 }
 
 void pdsp::ADSR::onRetrigger(float triggerValue, int n) {
@@ -151,7 +134,8 @@ void pdsp::ADSR::onRetrigger(float triggerValue, int n) {
                 stageSwitch = releaseStage;
 
         }else if( triggerValue > 0.0f ){
-                this->intensity = triggerValue;
+                float veloCtrl = processAndGetSingleValue(input_velocity, n);
+                this->intensity = (triggerValue * veloCtrl)  + (1.0f-veloCtrl); 
                 stageSwitch = attackStage;
 
         }else if( triggerValue < 0.0f ){ //legato triggers

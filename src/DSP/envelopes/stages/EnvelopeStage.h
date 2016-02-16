@@ -7,6 +7,8 @@
 #ifndef PDSP_ENVSTAGE_ENVELOPESTAGE_H_INCLUDED
 #define PDSP_ENVSTAGE_ENVELOPESTAGE_H_INCLUDED
 
+#include "../../../flags.h"
+
 namespace pdsp {
 
 /*!

@@ -128,6 +128,7 @@ void pdsp::AllPassDelay::process(int bufferSize) noexcept{
         const float* feedbackBuffer = processInput(input_feedback, changed);
         if(changed){
                 g = feedbackBuffer[0];
+                outGcoeff = 1.0f - g*g;
         }
         
         int inputBufferState;
@@ -190,7 +191,7 @@ void pdsp::AllPassDelay::process_audio(const float* inputBuffer, const float* ti
                 
                 delayBuffer[writeIndex] = vn;
                 
-                outputBuffer[n] = readValue - g*vn;
+                outputBuffer[n] = (outGcoeff * readValue) - (g * vn);
                 
                 if (++writeIndex > maxDelayTimeSamples){
                         writeIndex = 1;

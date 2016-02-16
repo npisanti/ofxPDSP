@@ -110,6 +110,7 @@ private:
     InterpolatorShell interShell;
     
     float g;
+    float outGcoeff;
 
     std::atomic<float> timeMeter;
 };
