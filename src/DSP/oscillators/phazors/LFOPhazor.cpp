@@ -28,7 +28,6 @@ pdsp::Patchable& pdsp::LFOPhazor::set(float freq, float phase_start){
         return *this;   
 }
 
-
 pdsp::Patchable& pdsp::LFOPhazor::in_freq(){
     return in("freq");
 }
@@ -50,9 +49,8 @@ pdsp::Patchable& pdsp::LFOPhazor::out_trig(){
 }
 
 void pdsp::LFOPhazor::prepareUnit( int expectedBufferSize, double sampleRate) {
-
-        phase = 0.0f;
-        incCalculationMultiplier = 1.0f / sampleRate;
+    phase = 0.0f;
+    incCalculationMultiplier = 1.0f / sampleRate;
 }
 
 void pdsp::LFOPhazor::releaseResources () {

@@ -129,17 +129,20 @@ void pdsp::ADSR::process(int bufferSize) noexcept{
 }
 
 void pdsp::ADSR::onRetrigger(float triggerValue, int n) {
+    
+        
         
         if(triggerValue == pdspTriggerOff){
                 stageSwitch = releaseStage;
 
         }else if( triggerValue > 0.0f ){
+                triggerValue = (triggerValue > 1.0f) ? 1.0f : triggerValue;
                 float veloCtrl = processAndGetSingleValue(input_velocity, n);
                 this->intensity = (triggerValue * veloCtrl)  + (1.0f-veloCtrl); 
                 stageSwitch = attackStage;
 
         }else if( triggerValue < 0.0f ){ //legato triggers
-                
+                triggerValue = (triggerValue < -1.0f) ? -1.0f : triggerValue;
                 float newIntensity = -triggerValue;
                 if(stageSwitch!=attackStage){
                         if(newIntensity <= this->intensity){

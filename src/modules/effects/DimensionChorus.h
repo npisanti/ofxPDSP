@@ -7,7 +7,7 @@
 #define PDSP_MODULE_DIMENSIONCHORUS_H_INCLUDED
 
 #include "../../DSP/pdspCore.h"
-#include "../../DSP/oscillators/phazors/PMPhazor.h"
+#include "../../DSP/oscillators/phazors/LFOPhazor.h"
 #include "../../DSP/oscillators/cheap/CheapTri.h"
 #include "../../DSP/delays/DampedDelay.h"
 #include "../../DSP/filters/OnePole.h"
@@ -74,7 +74,7 @@ public:
 private:
     void patch();
  
-    PMPhazor        phazor;
+    LFOPhazor       phazor;
     CheapTri        LFO;
  
     Amp             mod1;

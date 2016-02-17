@@ -22,13 +22,14 @@
 #include "effects/DimensionChorus.h"
 #include "effects/StereoConvolver.h"
 
-
-
 #include "equalizers/AAHighShelfEQ.h"
 #include "equalizers/AALowShelfEQ.h"
 #include "equalizers/AAPeakEQ.h"
 #include "equalizers/HighShelfEQ.h"
 #include "equalizers/LowShelfEQ.h"
 #include "equalizers/PeakEQ.h"
+
+#include "reverbs/BasiVerb.h"
+
 
 #endif // PDSP_MODULEHEADER_H_INCLUDED

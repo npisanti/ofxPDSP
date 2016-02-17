@@ -1,4 +1,10 @@
 
+v0.1.2.2
+    - TableOsc changed to WaveTableOsc, now support interpolation of different loaded waves with in_shape()
+    - added BitCruncher unit
+    - added Decimator unit
+    - added BasiVerb module
+
 v0.1.2.1
     - added AllPassDelay unit
     - added OneBarTimeMs unit

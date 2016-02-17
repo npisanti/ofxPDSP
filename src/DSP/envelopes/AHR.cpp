@@ -101,6 +101,7 @@ void pdsp::AHR::process(int bufferSize) noexcept{
 }
 
 void pdsp::AHR::onRetrigger(float triggerValue, int n) {
+        triggerValue = (triggerValue > 1.0f) ? 1.0f : triggerValue;
         
         if( triggerValue > 0.0f ){
                 float veloCtrl = processAndGetSingleValue(input_velocity, n);

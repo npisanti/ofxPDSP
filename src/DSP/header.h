@@ -21,6 +21,8 @@
 
 #include "signal/Saturator1.h"
 #include "signal/SampleAndHold.h"
+#include "signal/Bitcruncher.h"
+#include "signal/Decimator.h"
 
 #include "control/CRSlew.h"
 #include "control/ToGateTrigger.h"
@@ -49,7 +51,7 @@
 #include "oscillators/antialiased/DPWTri.h"
 #include "oscillators/antialiased/BLEPSaw.h"
 
-#include "oscillators/wavetable/TableOsc.h"
+#include "oscillators/wavetable/WaveTableOsc.h"
 
 #include "random/PRNoiseGen.h"
 #include "random/TriggeredRandom.h"
