@@ -29,13 +29,12 @@ public:
     */ 
     static void setSilenceThreshold( float silenceDB );
     
-protected:
+private:
     
     float formula(const float &x) noexcept override;
     
     void formulaAudioRate(float* &output, const float* &input, const int &bufferSize) noexcept override;
 
-private:
     static float silenceThreshold;
 };
         

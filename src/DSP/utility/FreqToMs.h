@@ -16,6 +16,7 @@ namespace pdsp{
 */    
 
 class FreqToMs : public Formula {
+    
 public:
 
     /** 
@@ -24,7 +25,7 @@ public:
     */    
     static float eval(float value);
     
-protected:
+private:
     
     float formula(const float &x) noexcept override;
     

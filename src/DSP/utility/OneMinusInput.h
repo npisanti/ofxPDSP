@@ -17,7 +17,7 @@ namespace pdsp{
 
 class OneMinusInput : public Formula {
         
-protected:
+private:
     
     float formula(const float &x) noexcept override;
     

@@ -8,7 +8,7 @@
 class SineBleep : public pdsp::Patchable{
 public:
     SineBleep() {
-        //add inputs / outputs with this methods 
+        //add inputs / outputs with these methods 
         addUnitInput("trig", env.in_trig()); // arguments are tag and the Unit in/out to link to that tag
         addUnitInput("pitch", osc.in_pitch());
         addUnitOutput("signal", amp ); // if in/out is not selected default in/out is used

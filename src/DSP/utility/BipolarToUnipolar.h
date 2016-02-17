@@ -17,7 +17,7 @@ This unit converts a signal between -1.0f and 1.0f to a signal between 0.0f and 
 */
 class BipolarToUnipolar : public Formula {
         
-protected:
+private:
     
     float formula(const float &x) noexcept override;
     

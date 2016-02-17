@@ -171,6 +171,6 @@ pdsp::Patchable& pdsp::BasiVerb::out_1(){
 }
 
 float pdsp::BasiVerb::meter_lfo(){
-    return LFO.meter_output();
+    return lfoOut.meter_output();
 }
 

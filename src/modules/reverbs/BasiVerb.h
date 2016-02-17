@@ -102,7 +102,7 @@ public:
     Patchable& out_1();
 
     /*!
-    @brief returns a value between -1.0f and 1.0f that rapresent the LFO output signal. This method is thread-safe.
+    @brief returns a value between 0.0f and 1.0f that rapresent the mod LFO signal. This method is thread-safe.
     */   
     float meter_lfo();
     

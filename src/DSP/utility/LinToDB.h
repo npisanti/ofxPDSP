@@ -24,7 +24,7 @@ public:
     */   
     static float eval(float value);
     
-protected:
+private:
     
     float formula(const float &x) noexcept override;
     

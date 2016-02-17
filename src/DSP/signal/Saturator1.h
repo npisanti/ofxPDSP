@@ -18,7 +18,7 @@ This unit saturates the signal using a curve similar to tanh, the inverse sigmoi
 
 class Saturator1 : public Formula {
         
-protected:
+private:
         
         float formula(const float &x) noexcept override;
         
