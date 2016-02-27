@@ -1,4 +1,9 @@
 
+v0.1.2.3
+    - changed all the meter_out() to meter_output() for consistency
+    - corrected envelope hold stage behavior
+    - updated doxy
+
 v0.1.2.2
     - TableOsc changed to WaveTableOsc, now support interpolation of different loaded waves with in_shape()
     - added BitCruncher unit

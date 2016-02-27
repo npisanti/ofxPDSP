@@ -42,7 +42,7 @@ public:
     /*!
     @brief returns the last sampled value. This method is thread-safe.
     */
-    float meter_out() const;
+    float meter_output() const;
 
 private:
     void prepareUnit( int expectedBufferSize, double sampleRate ) override;

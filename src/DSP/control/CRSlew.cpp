@@ -61,6 +61,6 @@ void pdsp::CRSlew::process (int bufferSize) noexcept {
 }
 
 
-float pdsp::CRSlew::meter_out() const {
+float pdsp::CRSlew::meter_output() const {
     return meter.load();
 }

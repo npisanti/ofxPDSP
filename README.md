@@ -3,6 +3,7 @@ ofxPDSP
 ofxPDSP is an audio DSP addon/library for openFrameworks. It is based on those design principles:
 - Native c++, made to be tightly integrated into c++ projects.
 - Class design mimics modular synthesizers, where inputs and outputs are patched with the >> operator.
+- Sample accurate timing.
 - Lazy evaluated DSPs. DSP units are recursively processed in chunks big as the audio buffer size, CPU cycles are spared by not processing Units if the actual state of the system make their results irrelevant and by switching between routines running at audio rate (process every sample) and control rate (once every buffer) on the fly. PDSP is coded optimizing the instruction for this kind of branching and shows a low I1 cache miss rate (e.g. less than 0.3% on a i7 processor with 128 samples of buffersize, measured with valgrind). DSPs are also coded using SIMD instructions when possible.
 - Thread-safe methods for metering and control.
 - Cross-platform code: works on Linux, OSX, Windows, iOS, Android (only on ARM processors with NEON instructions).

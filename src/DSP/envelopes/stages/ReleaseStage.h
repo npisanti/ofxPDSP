@@ -10,12 +10,12 @@
 #include "EnvelopeStage.h"
 
 namespace pdsp{
+
+	class ReleaseStage : public virtual EnvelopeStage{
+	public:
 /*!
     @cond HIDDEN_SYMBOLS
 */
-	class ReleaseStage : public virtual EnvelopeStage{
-	public:
-
 		ReleaseStage(){
 			releaseTimeMs = 50.0;
 			releaseTCO = exp(-4.95); //digital 
@@ -23,13 +23,22 @@ namespace pdsp{
 		};
 
 	
+/*!
+    @endcond
+*/
 
+        /*!
+        @brief sets a value that defines the release curve, default is exp(-4.95) .
+        @param[in] releaseTCO release TCO value
+        */
 		void setReleaseTCO(float releaseTCO){
 			this->releaseTCO = releaseTCO;
 			calculateReleaseTime();
 		}
 
-
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
 	protected:
 
 		float releaseTimeMs;

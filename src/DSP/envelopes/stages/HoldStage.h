@@ -7,7 +7,6 @@
 #ifndef PDSP_ENVSTAGE_HOLD_H_INCLUDED
 #define PDSP_ENVSTAGE_HOLD_H_INCLUDED
 
-
 #include "EnvelopeStage.h"
 
 namespace pdsp{
@@ -43,7 +42,7 @@ protected:
 
         inline_f void Hold(int& stageSwitch, int nextStageId){
                 envelopeOutput = holdLevel;
-                if (counter++ <= holdSamples ){ // || holdTimeMs <= 0.0f
+                if (counter++ >= holdSamples ){ // || holdTimeMs <= 0.0f
                         stageSwitch = nextStageId;
                 }
         }

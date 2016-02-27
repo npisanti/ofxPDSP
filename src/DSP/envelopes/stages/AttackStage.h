@@ -10,11 +10,11 @@
 #include "EnvelopeStage.h"
 
 namespace pdsp{
+
+	class AttackStage : public virtual EnvelopeStage{
 /*!
     @cond HIDDEN_SYMBOLS
 */
-	class AttackStage : public virtual EnvelopeStage{
-	
 	public:
 
 		AttackStage(){
@@ -22,13 +22,22 @@ namespace pdsp{
 			attackTCO = 0.99999f; //digital 
 			calculateAttackTime();
 		};
+/*!
+    @endcond
+*/
 
+        /*!
+        @brief sets a value that defines the attack curve, default is 0.999999f.
+        @param[in] attackTCO attack TCO value
+        */
 		void setAttackTCO(float attackTCO){
 			this->attackTCO = attackTCO;
 			calculateAttackTime();
 		};
 	
-
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
 	protected:
 		float attackTimeMs;
 		float attackTCO;	//TCO set the curve

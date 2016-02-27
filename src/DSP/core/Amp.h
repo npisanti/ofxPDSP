@@ -59,7 +59,7 @@ public:
     /*!
     @brief returns the value of the output buffer, updated at control rate. This method is thread safe.
     */ 
-    float meter_out() const;
+    float meter_output() const;
     
 private:
 

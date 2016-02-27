@@ -14,7 +14,7 @@ pdsp::SampleAndHold::SampleAndHold(){
         meter.store(sampled);
 }
 
-float pdsp::SampleAndHold::meter_out() const{
+float pdsp::SampleAndHold::meter_output() const{
     return meter.load();
 }
 

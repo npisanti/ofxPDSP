@@ -10,23 +10,33 @@
 #include "EnvelopeStage.h"
 
 namespace pdsp{
+
+class DecayStage : public virtual EnvelopeStage{
+    
 /*!
     @cond HIDDEN_SYMBOLS
 */
-class DecayStage : public virtual EnvelopeStage{
-
 public:
         DecayStage(){
                 decayTimeMs = 50.0;
                 decayTCO = exp(-4.95); //digital 
                 calculateDecayTime();
         };
+/*!
+    @endcond
+*/
 
+        /*!
+        @brief sets a value that defines the decay curve, default is exp(-4.95) .
+        @param[in] decayTCO decay TCO value
+        */
         void setDecayTCO(float decayTCO){
                 this->decayTCO = decayTCO;
                 calculateDecayTime();
         }
-
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
 protected:
         float decayTimeMs;
         float decayTCO;	//TCO set the curve

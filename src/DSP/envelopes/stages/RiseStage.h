@@ -10,12 +10,12 @@
 #include "EnvelopeStage.h"
 
 namespace pdsp{
+
+class RiseStage : public virtual EnvelopeStage{
+public:
 /*!
     @cond HIDDEN_SYMBOLS
 */
-class RiseStage : public virtual EnvelopeStage{
-public:
-
         RiseStage(){
                 riseTimeMs = 50.0;
                 riseTCO = exp(-4.95); //digital 
@@ -23,12 +23,23 @@ public:
         };
 
 
+/*!
+    @endcond
+*/
 
+        /*!
+        @brief sets a value that defines the rise curve, default is exp(-4.95) .
+        @param[in] riseTCO rise TCO value
+        */
         void setRiseTCO(float riseTCO){
                 this->riseTCO = riseTCO;
                 calculateRiseTime();
         }
-
+        
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
+    
 protected:
 
         float riseTimeMs;

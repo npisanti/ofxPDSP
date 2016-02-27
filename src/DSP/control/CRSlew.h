@@ -49,7 +49,7 @@ public:
         /*!
         @brief returns the actual output value. Thread-safe.
         */ 
-        float meter_out() const;
+        float meter_output() const;
         
 private:
         OutputNode output;

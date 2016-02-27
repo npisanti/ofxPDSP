@@ -42,7 +42,7 @@ float pdsp::Amp::meter_mod() const{
     return meter.load();
 }
 
-float pdsp::Amp::meter_out() const{
+float pdsp::Amp::meter_output() const{
     return meterOut.load();
 }
 
