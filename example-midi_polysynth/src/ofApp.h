@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxMidi.h"
 #include "ofxPDSP.h"
+#include "ofxGui.h"
 #include "voice.h"
 
 class ofApp : public ofBaseApp{
@@ -32,7 +33,7 @@ class ofApp : public ofBaseApp{
         int     bufferSize;
         double  sampleRate;
 
-        ofxMidiIn           midiIn;
+    
         ofSoundStream       audioStream;
 
         int                     voicesNum;
@@ -41,13 +42,17 @@ class ofApp : public ofBaseApp{
         pdsp::Processor         pdspEngine;
         pdsp::DimensionChorus   chorus;       
             
-        ofxMidiInProcessor      midiInProcessor;    
+        ofxMidiInProcessor      midiInProcessor;
         ofxMidiKeysProcessor    midiKeys;
 
         ofxPanel             gui;
         
         ofParameterGroup     chorusUI;
-        ofxPDSPParameter     chorusSpeed; 
-        ofxPDSPParameter     chorusDepth; 
+        ofParameterGroup     synthUI;
+    
+        ofxPDSPParameter     chorusSpeed;
+        ofxPDSPParameter     chorusDepth;
+    
+
 
 };

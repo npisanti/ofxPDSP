@@ -10,16 +10,17 @@ void ofApp::setup(){
     //patching-------------------------------
     //get MIDI control
     midiInProcessor.listPorts();
-    midiInProcessor.openPort(0); //set the right port !!!
+    midiInProcessor.openPort(1); //set the right port !!!
 
     // set up control
     // you can use setPolyMode(int maxNotes, int unisonVoices) or setMonoMode(int unisonVoices, bool legato, MonoPriority priority)
     midiKeys.setPolyMode(4, 1);
     // activate portamento, in poly mode you can notice portamento only on note stealing
-    midiKeys.setPortamento(On, 250.0f, pdsp::Rate); 
+    midiKeys.setPortamento(On, 250.0f, pdsp::Rate);
 
     // voices is a vector of synth voices, we resize it to the midiKeys voice number     
     voicesNum = midiKeys.getVoicesNumber();
+    
     voices.resize(voicesNum);
     
     // midiKeys has a vector for the pitch outputs and one for the trigger outputs
@@ -32,6 +33,7 @@ void ofApp::setup(){
         voices[i].voiceAmp  >> chorus.in_0();
         voices[i].voiceAmp  >> chorus.in_1();
     }
+    
     
     //set up chorus
     chorus.out_0() >> pdspEngine.channels[0];
@@ -46,7 +48,7 @@ void ofApp::setup(){
 
     ofxPDSPSetup(bufferSize, sampleRate);
     
-    audioStream.setDeviceID(0);       
+    audioStream.setDeviceID(0);
     audioStream.setup(this, 2, 0, static_cast<int>(sampleRate), bufferSize, 3);
   
     //graphic setup---------------------------
@@ -63,16 +65,25 @@ void ofApp::setup(){
     gui.setBorderColor(ofColor(0,40,40));
     
     gui.setDefaultFillColor(ofColor(0,90,90));
-    gui.setDefaultBackgroundColor(ofColor(0,0,0));    
+    gui.setDefaultBackgroundColor(ofColor(0,0,0));
     
+    synthUI.setName("synth parameters");
+    synthUI.add(voices[0].pwUI.parameter);
+    synthUI.add(voices[0].pwmUI.parameter);
+    synthUI.add(voices[0].pwmSpeedUI.parameter);
+    synthUI.add(voices[0].cutoffUI.parameter);
+    synthUI.add(voices[0].resoUI.parameter);
+    synthUI.add(voices[0].modAttackUI.parameter);
+    synthUI.add(voices[0].modReleaseUI.parameter);
+
     chorusUI.setName("chorus parameters");
     chorusUI.add(chorusSpeed.parameter);
     chorusUI.add(chorusDepth.parameter);
 
     gui.setup("panel");
-    gui.add(voices[0].synthUI);
+    gui.add(synthUI);
     gui.add(chorusUI);
-    gui.setPosition(400, 20);    
+    gui.setPosition(400, 20);
 }
 
 //--------------------------------------------------------------
@@ -87,7 +98,7 @@ void ofApp::audioOut(ofSoundBuffer &outBuffer) {
 //--------------------------------------------------------------
 void ofApp::exit() {
 	audioStream.stop();
-    midiInProcessor.closePort(); // remember to close the midi port 
+    midiInProcessor.closePort(); // remember to close the midi port
     audioStream.close();
 }
 
@@ -103,14 +114,14 @@ void ofApp::draw(){
     int xBase = 20;
     ofDrawBitmapString("osc pitches", xBase, 26);
     for(int i=0; i<voicesNum; ++i){
-        drawMeter( voices[i].oscillator.meter_pitch(), 36.f, 84.f, xBase, 30, 20, 200); 
+        drawMeter( voices[i].oscillator.meter_pitch(), 36.f, 84.f, xBase, 30, 20, 200);
         xBase+=40;
     }
     // draw mod envelope meters
     xBase += 30;
     ofDrawBitmapString("mod envs", xBase, 26);
     for(int i=0; i<voicesNum; ++i){
-        drawMeter( voices[i].modEnv.meter_output(), 0.05f, 1.0f, xBase, 30, 20, 200); 
+        drawMeter( voices[i].modEnv.meter_output(), 0.05f, 1.0f, xBase, 30, 20, 200);
         xBase+=40;
     }
 

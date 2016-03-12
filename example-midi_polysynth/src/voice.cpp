@@ -2,6 +2,8 @@
 #include "voice.h"
 
 // we use static instances for the parameters so we can patch a single parameter to many voices
+
+
 ofxPDSPParameter SynthVoice::cutoffUI     = ofxPDSPParameter();
 ofxPDSPParameter SynthVoice::resoUI       = ofxPDSPParameter();
 ofxPDSPParameter SynthVoice::pwUI         = ofxPDSPParameter();
@@ -9,21 +11,18 @@ ofxPDSPParameter SynthVoice::pwmUI        = ofxPDSPParameter();
 ofxPDSPParameter SynthVoice::pwmSpeedUI   = ofxPDSPParameter();
 ofxPDSPParameter SynthVoice::modAttackUI  = ofxPDSPParameter();
 ofxPDSPParameter SynthVoice::modReleaseUI = ofxPDSPParameter();
-ofParameterGroup SynthVoice::synthUI = ofParameterGroup();
-bool SynthVoice::initUIflag = true;
+
+
+
 
 SynthVoice::SynthVoice() { 
-    patch(); 
-    if(initUIflag){
-        initUI();
-        initUIflag = false; // we add the parameter to the ofParameterGroup just once
-    }
+    patch();
 }
 
 SynthVoice::SynthVoice(const SynthVoice& other){ patch(); }
 
 void SynthVoice::patch(){
-    
+
     // SIGNAL PATH
     oscillator.out("pulse") * 4.0f >> saturator >> filter >> voiceAmp;
     
@@ -44,15 +43,6 @@ void SynthVoice::patch(){
     (voiceTrigger >> (ampEnv.set(200.0f, 400.0f, 1.0f, 600.0f ) * 0.1f)) >> voiceAmp.in_mod();
     
                      pwmSpeedUI.set("pwm speed (hz)", 0.5f, 0.005f, 1.5f) >> lfo.in_freq();  
-}
-
-void SynthVoice::initUI(){
-    synthUI.setName("synth parameters");
-    synthUI.add(pwUI.parameter);
-    synthUI.add(pwmUI.parameter);    
-    synthUI.add(pwmSpeedUI.parameter);   
-    synthUI.add(cutoffUI.parameter);
-    synthUI.add(resoUI.parameter);
-    synthUI.add(modAttackUI.parameter);
-    synthUI.add(modReleaseUI.parameter);
+     
+     
 }

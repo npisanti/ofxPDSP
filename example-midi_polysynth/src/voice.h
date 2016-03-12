@@ -1,8 +1,9 @@
 
 #pragma once
 
+#include "ofMain.h"
 #include "ofxPDSP.h"
-#include "ofxGui.h"
+
 
 struct SynthVoice{
     
@@ -10,8 +11,7 @@ struct SynthVoice{
     SynthVoice(const SynthVoice& other);
     
     void patch();
-    void initUI();
-   
+    
     pdsp::PatchNode     voiceTrigger;
     pdsp::PatchNode     voicePitch;
     pdsp::PitchToFreq   p2f;
@@ -29,7 +29,7 @@ struct SynthVoice{
     pdsp::Amp           lfoAmt;
 
     pdsp::CRSlew                slew;
-    
+
     static ofxPDSPParameter     cutoffUI;
     static ofxPDSPParameter     resoUI;
     static ofxPDSPParameter     modAttackUI;
@@ -38,8 +38,5 @@ struct SynthVoice{
     static ofxPDSPParameter     pwUI;
     static ofxPDSPParameter     pwmSpeedUI;
     static ofxPDSPParameter     pwmUI;
-    
-    static bool                 initUIflag;
-    static ofParameterGroup     synthUI;
-    
+ 
 };
