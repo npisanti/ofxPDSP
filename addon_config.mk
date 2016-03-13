@@ -87,11 +87,15 @@ vs:
     ADDON_SOURCES_EXCLUDE = libs/libaudiodecoder/%
 	
 linuxarmv6l:
+	# NEON is required, adding here for raspbian distro
+	ADDON_CFLAGS = -mfpu=neon-vfpv4 -mfloat-abi=hard -ftree-vectorize
+    ADDON_SOURCES_EXCLUDE = libs/libaudiodecoder/%
 
 	
 linuxarmv7l:
 	# enable NEON as is not enabled by default
 	ADDON_CFLAGS = -march=armv7-a -mfpu=neon-vfpv4 -mfloat-abi=hard -ftree-vectorize
+    ADDON_SOURCES_EXCLUDE = libs/libaudiodecoder/%
 
 android/armeabi:	
 	
@@ -99,6 +103,7 @@ android/armeabi:
 android/armeabi-v7a:	
 	# enable NEON as is not enabled by default
 	ADDON_CFLAGS = -march=armv7-a -mfpu=neon-vfpv4 -mfloat-abi=hard -ftree-vectorize
+    ADDON_SOURCES_EXCLUDE = libs/libaudiodecoder/%
 
 osx:
 

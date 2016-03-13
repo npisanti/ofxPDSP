@@ -143,7 +143,7 @@ void ofxMidiKeysBuffers::processMidi (vector<_ofxPositionedMidiMessage>* readVec
         }
         
         
-        for(int i=0; i<maxNotes; ++i){
+        for(int i=0; i < static_cast<int>(notes.size()); ++i){
             gateMessages[i].processDestination(bufferSize);
             pitchMessages[i].processDestination(bufferSize);
         }
@@ -154,7 +154,7 @@ void ofxMidiKeysBuffers::processMidi (vector<_ofxPositionedMidiMessage>* readVec
         // for checking overflow of note generation, it will fail only there are more than 2000 events generated between calls, unlikely
         if (eventIdGenerator>30000) {
                 eventIdGenerator = 0;
-                for(int i=0; i<notes.size(); ++i){
+                for(int i=0; i<static_cast<int>(notes.size()); ++i){
                         notes[i].eventNumber = notes[i].eventNumber - 30000;
                 }
         }
@@ -162,13 +162,13 @@ void ofxMidiKeysBuffers::processMidi (vector<_ofxPositionedMidiMessage>* readVec
 
 
 void ofxMidiKeysBuffers::setMaxNotes(int notes){
-        maxNotes = notes;
+        maxNotes = notes;  //basically maxNotes is not used anymore, to remove in future releases
         this->notes.resize(notes);
         gateMessages.resize(notes);
         pitchMessages.resize(notes);
         portaMessages.resize(notes);
         
-        for(int i=0; i<maxNotes; ++i){
+        for(int i=0; i<notes; ++i){
                 gateMessages[i].reserve(MIDINOTEPROCESSORMESSAGERESERVE);
                 pitchMessages[i].reserve(MIDINOTEPROCESSORMESSAGERESERVE);
                 portaMessages[i].reserve(MIDINOTEPROCESSORMESSAGERESERVE);
@@ -178,7 +178,7 @@ void ofxMidiKeysBuffers::setMaxNotes(int notes){
 }
 
 void ofxMidiKeysBuffers::clearNotes(){
-        for(int i=0; i<notes.size(); ++i){
+        for(int i=0; i<static_cast<int>(notes.size()); ++i){
                 notes[i].gate = 0.0f;
                 notes[i].note = -1;
                 notes[i].eventNumber = eventIdGenerator++;
@@ -191,7 +191,7 @@ void ofxMidiKeysBuffers::checkIdGeneration(){
     // for checking overflow of note generation, it will fail only there are more than 2000 events generated between calls, unlikely
     if (eventIdGenerator>30000) {
         eventIdGenerator = 0;
-        for(int i=0; i<notes.size(); ++i){
+        for(int i=0; i<static_cast<int>(notes.size()); ++i){
             notes[i].eventNumber = notes[i].eventNumber - 30000;
         }
     }
@@ -203,8 +203,8 @@ int ofxMidiKeysBuffers::noteSteal(){
         int dummyVoiceEventNum = 32000;
         int foundIndex=-1;
 
-        if(activeNotes!=maxNotes){ //there is at least 1 inactive note to steal
-                for(int i=0; i<maxNotes; ++i){
+        if(activeNotes!=static_cast<int>(notes.size())){ //there is at least 1 inactive note to steal
+                for(int i=0; i<static_cast<int>(notes.size()); ++i){
                         if ( !(notes[i].gate>0) ) {
                                 if(notes[i].eventNumber<dummyVoiceEventNum){
                                         dummyVoiceEventNum=notes[i].eventNumber;
@@ -220,7 +220,7 @@ int ofxMidiKeysBuffers::noteSteal(){
                 int lowest = 4000;
 
                 //blacklist highest and lowest
-                for(int i=0; i<maxNotes; ++i){
+                for(int i=0; i<static_cast<int>(notes.size()); ++i){
                         if(notes[i].note<lowest){
                                 lowest = notes[i].note;
                                 indexLowest = i;
@@ -230,7 +230,7 @@ int ofxMidiKeysBuffers::noteSteal(){
                         }
                 }
 
-                for(int i=0; i<maxNotes; ++i){
+                for(int i=0; i<static_cast<int>(notes.size()); ++i){
                         if(i!=indexLowest && i!=indexHighest){
                                 if(notes[i].eventNumber<dummyVoiceEventNum){
                                         dummyVoiceEventNum=notes[i].eventNumber;
@@ -256,7 +256,7 @@ void ofxMidiKeysBuffers::processPolyMidiNoteOn( _ofxPositionedMidiMessage& midi 
         float gateValue = static_cast<float>(midi.message.velocity+1)*0.0078125f;  // add 1 and divide by 128, 
                                                                                 //so range is 0.0078125f-1.0f
         //search a note with the same note number, gated or not
-        for(int i=0; i<maxNotes; ++i){
+        for(int i=0; i<static_cast<int>(notes.size()); ++i){
                 if(notes[i].note == noteNumber){
                         //retrigger note
                         noteIndex = i;
@@ -304,7 +304,7 @@ void ofxMidiKeysBuffers::processPolyMidiNoteOff( _ofxPositionedMidiMessage& midi
         int noteIndex = -1;
 
         //1 - search a note with the same note number, gated or not, update and call retrigger on the priorityArray
-        for(int i=0; i<maxNotes; ++i){
+        for(int i=0; i<static_cast<int>(notes.size()); ++i){
                 if(notes[i].note == noteNumber){
                         //retrigger note
                         noteIndex = i;
@@ -338,7 +338,7 @@ int ofxMidiKeysBuffers::getHighestPriorityMono(){
 
     if(monoMode==Last){
         int event = -4000;
-        for(int i=0; i<maxNotes; ++i){
+        for(int i=0; i<static_cast<int>(notes.size()); ++i){
             if( (notes[i].gate>0) && notes[i].eventNumber>event){
                 event = notes[i].eventNumber;
                 indexToReturn = i;
@@ -346,7 +346,7 @@ int ofxMidiKeysBuffers::getHighestPriorityMono(){
         }
     }else if(monoMode==Low){
         int lowest = 4000;
-        for(int i=0; i<maxNotes; ++i){
+        for(int i=0; i<static_cast<int>(notes.size()); ++i){
             if((notes[i].gate>0) && notes[i].note<lowest){
                 lowest = notes[i].note;
                 indexToReturn = i;
@@ -354,7 +354,7 @@ int ofxMidiKeysBuffers::getHighestPriorityMono(){
         }
     }else if(monoMode==High){
         int highest = -4000;
-        for(int i=0; i<maxNotes; ++i){
+        for(int i=0; i<static_cast<int>(notes.size()); ++i){
             if( (notes[i].gate>0) && notes[i].note>highest){
                 highest = notes[i].note;
                 indexToReturn = i;
@@ -375,7 +375,7 @@ void ofxMidiKeysBuffers::processMonoMidiNoteOn( _ofxPositionedMidiMessage& midi 
         float gateValue = static_cast<float>(midi.message.velocity+1)*0.0078125f;  // add 1 and divide by 128, 
                                                                                 //so range is 0.0078125f-1.0f
         
-        for(int i=0; i<maxNotes; ++i){
+        for(int i=0; i<static_cast<int>(notes.size()); ++i){
                 if(notes[i].note == noteNumber){
                         //retrigger note
                         noteIndex = i;
@@ -438,7 +438,7 @@ void ofxMidiKeysBuffers::processMonoMidiNoteOff( _ofxPositionedMidiMessage& midi
         int noteIndex = -1;
 
         //search a note with the same note number, gated or not, update and call retrigger on the priorityArray
-        for(int i=0; i<maxNotes; ++i){
+        for(int i=0; i<static_cast<int>(notes.size()); ++i){
                 if(notes[i].note == noteNumber){
                         //retrigger note
                         noteIndex = i;

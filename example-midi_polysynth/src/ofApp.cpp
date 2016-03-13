@@ -10,7 +10,7 @@ void ofApp::setup(){
     //patching-------------------------------
     //get MIDI control
     midiInProcessor.listPorts();
-    midiInProcessor.openPort(1); //set the right port !!!
+    midiInProcessor.openPort(0); //set the right port !!!
 
     // set up control
     // you can use setPolyMode(int maxNotes, int unisonVoices) or setMonoMode(int unisonVoices, bool legato, MonoPriority priority)
