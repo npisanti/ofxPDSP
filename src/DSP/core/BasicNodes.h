@@ -188,9 +188,10 @@ protected:
 /*!
     @cond HIDDEN_SYMBOLS
 */
-
+    [[deprecated("Replaced by addModuleOutput() for a less ambigous nomenclature")]]
     void    addUnitOutput( const char* tag, Patchable & unit );
     
+    [[deprecated("Replaced by addModuleInput() for a less ambigous nomenclature")]]
     void    addUnitInput( const char* tag, Patchable & unit );
 /*!
     @endcond
