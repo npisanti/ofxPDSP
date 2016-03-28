@@ -1,4 +1,7 @@
 
+v0.1.2.4
+    - addUnitInput is deprecated as it is confusing to use, use addModuleInput instead
+
 v0.1.2.3
     - changed all the meter_out() to meter_output() for consistency
     - corrected envelope hold stage behavior

@@ -963,6 +963,19 @@ void pdsp::Patchable::addUnitInput( const char* tag, Patchable &unit ){
     resetInputToDefault();
 }
 
+void pdsp::Patchable::addModuleOutput( const char* tag, Patchable &unit ){
+    addOutput(tag, unit.getSelectedOutput() );
+    unit.resetOutputToDefault();
+    resetOutputToDefault();
+}
+    
+    
+void pdsp::Patchable::addModuleInput( const char* tag, Patchable &unit ){
+    addInput(tag, unit.getSelectedInput() );
+    unit.resetInputToDefault();
+    resetInputToDefault();
+}
+
 void pdsp::Patchable::clearAllAddedNodes(){
     
     for( NamedInput &item : inputs ) {

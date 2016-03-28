@@ -23,7 +23,6 @@ pdsp::BasiVerb::RT60Calculator::RT60Calculator(){
     addOutput( "g3", delay_g[3] );
     addOutput( "g4", delay_g[4] );
     addOutput( "g5", delay_g[5] );
-    addOutput( "g6", delay_g[6] );
     addOutput( "time0", delay_times[0] );
     addOutput( "time1", delay_times[1] );
     addOutput( "time2", delay_times[2] );
@@ -88,17 +87,17 @@ void pdsp::BasiVerb::RT60Calculator::process (int bufferSize) noexcept {
 
 void pdsp::BasiVerb::patch(){
     
-    addUnitInput( "signal",  input_signal );
-    addUnitInput("time", coeffs.in("rt60") );
-    addUnitInput("density", coeffs.in("density") );
-    addUnitInput("damping", damping_ctrl );
-    addUnitInput("hi_cut", hi_cut_ctrl );
+    addModuleInput( "signal",  input_signal );
+    addModuleInput("time", coeffs.in("rt60") );
+    addModuleInput("density", coeffs.in("density") );
+    addModuleInput("damping", damping_ctrl );
+    addModuleInput("hi_cut", hi_cut_ctrl );
    
-    addUnitInput("mod_freq", phazor.in_freq() );
-    addUnitInput("mod_amount", modAmt.in_mod() );
+    addModuleInput("mod_freq", phazor.in_freq() );
+    addModuleInput("mod_amount", modAmt.in_mod() );
  
-    addUnitOutput("0", output1);
-    addUnitOutput("1", output2);
+    addModuleOutput("0", output1);
+    addModuleOutput("1", output2);
     
     hi_cut_ctrl.set(8000.0f);
     damping_ctrl.set(0.25f);  

@@ -12,16 +12,16 @@ pdsp::LFO& pdsp::LFO::operator=(const pdsp::LFO &Other){ return *this; }
 
 void pdsp::LFO::patch(){
     
-    addUnitInput( "freq",   speed );
-    addUnitInput( "retrig",  phazorFree.in_retrig()  );    
-    addUnitInput( "phase_start",  phazorFree.in_phase_start() );  
+    addModuleInput( "freq",   speed );
+    addModuleInput( "retrig",  phazorFree.in_retrig()  );    
+    addModuleInput( "phase_start",  phazorFree.in_phase_start() );  
 
-    addUnitOutput( "triangle", triangle );
-    addUnitOutput( "sine", sine );
-    addUnitOutput( "saw", sawSlew );
-    addUnitOutput( "square", squareSlew );
-    addUnitOutput( "sample_and_hold", randomSnHSlew );
-    addUnitOutput( "random", randomSlew);
+    addModuleOutput( "triangle", triangle );
+    addModuleOutput( "sine", sine );
+    addModuleOutput( "saw", sawSlew );
+    addModuleOutput( "square", squareSlew );
+    addModuleOutput( "sample_and_hold", randomSnHSlew );
+    addModuleOutput( "random", randomSlew);
 
     speed.set(0.5f);
 

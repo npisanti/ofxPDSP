@@ -45,10 +45,10 @@ void pdsp::Panner::CosFormula::formulaAudioRate(float* &output, const float* &in
 
 void pdsp::Panner::patch(){
     
-    addUnitInput( "signal",  input ); 
-    addUnitInput("pan", panning_step1);
-    addUnitOutput("0", amp1);
-    addUnitOutput("1", amp2);    
+    addModuleInput( "signal",  input ); 
+    addModuleInput("pan", panning_step1);
+    addModuleOutput("0", amp1);
+    addModuleOutput("1", amp2);    
     
     panning_step1.enableBoundaries(-1.0f, 1.0f);
     

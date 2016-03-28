@@ -10,14 +10,14 @@ pdsp::FMOperator& pdsp::FMOperator::operator=(const pdsp::FMOperator &Other){ pa
 
 void pdsp::FMOperator::patch(){
 
-    addUnitInput( "fm",     phazor.in("pm") );    
-    addUnitInput( "pitch",  p2f );    
-    addUnitInput( "ratio",  ratioMult.in_mod() );    
-    addUnitInput( "fb",     sine.in_shape() );
-    addUnitInput( "sync",    phazor.in("sync") );
+    addModuleInput( "fm",     phazor.in("pm") );    
+    addModuleInput( "pitch",  p2f );    
+    addModuleInput( "ratio",  ratioMult.in_mod() );    
+    addModuleInput( "fb",     sine.in_shape() );
+    addModuleInput( "sync",    phazor.in("sync") );
 
-    addUnitOutput( "signal", sine );
-    addUnitOutput( "sync",   phazor.out("sync") );
+    addModuleOutput( "signal", sine );
+    addModuleOutput( "sync",   phazor.out("sync") );
     
     ratioMult.set(1.0f);
     

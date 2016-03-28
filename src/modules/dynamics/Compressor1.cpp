@@ -3,17 +3,17 @@
 
 void pdsp::Compressor1::patch(bool linkChannels){
     
-    addUnitInput("0", input1);
-    addUnitInput("1", input2);
+    addModuleInput("0", input1);
+    addModuleInput("1", input2);
     
-    addUnitInput("attack", attack);
-    addUnitInput("release", release);
-    addUnitInput("threshold", threshold);
-    addUnitInput("ratio", ratio);
-    addUnitInput("knee", knee);
+    addModuleInput("attack", attack);
+    addModuleInput("release", release);
+    addModuleInput("threshold", threshold);
+    addModuleInput("ratio", ratio);
+    addModuleInput("knee", knee);
 
-    addUnitOutput("0", dca1);
-    addUnitOutput("1", dca2);
+    addModuleOutput("0", dca1);
+    addModuleOutput("1", dca2);
 
     attack.set(10.0f);
     release.set(50.0f),

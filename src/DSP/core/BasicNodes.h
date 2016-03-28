@@ -174,7 +174,7 @@ protected:
         
     When you are constructing a new module you use this method to add an output to the ones available for patching for this module. The actually selected output will be added, so you can use the in("tagname") or in_tagname() methods on the unit that you are passing as argument. The method will also reset the Unit selected output to the default.
     */  
-    void    addUnitOutput( const char* tag, Patchable & unit );
+    void    addModuleOutput( const char* tag, Patchable & unit );
     
     /*!
     @brief method to add outputs when constructing a module
@@ -183,8 +183,18 @@ protected:
         
     When you are constructing a new module you use this method to add an input to the ones available for patching for this module. The actually selected input will be added, so you can use the out("tagname") or out_tagname() methods on the unit that you are passing as argument. The method will also reset the Unit selected input to the default.
     */  
-    void    addUnitInput( const char* tag, Patchable & unit );
+    void    addModuleInput( const char* tag, Patchable & unit );
+
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
+
+    void    addUnitOutput( const char* tag, Patchable & unit );
     
+    void    addUnitInput( const char* tag, Patchable & unit );
+/*!
+    @endcond
+*/    
 
 private:
     std::vector<NamedInput>         inputs;

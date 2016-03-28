@@ -12,15 +12,15 @@ pdsp::ClockedLFO& pdsp::ClockedLFO::operator=(const pdsp::ClockedLFO &Other){ re
 
 void pdsp::ClockedLFO::patch(){
     
-    addUnitInput( "division",   phazorClocked.in_division() );
-    addUnitInput( "retrig",  phazorClocked.in_retrig() );    
-    addUnitInput( "phase_offset",  phazorClocked.in_phase_offset() );  
+    addModuleInput( "division",   phazorClocked.in_division() );
+    addModuleInput( "retrig",  phazorClocked.in_retrig() );    
+    addModuleInput( "phase_offset",  phazorClocked.in_phase_offset() );  
 
-    addUnitOutput( "triangle", triangle );
-    addUnitOutput( "sine", sine );
-    addUnitOutput( "saw", sawSlew );
-    addUnitOutput( "square", squareSlew );
-    addUnitOutput( "sample_and_hold", randomSnHSlew );
+    addModuleOutput( "triangle", triangle );
+    addModuleOutput( "sine", sine );
+    addModuleOutput( "saw", sawSlew );
+    addModuleOutput( "square", squareSlew );
+    addModuleOutput( "sample_and_hold", randomSnHSlew );
     
 
     phazorClocked  >> saw      >> sawSlew;

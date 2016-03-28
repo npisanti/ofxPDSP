@@ -14,18 +14,18 @@ pdsp::TriggeredGrain& pdsp::TriggeredGrain::operator=(const TriggeredGrain &othe
     
 void pdsp::TriggeredGrain::patch(){
 
-    addUnitInput("position", grain.in_start());
-    addUnitInput("length", window.in_length() );
-    addUnitInput("pitch", grain.in_pitch() );
-    addUnitInput("select", grain.in_select() );
+    addModuleInput("position", grain.in_start());
+    addModuleInput("length", window.in_length() );
+    addModuleInput("pitch", grain.in_pitch() );
+    addModuleInput("select", grain.in_select() );
     
-    addUnitInput("trig", trigger_in );
+    addModuleInput("trig", trigger_in );
     
-    addUnitInput("position_jitter", posJitterAmt.in_mod());
-    addUnitInput("pitch_jitter", pitchJitterAmt.in_mod());
-    addUnitInput("direction", grain.in_direction());        
-    addUnitOutput("signal", window);
-    addUnitOutput("jitter", jitter);
+    addModuleInput("position_jitter", posJitterAmt.in_mod());
+    addModuleInput("pitch_jitter", pitchJitterAmt.in_mod());
+    addModuleInput("direction", grain.in_direction());        
+    addModuleOutput("signal", window);
+    addModuleOutput("jitter", jitter);
 
     grain >> window;
     

@@ -11,15 +11,15 @@ pdsp::VAOscillator& pdsp::VAOscillator::operator=(const pdsp::VAOscillator &Othe
 
 void pdsp::VAOscillator::patch(){
     
-    addUnitInput( "pitch",  p2f );
-    addUnitInput( "pw",  inputShape );
-    addUnitInput( "sync",   phazor.in("sync") );
+    addModuleInput( "pitch",  p2f );
+    addModuleInput( "pw",  inputShape );
+    addModuleInput( "sync",   phazor.in("sync") );
     
-    addUnitOutput( "saw",       saw );
-    addUnitOutput( "pulse",     leakDC.out_hpf() );
-    addUnitOutput( "triangle",  triangle );
-    addUnitOutput( "sine",      sine );
-    addUnitOutput( "sync",      phazor.out("sync") );
+    addModuleOutput( "saw",       saw );
+    addModuleOutput( "pulse",     leakDC.out_hpf() );
+    addModuleOutput( "triangle",  triangle );
+    addModuleOutput( "sine",      sine );
+    addModuleOutput( "sync",      phazor.out("sync") );
     
     inputShape.enableBoundaries(0.0f, 1.0f);
     inputShape.set(0.5f);

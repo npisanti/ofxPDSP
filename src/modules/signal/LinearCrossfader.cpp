@@ -10,10 +10,10 @@ pdsp::LinearCrossfader& pdsp::LinearCrossfader::operator=(const LinearCrossfader
 
 void pdsp::LinearCrossfader::patch(){
                  
-    addUnitInput( "0",  in1amp );
-    addUnitInput( "1",  in2amp );    
-    addUnitInput("fade", control);
-    addUnitOutput("signal", output);
+    addModuleInput( "0",  in1amp );
+    addModuleInput( "1",  in2amp );    
+    addModuleInput("fade", control);
+    addModuleOutput("signal", output);
     
     control.enableBoundaries(0.0f, 1.0f);
     

@@ -83,20 +83,20 @@ pdsp::GrainCloud& pdsp::GrainCloud::operator=(const GrainCloud &other){
     
 void pdsp::GrainCloud::patch(){
 
-    addUnitInput("position", ctrl_start );
-    addUnitInput("length", ctrl_grain_length );
-    addUnitInput("pitch", ctrl_pitch );
-    addUnitInput("select", ctrl_select );
+    addModuleInput("position", ctrl_start );
+    addModuleInput("length", ctrl_grain_length );
+    addModuleInput("pitch", ctrl_pitch );
+    addModuleInput("select", ctrl_select );
     
-    addUnitInput("density", ctrl_density );
-    addUnitInput("distance_jitter", triggers.in("jitter") );
+    addModuleInput("density", ctrl_density );
+    addModuleInput("distance_jitter", triggers.in("jitter") );
     
-    addUnitInput("position_jitter", ctrl_pos_jit );
-    addUnitInput("pitch_jitter", ctrl_pitch_jit );
-    addUnitInput("direction", ctrl_direction );      
+    addModuleInput("position_jitter", ctrl_pos_jit );
+    addModuleInput("pitch_jitter", ctrl_pitch_jit );
+    addModuleInput("direction", ctrl_direction );      
       
-    addUnitOutput("L", outL);
-    addUnitOutput("R", outR);
+    addModuleOutput("L", outL);
+    addModuleOutput("R", outR);
 
     streams.resize(voices);
         

@@ -10,11 +10,11 @@ pdsp::StereoConvolver& pdsp::StereoConvolver::operator=(const StereoConvolver& o
 
 void pdsp::StereoConvolver::patch(){
     
-    addUnitInput( "0",  channel1 );
-    addUnitInput( "1",  channel2 );    
+    addModuleInput( "0",  channel1 );
+    addModuleInput( "1",  channel2 );    
     
-    addUnitOutput( "0",  channel1 );
-    addUnitOutput( "1",  channel2 );    
+    addModuleOutput( "0",  channel1 );
+    addModuleOutput( "1",  channel2 );    
     
 }
 

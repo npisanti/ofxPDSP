@@ -10,14 +10,14 @@ pdsp::DimensionChorus& pdsp::DimensionChorus::operator=(const DimensionChorus& o
 
 void pdsp::DimensionChorus::patch(){
     
-    addUnitInput( "0",  input1 );
-    addUnitInput( "1",  input2 );    
-    addUnitOutput("0", output1);
-    addUnitOutput("1", output2);
+    addModuleInput( "0",  input1 );
+    addModuleInput( "1",  input2 );    
+    addModuleOutput("0", output1);
+    addModuleOutput("1", output2);
     
-    addUnitInput("speed", speed);
-    addUnitInput("depth", depth);
-    addUnitInput("delay", delay);
+    addModuleInput("speed", speed);
+    addModuleInput("depth", depth);
+    addModuleInput("delay", delay);
     
     speed.set(0.25);
     speed.enableBoundaries(0.15f, 0.6f);

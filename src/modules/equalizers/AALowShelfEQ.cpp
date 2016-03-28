@@ -3,14 +3,14 @@
 
 void pdsp::AALowShelfEQ::patch(){
 
-    addUnitInput("0", upsampler0);
-    addUnitInput("1", upsampler1);
-    addUnitOutput("0", downsampler0);
-    addUnitOutput("1", downsampler1);
+    addModuleInput("0", upsampler0);
+    addModuleInput("1", upsampler1);
+    addModuleOutput("0", downsampler0);
+    addModuleOutput("1", downsampler1);
     
-    addUnitInput("freq", freq);
-    addUnitInput("Q", Q);
-    addUnitInput("gain", gain);   
+    addModuleInput("freq", freq);
+    addModuleInput("Q", Q);
+    addModuleInput("gain", gain);   
     
     eq0.setOversampleLevel(2);
     eq1.setOversampleLevel(2);

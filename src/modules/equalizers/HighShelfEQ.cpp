@@ -3,14 +3,14 @@
 
 void pdsp::HighShelfEQ::patch(){
  
-    addUnitInput("0", eq0);
-    addUnitInput("1", eq1);
-    addUnitOutput("0", eq0);
-    addUnitOutput("1", eq1);
+    addModuleInput("0", eq0);
+    addModuleInput("1", eq1);
+    addModuleOutput("0", eq0);
+    addModuleOutput("1", eq1);
     
-    addUnitInput("freq", freq);
-    addUnitInput("Q", Q);
-    addUnitInput("gain", gain);
+    addModuleInput("freq", freq);
+    addModuleInput("Q", Q);
+    addModuleInput("gain", gain);
     
     freq.set(10000.0f);
     Q.set(0.707f);
