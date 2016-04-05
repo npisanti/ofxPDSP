@@ -10,5 +10,6 @@
 #include "ScoreSection.h"
 #include "ScoreCell.h"
 #include "stockBehaviors.h"
+#include "Sequence.h"
 
 #endif // PDSP_SEQUENCERHEADER_H_INCLUDE

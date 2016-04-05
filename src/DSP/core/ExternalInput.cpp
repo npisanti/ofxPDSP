@@ -13,6 +13,16 @@ pdsp::ExternalInput::ExternalInput(){
     }
 }
         
+pdsp::ExternalInput::ExternalInput(const ExternalInput & other){
+    std::cout<<"[pdsp] warning! ExternalInput copy constructed\n";
+    pdsp_trace();
+}
+
+pdsp::ExternalInput::~ExternalInput(){
+        output.buffer = nullptr; //otherwise output will delete other buffers on decostruction, leading to segfaults
+}
+
+        
 pdsp::Patchable& pdsp::ExternalInput::out_signal(){
     return out("signal");
 }

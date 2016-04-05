@@ -1,14 +1,17 @@
 #include "ofApp.h"
 
-// Graincloud example. At the moment file loading is managed using libsndfile
-// it will work on Linux out-of-the-box on oF
-// but on OSX and Win you will have to find a way to install it and dynamically link it
-// you also have to go into ofxPDSP flags.h file and decomment #define PDSP_USE_LIBSNDFILE
+// before looking at this, be shure to check out the lessons on the gitHub wiki:
+// https://github.com/npisanti/ofxPDSP/wiki
+
+// Graincloud example. At the moment file loading is managed using libsndfile on Linux / Win
+// it will work on Linux out of the box 
+// but on Win you will have to find a way to install it and dynamically link it
+// and then you have to go into ofxPDSP flags.h file and decomment #define PDSP_USE_LIBSNDFILE
+// on OSX/iOS libaudiodecoder is used
 
 //--------------------------------------------------------------
 void ofApp::setup(){
 
-     
     //--------GRAINCLOUD-----------------------
     float scaleAudio = 2.0f;
     grainVoices = cloud.getVoicesNum();
@@ -16,6 +19,7 @@ void ofApp::setup(){
     // sampleData is an instance of pdsp::SampleBuffer
     sampleData.setVerbose(true); 
     sampleData.load("data/dreadlock_ride2.wav"); // at the moment this will work only on linux and osx
+                                                 // sometimes on osx you have to use an absolute path
     cloud.setWindowType(pdsp::Triangular); // select the shape of the grain envelope
             // available windows: Rectangular, Triangular, Hann, Hamming, Blackman, BlackmanHarris, SineWindow, Welch
     cloud.setSample(&sampleData); // give to the pdsp::GrainCloud the reference to the sample
@@ -34,23 +38,12 @@ void ofApp::setup(){
             ampSlew * scaleAudio >> voiceAmpL.in_mod(); 
             ampSlew * scaleAudio >> voiceAmpR.in_mod();
 
-    cloud.out_L() >> voiceAmpL >> pdspEngine.channels[0];  
-    cloud.out_R() >> voiceAmpR >> pdspEngine.channels[1];
+    cloud.out_L() >> voiceAmpL >> engine.audio_out(0); 
+    cloud.out_R() >> voiceAmpR >> engine.audio_out(1); 
     
     cout<<"finished patching\n";
     
-    //-----------------init audio-------------
-    expectedBufferSize = 512;
-    sampleRate = 44100.0;
     
-    ofxPDSPSetup(expectedBufferSize, sampleRate);
-    cout<<"pdsp prepared\n";
-    
-    ofSoundStreamListDevices();
-    audioStream.setDeviceID(0);
-    audioStream.setup(this, 2, 0, static_cast<int>(sampleRate), expectedBufferSize, 3);
-
-
     //ui values-------------------------------
     uiWidth  = ofGetWidth()-40; 
     uiHeigth = ofGetHeight()-40;
@@ -71,6 +64,12 @@ void ofApp::setup(){
 
     // create an ofFbo with the plotted waveform
     waveformGraphics.setWaveform(sampleData, 0, ofColor(0, 100, 100, 255), uiWidth, uiHeigth);
+    
+    
+    //-----------------init and start audio-------------
+    engine.listDevices();
+    engine.setDeviceID(0); // REMEMBER TO SET THIS AT THE RIGHT INDEX!!!!
+    engine.setup( 44100, 512, 3 ); 
     
 }
 
@@ -106,19 +105,6 @@ void ofApp::draw(){
 }
 
 //--------------------------------------------------------------
-void ofApp::audioOut(ofSoundBuffer &outBuffer) {
-
-    pdspEngine.processAndCopyInterleaved(outBuffer.getBuffer().data(), outBuffer.getNumChannels(), outBuffer.getNumFrames());
-    
-}
-
-//--------------------------------------------------------------
-void ofApp::exit() {
-	audioStream.stop();
-    audioStream.close();
-}
-
-//--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 
 }
@@ -132,7 +118,6 @@ void ofApp::keyReleased(int key){
 void ofApp::mouseMoved(int x, int y ){
 
 }
-
 
 //--------------------------------------------------------------
 void ofApp::controlOn(int x, int y){

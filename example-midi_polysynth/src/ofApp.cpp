@@ -1,5 +1,8 @@
 #include "ofApp.h"
 
+// before looking at this, be shure to check out the basics with the ofxPDSP wiki tutorials:
+// https://github.com/npisanti/ofxPDSP/wiki
+
 // midi controlled polysynth example
 // you need a midi keyboard for trying this! 
 // remember also to select the right midi port and audio output device, as ususal.
@@ -10,7 +13,7 @@ void ofApp::setup(){
     //patching-------------------------------
     //get MIDI control
     midiInProcessor.listPorts();
-    midiInProcessor.openPort(0); //set the right port !!!
+    midiInProcessor.openPort(1); //set the right port !!!
 
     // set up control
     // you can use setPolyMode(int maxNotes, int unisonVoices) or setMonoMode(int unisonVoices, bool legato, MonoPriority priority)
@@ -34,24 +37,15 @@ void ofApp::setup(){
         voices[i].voiceAmp  >> chorus.in_1();
     }
     
-    
-    //set up chorus
-    chorus.out_0() >> pdspEngine.channels[0];
-    chorus.out_1() >> pdspEngine.channels[1];
+    // set up chorus
+    chorus.out_0() >> engine.audio_out(0);
+    chorus.out_1() >> engine.audio_out(1);
 
     chorusSpeed.set("speed (hz)", 0.25f, 0.25f, 0.5f) >> chorus.in_speed();
     chorusDepth.set("depth (ms)", 10.f, 0.05f, 30.0f) >> chorus.in_depth();
-    
-    //audio setup----------------------------
-    bufferSize = 512;
-    sampleRate = 44100.0;
 
-    ofxPDSPSetup(bufferSize, sampleRate);
-    
-    audioStream.setDeviceID(0);
-    audioStream.setup(this, 2, 0, static_cast<int>(sampleRate), bufferSize, 3);
   
-    //graphic setup---------------------------
+    // graphic setup---------------------------
     ofSetVerticalSync(true);
     ofDisableAntiAliasing();
     ofBackground(0);
@@ -84,22 +78,14 @@ void ofApp::setup(){
     gui.add(synthUI);
     gui.add(chorusUI);
     gui.setPosition(400, 20);
-}
-
-//--------------------------------------------------------------
-void ofApp::audioOut(ofSoundBuffer &outBuffer) {
-    // you have to call those methods before of the pdsp::Processor process method
-    midiInProcessor.processMidi(outBuffer.getNumFrames());
-    midiKeys.processMidi(midiInProcessor, outBuffer.getNumFrames());
-    // now we can process the DSPs
-    pdspEngine.processAndCopyInterleaved(outBuffer.getBuffer().data(), outBuffer.getNumChannels(), outBuffer.getNumFrames()); 
-}
-
-//--------------------------------------------------------------
-void ofApp::exit() {
-	audioStream.stop();
-    midiInProcessor.closePort(); // remember to close the midi port
-    audioStream.close();
+    
+    
+    // audio setup----------------------------
+    engine.addMidiController( midiKeys, midiInProcessor ); // add midi processing to the engine
+    engine.listDevices();
+    engine.setDeviceID(0); // REMEMBER TO SET THIS AT THE RIGHT INDEX!!!!
+    engine.setup( 44100, 512, 3);     
+    
 }
 
 //--------------------------------------------------------------

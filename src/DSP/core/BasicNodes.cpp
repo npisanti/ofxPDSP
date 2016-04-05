@@ -7,7 +7,7 @@ pdsp::NullOutput pdsp::Patchable::invalidOutput = NullOutput();
 pdsp::NullInput pdsp::Patchable::invalidInput = pdsp::NullInput();
 
 
-int pdsp::OutputNode::globalProcessingTurnId = 42;
+int pdsp::OutputNode::globalProcessingTurnId = 42; // is the answer
 
 //------------------------INPUT NODE--------------------------------
 
@@ -795,23 +795,23 @@ pdsp::Unit::Unit() {
 }
 
 pdsp::Unit::Unit(const Unit & other){
-    std::cout<<"PDSP: warning, Unit copy constructed, undefined behavior\n";
-    assert(false);
+    std::cout<<"[pdsp] warning, Unit copy constructed, undefined behavior\n";
+    pdsp_trace();
 }
 pdsp::Unit& pdsp::Unit::operator= (const Unit & other){
-    std::cout<<"PDSP: warning, Unit copied, undefined behavior\n";
-    assert(false);
+    std::cout<<"[pdsp] warning, Unit copied, undefined behavior\n";
+    pdsp_trace();
     return *this;
 }
 
 pdsp::Unit::Unit (Unit&& other){
-    std::cout<<"PDSP: warning, Unit move constructed, undefined behavior\n";
-    assert(false);   
+    std::cout<<"[pdsp] warning, Unit move constructed, undefined behavior\n";
+    pdsp_trace();
 }
 
 pdsp::Unit& pdsp::Unit::operator= (Unit&& other){
-    std::cout<<"PDSP: warning, Unit moved, undefined behavior\n";
-    assert(false); 
+    std::cout<<"[pdsp] warning, Unit moved, undefined behavior\n";
+    pdsp_trace();
     return *this;
 }
 
@@ -883,6 +883,8 @@ pdsp::Patchable::Patchable() {
     inputs.clear();
     outputs.clear();
     //valueins.clear();
+    resetInputToDefault();
+    resetOutputToDefault();
 }
 
 
@@ -915,9 +917,17 @@ void pdsp::Patchable::addInput( const char* tag, InputNode &input ) {
 
 
 pdsp::InputNode& pdsp::Patchable::getSelectedInput()  {
+    if ( selectedInput == reinterpret_cast<InputNode*>( &invalidInput ) ){
+        std::cout<< "[pdsp] warning! patching to invalid input, probably this unit/module has no input or you have used an invalid tag\n";
+        pdsp_trace();
+    }  
     return *selectedInput;
 }
 pdsp::OutputNode& pdsp::Patchable::getSelectedOutput() {
+    if ( selectedOutput == reinterpret_cast<OutputNode*>( &invalidOutput ) ){
+        std::cout<< "[pdsp] warning! patching to invalid output, probably this unit/module has no output or you have used an invalid tag\n";
+        pdsp_trace();
+    }
     return *selectedOutput;
 }
 
@@ -931,8 +941,8 @@ pdsp::Patchable&  pdsp::Patchable::in( const char* tag ) {
         }
     }
     selectedInput = reinterpret_cast<InputNode*>( &invalidInput );
-    std::cout<<"unexistent input selected!!!\n";
-    assert(false && "unexistent input selected!!!" );
+    std::cout<<"[pdsp] unexistent input selected!!!\n";
+    pdsp_trace();
     return *this;
 }
 
@@ -944,8 +954,8 @@ pdsp::Patchable&  pdsp::Patchable::out( const char* tag ) {
         }
     }
     selectedOutput = reinterpret_cast<OutputNode*>( &invalidOutput );
-    std::cout<<"unexistent output selected!!!";
-    assert(false && "unexistent output selected!!!" );
+    std::cout<<"[pdsp] unexistent output selected!!!";
+    pdsp_trace();
     return *this;
 }
 

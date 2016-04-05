@@ -9,9 +9,6 @@ class ofApp : public ofxiOSApp {
         void setup();
         void update();
         void draw();
-        void exit();
-    
-        void audioOut(float * output, int bufferSize, int nChannels);
 	
         void touchDown(ofTouchEventArgs & touch);
         void touchMoved(ofTouchEventArgs & touch);
@@ -23,11 +20,8 @@ class ofApp : public ofxiOSApp {
         void gotFocus();
         void gotMemoryWarning();
         void deviceOrientationChanged(int newOrientation);
- 
-        int sampleRate;
-        int expectedBufferSize;
     
-        pdsp::Processor         pdspEngine;
+        ofxPDSPEngine           engine;
     
         pdsp::VAOscillator      osc;
         pdsp::Amp               amp;

@@ -27,7 +27,7 @@ int pdsp::CellChangePrev::getNextPattern( int currentPattern, int size ) {
 }
 
 int pdsp::CellChangeRandom::getNextPattern( int currentPattern, int size ) {
-    return randomUnipolarInt(size);
+    return dice(size);
 }
 
 pdsp::CellChangeRandomWalk::CellChangeRandomWalk(int walk) : walk(walk) {}

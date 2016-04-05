@@ -23,13 +23,14 @@ pdsp::Amp::~Amp(){
 }
 
 pdsp::Amp::Amp(const pdsp::Amp & other) : Amp(){
-
-        std::cout<<"amp copy constructed\n"; 
+    std::cout<<"[pdsp] warning! amp copy constructed\n"; 
+    pdsp_trace();
 }
  
 pdsp::Amp& pdsp::Amp::operator=(const Amp& other){
-        return *this;
-        std::cout<<"amp moved constructed\n";
+    return *this;
+    std::cout<<"[pdsp] warning! amp moved constructed\n";
+    pdsp_trace();
 }
 
 

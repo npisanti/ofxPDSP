@@ -9,9 +9,9 @@ class SineBleep : public pdsp::Patchable{
 public:
     SineBleep() {
         //add inputs / outputs with these methods 
-        addUnitInput("trig", env.in_trig()); // arguments are tag and the Unit in/out to link to that tag
-        addUnitInput("pitch", osc.in_pitch());
-        addUnitOutput("signal", amp ); // if in/out is not selected default in/out is used
+        addModuleInput("trig", env.in_trig()); // arguments are tag and the Unit in/out to link to that tag
+        addModuleInput("pitch", osc.in_pitch());
+        addModuleOutput("signal", amp ); // if in/out is not selected default in/out is used
         
         //patching
         env.set(0.0f, 100.0f, 350.0f) * 0.25f >> amp.in_mod();
@@ -29,9 +29,9 @@ class BassSynth : public pdsp::Patchable{
 public:
     BassSynth() {
         //set inputs/outputs
-        addUnitInput("trig", trigger_in);
-        addUnitInput("pitch", osc.in_pitch());
-        addUnitOutput("signal", amp );
+        addModuleInput("trig", trigger_in);
+        addModuleInput("pitch", osc.in_pitch());
+        addModuleOutput("signal", amp );
         
         //patching
         osc.out_saw() * 2.5f >> drive >> filter.out_lpf4() >> amp;

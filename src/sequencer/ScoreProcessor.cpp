@@ -16,7 +16,8 @@ pdsp::ScoreProcessor::ScoreProcessor(){
     playhead_meter.store(0.0f);
     
     sections.clear();
-    setSections(1);
+    sections.reserve(16);
+    sections.clear();
     
     playing.store(false);
     

@@ -1,11 +1,10 @@
 
-// ofxMidiKeysProcessor.h
+// ofxPDSPMidiKeys.h
 // ofxPDSP
 // Nicola Pisanti, MIT License, 2016
 
-#ifndef OFXPDSPMIDI_MIDIKEYSPROCESSOR_H_INCLUDED
-#define OFXPDSPMIDI_MIDIKEYSPROCESSOR_H_INCLUDED
-
+#ifndef OFXPDSPMIDI_PDSPMIDIKEYS_H_INCLUDED
+#define OFXPDSPMIDI_PDSPMIDIKEYS_H_INCLUDED
 
 #include "ofxMidi.h"
 #include "../DSP/pdspCore.h"
@@ -13,16 +12,15 @@
 #include "../DSP/control/ValueSequencer.h"
 #include "ofxPositionedMidiMessage.h"
 #include "ofxMidiKeysBuffers.h"
+#include "ofxPDSPController.h"
+#include "ofxPDSPMidiIn.h"
 
-#include "ofxMidiInProcessor.h"
-
-class ofxMidiKeysProcessor {
-
+class ofxPDSPMidiKeys : public ofxPDSPController  {
     
 public:
-    ofxMidiKeysProcessor();
+    ofxPDSPMidiKeys();
  
-    void processMidi(const ofxMidiInProcessor &midiInProcessor, const int &bufferSize ) noexcept;
+    void processMidi(const ofxPDSPMidiIn &midiInProcessor, const int &bufferSize ) noexcept override;
     
 
     int getVoicesNumber() const;
@@ -31,7 +29,7 @@ public:
     void setMonoMode(int unisonVoices, bool legato, MonoPriority priority);
     void setPitchBend( float down, float up);
     void setPortamento(PortamentoMode portamentoMode, float timeMs, pdsp::SlewMode_t slewMode = pdsp::Time, float scaling=12.0f);
-    
+    void setNoteRange(int lowNote, int highNote);
 
     void setSlew(float slewTimeMs);  
       
@@ -68,4 +66,4 @@ private:
 
 
 
-#endif //OFXPDSPMIDI_MIDIKEYSPROCESSOR_H_INCLUDED
+#endif //OFXPDSPMIDI_PDSPMIDIKEYS_H_INCLUDED

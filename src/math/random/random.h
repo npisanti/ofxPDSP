@@ -13,13 +13,16 @@
 namespace pdsp{
     
         float randomUnipolar();
+        float randomUnipolarInclusive();
         float randomBipolar();
     
         int randomInt();
-        int randomUnipolarInt(int maxExclusive);
+        int dice(int sides);
         int randomBipolarInt(int min, int maxExclusive);        
     
         void seedGlobalRandom(int seed);
+        
+        bool coin(float chance);
     
 }
 

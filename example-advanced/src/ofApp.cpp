@@ -1,5 +1,8 @@
 #include "ofApp.h"
 
+// before looking at this, be shure to check out the basics with the ofxPDSP wiki tutorials:
+// https://github.com/npisanti/ofxPDSP/wiki
+
 // example of classes for generative music and sequencing --> score.h
 // also example of basic synth patching  -------------------> music.h
 
@@ -36,8 +39,10 @@ void ofApp::setup(){
     expectedBufferSize = 512;
     sampleRate = 44100.0;
 
+    // ofxPDSPEngine automatically call this, if you are not using it you have to call it yourself
     ofxPDSPSetup(expectedBufferSize, sampleRate);
   
+    // default oF audio callbacks
     ofSoundStreamListDevices();
     audioStream.setDeviceID(0);
     audioStream.setup(this, 2, 0, static_cast<int>(sampleRate), expectedBufferSize, 3);
@@ -160,7 +165,7 @@ void ofApp::audioOut(ofSoundBuffer &outBuffer) {
 
 //--------------------------------------------------------------
 void ofApp::exit() {
-
+    // cleaning everything
 	audioStream.stop();
 	audioStream.close();
 

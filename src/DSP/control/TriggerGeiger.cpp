@@ -53,7 +53,7 @@ void pdsp::TriggerGeiger::process (int bufferSize) noexcept {
         for(int n=0; n<bufferSize; ++n){
             if(counter==0){
                 outputBuffer[n] = 1.0f; //set trigger pulse
-                counter = distanceSamples + randomUnipolarInt(jitterSamples);
+                counter = distanceSamples + dice(jitterSamples);
             }
             counter--;
         }

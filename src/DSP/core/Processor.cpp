@@ -20,11 +20,12 @@ void pdsp::Processor::process(const int &bufferSize) noexcept{
         }
 }
 
-/*
-void pdsp::Processor::process() noexcept{
-        process(Preparable::turnBufferSize);
+void pdsp::Processor::resize( int channelsNum ){
+    this->channels.resize(channelsNum);
+        for(int i=0; i<channelsNum; ++i){
+                this->channels[i].disableAutomaticProcessing();
+    }    
 }
-*/
 
 void pdsp::Processor::processAndCopyOutput(float** bufferToFill, const int &channelsNum, const int &bufferSize) noexcept{
      

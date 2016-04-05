@@ -67,7 +67,6 @@ private:
         InputNode   in_thresh;
         
         float   hysteresis;
-        float   max;
         
         int     gate;        
         float   highThreshold;

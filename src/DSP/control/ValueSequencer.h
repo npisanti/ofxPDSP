@@ -24,6 +24,7 @@ class ValueSequencer : public Sequencer, public UsesSlew {
     
 public:
         ValueSequencer();
+        ValueSequencer(const ValueSequencer & other);
                 
         /*!
         @brief connect the ValueSequencer to a MessageBuffer. You can also use the >> operator with the same effect.
@@ -52,6 +53,11 @@ public:
         */ 
         Patchable& out_signal();
 
+        /*!
+        @brief returns the actual output value. Thread-safe.
+        */ 
+        float meter_output() const;
+
 private:
         void prepareUnit( int expectedBufferSize, double sampleRate ) override;
         void releaseResources () override;
@@ -63,6 +69,8 @@ private:
         MessageBuffer* messageBuffer;
         MessageBuffer* slewControl;
         bool connectToSlewControl;
+        
+        std::atomic<float> meter;
 };
 
 } // pdsp namespace end

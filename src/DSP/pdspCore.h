@@ -35,5 +35,4 @@
 #include "../math/header.h"
 #include "../messages/header.h"
 
-
 #endif  // PDSPCOREUNITS_H_INCLUDED

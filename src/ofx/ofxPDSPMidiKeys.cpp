@@ -1,10 +1,10 @@
 
-#include "ofxMidiKeysProcessor.h"
+#include "ofxPDSPMidiKeys.h"
 
 #define OFXPDSP_MIDIKEYSPROCESSOR_MESSAGERESERVE 128
 
 
-ofxMidiKeysProcessor::ofxMidiKeysProcessor(){
+ofxPDSPMidiKeys::ofxPDSPMidiKeys(){
    
     gates.reserve(16);
     values.reserve(16);
@@ -25,12 +25,12 @@ ofxMidiKeysProcessor::ofxMidiKeysProcessor(){
 }
 
 
-void ofxMidiKeysProcessor::processMidi(const ofxMidiInProcessor &midiInProcessor, const int &bufferSize ) noexcept{
+void ofxPDSPMidiKeys::processMidi(const ofxPDSPMidiIn &midiInProcessor, const int &bufferSize ) noexcept{
     midiConverter.processMidi(midiInProcessor.readVector, bufferSize);
 }
 
 
-void ofxMidiKeysProcessor::setSlew(float slewTimeMs){
+void ofxPDSPMidiKeys::setSlew(float slewTimeMs){
     this->slewTime = slewTimeMs;
 
     out_pressure.setSlewRateModeReference(1.0f);
@@ -41,7 +41,7 @@ void ofxMidiKeysProcessor::setSlew(float slewTimeMs){
 }
 
 
-void ofxMidiKeysProcessor::setPitchBend( float down, float up){
+void ofxPDSPMidiKeys::setPitchBend( float down, float up){
     if(down!=up){
         midiConverter.setPitchBend(down, up);
         float range = fabs(up - down);
@@ -51,12 +51,16 @@ void ofxMidiKeysProcessor::setPitchBend( float down, float up){
 }
 
 
-int ofxMidiKeysProcessor::getVoicesNumber() const {
+int ofxPDSPMidiKeys::getVoicesNumber() const {
         return maxVoices;
 }
 
+void ofxPDSPMidiKeys::setNoteRange(int lowNote, int highNote){
+    midiConverter.setNoteRange( lowNote, highNote );
+    
+}
 
-void ofxMidiKeysProcessor::setPolyMode(int maxNotes, int unisonVoices ){
+void ofxPDSPMidiKeys::setPolyMode(int maxNotes, int unisonVoices ){
         
         for(int i=0; i<this->maxNotes; ++i){
                 gates[i].unLink();
@@ -127,7 +131,7 @@ void ofxMidiKeysProcessor::setPolyMode(int maxNotes, int unisonVoices ){
 }
 
 
-void ofxMidiKeysProcessor::setMonoMode(int unisonVoices, bool legato, MonoPriority priority){
+void ofxPDSPMidiKeys::setMonoMode(int unisonVoices, bool legato, MonoPriority priority){
 
         for(int i=0; i<this->maxNotes; ++i){
                 gates[i].unLink();
@@ -197,7 +201,7 @@ void ofxMidiKeysProcessor::setMonoMode(int unisonVoices, bool legato, MonoPriori
         
 }
 
-void ofxMidiKeysProcessor::setPortamento(PortamentoMode portamentoMode, float timeMs, pdsp::SlewMode_t slewMode, float scaling){
+void ofxPDSPMidiKeys::setPortamento(PortamentoMode portamentoMode, float timeMs, pdsp::SlewMode_t slewMode, float scaling){
         this->portamentoMode = portamentoMode;
         this->portamentoTime = timeMs;
         this->slewMode = slewMode;

@@ -45,7 +45,7 @@ void pdsp::GrainCloud::MultiGrainTrigger::process (int bufferSize) noexcept {
                 float* outputBuffer = getOutputBufferToFill(outs[currentOut]);
                 ofx_Aeq_Zero(outputBuffer, bufferSize);
                 outputBuffer[n] = 1.0f; //set trigger pulse
-                counter = distanceSamples + randomUnipolarInt(jitterSamples);
+                counter = distanceSamples + dice(jitterSamples);
                 
                 currentOut++;
                 if (currentOut==outputs) currentOut = 0;

@@ -36,6 +36,8 @@ public:
         void setPortamento( PortamentoMode mode );
         void setMaxNotes(int notes);
         void setPitchBend( float down, float up);
+        void setNoteRange( int lowNote, int highNote );
+        
         
         vector<pdsp::MessageBuffer>      gateMessages;
         vector<pdsp::MessageBuffer>      pitchMessages;
@@ -64,6 +66,9 @@ private:
         int     activeNotes;
         int     maxNotes;
         int     monoNoteIndex;
+        
+        int lowNote; 
+        int highNote;
         
         vector<NoteState_t>             notes;
         

@@ -3,6 +3,9 @@
 // this is a basic ios example,
 // it is just a little more than a "hello world" program to test that everything is working
 
+// also be shure to check out the basics with the ofxPDSP wiki tutorials:
+// https://github.com/npisanti/ofxPDSP/wiki
+
 //--------------------------------------------------------------
 void ofApp::setup(){
     //-------------------GRAPHIC SETUP--------------
@@ -12,19 +15,17 @@ void ofApp::setup(){
     //-------------------------PATCHING--------------
     // an oscillator with nothing connected to in_pitch() will play A4 = 440hz
     // the * operator when used before patching scales the output signal
-    osc.out_sine() >> amp * 0.20f >> pdspEngine.channels[0]; // connect to left output channel
-                      amp * 0.20f >> pdspEngine.channels[1]; // connect to right right channel
+    osc.out_sine() >> amp * 0.20f >> engine.audio_out(0); // connect to left output channel
+                      amp * 0.20f >> engine.audio_out(1); // connect to right right channel
    
     0.0f >> amp.in_mod();
     cout<<"finished patching\n";
     
-    sampleRate = 44100;
     //for some reason on the iphone simulator 256 doesn't work - it comes in as 512!
     //so we do 512 - otherwise we crash
-    expectedBufferSize = 512;
+
+    engine.setup( 44100, 512, 4 );
     
-    ofxPDSPSetup(expectedBufferSize, sampleRate);
-	ofSoundStreamSetup(2, 0, this, sampleRate, expectedBufferSize, 4);
 }
 
 //--------------------------------------------------------------
@@ -35,18 +36,6 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     ofDrawBitmapString("touch the screen for testing!", 20, 20);
-}
-
-//--------------------------------------------------------------
-void ofApp::audioOut(float * output, int bufferSize, int nChannels){
-    pdspEngine.processAndCopyInterleaved(output, nChannels, bufferSize);
-}
-
-//--------------------------------------------------------------
-void ofApp::exit(){
-    ofSoundStreamStop();
-    ofSoundStreamClose();
-
 }
 
 //--------------------------------------------------------------

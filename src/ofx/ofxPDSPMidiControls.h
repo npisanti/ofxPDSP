@@ -1,27 +1,26 @@
 
-// ofxMidiCCProcessor.h
+// ofxPDSPMidiControls.h
 // ofxPDSP
 // Nicola Pisanti, MIT License, 2016
 
-#ifndef OFXPDSPMIDI_MIDICCPROCESSOR_H_INCLUDED
-#define OFXPDSPMIDI_MIDICCPROCESSOR_H_INCLUDED
-
+#ifndef OFXPDSPMIDI_PDSPMIDICONTROLS_H_INCLUDED
+#define OFXPDSPMIDI_PDSPMIDICONTROLS_H_INCLUDED
 
 #include "ofxMidi.h"
 #include "../DSP/control/ValueSequencer.h"
 #include <chrono>
 #include "ofxPositionedMidiMessage.h"
 #include "ofxMidiCCBuffers.h"
+#include "ofxPDSPController.h"
+#include "ofxPDSPMidiIn.h"
 
-#include "ofxMidiInProcessor.h"
-
-class ofxMidiCCProcessor {
+class ofxPDSPMidiControls : public ofxPDSPController {
     
 public:
-    ofxMidiCCProcessor();
-    ofxMidiCCProcessor(int maxCC);
+    ofxPDSPMidiControls();
+    ofxPDSPMidiControls(int maxCC);
 
-    void processMidi(const ofxMidiInProcessor &midiInProcessor, const int &bufferSize ) noexcept;
+    void processMidi(const ofxPDSPMidiIn &midiInProcessor, const int &bufferSize ) noexcept override;
     	
     void setCCSlew(float slewTimeMs);
     void setMaxCCNum(int ccNum);
@@ -36,4 +35,4 @@ private:
 };
 
 
-#endif //OFXPDSPMIDI_MIDICCPROCESSOR_H_INCLUDED
+#endif //OFXPDSPMIDI_PDSPMIDICONTROLS_H_INCLUDED

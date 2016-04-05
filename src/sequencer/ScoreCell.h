@@ -10,7 +10,7 @@
 #include <vector>
 #include <algorithm>
 #include <assert.h>
-#include "../DSP/pdspConstants.h"
+#include "../DSP/pdspFunctions.h"
 
 namespace pdsp{
 

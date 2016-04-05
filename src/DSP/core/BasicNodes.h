@@ -680,7 +680,6 @@ private:
     void prepareToPlay( int expectedBufferSize, double sampleRate ) override {}
     void releaseResources() override {}
 
-    float dummy;
 };
 
 /*!

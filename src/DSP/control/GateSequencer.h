@@ -21,6 +21,7 @@ class GateSequencer :  public Sequencer{
         
 public:
         GateSequencer();
+        GateSequencer(const GateSequencer& other);
         
         /*!
         @brief connect the GateSequencer to a MessageBuffer. You can also use the >> operator with the same effect.
@@ -44,6 +45,16 @@ public:
         */   
         Patchable& out_trig();
         
+        /*!
+        @brief returns how many time this Unit has been processed since the last trigger, useful for visual. Thread-safe.
+        */ 
+        int meter_last_ticks() const;
+
+        /*!
+        @brief returns the last trigger value received. Thread-safe.
+        */ 
+        float meter_last_value() const;
+
 private:
 
         void prepareUnit( int expectedBufferSize, double sampleRate ) override;
@@ -55,6 +66,9 @@ private:
         MessageBuffer* messageBuffer;
         bool singleTrigger;
         bool gateState;
+        
+        std::atomic<int> meter_ticks;
+        std::atomic<float> meter_value;
         
 };
         

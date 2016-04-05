@@ -1,10 +1,10 @@
 
-#include "ofxMidiInProcessor.h"
+#include "ofxPDSPMidiIn.h"
 
 #define OFXPDSP_MIDIKEYSPROCESSOR_MESSAGERESERVE 128
 
 
-ofxMidiInProcessor::ofxMidiInProcessor(){
+ofxPDSPMidiIn::ofxPDSPMidiIn(){
     midiMessageVectorA.reserve(OFXPDSP_MIDIKEYSPROCESSOR_MESSAGERESERVE);
     midiMessageVectorA.clear();
     midiMessageVectorB.reserve(OFXPDSP_MIDIKEYSPROCESSOR_MESSAGERESERVE);
@@ -17,11 +17,11 @@ ofxMidiInProcessor::ofxMidiInProcessor(){
     
 }
 
-ofxMidiInProcessor::~ofxMidiInProcessor(){
+ofxPDSPMidiIn::~ofxPDSPMidiIn(){
     closePort();
 }
 
-void ofxMidiInProcessor::linkToMidiIn(ofxMidiIn &midiInput){
+void ofxPDSPMidiIn::linkToMidiIn(ofxMidiIn &midiInput){
     if(connected){
         closePort();
     }
@@ -32,7 +32,7 @@ void ofxMidiInProcessor::linkToMidiIn(ofxMidiIn &midiInput){
 }
 
 
-void ofxMidiInProcessor::openPort(int index){
+void ofxPDSPMidiIn::openPort(int index){
     if(connected){
         closePort();
     }
@@ -46,7 +46,7 @@ void ofxMidiInProcessor::openPort(int index){
     }
 }
 
-void ofxMidiInProcessor::closePort(){
+void ofxPDSPMidiIn::closePort(){
     if(connected){
         connected = false; 
         midiIn_p->removeListener(this);
@@ -57,21 +57,21 @@ void ofxMidiInProcessor::closePort(){
     }
 }
 
-void ofxMidiInProcessor::listPorts(){
+void ofxPDSPMidiIn::listPorts(){
     midiIn.listPorts(); // print input ports to console
 }
 
 
-void ofxMidiInProcessor::prepareToPlay( int expectedBufferSize, double sampleRate ){
+void ofxPDSPMidiIn::prepareToPlay( int expectedBufferSize, double sampleRate ){
     oneSlashMicrosecForSample = 1.0 / (1000000.0 / sampleRate);
 }
 
-void ofxMidiInProcessor::releaseResources(){}
+void ofxPDSPMidiIn::releaseResources(){}
 
 
 
 
-void ofxMidiInProcessor::newMidiMessage(ofxMidiMessage& eventArgs) noexcept{
+void ofxPDSPMidiIn::newMidiMessage(ofxMidiMessage& eventArgs) noexcept{
     	
     midiMutex.lock();
         // calculate the right offset inside the bufferSize
@@ -83,7 +83,7 @@ void ofxMidiInProcessor::newMidiMessage(ofxMidiMessage& eventArgs) noexcept{
     
 }
 
-void ofxMidiInProcessor::processMidi( const int &bufferSize ) noexcept{
+void ofxPDSPMidiIn::processMidi( const int &bufferSize ) noexcept{
     if(connected){
         midiMutex.lock();
             //switch buffers

@@ -1,23 +1,26 @@
 
 #include "ofxMidiKeysBuffers.h"
 
-#define MIDINOTEPROCESSORMESSAGERESERVE 16
+#define MIDINOTEPROCESSORMESSAGERESERVE 32
 
 ofxMidiKeysBuffers::ofxMidiKeysBuffers(){
+    
         eventIdGenerator = 0;
         monoNoteIndex = -1;
         activeNotes = 0;
         sendClearMessages = true;
-        gateMessages.reserve(32);
-        pitchMessages.reserve(32);
-        portaMessages.reserve(32);
-        notes.reserve(32);
+        gateMessages.reserve( MIDINOTEPROCESSORMESSAGERESERVE );
+        pitchMessages.reserve( MIDINOTEPROCESSORMESSAGERESERVE );
+        portaMessages.reserve( MIDINOTEPROCESSORMESSAGERESERVE );
+        notes.reserve( MIDINOTEPROCESSORMESSAGERESERVE );
 
         pitchBendUpAmount   = 2;
         pitchBendDownAmount = 2;
-        pitchBendMessages.reserve(MIDINOTEPROCESSORMESSAGERESERVE * 2);
-        pressureMessages.reserve(MIDINOTEPROCESSORMESSAGERESERVE * 2);
+        pitchBendMessages.reserve( MIDINOTEPROCESSORMESSAGERESERVE * 2 );
+        pressureMessages.reserve( MIDINOTEPROCESSORMESSAGERESERVE * 2 );
             
+        setNoteRange(0, 127);    
+        
         voiceMode = Poly;
         monoMode = Last;
         portamentoMode = On;
@@ -26,8 +29,8 @@ ofxMidiKeysBuffers::ofxMidiKeysBuffers(){
 }
 
 void ofxMidiKeysBuffers::setPitchBend( float down, float up ){
-    pitchBendUpAmount   =  up;
-    pitchBendDownAmount = -down;        
+        pitchBendUpAmount   =  up;
+        pitchBendDownAmount = -down;        
 }
 
 void ofxMidiKeysBuffers::setVoiceMode(VoiceMode mode){
@@ -44,6 +47,10 @@ void ofxMidiKeysBuffers::setPortamento( PortamentoMode mode ) {
         portamentoMode = mode;
 }
 
+void ofxMidiKeysBuffers::setNoteRange( int lowNote, int highNote ){
+    this->lowNote = lowNote;
+    this->highNote = highNote;
+}
 
 
 void ofxMidiKeysBuffers::processMidi (vector<_ofxPositionedMidiMessage>* readVector, const int &bufferSize ) noexcept{
@@ -74,75 +81,88 @@ void ofxMidiKeysBuffers::processMidi (vector<_ofxPositionedMidiMessage>* readVec
         }
 
 
-        if(voiceMode == Poly){
-            for(_ofxPositionedMidiMessage &msg : *readVector){
-                switch(msg.message.status){
-                    case MIDI_NOTE_ON:
-                        processPolyMidiNoteOn( msg);
-                    break;
-                    
-                    case MIDI_NOTE_OFF:
-                        processPolyMidiNoteOff(msg);
-                    break;
-                    
-                    case MIDI_PITCH_BEND:
-                    {
-                        float value = static_cast<float>((msg.message.value - 8192)) * 0.0001220703125f; // divide by 8192
-                        if(value>0) {
-                            value *= pitchBendUpAmount;
-                        }else{
-                            value *= pitchBendDownAmount;
+        switch( voiceMode ){
+            case Poly :
+                for(_ofxPositionedMidiMessage &msg : *readVector){
+                    switch(msg.message.status){
+                        case MIDI_NOTE_ON:
+                            if(msg.message.pitch >= lowNote && msg.message.pitch<= highNote){
+                                processPolyMidiNoteOn( msg);
+                            }
+                        break;
+                        
+                        case MIDI_NOTE_OFF:
+                            if(msg.message.pitch >= lowNote && msg.message.pitch<= highNote){
+                                processPolyMidiNoteOff(msg);
+                            }
+                        break;
+                        
+                        case MIDI_PITCH_BEND:
+                        {
+                            float value = static_cast<float>((msg.message.value - 8192)) * 0.0001220703125f; // divide by 8192
+                            if(value>0) {
+                                value *= pitchBendUpAmount;
+                            }else{
+                                value *= pitchBendDownAmount;
+                            }
+                            pitchBendMessages.addMessage(value, msg.sample);
                         }
-                        pitchBendMessages.addMessage(value, msg.sample);
-                    }
-                    break;
-                    
-                    case MIDI_AFTERTOUCH:
-                    {
-                        float value = static_cast<float>(msg.message.value +1)*0.0078125f; 
-                        pressureMessages.addMessage(value, msg.sample); 
-                    }
-                    break;
-                    
-                    default: break;
-                }
-            }            
-        }else{
-            for(_ofxPositionedMidiMessage &msg : *readVector){
-                switch(msg.message.status){
-                    case MIDI_NOTE_ON:
-                        processMonoMidiNoteOn( msg);
-                    break;
-                    
-                    case MIDI_NOTE_OFF:
-                        processMonoMidiNoteOff(msg);
-                    break;
-                    
-                    case MIDI_PITCH_BEND:
-                    {
-                        float value = static_cast<float>((msg.message.value - 8192)) * 0.0001220703125f; // divide by 8192
-                        if(value>0) {
-                            value *= pitchBendUpAmount;
-                        }else{
-                            value *= pitchBendDownAmount;
+                        break;
+                        
+                        case MIDI_AFTERTOUCH:
+                        {
+                            float value = static_cast<float>(msg.message.value +1)*0.0078125f; 
+                            pressureMessages.addMessage(value, msg.sample); 
                         }
-                        pitchBendMessages.addMessage(value, msg.sample);
+                        break;
+                        
+                        default: break;
                     }
-                    break;
-                    
-                    case MIDI_AFTERTOUCH:
-                    {
-                        float value = static_cast<float>(msg.message.value +1)*0.0078125f; 
-                        pressureMessages.addMessage(value, msg.sample); 
+                } 
+                break;
+            case Mono:
+                for(_ofxPositionedMidiMessage &msg : *readVector){
+                    switch(msg.message.status){
+                        case MIDI_NOTE_ON:
+                            if(msg.message.pitch >= lowNote && msg.message.pitch<= highNote) {
+                                processMonoMidiNoteOn( msg);
+                            }
+                        break;
+                        
+                        case MIDI_NOTE_OFF:
+                            if(msg.message.pitch >= lowNote && msg.message.pitch<= highNote) {
+                                processMonoMidiNoteOff(msg);
+                            }
+                        break;
+                        
+                        case MIDI_PITCH_BEND:
+                        {
+                            float value = static_cast<float>((msg.message.value - 8192)) * 0.0001220703125f; // divide by 8192
+                            if(value>0) {
+                                value *= pitchBendUpAmount;
+                            }else{
+                                value *= pitchBendDownAmount;
+                            }
+                            pitchBendMessages.addMessage(value, msg.sample);
+                        }
+                        break;
+                        
+                        case MIDI_AFTERTOUCH:
+                        {
+                            float value = static_cast<float>(msg.message.value +1)*0.0078125f; 
+                            pressureMessages.addMessage(value, msg.sample); 
+                        }
+                        break;
+                        
+                        default: break;
                     }
-                    break;
-                    
-                    default: break;
                 }
-            }
+                break;
+                
+            default: break;
         }
-        
-        
+    
+    
         for(int i=0; i < static_cast<int>(notes.size()); ++i){
             gateMessages[i].processDestination(bufferSize);
             pitchMessages[i].processDestination(bufferSize);
@@ -199,7 +219,7 @@ void ofxMidiKeysBuffers::checkIdGeneration(){
 
 
 int ofxMidiKeysBuffers::noteSteal(){
-        //bool dummyVoiceGate = true;
+
         int dummyVoiceEventNum = 32000;
         int foundIndex=-1;
 
@@ -248,7 +268,6 @@ int ofxMidiKeysBuffers::noteSteal(){
 
 void ofxMidiKeysBuffers::processPolyMidiNoteOn( _ofxPositionedMidiMessage& midi ) noexcept{
         
-        //std::cout<<"poly note on\n";
         bool retrigger = false;
         int noteNumber = midi.message.pitch;
         int noteIndex=-1;
@@ -270,11 +289,10 @@ void ofxMidiKeysBuffers::processPolyMidiNoteOn( _ofxPositionedMidiMessage& midi 
         }
 
         gateMessages[noteIndex].addMessage(gateValue, midi.sample);
-        //std::cout<<"gate on message, index "<<noteIndex<<" | value: "<<gateValue<<"\n";
+
         if(!retrigger){ //with retrigger the pitch is always the same
                 pitchMessages[noteIndex].addMessage(static_cast<float>(noteNumber), midi.sample);
-                //std::cout<<"pitch message, index "<<noteIndex<<" | value: "<<noteNumber<<"\n";
-                
+
                 switch(portamentoMode){
                 case Off:
                         portaMessages[noteIndex].addMessage(0.0f, midi.sample);  
@@ -314,7 +332,6 @@ void ofxMidiKeysBuffers::processPolyMidiNoteOff( _ofxPositionedMidiMessage& midi
         if(noteIndex!=-1){
                 // do the necessary calculations on the outputs
                 //gateMessages[noteIndex].addMessage(0.0f, sample);
-                //std::cout<<"gate off message, index "<<noteIndex<<"\n";
                 notes[noteIndex].gate = 0.0f;
                 notes[noteIndex].eventNumber = ++eventIdGenerator;
 
@@ -403,7 +420,6 @@ void ofxMidiKeysBuffers::processMonoMidiNoteOn( _ofxPositionedMidiMessage& midi 
         }
 
         if(monoNoteIndex!=lastMonoNoteIndex){ //if mono note index is changed
-                //std::cout<<"pitch message, note "<<notes[monoNoteIndex].note<<" | value: "<<gateValue<<"\n";
                 pitchMessages[0].addMessage(static_cast<float>(notes[monoNoteIndex].note), midi.sample);
                 switch(portamentoMode){
                 case Off:
@@ -425,7 +441,6 @@ void ofxMidiKeysBuffers::processMonoMidiNoteOn( _ofxPositionedMidiMessage& midi 
         
         if(monoNoteIndex!=lastMonoNoteIndex || activeNotes==0){
                 gateMessages[0].addMessage(notes[monoNoteIndex].gate, midi.sample);
-                //singleGateMessages.addMessage(notes[monoNoteIndex].gate, sample);
         }
 
         activeNotes++;        
@@ -451,15 +466,12 @@ void ofxMidiKeysBuffers::processMonoMidiNoteOff( _ofxPositionedMidiMessage& midi
                 notes[noteIndex].eventNumber = ++eventIdGenerator;
 
                 if(activeNotes==1){
-                        //std::cout<<"note off message\n";
-                //single trigger note off
-                        //singleGateMessages.addMessage(0.0f, sample);
+                        //single trigger note off
                         gateMessages[0].addMessage(0.0f, midi.sample);
                 }else{
-                        //std::cout<<"note on change message\n";
                         //we got another active note to use instead of the released one maybe
                         if(noteIndex==monoNoteIndex){
-                                  
+                            
                                 //we released the active mono note index, but we can switch to another note
                                 monoNoteIndex = getHighestPriorityMono();
                                 pitchMessages[0].addMessage(static_cast<float>(notes[monoNoteIndex].note), midi.sample);
@@ -480,10 +492,9 @@ void ofxMidiKeysBuffers::processMonoMidiNoteOff( _ofxPositionedMidiMessage& midi
                                         break;
                                 default: break;
                                 }
-                                
-                                //std::cout<<"pitch message, note "<<notes[monoNoteIndex].note<<"\n";
+                                                                
                                 gateMessages[0].addMessage(notes[monoNoteIndex].gate, midi.sample);
-                                //singleGateMessages.addMessage(notes[monoNoteIndex].gate, sample);
+
                         }
                 }
                 activeNotes--;

@@ -35,14 +35,15 @@ public:
     */ 
     void setTempo( float tempo );
     
-    /*!
-    @brief sets the number of ScoreSections contained in the ScoreProcessor
-    @param sectionsNumber number of ScoreSection to set
     
-    Sets the number of ScoreSections contained in the ScoreProcessor. If you want just to use the ScoreProcessor for updating the tempo and playhead you can set this to 0.
-    */ 
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
+    [[deprecated("this method is deprecated, directly use sections.resize(int size) instead ")]]
     void setSections(int sectionsNumber);
-
+/*!
+    @endcond
+*/
 
   
     /*!

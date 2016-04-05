@@ -22,30 +22,21 @@ pdsp::PatchNode::PatchNode(const PatchNode& other) : PatchNode(){
         output.state = other.output.state;
 
         input.setDefaultValue(0.0f);
-        std::cout<<"patch node copy constructed\n";
+        std::cout<<"[pdsp] warning! patch node copy constructed\n";
+        pdsp_trace();
 };
 
 pdsp::PatchNode& pdsp::PatchNode::operator=(const PatchNode& other){
         output.buffer = other.output.buffer;
         return *this;
-        std::cout<<"patch node moved\n";
+        std::cout<<"[pdsp] warning! patch node moved\n";
+        pdsp_trace();
 };
 
 
 pdsp::PatchNode::~PatchNode(){
         output.buffer = nullptr; //otherwise output will delete other buffers on decostruction, leading to segfaults
 }
-
-
-/*
-pdsp::OutputNode& pdsp::PatchNode::getDefaultOutput(){
-        return output;
-}
-
-pdsp::InputNode& pdsp::PatchNode::getDefaultInput(){
-        return input;
-}
-*/
 
 pdsp::Patchable& pdsp::PatchNode::set(float defaultValue){
     input.setDefaultValue(defaultValue);
@@ -68,13 +59,6 @@ void pdsp::PatchNode::prepareUnit( int expectedBufferSize, double sampleRate ) {
 void pdsp::PatchNode::releaseResources() {
         //never prepare or release output, we set output buffer pointer directly
 }
-
-/*
-void pdsp::PatchNode::disconnectAll(){
-        input.disconnectAll();
-        output.disconnectAll();
-}
-*/
                   
 void pdsp::PatchNode::process(int bufferSize) noexcept {
         input.process();

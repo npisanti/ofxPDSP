@@ -50,7 +50,7 @@ private:
     //--------------------------------------------------------------------------
     
 public:
-    ScoreSection(int outputsNumber);
+
     ScoreSection();
     ScoreSection(const ScoreSection &other);
 
@@ -62,30 +62,44 @@ public:
     void resizePatterns(int size);
     
     /*!
-    @brief Sets the number of outputs of this ScoreSection
+    @brief Sets the number of outputs of this ScoreSection, default is 1.
     @param[in] size number of outputs for connection
 
-    Set the number of outputs that can be connected to GateSequencer or ValueSequencer
+    Set the number of outputs that can be connected to GateSequencer or ValueSequencer, default is 1.
     */ 
     void setOutputsNumber(int size);
     
     /*!
     @brief Set the output with the given index as selected output and return this ScoreSection for patching
-    @param[in] index index of the out to patch
+    @param[in] index index of the out to patch, 0 if not given
 
     Set the output with the given index as selected output and return this ScoreSection for patching. You can connect the ScoreSection to a GateSequencer, ValueSequencer or ExtSequencer using the >> operator.
     */     
-    ScoreSection& out(int index);
+    ScoreSection& out( int index = 0 );
+
+
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
+    [[deprecated("Replaced by setCell() for a less ambigous nomenclature")]]
+    void setPattern( int index, ScoreCell* scoreCell, CellChange* behavior = nullptr );
+    
+    [[deprecated("Replaced by setChange() for a less ambigous nomenclature")]]
+    void setBehavior( int index, CellChange* behavior );
+/*!
+    @endcond
+*/    
     
     /*!
-    @brief Sets the pattern at the given index to the given one
-    @param[in] index index of the patter to set inside the ScoreSection. If the size is too little the ScoreSection is automatically resized.
+    @brief Sets the Cell at the given index to the given one
+    @param[in] index index of the ScoreCell (or Sequence) to set inside the ScoreSection. If the size is too little the ScoreSection is automatically resized.
     @param[in] scoreCell pointer to a ScoreCell
     @param[in] behavior pointer to a CellChange, nullptr if not given
 
-    Sets the score pattern at a given index. If ScoreCell is set to nullptr then nothing is played, If CellChange is set to nullptr the sequencing is stopped after playing this Pattern.
+    Sets the score pattern at a given index. If ScoreCell is set to nullptr then nothing is played, If CellChange is set to nullptr the sequencing is stopped after playing this Pattern. Sequence is a subclass of ScoreCell easiear to manage.
     */ 
-    void setPattern( int index, ScoreCell* scoreCell, CellChange* behavior = nullptr );
+    void setCell( int index, ScoreCell* scoreCell, CellChange* behavior = nullptr );
+
 
     /*!
     @brief Sets the CellChange that determine what cell will be played after this
@@ -93,7 +107,7 @@ public:
     @param[in] behavior pointer to a CellChange
 
     */ 
-    void setBehavior( int index, CellChange* behavior );
+    void setChange( int index, CellChange* behavior );
     
     
     /*!
@@ -176,7 +190,7 @@ private:
     
     
     std::vector<MessageBuffer>  outputs;
-    int                         outputSize;
+    //int                         outputSize;
     
     MessageBuffer*              selectedMessageBuffer;
     

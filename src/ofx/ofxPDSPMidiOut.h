@@ -1,10 +1,10 @@
 
-// ofxMidiOutProcessor.h
+// ofxPDSPMidiOut.h
 // ofxPDSP
 // Nicola Pisanti, MIT License, 2016
 
-#ifndef OFXPDSPMIDI_MIDIOUTPUTPROCESSOR_H_INCLUDED
-#define OFXPDSPMIDI_MIDIOUTPUTPROCESSOR_H_INCLUDED
+#ifndef OFXPDSPMIDI_PDSPMIDIOUT_H_INCLUDED
+#define OFXPDSPMIDI_PDSPMIDIOUT_H_INCLUDED
 
 #include "ofxMidi.h"
 #include <chrono>
@@ -18,7 +18,7 @@
 #include "../sequencer/ScoreSection.h"
 
 
-class ofxMidiOutProcessor : public pdsp::ExtSequencer, public pdsp::Preparable {
+class ofxPDSPMidiOut : public pdsp::ExtSequencer, public pdsp::Preparable {
 
 private:
 
@@ -38,8 +38,8 @@ private:
     
     
 public:
-    ofxMidiOutProcessor();    
-    ~ofxMidiOutProcessor();      
+    ofxPDSPMidiOut();    
+    ~ofxPDSPMidiOut();      
     
     void linkToMidiOut(ofxMidiOut &midiOut);
     void listPorts();
@@ -94,7 +94,7 @@ private:
     void                                                prepareForDaemonAndNotify();
     void                                                closeMidiDaemon();
     void                                                midiDaemonFunction() noexcept;
-    static void                                         midiDaemonFunctionWrapper(ofxMidiOutProcessor* parent);
+    static void                                         midiDaemonFunctionWrapper(ofxPDSPMidiOut* parent);
     
     thread                                              midiDaemonThread;
     mutex                                               midiOutMutex;
@@ -115,8 +115,4 @@ private:
 };
 
 
-
-
-
-
-#endif //OFXPDSPMIDI_MIDIOUTPUTPROCESSOR_H_INCLUDED
+#endif //OFXPDSPMIDI_PDSPMIDIOUT_H_INCLUDED

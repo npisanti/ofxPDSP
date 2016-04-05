@@ -13,9 +13,6 @@ class ofApp : public ofBaseApp{
 		void update();
 		void draw();
         
-        void exit();
-		void audioOut(ofSoundBuffer &outBuffer);
-        
         void drawMeter(float value, float min, float max, int x, int y, int w, int h);
         
 		void keyPressed(int key);
@@ -30,20 +27,15 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
         
-        int     bufferSize;
-        double  sampleRate;
-
-    
-        ofSoundStream       audioStream;
+        ofxPDSPEngine   engine;
 
         int                     voicesNum;
         vector<SynthVoice>      voices;
      
-        pdsp::Processor         pdspEngine;
         pdsp::DimensionChorus   chorus;       
-            
-        ofxMidiInProcessor      midiInProcessor;
-        ofxMidiKeysProcessor    midiKeys;
+        
+        ofxPDSPMidiIn        midiInProcessor;
+        ofxPDSPMidiKeys      midiKeys;
 
         ofxPanel             gui;
         
@@ -53,6 +45,4 @@ class ofApp : public ofBaseApp{
         ofxPDSPParameter     chorusSpeed;
         ofxPDSPParameter     chorusDepth;
     
-
-
 };

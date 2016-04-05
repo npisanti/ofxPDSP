@@ -22,6 +22,8 @@ class ExternalInput : public Unit  {
 
 public:
         ExternalInput();
+        ExternalInput(const ExternalInput & other);
+        ~ExternalInput();
         
         /*!
         @brief copies input from a non-interleaved array

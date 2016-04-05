@@ -60,8 +60,4 @@ static std::vector<sumNodePtr> _leftSumVector;
 
 }
 
-#ifdef __GNUC__
-    #pragma GCC diagnostic pop
-#endif
-
 #endif  // LEFTSUM_H_INCLUDED

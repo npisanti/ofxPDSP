@@ -1,21 +1,21 @@
 
-// ofxMidiInProcessor.h
+// ofxPDSPMidiIn.h
 // ofxPDSP
 // Nicola Pisanti, MIT License, 2016
 
-#ifndef OFXPDSPMIDI_MIDIINPROCESSOR_H_INCLUDED
-#define OFXPDSPMIDI_MIDIINPROCESSOR_H_INCLUDED
+#ifndef OFXPDSPMIDI_PDSPMIDIIN_H_INCLUDED
+#define OFXPDSPMIDI_PDSPMIDIIN_H_INCLUDED
 
 #include "ofxMidi.h"
 #include <chrono>
 #include "ofxPositionedMidiMessage.h"
 #include "../DSP/pdspCore.h"
 
-class ofxMidiInProcessor : public ofxMidiListener, public pdsp::Preparable {
+class ofxPDSPMidiIn : public ofxMidiListener, public pdsp::Preparable {
     
 public:
-    ofxMidiInProcessor();
-    ~ofxMidiInProcessor();
+    ofxPDSPMidiIn();
+    ~ofxPDSPMidiIn();
     
     void linkToMidiIn(ofxMidiIn &midiInput);
     void openPort(int index);
@@ -52,4 +52,4 @@ private:
 };
 
 
-#endif // OFXPDSPMIDI_MIDIINPROCESSOR_H_INCLUDED
+#endif // OFXPDSPMIDI_PDSPMIDIIN_H_INCLUDED

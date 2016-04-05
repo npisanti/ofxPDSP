@@ -1,24 +1,24 @@
 
-#include "ofxMidiCCProcessor.h"
+#include "ofxPDSPMidiControls.h"
 
 
-ofxMidiCCProcessor::ofxMidiCCProcessor(){
+ofxPDSPMidiControls::ofxPDSPMidiControls(){
     setMaxCCNum(midiCC.getCCSize());
     setCCSlew(50.0f);   
 }
 
 
-ofxMidiCCProcessor::ofxMidiCCProcessor(int maxCC){
+ofxPDSPMidiControls::ofxPDSPMidiControls(int maxCC){
     setMaxCCNum(maxCC);
     setCCSlew(50.0f);   
 }
 
-void ofxMidiCCProcessor::processMidi(const ofxMidiInProcessor &midiInProcessor, const int &bufferSize ) noexcept{
+void ofxPDSPMidiControls::processMidi(const ofxPDSPMidiIn &midiInProcessor, const int &bufferSize ) noexcept{
     midiCC.processMidi(midiInProcessor.readVector, bufferSize);
 }
 
 
-void ofxMidiCCProcessor::setCCSlew(float slewTimeMs){
+void ofxPDSPMidiControls::setCCSlew(float slewTimeMs){
     this->slewTime = slewTimeMs;
     
     for(int i=0; i<midiCC.getCCSize(); ++i){
@@ -28,7 +28,7 @@ void ofxMidiCCProcessor::setCCSlew(float slewTimeMs){
 }
 
 
-void ofxMidiCCProcessor::setMaxCCNum(int ccNum){
+void ofxPDSPMidiControls::setMaxCCNum(int ccNum){
     midiCC.setMaxCCNum(ccNum);
     outs_cc.resize(midiCC.getCCSize());
     setCCSlew(slewTime);
@@ -38,7 +38,7 @@ void ofxMidiCCProcessor::setMaxCCNum(int ccNum){
     midiCC.clearAll();
 }
 
-int ofxMidiCCProcessor::getMaxCCNum(){
+int ofxPDSPMidiControls::getMaxCCNum(){
     return midiCC.getCCSize();
 }
 

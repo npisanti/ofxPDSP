@@ -153,13 +153,13 @@ struct MusicTest{
         // ScoreProcessor setup
         scoregen.setTempo(120.0);
         scoregen.setMaxBars(16.0);    
-        scoregen.setSections(2);
+        scoregen.sections.resize(2);
         
         // adding the bleep patterns and settings their timings
-        scoregen.sections[0].setPattern(0, &bleep1, &bleepSeq );
-        scoregen.sections[0].setPattern(1, &bleep2, &bleepSeq );
-        scoregen.sections[0].setPattern(2, &bleep3, &bleepSeq );
-        scoregen.sections[0].setPattern(3, &bleep4, &bleepSeq );
+        scoregen.sections[0].setCell(0, &bleep1, &bleepSeq );
+        scoregen.sections[0].setCell(1, &bleep2, &bleepSeq );
+        scoregen.sections[0].setCell(2, &bleep3, &bleepSeq );
+        scoregen.sections[0].setCell(3, &bleep4, &bleepSeq );
         //set up launch timigs           index length quant grid  
         scoregen.sections[0].setCellTiming(0,   0.25, true, 0.25 );
         scoregen.sections[0].setCellTiming(1,   0.25, true, 0.25 );
@@ -174,9 +174,9 @@ struct MusicTest{
         // GateSequencer and ValueSequencer are a sample-accurate bridge between scored messages and DSPs
     
 
-        scoregen.sections[1].setPattern(0, &bassPattern, pdsp::Behavior::Self); //pdsp::Behavior contains some ready-made CellChange
+        scoregen.sections[1].setCell(0, &bassPattern, pdsp::Behavior::Self); //pdsp::Behavior contains some ready-made CellChange
         scoregen.sections[1].setCellTiming( 0, 1.0, true, 1.0 ); // lenght = 1bar, nextCell quantized to the next bar
-        scoregen.sections[1].setPattern(1, nullptr, nullptr); 
+        scoregen.sections[1].setCell(1, nullptr, nullptr); 
         scoregen.sections[1].setOutputsNumber(3); // 0 = gate, 1 = pitch, 2 = slew control
         scoregen.sections[1].out(0) >> bassGate;      
         scoregen.sections[1].out(1) >> bassPitch;        

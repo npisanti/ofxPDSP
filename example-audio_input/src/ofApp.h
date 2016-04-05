@@ -23,20 +23,11 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
         
-        void exit();
-		void audioOut(ofSoundBuffer &outBuffer);
-		void audioIn(float * input, int bufferSize, int nChannels); 
-        
-        ofSoundStream   audioStream;
-		
-        //decomment this for using different in/out channels
-        //ofSoundStream   inputStream;
-        
-        pdsp::Processor         pdspEngine;
+        // pdsp modules
+        ofxPDSPEngine   engine;
         
         pdsp::Compressor1       compressor;
         
-        pdsp::ExternalInput     input1;
         pdsp::Amp               channelGain;
         pdsp::Amp               delaySend;
         pdsp::DampedDelay       delayL;
@@ -45,9 +36,6 @@ class ofApp : public ofBaseApp{
         pdsp::PatchNode         damp_node;
         pdsp::DBtoLin           channelFader;
         pdsp::DBtoLin           sendFader;        
-
-
-
 
         ofxPanel             gui;
         ofParameterGroup     comp_gui;

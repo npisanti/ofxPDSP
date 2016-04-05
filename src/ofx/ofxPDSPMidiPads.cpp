@@ -1,9 +1,9 @@
 
-#include "ofxMidiDrumKitProcessor.h"
+#include "ofxPDSPMidiPads.h"
 
 #define MIDIDRUMKITPROCESSORMESSAGERESERVE 16
 
-ofxMidiDrumKitProcessor::ofxMidiDrumKitProcessor(){
+ofxPDSPMidiPads::ofxPDSPMidiPads(){
     trigBuffers.clear();
     lowThreshold.clear();
     highThreshold.clear();
@@ -12,7 +12,7 @@ ofxMidiDrumKitProcessor::ofxMidiDrumKitProcessor(){
 }
 
 
-void ofxMidiDrumKitProcessor::resizeLayers(int size){
+void ofxPDSPMidiPads::resizeLayers(int size){
     this->size = size;
     trigBuffers.resize(size);
     lowThreshold.resize(size);
@@ -25,7 +25,7 @@ void ofxMidiDrumKitProcessor::resizeLayers(int size){
 }
 
 
-void ofxMidiDrumKitProcessor::addTriggerLayer(int noteLow, int noteHigh){
+void ofxPDSPMidiPads::addTriggerLayer(int noteLow, int noteHigh){
     lowThreshold.push_back(noteLow);
     highThreshold.push_back(noteHigh);
     trigBuffers.resize(size + 1);
@@ -36,7 +36,7 @@ void ofxMidiDrumKitProcessor::addTriggerLayer(int noteLow, int noteHigh){
 }
 
 
-void ofxMidiDrumKitProcessor::setTriggerLayer(int noteLow, int noteHigh, int outIndex){
+void ofxPDSPMidiPads::setTriggerLayer(int noteLow, int noteHigh, int outIndex){
     if(outIndex>=0 && outIndex<= size){
         lowThreshold[outIndex] = noteLow;
         highThreshold[outIndex] = noteHigh; 
@@ -44,7 +44,7 @@ void ofxMidiDrumKitProcessor::setTriggerLayer(int noteLow, int noteHigh, int out
 }
 
 
-void ofxMidiDrumKitProcessor::simpleInit(int lowNote, int numNotes, int span){
+void ofxPDSPMidiPads::simpleInit(int lowNote, int numNotes, int span){
     trigBuffers.clear();
     lowThreshold.clear();
     highThreshold.clear();
@@ -64,7 +64,7 @@ void ofxMidiDrumKitProcessor::simpleInit(int lowNote, int numNotes, int span){
 }
 
 
-void ofxMidiDrumKitProcessor::processMidi(const ofxMidiInProcessor &midiInProcessor, const int &bufferSize ) noexcept{
+void ofxPDSPMidiPads::processMidi(const ofxPDSPMidiIn &midiInProcessor, const int &bufferSize ) noexcept{
     
     for(int i=0; i<size; ++i){
         trigBuffers[i].clearMessages();

@@ -3,8 +3,6 @@
 #include "ofMain.h"
 #include "ofxSIMDFloats.h"
 #include "ofxPDSP.h"
-#include "music.h"
-
 
 class ofApp : public ofBaseApp{
 
@@ -12,10 +10,6 @@ class ofApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
-        
-		void audioOut(ofSoundBuffer &outBuffer);
-        
-        void exit();
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -29,9 +23,12 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
         
-        int             expectedBufferSize;
-        double          sampleRate;		
-        ofSoundStream   audioStream;
+        ofxPDSPEngine   engine;
+        ofxPDSPMidiOut  midiOut;
+                        
+        pdsp::Sequence  sequence1;
+        pdsp::Sequence  sequence2;
+        pdsp::Sequence  sequence3;
         
-        MusicTest       music;
+        pdsp::GateSequencer gate;
 };

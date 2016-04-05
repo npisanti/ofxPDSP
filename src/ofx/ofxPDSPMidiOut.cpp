@@ -1,34 +1,34 @@
 
-#include "ofxMidiOutProcessor.h"
+#include "ofxPDSPMidiOut.h"
 
 #define OFXPDSP_MIDIOUTPUTCIRCULARBUFFERSIZE 1024
 
 
-ofxMidiOutProcessor::ofxScheduledMidiMessage::ofxScheduledMidiMessage(){  };
+ofxPDSPMidiOut::ofxScheduledMidiMessage::ofxScheduledMidiMessage(){  };
 
-ofxMidiOutProcessor::ofxScheduledMidiMessage::ofxScheduledMidiMessage(ofxMidiMessage message, chrono::high_resolution_clock::time_point schedule)
+ofxPDSPMidiOut::ofxScheduledMidiMessage::ofxScheduledMidiMessage(ofxMidiMessage message, chrono::high_resolution_clock::time_point schedule)
                 : midi(message), scheduledTime(schedule){};
 
-ofxMidiOutProcessor::ofxScheduledMidiMessage::ofxScheduledMidiMessage(const ofxMidiOutProcessor::ofxScheduledMidiMessage &other)
-                : ofxMidiOutProcessor::ofxScheduledMidiMessage(other.midi, other.scheduledTime){}
+ofxPDSPMidiOut::ofxScheduledMidiMessage::ofxScheduledMidiMessage(const ofxPDSPMidiOut::ofxScheduledMidiMessage &other)
+                : ofxPDSPMidiOut::ofxScheduledMidiMessage(other.midi, other.scheduledTime){}
 
-ofxMidiOutProcessor::ofxScheduledMidiMessage& ofxMidiOutProcessor::ofxScheduledMidiMessage::operator= (const ofxMidiOutProcessor::ofxScheduledMidiMessage &other){
+ofxPDSPMidiOut::ofxScheduledMidiMessage& ofxPDSPMidiOut::ofxScheduledMidiMessage::operator= (const ofxPDSPMidiOut::ofxScheduledMidiMessage &other){
     this->midi          = other.midi;
     this->scheduledTime = other.scheduledTime;
     return *this;
 }
 
-ofxMidiOutProcessor::ofxScheduledMidiMessage::~ofxScheduledMidiMessage(){}
+ofxPDSPMidiOut::ofxScheduledMidiMessage::~ofxScheduledMidiMessage(){}
 
 
-bool ofxMidiOutProcessor::scheduledMidiSort(const ofxScheduledMidiMessage &lhs, const ofxScheduledMidiMessage &rhs ){
+bool ofxPDSPMidiOut::scheduledMidiSort(const ofxScheduledMidiMessage &lhs, const ofxScheduledMidiMessage &rhs ){
     return (lhs.scheduledTime < rhs.scheduledTime);
 }
 
 
 //-------------------------------------------------------------------------------------------
 
-ofxMidiOutProcessor::ofxMidiOutProcessor(){
+ofxPDSPMidiOut::ofxPDSPMidiOut(){
     inputs[0].reserve(128);
     inputs[1].reserve(128);
     inputs[2].reserve(128);
@@ -57,17 +57,17 @@ ofxMidiOutProcessor::ofxMidiOutProcessor(){
     messageCount = 0;
 }
 
-ofxMidiOutProcessor::~ofxMidiOutProcessor(){
+ofxPDSPMidiOut::~ofxPDSPMidiOut(){
     if(connected){
         closePort();
     }
 }
 
-void ofxMidiOutProcessor::setVerbose( bool verbose ){
+void ofxPDSPMidiOut::setVerbose( bool verbose ){
     this->verbose = verbose;
 }
 
-void ofxMidiOutProcessor::linkToMidiOut(ofxMidiOut &midiOut){
+void ofxPDSPMidiOut::linkToMidiOut(ofxMidiOut &midiOut){
 
     if( midiOut.isOpen() ){
         if(connected){
@@ -75,21 +75,21 @@ void ofxMidiOutProcessor::linkToMidiOut(ofxMidiOut &midiOut){
         }
 
         midiOut_p = &midiOut;
-        if(verbose) cout<<"[ofxPDSP]: linked to midi Out \n";
+        if(verbose) cout<<"[pdsp] linked to midi Out \n";
 
         startMidiDaemon();
         
         connected = true;
     }else{
-        if(verbose) cout<<"[ofxPDSP]: midi out not linked, open midi out before linking! \n";
+        if(verbose) cout<<"[pdsp] midi out not linked, open midi out before linking! \n";
     }
 }
 
-void ofxMidiOutProcessor::listPorts(){
+void ofxPDSPMidiOut::listPorts(){
     midiOut.listPorts();
 }
 
-void ofxMidiOutProcessor::openPort(int portIndex){
+void ofxPDSPMidiOut::openPort(int portIndex){
     if(connected){
         closePort();
     }
@@ -97,7 +97,7 @@ void ofxMidiOutProcessor::openPort(int portIndex){
     midiOut.openPort( portIndex );
     
     if( midiOut.isOpen() ){
-        if(verbose) cout<<"[ofxPDSP]: connected to midi port "<<portIndex<<"\n";
+        if(verbose) cout<<"[pdsp] midi out connected to midi port "<<portIndex<<"\n";
         
         midiOut_p = &midiOut;
         
@@ -107,9 +107,9 @@ void ofxMidiOutProcessor::openPort(int portIndex){
     }
 }
 
-void ofxMidiOutProcessor:: closePort(){
+void ofxPDSPMidiOut:: closePort(){
     if(connected){
-        if(verbose) cout<<"[ofxPDSP]: shutting down midi out\n";
+        if(verbose) cout<<"[pdsp] shutting down midi out\n";
         //stop the daemon before
         closeMidiDaemon();
         if(midiOut.isOpen()){
@@ -120,26 +120,26 @@ void ofxMidiOutProcessor:: closePort(){
     }
 }
 
-pdsp::ExtSequencer& ofxMidiOutProcessor::gate(int midiChannel, int defaultNote ){
+pdsp::ExtSequencer& ofxPDSPMidiOut::gate(int midiChannel, int defaultNote ){
     selectedType = gateType;
     selectedMidiChannel = midiChannel;
     selectedDefaultNote = defaultNote;
     return *this;
 }
 
-pdsp::ExtSequencer& ofxMidiOutProcessor::note(){ //link to the last gate 
+pdsp::ExtSequencer& ofxPDSPMidiOut::note(){ //link to the last gate 
     selectedType = noteType;
     return *this; 
 }
 
-pdsp::ExtSequencer& ofxMidiOutProcessor::cc(int midiChannel, int ccNumber){
+pdsp::ExtSequencer& ofxPDSPMidiOut::cc(int midiChannel, int ccNumber){
     selectedType = ccType;
     selectedMidiChannel = midiChannel;
     selectedCC = ccNumber;
     return *this;
 }
 
-void ofxMidiOutProcessor::linkToMessageBuffer(pdsp::MessageBuffer &messageBuffer) {
+void ofxPDSPMidiOut::linkToMessageBuffer(pdsp::MessageBuffer &messageBuffer) {
     if(selectedType != nullType){
         switch(selectedType){
         case gateType:
@@ -163,7 +163,7 @@ void ofxMidiOutProcessor::linkToMessageBuffer(pdsp::MessageBuffer &messageBuffer
     selectedType = nullType;
 }
 
-void ofxMidiOutProcessor::unlinkMessageBuffer(pdsp::MessageBuffer &messageBuffer) {
+void ofxPDSPMidiOut::unlinkMessageBuffer(pdsp::MessageBuffer &messageBuffer) {
     
     int i=0;
     for (vector<pdsp::MessageBuffer*>::iterator it = inputs[gateType].begin(); it != inputs[gateType].end(); ++it){
@@ -192,15 +192,15 @@ void ofxMidiOutProcessor::unlinkMessageBuffer(pdsp::MessageBuffer &messageBuffer
     
 }
 
-void ofxMidiOutProcessor::prepareToPlay( int expectedBufferSize, double sampleRate ){
+void ofxPDSPMidiOut::prepareToPlay( int expectedBufferSize, double sampleRate ){
     usecPerSample = 1000000.0 / sampleRate;
     
 }
 
-void ofxMidiOutProcessor::releaseResources() {}
+void ofxPDSPMidiOut::releaseResources() {}
 
 
-void ofxMidiOutProcessor::process() noexcept{
+void ofxPDSPMidiOut::process() noexcept{
     
     if(connected){
         //clear messages
@@ -289,14 +289,14 @@ void ofxMidiOutProcessor::process() noexcept{
     }//end checking connected
 }
 
-void ofxMidiOutProcessor::startMidiDaemon(){
+void ofxPDSPMidiOut::startMidiDaemon(){
     
     runMidiDaemon = true;
     midiDaemonThread = thread( midiDaemonFunctionWrapper, this );   
     
 }
 
-void ofxMidiOutProcessor::prepareForDaemonAndNotify(){
+void ofxPDSPMidiOut::prepareForDaemonAndNotify(){
     
     unique_lock<mutex> lck (midiOutMutex);  
     //send messages in circular buffer
@@ -313,12 +313,12 @@ void ofxMidiOutProcessor::prepareForDaemonAndNotify(){
 }
    
     
-void ofxMidiOutProcessor::midiDaemonFunctionWrapper(ofxMidiOutProcessor* parent){
+void ofxPDSPMidiOut::midiDaemonFunctionWrapper(ofxPDSPMidiOut* parent){
     parent->midiDaemonFunction();
 }
    
     
-void ofxMidiOutProcessor::midiDaemonFunction() noexcept{
+void ofxPDSPMidiOut::midiDaemonFunction() noexcept{
     
     while (runMidiDaemon){
 
@@ -359,12 +359,12 @@ void ofxMidiOutProcessor::midiDaemonFunction() noexcept{
 
     }
    
-    if(verbose) cout<<"[ofxPDSP] closing midi out daemon thread\n";
+    if(verbose) cout<<"[pdsp] closing midi out daemon thread\n";
 }
     
  
     
-void ofxMidiOutProcessor::closeMidiDaemon(){
+void ofxPDSPMidiOut::closeMidiDaemon(){
     runMidiDaemon = false;
     
     unique_lock<mutex> lck (midiOutMutex);  

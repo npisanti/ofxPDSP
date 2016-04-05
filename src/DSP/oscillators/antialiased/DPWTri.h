@@ -31,7 +31,6 @@ private:
     void oscillate( float* outputBuffer, const float* phaseBuffer, int bufferSize) noexcept override ;
 
     InputNode input_inc;
-    bool squareModulo;
     float z_1;
 };
 

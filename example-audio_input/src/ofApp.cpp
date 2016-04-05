@@ -1,5 +1,8 @@
 #include "ofApp.h"
 
+// before looking at this, be shure to check out the basics with the ofxPDSP wiki tutorials:
+// https://github.com/npisanti/ofxPDSP/wiki
+
 // audio input example, and UI example
 // at the moment on some systems the input comes in distorted, 
 // this may be a problem of audio input underruns on some systems
@@ -15,12 +18,14 @@ void ofApp::setup(){
     ofSetFrameRate(30);
     
     //-------------------------PATCHING--------------
+    engine.setChannels(2, 2); // activate 2 input channels
+    
     //signal
-    // input1 is an instance of pdsp::ExternalInput, a bridge between the audio input callback and pdsp
-    input1 >> compressor >> channelGain >> pdspEngine.channels[0];
-                            channelGain >> pdspEngine.channels[1];
-              compressor >> delaySend >> delayL >> pdspEngine.channels[0];
-                            delaySend >> delayR >> pdspEngine.channels[1];
+    // we patch our audio input
+    engine.audio_in(0) >> compressor >> channelGain         >> engine.audio_out(0);
+                                        channelGain         >> engine.audio_out(1);
+                          compressor >> delaySend >> delayL >> engine.audio_out(0);
+                                        delaySend >> delayR >> engine.audio_out(1);
    
     // you can use set() to set the parameters like ofParameter
     // an ofxPDSPParameter set() returns a Patchable reference so you can patch it with >>
@@ -44,21 +49,15 @@ void ofApp::setup(){
     cout<<"finished patching\n";
     
     //----------------------AUDIO SETUP-------------
-    int expectedBufferSize = 512;
-    double sampleRate = 44100.0;   
-
-    ofxPDSPSetup(expectedBufferSize, sampleRate);
-  
-    ofSoundStreamListDevices();
     
-    audioStream.setDeviceID(0);
-    audioStream.setup(this, 2, 2, static_cast<int>(sampleRate), expectedBufferSize, 3);
+    // start your audio engines!
+    engine.listDevices();
     
-    // if ofSoundStreamListDevices() lists different devices for in and out you need to make something like this 
-    //audioStream.setDeviceID(0);
-    //audioStream.setup(this, 2, 0, static_cast<int>(sampleRate), expectedBufferSize, 2);
-	//inputStream.setDeviceID(1);
-	//inputStream.setup(this, 0, 2, static_cast<int>(sampleRate), expectedBufferSize, 2);
+    engine.setDeviceID(0); // REMEMBER TO SET THIS AT THE RIGHT INDEX!!!!
+    // if listDevices() lists different devices for in and out you need to make something like this 
+    //engine.setOutputDeviceID(0);
+	//engine.setInputDeviceID(1);    
+    engine.setup( 44100, 512, 3); 
     
     // GUI -----------------------------------   
     gui.setup("channel strip");
@@ -93,23 +92,6 @@ void ofApp::update(){
 void ofApp::draw(){
     // draw GUI
     gui.draw();
-}
-
-//--------------------------------------------------------------
-void ofApp::audioIn(float * input, int bufferSize, int nChannels){
-    // this is mandatory for interfacing the audio input with pdsp
-    input1.copyInterleavedInput(input, 0, nChannels, bufferSize);
-}
-
-//--------------------------------------------------------------
-void ofApp::audioOut(ofSoundBuffer &outBuffer) {
-    pdspEngine.processAndCopyInterleaved(outBuffer.getBuffer().data(), outBuffer.getNumChannels(), outBuffer.getNumFrames());
-}
-
-//--------------------------------------------------------------
-void ofApp::exit() {
-	audioStream.stop();
-	audioStream.close();
 }
 
 //--------------------------------------------------------------

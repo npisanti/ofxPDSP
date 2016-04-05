@@ -10,9 +10,6 @@ class ofApp : public ofBaseApp{
 		void update();
 		void draw();
         
-        void exit();
-		void audioOut(ofSoundBuffer &outBuffer);
-        
         void controlOn(int x, int y);
         
 		void keyPressed(int key);
@@ -27,10 +24,7 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
         
-        int                     expectedBufferSize;
-        double                  sampleRate;
-        ofSoundStream           audioStream;
-        pdsp::Processor         pdspEngine; 
+        ofxPDSPEngine           engine;
        
         ofxSampleBufferPlotter  waveformGraphics;
        

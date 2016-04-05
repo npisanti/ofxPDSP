@@ -51,8 +51,12 @@ public:
     @brief an array of channels. Patch your Units and modules to this channels thinking to them as your system final output
     */  
     std::vector<PatchNode> channels;
-    
-    //void process() noexcept;
+   
+    /*!
+    @brief change the number of output channels;
+    @param[in] channelsNum number of channels
+    */  
+    void resize( int channelsNum );
         
 };
         

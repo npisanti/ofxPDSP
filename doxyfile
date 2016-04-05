@@ -845,11 +845,14 @@ EXCLUDE                = src/math \
                          example-graincloud \
                          example-hello_world \
                          example-audio_input \
-                         example-scoring \
                          example-midi_polysynth \
                          example-midi_seq_out \
-                         src/ofx \
-                         exampleios
+                         exampleios \
+                         src/math \
+                         src/ofx/ofxMidiCCBuffers.h \
+                         src/ofx/ofxMidiKeysBuffers.h \
+                         example-lower_api \
+                         src/ofx/ofxPositionedMidiMessage.h
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded

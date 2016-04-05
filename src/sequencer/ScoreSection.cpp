@@ -5,7 +5,8 @@
 #include <limits.h>
 
 
-pdsp::ScoreSection::ScoreSection(int outputsNumber) {
+pdsp::ScoreSection::ScoreSection() {
+    
     patterns.clear();
     scheduledPattern = -1;
     scheduledTime = std::numeric_limits<double>::infinity();
@@ -18,24 +19,29 @@ pdsp::ScoreSection::ScoreSection(int outputsNumber) {
     clear = true;
     quantizedLaunch = false;
     selectedMessageBuffer = nullptr;
-    setOutputsNumber(outputsNumber);
 
     atomic_meter_current.store(-1);
     atomic_meter_next.store(-1);
     atomic_meter_playhead.store(0.0f);    
 
+    setOutputsNumber(1);    
+    
 }
 
-pdsp::ScoreSection::ScoreSection() : ScoreSection(1) {}
 
-pdsp::ScoreSection::ScoreSection(const pdsp::ScoreSection &other) : ScoreSection (other.patternSize){
-    for(int i=0; i< other.patternSize; ++i){
+pdsp::ScoreSection::ScoreSection(const pdsp::ScoreSection &other) {
+    
+    resizePatterns( (int) other.patterns.size() );
+    
+    for(int i=0; i< (int) other.patterns.size(); ++i){
         patterns[i].scoreCell          = other.patterns[i].scoreCell;
         patterns[i].nextCell           = other.patterns[i].nextCell;
         patterns[i].length             = other.patterns[i].length;
         patterns[i].quantizeLaunch     = other.patterns[i].quantizeLaunch;
-        patterns[i].quantizeGrid         = other.patterns[i].quantizeGrid;
+        patterns[i].quantizeGrid       = other.patterns[i].quantizeGrid;
     } 
+    
+    this->setOutputsNumber( (int)other.outputs.size() );
 }
 
 
@@ -54,7 +60,6 @@ void pdsp::ScoreSection::resizePatterns(int size){
 
 void pdsp::ScoreSection::setOutputsNumber(int size){
     outputs.resize(size);
-    outputSize = size;
     for(MessageBuffer &buffer : outputs){
         buffer.reserve(PDSP_SCORESECTIONMESSAGERESERVE);
     }
@@ -81,7 +86,7 @@ void pdsp::ScoreSection::launchCell( int index, bool legato, bool quantizeLaunch
 }
 
 pdsp::ScoreSection& pdsp::ScoreSection::out(int index){
-    if(index>=0 && index <outputSize){
+    if(index>=0 && index <outputs.size() ){
         selectedMessageBuffer = &outputs[index];
         return *this;
     }else{
@@ -89,7 +94,7 @@ pdsp::ScoreSection& pdsp::ScoreSection::out(int index){
     }
 }
 
-void pdsp::ScoreSection::setPattern( int index, ScoreCell* scoreCell, CellChange* behavior ){
+void pdsp::ScoreSection::setCell( int index, ScoreCell* scoreCell, CellChange* behavior ){
     if(index>=0){
         if(index>=patternSize){
             resizePatterns(index+1);
@@ -102,12 +107,20 @@ void pdsp::ScoreSection::setPattern( int index, ScoreCell* scoreCell, CellChange
     }
 }
 
-void pdsp::ScoreSection::setBehavior( int index, CellChange* behavior ){
+void pdsp::ScoreSection::setPattern( int index, ScoreCell* scoreCell, CellChange* behavior ){
+    setCell(index, scoreCell, behavior);
+}
+
+void pdsp::ScoreSection::setChange( int index, CellChange* behavior ){
     if(index>=0 && index < patternSize){
         patternMutex.lock();
             patterns[index].nextCell  = behavior;
         patternMutex.unlock();
     }
+}
+
+void pdsp::ScoreSection::setBehavior( int index, CellChange* behavior ){
+    setChange(index, behavior);
 }
 
 //remember to check for quantizeGrid to be no greater than pattern length
@@ -199,7 +212,7 @@ void pdsp::ScoreSection::playScore(double const &range, double const &offset, co
     
     while( (scoreIndex < patternToProcess->score.size()) && (patternToProcess->score[scoreIndex].time < patternMax) ){
         
-        if( (patternToProcess->score[scoreIndex].time >= scorePlayHead) && (patternToProcess->score[scoreIndex].lane < outputSize)   ){ //check if we are inside the outputs boundaries and inside the processed time
+        if( (patternToProcess->score[scoreIndex].time >= scorePlayHead) && (patternToProcess->score[scoreIndex].lane < (int)outputs.size() )   ){ //check if we are inside the outputs boundaries and inside the processed time
             int sample = static_cast<int>( (patternToProcess->score[scoreIndex].time - scorePlayHead + offset) * oneSlashBarsPerSample);
             outputs[patternToProcess->score[scoreIndex].lane].addMessage(patternToProcess->score[scoreIndex].value, sample);
             //std::cout<<"added message with sample value:"<<sample<<"\n";

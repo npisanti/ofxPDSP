@@ -2,7 +2,6 @@
 
 #include "leftSum.h"
 
-
 //pdsp::_leftSumVector.reserve(16);
 
 namespace pdsp{
@@ -115,35 +114,5 @@ Patchable& operator>> (std::vector<sumNodePtr>* left, Patchable& right)
     right.resetInputToDefault();
     return right;
 }
-
-/*
-void operator>>= (std::vector<sumNodePtr>* left, InputNode& right)
-{
-    right.disconnectAll();
-
-    for (sumNodePtr ptr : *left){
-        if (ptr.type == Output){
-            *(reinterpret_cast<OutputNode *> (ptr.pointer)) >> right;
-        }
-        else if (ptr.type == Patch){
-            *(reinterpret_cast<Patchable *> (ptr.pointer)) >> right;
-        }
-        else if (ptr.type == Float){
-            ptr.floatValue >> right;
-        }
-    }
-    
-}
-
-
-
-Patchable& operator>>= (std::vector<sumNodePtr>* left, Patchable& right)
-{
-    right.getSelectedInput().disconnectAll();
-    left >> right.getSelectedInput();
-    right.resetInputToDefault();
-    return right;
-}
-*/
 
 }//END NAMESPACE

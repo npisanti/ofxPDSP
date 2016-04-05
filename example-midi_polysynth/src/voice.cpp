@@ -2,8 +2,6 @@
 #include "voice.h"
 
 // we use static instances for the parameters so we can patch a single parameter to many voices
-
-
 ofxPDSPParameter SynthVoice::cutoffUI     = ofxPDSPParameter();
 ofxPDSPParameter SynthVoice::resoUI       = ofxPDSPParameter();
 ofxPDSPParameter SynthVoice::pwUI         = ofxPDSPParameter();
@@ -11,8 +9,6 @@ ofxPDSPParameter SynthVoice::pwmUI        = ofxPDSPParameter();
 ofxPDSPParameter SynthVoice::pwmSpeedUI   = ofxPDSPParameter();
 ofxPDSPParameter SynthVoice::modAttackUI  = ofxPDSPParameter();
 ofxPDSPParameter SynthVoice::modReleaseUI = ofxPDSPParameter();
-
-
 
 
 SynthVoice::SynthVoice() { 
@@ -43,6 +39,5 @@ void SynthVoice::patch(){
     (voiceTrigger >> (ampEnv.set(200.0f, 400.0f, 1.0f, 600.0f ) * 0.1f)) >> voiceAmp.in_mod();
     
                      pwmSpeedUI.set("pwm speed (hz)", 0.5f, 0.005f, 1.5f) >> lfo.in_freq();  
-     
-     
+                     
 }

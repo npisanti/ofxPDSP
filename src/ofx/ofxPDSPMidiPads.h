@@ -1,25 +1,24 @@
 
-// ofxMidiDrumKitProcessor
+// ofxPDSPMidiPads
 // ofxPDSP
 // Nicola Pisanti, MIT License, 2016
 
-#ifndef OFXPDSP_MIDIDRUMKITPROCESSOR_H_INCLUDED
-#define OFXPDSP_MIDIDRUMKITPROCESSOR_H_INCLUDED
+#ifndef OFXPDSP_PDSPMIDIPADS_H_INCLUDED
+#define OFXPDSP_PDSPMIDIPADS_H_INCLUDED
 
 #include "ofxMidi.h"
 #include "../messages/header.h"
 #include "../DSP/control/GateSequencer.h"
 #include "ofxPositionedMidiMessage.h"
+#include "ofxPDSPController.h"
+#include "ofxPDSPMidiIn.h"
 
-#include "ofxMidiInProcessor.h"
-
-class ofxMidiDrumKitProcessor {
-
+class ofxPDSPMidiPads  : public ofxPDSPController {
     
 public:
-    ofxMidiDrumKitProcessor();
+    ofxPDSPMidiPads();
 
-    void processMidi(const ofxMidiInProcessor &midiInProcessor, const int &bufferSize ) noexcept;
+    void processMidi(const ofxPDSPMidiIn &midiInProcessor, const int &bufferSize ) noexcept override;
     
     void addTriggerLayer(int noteLow, int noteHigh);
     void setTriggerLayer(int noteLow, int noteHigh, int outIndex);
@@ -38,9 +37,4 @@ private:
 };
 
 
-
-
-
-
-
-#endif // OFXPDSP_MIDIDRUMKITPROCESSOR_H_INCLUDED
+#endif // OFXPDSP_PDSPMIDIPADS_H_INCLUDED

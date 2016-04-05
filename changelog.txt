@@ -1,4 +1,9 @@
 
+
+v0.1.3.0
+    - added more asserts
+    - added Sequence and SeqChange classes for easy and powerful sequencing
+
 v0.1.2.4
     - addUnitInput is deprecated as it is confusing to use, use addModuleInput instead
 

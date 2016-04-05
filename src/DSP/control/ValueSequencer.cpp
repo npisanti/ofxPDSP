@@ -19,10 +19,18 @@ pdsp::ValueSequencer::ValueSequencer(){
     }
 }
 
+pdsp::ValueSequencer::ValueSequencer(const ValueSequencer & other){
+    std::cout<<"[pdsp] do not copy construct ValueSequencers!\n";    
+    pdsp_trace();
+}
+
 pdsp::Patchable& pdsp::ValueSequencer::out_signal(){
     return out("signal");   
 }
 
+float pdsp::ValueSequencer::meter_output() const{
+    return meter.load();
+}
 
 void pdsp::ValueSequencer::link(MessageBuffer &messageBuffer){
     if(connectToSlewControl){
@@ -57,6 +65,7 @@ void pdsp::ValueSequencer::unLink(){
 void pdsp::ValueSequencer::prepareUnit( int expectedBufferSize, double sampleRate ) {
         this->sampleRate = sampleRate;
         slewLastValue = slewInitValue;
+        meter = slewLastValue;
 }
 
 
@@ -69,7 +78,8 @@ void pdsp::ValueSequencer::process (int bufferSize) noexcept {
         //std::cout<<"valuesequencer slewLastValue = "<<slewLastValue<<"\n";
         if(messageBuffer!=nullptr){
                 //updateBuffer(messageBuffer, bufferSize);
-                 
+                meter = slewLastValue;
+                
                 if( messageBuffer->empty() ){
                         //std::cout<<"message queue empty, broadcasting last value\n";
                         if(slewRun){

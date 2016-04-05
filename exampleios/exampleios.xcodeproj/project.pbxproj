@@ -849,7 +849,158 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
-			<key>0A8A0B264BFAA477B7A0AC6A</key>
+			<key>0092952EB13951825012FE15</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>audiodecodercoreaudio.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/libs/libaudiodecoder/audiodecodercoreaudio.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>A96B24000923D509386D50C0</key>
+			<dict>
+				<key>fileRef</key>
+				<string>9DB42778C53BA8C8EA9C8452</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>9DB42778C53BA8C8EA9C8452</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>audiodecodercoreaudio.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/libs/libaudiodecoder/audiodecodercoreaudio.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>E4130E493943C56AF5053E10</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>audiodecoderbase.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/libs/libaudiodecoder/audiodecoderbase.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>18F4F21244C934F8FFA7E4B6</key>
+			<dict>
+				<key>fileRef</key>
+				<string>84BDE5ED6EAD0C93A0D51AB6</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>84BDE5ED6EAD0C93A0D51AB6</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>audiodecoderbase.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/libs/libaudiodecoder/audiodecoderbase.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>1F35E2437108CB0D6ABF6091</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>audiodecoder.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/libs/libaudiodecoder/audiodecoder.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>D287DC96E2C2124E2421A676</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>CAStreamBasicDescription.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/libs/libaudiodecoder/apple/CAStreamBasicDescription.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>68E79F5CAA0087A639D5C4F4</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>59F187F70EAEA4C910295F8D</string>
+					<string>D287DC96E2C2124E2421A676</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>apple</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>3228F4E4C9689FDB4E4DE04C</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>68E79F5CAA0087A639D5C4F4</string>
+					<string>1F35E2437108CB0D6ABF6091</string>
+					<string>84BDE5ED6EAD0C93A0D51AB6</string>
+					<string>E4130E493943C56AF5053E10</string>
+					<string>9DB42778C53BA8C8EA9C8452</string>
+					<string>0092952EB13951825012FE15</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>libaudiodecoder</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>59F187F70EAEA4C910295F8D</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>CADebugMacros.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/libs/libaudiodecoder/apple/CADebugMacros.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>73D92BD323AEA4C3832AB932</key>
 			<dict>
 				<key>explicitFileType</key>
 				<string>sourcecode.c.h</string>
@@ -860,16 +1011,30 @@
 				<key>name</key>
 				<string>AudioFFT.h</string>
 				<key>path</key>
-				<string>../../../addons/ofxPDSP/libs/AudioFFT.h</string>
+				<string>../../../addons/ofxPDSP/libs/audiofft/AudioFFT.h</string>
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>AFB4122E318DF0C23A934286</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>4E223839EE8BE1ACF55F1BB2</string>
+					<string>73D92BD323AEA4C3832AB932</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>audiofft</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
 			</dict>
 			<key>1388F647847DFF55789FC01E</key>
 			<dict>
 				<key>children</key>
 				<array>
-					<string>41CB97D799DC25885A57873D</string>
-					<string>0A8A0B264BFAA477B7A0AC6A</string>
+					<string>AFB4122E318DF0C23A934286</string>
+					<string>3228F4E4C9689FDB4E4DE04C</string>
 				</array>
 				<key>isa</key>
 				<string>PBXGroup</string>
@@ -878,14 +1043,14 @@
 				<key>sourceTree</key>
 				<string>&lt;group&gt;</string>
 			</dict>
-			<key>103ABC6A5172EAF594669B38</key>
+			<key>EEF7EB599FD6B7E2990E4842</key>
 			<dict>
 				<key>fileRef</key>
-				<string>41CB97D799DC25885A57873D</string>
+				<string>4E223839EE8BE1ACF55F1BB2</string>
 				<key>isa</key>
 				<string>PBXBuildFile</string>
 			</dict>
-			<key>41CB97D799DC25885A57873D</key>
+			<key>4E223839EE8BE1ACF55F1BB2</key>
 			<dict>
 				<key>explicitFileType</key>
 				<string>sourcecode.cpp.cpp</string>
@@ -896,7 +1061,7 @@
 				<key>name</key>
 				<string>AudioFFT.cpp</string>
 				<key>path</key>
-				<string>../../../addons/ofxPDSP/libs/AudioFFT.cpp</string>
+				<string>../../../addons/ofxPDSP/libs/audiofft/AudioFFT.cpp</string>
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
@@ -949,6 +1114,43 @@
 				<string>stockBehaviors.cpp</string>
 				<key>path</key>
 				<string>../../../addons/ofxPDSP/src/sequencer/stockBehaviors.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>B05A4E65975471BA4D3690B6</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Sequence.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/src/sequencer/Sequence.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>98A8331C747F8AAD98BFB503</key>
+			<dict>
+				<key>fileRef</key>
+				<string>41BFBD3FBBE333DD3AF87209</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>41BFBD3FBBE333DD3AF87209</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Sequence.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/src/sequencer/Sequence.cpp</string>
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
@@ -1074,6 +1276,8 @@
 					<string>77FE9CB62925FDF24E1528F3</string>
 					<string>7A898B2B7115BCBA06222AB3</string>
 					<string>A6C04D1B7B0EAFAB4BF9EBF3</string>
+					<string>41BFBD3FBBE333DD3AF87209</string>
+					<string>B05A4E65975471BA4D3690B6</string>
 					<string>D5B5065CFF27BE3FD96E6834</string>
 					<string>E3A3A6B4E363758FD68FED11</string>
 				</array>
@@ -1203,6 +1407,191 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
+			<key>AA207E3781251743C32EAA74</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxPDSPMidiPads.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/src/ofx/ofxPDSPMidiPads.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>D26B95B6C297B3434BD32F55</key>
+			<dict>
+				<key>fileRef</key>
+				<string>320F8178FC75FDA2E0292DC0</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>320F8178FC75FDA2E0292DC0</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxPDSPMidiPads.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/src/ofx/ofxPDSPMidiPads.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>E694F72AD6589E42A78A87F6</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxPDSPMidiOut.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/src/ofx/ofxPDSPMidiOut.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>541B68D8D35004B64B6F774D</key>
+			<dict>
+				<key>fileRef</key>
+				<string>6DAB6504862C1AD5D638493F</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>6DAB6504862C1AD5D638493F</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxPDSPMidiOut.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/src/ofx/ofxPDSPMidiOut.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>62C405D1ABDB4D94A02EBDCC</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxPDSPMidiKeys.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/src/ofx/ofxPDSPMidiKeys.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>225BBBD96E4BCFC2A4705ADD</key>
+			<dict>
+				<key>fileRef</key>
+				<string>72874096F56DB0E6DA31AB30</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>72874096F56DB0E6DA31AB30</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxPDSPMidiKeys.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/src/ofx/ofxPDSPMidiKeys.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>05024E46BD34A4784113BA57</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxPDSPMidiIn.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/src/ofx/ofxPDSPMidiIn.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>81899C81F1F47FEC2002D996</key>
+			<dict>
+				<key>fileRef</key>
+				<string>887268A6505E44103DF3059B</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>887268A6505E44103DF3059B</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxPDSPMidiIn.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/src/ofx/ofxPDSPMidiIn.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>71007922836BF74C07319F69</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxPDSPMidiControls.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/src/ofx/ofxPDSPMidiControls.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>943927834CD36C912D672174</key>
+			<dict>
+				<key>fileRef</key>
+				<string>14AF10F25379779B82ED7EF7</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>14AF10F25379779B82ED7EF7</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxPDSPMidiControls.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/src/ofx/ofxPDSPMidiControls.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
 			<key>1CF1DF413B75AE2F83DE60B9</key>
 			<dict>
 				<key>explicitFileType</key>
@@ -1255,7 +1644,7 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
-			<key>FE41DD94F22676D24D5F2A03</key>
+			<key>141F334F767F606593B4DD3D</key>
 			<dict>
 				<key>explicitFileType</key>
 				<string>sourcecode.c.h</string>
@@ -1264,20 +1653,20 @@
 				<key>isa</key>
 				<string>PBXFileReference</string>
 				<key>name</key>
-				<string>ofxMidiOutProcessor.h</string>
+				<string>ofxPDSPEngine.h</string>
 				<key>path</key>
-				<string>../../../addons/ofxPDSP/src/ofx/ofxMidiOutProcessor.h</string>
+				<string>../../../addons/ofxPDSP/src/ofx/ofxPDSPEngine.h</string>
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
-			<key>DB9A2D131819DFCDF447D729</key>
+			<key>C9073812FCC3A0EB42A9277F</key>
 			<dict>
 				<key>fileRef</key>
-				<string>E01265E2E5083EDC36A8544B</string>
+				<string>491A5035531B2D3A9AF858D8</string>
 				<key>isa</key>
 				<string>PBXBuildFile</string>
 			</dict>
-			<key>E01265E2E5083EDC36A8544B</key>
+			<key>491A5035531B2D3A9AF858D8</key>
 			<dict>
 				<key>explicitFileType</key>
 				<string>sourcecode.cpp.cpp</string>
@@ -1286,13 +1675,13 @@
 				<key>isa</key>
 				<string>PBXFileReference</string>
 				<key>name</key>
-				<string>ofxMidiOutProcessor.cpp</string>
+				<string>ofxPDSPEngine.cpp</string>
 				<key>path</key>
-				<string>../../../addons/ofxPDSP/src/ofx/ofxMidiOutProcessor.cpp</string>
+				<string>../../../addons/ofxPDSP/src/ofx/ofxPDSPEngine.cpp</string>
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
-			<key>D712908246BA436B6094E022</key>
+			<key>215DAC1ED49BBDD7A1D1E0D1</key>
 			<dict>
 				<key>explicitFileType</key>
 				<string>sourcecode.c.h</string>
@@ -1301,31 +1690,9 @@
 				<key>isa</key>
 				<string>PBXFileReference</string>
 				<key>name</key>
-				<string>ofxMidiKeysProcessor.h</string>
+				<string>ofxPDSPController.h</string>
 				<key>path</key>
-				<string>../../../addons/ofxPDSP/src/ofx/ofxMidiKeysProcessor.h</string>
-				<key>sourceTree</key>
-				<string>SOURCE_ROOT</string>
-			</dict>
-			<key>63BD7DCCCEDE7FED000140E7</key>
-			<dict>
-				<key>fileRef</key>
-				<string>36A806B7FD5C1FB296B1D849</string>
-				<key>isa</key>
-				<string>PBXBuildFile</string>
-			</dict>
-			<key>36A806B7FD5C1FB296B1D849</key>
-			<dict>
-				<key>explicitFileType</key>
-				<string>sourcecode.cpp.cpp</string>
-				<key>fileEncoding</key>
-				<string>30</string>
-				<key>isa</key>
-				<string>PBXFileReference</string>
-				<key>name</key>
-				<string>ofxMidiKeysProcessor.cpp</string>
-				<key>path</key>
-				<string>../../../addons/ofxPDSP/src/ofx/ofxMidiKeysProcessor.cpp</string>
+				<string>../../../addons/ofxPDSP/src/ofx/ofxPDSPController.h</string>
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
@@ -1366,117 +1733,6 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
-			<key>BBCCA7B1C7BDE4ECFCDD5DC9</key>
-			<dict>
-				<key>explicitFileType</key>
-				<string>sourcecode.c.h</string>
-				<key>fileEncoding</key>
-				<string>30</string>
-				<key>isa</key>
-				<string>PBXFileReference</string>
-				<key>name</key>
-				<string>ofxMidiInProcessor.h</string>
-				<key>path</key>
-				<string>../../../addons/ofxPDSP/src/ofx/ofxMidiInProcessor.h</string>
-				<key>sourceTree</key>
-				<string>SOURCE_ROOT</string>
-			</dict>
-			<key>30F92D4E758A45EC2B422B35</key>
-			<dict>
-				<key>fileRef</key>
-				<string>37860EAEFE084D5ED58C08B9</string>
-				<key>isa</key>
-				<string>PBXBuildFile</string>
-			</dict>
-			<key>37860EAEFE084D5ED58C08B9</key>
-			<dict>
-				<key>explicitFileType</key>
-				<string>sourcecode.cpp.cpp</string>
-				<key>fileEncoding</key>
-				<string>30</string>
-				<key>isa</key>
-				<string>PBXFileReference</string>
-				<key>name</key>
-				<string>ofxMidiInProcessor.cpp</string>
-				<key>path</key>
-				<string>../../../addons/ofxPDSP/src/ofx/ofxMidiInProcessor.cpp</string>
-				<key>sourceTree</key>
-				<string>SOURCE_ROOT</string>
-			</dict>
-			<key>6F7B4C437CE6FA1A9BE9EA8F</key>
-			<dict>
-				<key>explicitFileType</key>
-				<string>sourcecode.c.h</string>
-				<key>fileEncoding</key>
-				<string>30</string>
-				<key>isa</key>
-				<string>PBXFileReference</string>
-				<key>name</key>
-				<string>ofxMidiDrumKitProcessor.h</string>
-				<key>path</key>
-				<string>../../../addons/ofxPDSP/src/ofx/ofxMidiDrumKitProcessor.h</string>
-				<key>sourceTree</key>
-				<string>SOURCE_ROOT</string>
-			</dict>
-			<key>AEC05C4533B93FBA49C85490</key>
-			<dict>
-				<key>fileRef</key>
-				<string>72E7907A053F4EC9AD93DCC5</string>
-				<key>isa</key>
-				<string>PBXBuildFile</string>
-			</dict>
-			<key>72E7907A053F4EC9AD93DCC5</key>
-			<dict>
-				<key>explicitFileType</key>
-				<string>sourcecode.cpp.cpp</string>
-				<key>fileEncoding</key>
-				<string>30</string>
-				<key>isa</key>
-				<string>PBXFileReference</string>
-				<key>name</key>
-				<string>ofxMidiDrumKitProcessor.cpp</string>
-				<key>path</key>
-				<string>../../../addons/ofxPDSP/src/ofx/ofxMidiDrumKitProcessor.cpp</string>
-				<key>sourceTree</key>
-				<string>SOURCE_ROOT</string>
-			</dict>
-			<key>697D72BB33A083B908C540A3</key>
-			<dict>
-				<key>explicitFileType</key>
-				<string>sourcecode.c.h</string>
-				<key>fileEncoding</key>
-				<string>30</string>
-				<key>isa</key>
-				<string>PBXFileReference</string>
-				<key>name</key>
-				<string>ofxMidiCCProcessor.h</string>
-				<key>path</key>
-				<string>../../../addons/ofxPDSP/src/ofx/ofxMidiCCProcessor.h</string>
-				<key>sourceTree</key>
-				<string>SOURCE_ROOT</string>
-			</dict>
-			<key>4FEE584151B33109C3F2F053</key>
-			<dict>
-				<key>fileRef</key>
-				<string>052062F0CF3AE2374F4C4EE6</string>
-				<key>isa</key>
-				<string>PBXBuildFile</string>
-			</dict>
-			<key>052062F0CF3AE2374F4C4EE6</key>
-			<dict>
-				<key>explicitFileType</key>
-				<string>sourcecode.cpp.cpp</string>
-				<key>fileEncoding</key>
-				<string>30</string>
-				<key>isa</key>
-				<string>PBXFileReference</string>
-				<key>name</key>
-				<string>ofxMidiCCProcessor.cpp</string>
-				<key>path</key>
-				<string>../../../addons/ofxPDSP/src/ofx/ofxMidiCCProcessor.cpp</string>
-				<key>sourceTree</key>
-				<string>SOURCE_ROOT</string>
-			</dict>
 			<key>0FAD00956E5F79C5CFFC340D</key>
 			<dict>
 				<key>explicitFileType</key>
@@ -1498,21 +1754,24 @@
 				<array>
 					<string>D553064238532BBEED072F3F</string>
 					<string>0FAD00956E5F79C5CFFC340D</string>
-					<string>052062F0CF3AE2374F4C4EE6</string>
-					<string>697D72BB33A083B908C540A3</string>
-					<string>72E7907A053F4EC9AD93DCC5</string>
-					<string>6F7B4C437CE6FA1A9BE9EA8F</string>
-					<string>37860EAEFE084D5ED58C08B9</string>
-					<string>BBCCA7B1C7BDE4ECFCDD5DC9</string>
 					<string>695BC578351FF8F7ACEB5A3C</string>
 					<string>25F4566BD25A729533310C62</string>
-					<string>36A806B7FD5C1FB296B1D849</string>
-					<string>D712908246BA436B6094E022</string>
-					<string>E01265E2E5083EDC36A8544B</string>
-					<string>FE41DD94F22676D24D5F2A03</string>
+					<string>215DAC1ED49BBDD7A1D1E0D1</string>
+					<string>491A5035531B2D3A9AF858D8</string>
+					<string>141F334F767F606593B4DD3D</string>
 					<string>33CB2223224C7C100911D293</string>
 					<string>2B3413188866E4CB280223A9</string>
 					<string>1CF1DF413B75AE2F83DE60B9</string>
+					<string>14AF10F25379779B82ED7EF7</string>
+					<string>71007922836BF74C07319F69</string>
+					<string>887268A6505E44103DF3059B</string>
+					<string>05024E46BD34A4784113BA57</string>
+					<string>72874096F56DB0E6DA31AB30</string>
+					<string>62C405D1ABDB4D94A02EBDCC</string>
+					<string>6DAB6504862C1AD5D638493F</string>
+					<string>E694F72AD6589E42A78A87F6</string>
+					<string>320F8178FC75FDA2E0292DC0</string>
+					<string>AA207E3781251743C32EAA74</string>
 					<string>59414DF2CA61EAD7EF1BAE59</string>
 					<string>ABDBD5DE5D5747D61E5D5E5B</string>
 					<string>D7B4CE287D3C973B2C4A1DDB</string>
@@ -1725,6 +1984,57 @@
 				<string>GrainCloud.cpp</string>
 				<key>path</key>
 				<string>../../../addons/ofxPDSP/src/modules/samplers/GrainCloud.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>E2080FE214CCD4AA4240EE14</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>BasiVerb.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/src/modules/reverbs/BasiVerb.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>E2520E306C98F32DD11371CF</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>0790F1F5A84F1A43B90071F3</string>
+					<string>E2080FE214CCD4AA4240EE14</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>reverbs</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>A982ADA9C3A8432A4B3C21C9</key>
+			<dict>
+				<key>fileRef</key>
+				<string>0790F1F5A84F1A43B90071F3</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>0790F1F5A84F1A43B90071F3</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>BasiVerb.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/src/modules/reverbs/BasiVerb.cpp</string>
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
@@ -2285,6 +2595,7 @@
 					<string>2774B7872EE0061F9935E752</string>
 					<string>9585366BC2B708EB70B3F84E</string>
 					<string>93CB6EAE44386F2CAEE30DA6</string>
+					<string>E2520E306C98F32DD11371CF</string>
 					<string>4F394DDF3511152CBDB794F6</string>
 					<string>69FE82EC5A9964FD95F0DD40</string>
 				</array>
@@ -3094,6 +3405,43 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
+			<key>61F3F59431EDF5450160327D</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>OneBarTimeMs.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/src/DSP/utility/OneBarTimeMs.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>43F31BCEA58D55116E8C0F64</key>
+			<dict>
+				<key>fileRef</key>
+				<string>089773355009A944762CCF53</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>089773355009A944762CCF53</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>OneBarTimeMs.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/src/DSP/utility/OneBarTimeMs.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
 			<key>5605A0EE71FE7E3005C7A87C</key>
 			<dict>
 				<key>explicitFileType</key>
@@ -3168,6 +3516,43 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
+			<key>0CE79D055D35F2A3B6FDEA9F</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>FreqToMs.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/src/DSP/utility/FreqToMs.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>9273DA0C4FBD87DE6E1AFAA7</key>
+			<dict>
+				<key>fileRef</key>
+				<string>2421BF66A31391AAA2B7DE8F</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>2421BF66A31391AAA2B7DE8F</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>FreqToMs.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/src/DSP/utility/FreqToMs.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
 			<key>59A416378F4E6561D2059B80</key>
 			<dict>
 				<key>explicitFileType</key>
@@ -3228,10 +3613,14 @@
 					<string>CCFFB59C612BE26C5CD9FB55</string>
 					<string>191772886FF9E3F814E0BF6C</string>
 					<string>59A416378F4E6561D2059B80</string>
+					<string>2421BF66A31391AAA2B7DE8F</string>
+					<string>0CE79D055D35F2A3B6FDEA9F</string>
 					<string>1C8FFFEB619B6CDA992E9C87</string>
 					<string>904E66916F0987B9B12EBAF8</string>
 					<string>1082494DCEBFE30E67FA6584</string>
 					<string>5605A0EE71FE7E3005C7A87C</string>
+					<string>089773355009A944762CCF53</string>
+					<string>61F3F59431EDF5450160327D</string>
 					<string>84E041426F9E460F5E084FE0</string>
 					<string>3FB761163708BA36E130B1DC</string>
 					<string>BF9D346CF92BA2D024374E4B</string>
@@ -3318,22 +3707,6 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
-			<key>FED56462D2BF7073F4787C47</key>
-			<dict>
-				<key>children</key>
-				<array>
-					<string>F13B74EEA0A0581C685774AB</string>
-					<string>73FB9F358650AAF77B98BF3C</string>
-					<string>A351DC608F3B618FDCD5ED8A</string>
-					<string>DEB2586108DD0144B70B9513</string>
-				</array>
-				<key>isa</key>
-				<string>PBXGroup</string>
-				<key>name</key>
-				<string>signal</string>
-				<key>sourceTree</key>
-				<string>&lt;group&gt;</string>
-			</dict>
 			<key>13FDC68D840BE92121003988</key>
 			<dict>
 				<key>fileRef</key>
@@ -3353,6 +3726,100 @@
 				<string>SampleAndHold.cpp</string>
 				<key>path</key>
 				<string>../../../addons/ofxPDSP/src/DSP/signal/SampleAndHold.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>BD6BE0D81CBB6E81D3E64ECC</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Decimator.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/src/DSP/signal/Decimator.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>1146179ECB0A60BDC678E73E</key>
+			<dict>
+				<key>fileRef</key>
+				<string>6B8454D0AFDAB3938F5120DC</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>6B8454D0AFDAB3938F5120DC</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Decimator.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/src/DSP/signal/Decimator.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>6553CCFFF855C2FD33264083</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Bitcruncher.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/src/DSP/signal/Bitcruncher.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>FED56462D2BF7073F4787C47</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>1A70B5AF2A6AE2CFF2182983</string>
+					<string>6553CCFFF855C2FD33264083</string>
+					<string>6B8454D0AFDAB3938F5120DC</string>
+					<string>BD6BE0D81CBB6E81D3E64ECC</string>
+					<string>F13B74EEA0A0581C685774AB</string>
+					<string>73FB9F358650AAF77B98BF3C</string>
+					<string>A351DC608F3B618FDCD5ED8A</string>
+					<string>DEB2586108DD0144B70B9513</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>signal</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>7237C6B13B14E73B7BD6C336</key>
+			<dict>
+				<key>fileRef</key>
+				<string>1A70B5AF2A6AE2CFF2182983</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>1A70B5AF2A6AE2CFF2182983</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Bitcruncher.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/src/DSP/signal/Bitcruncher.cpp</string>
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
@@ -4012,7 +4479,7 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
-			<key>8ADA57010380ED8239771337</key>
+			<key>B638140B4A3E6E5034E44340</key>
 			<dict>
 				<key>explicitFileType</key>
 				<string>sourcecode.c.h</string>
@@ -4021,9 +4488,9 @@
 				<key>isa</key>
 				<string>PBXFileReference</string>
 				<key>name</key>
-				<string>TableOsc.h</string>
+				<string>WaveTableOsc.h</string>
 				<key>path</key>
-				<string>../../../addons/ofxPDSP/src/DSP/oscillators/wavetable/TableOsc.h</string>
+				<string>../../../addons/ofxPDSP/src/DSP/oscillators/wavetable/WaveTableOsc.h</string>
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
@@ -4031,8 +4498,8 @@
 			<dict>
 				<key>children</key>
 				<array>
-					<string>8215957003FFFA0DDF6DD5ED</string>
-					<string>8ADA57010380ED8239771337</string>
+					<string>520076D444AE7827C4C39E99</string>
+					<string>B638140B4A3E6E5034E44340</string>
 				</array>
 				<key>isa</key>
 				<string>PBXGroup</string>
@@ -4041,14 +4508,14 @@
 				<key>sourceTree</key>
 				<string>&lt;group&gt;</string>
 			</dict>
-			<key>15193A6F59B2D31C2D31240F</key>
+			<key>A0F1D050D67E2E9C6ACB4532</key>
 			<dict>
 				<key>fileRef</key>
-				<string>8215957003FFFA0DDF6DD5ED</string>
+				<string>520076D444AE7827C4C39E99</string>
 				<key>isa</key>
 				<string>PBXBuildFile</string>
 			</dict>
-			<key>8215957003FFFA0DDF6DD5ED</key>
+			<key>520076D444AE7827C4C39E99</key>
 			<dict>
 				<key>explicitFileType</key>
 				<string>sourcecode.cpp.cpp</string>
@@ -4057,9 +4524,9 @@
 				<key>isa</key>
 				<string>PBXFileReference</string>
 				<key>name</key>
-				<string>TableOsc.cpp</string>
+				<string>WaveTableOsc.cpp</string>
 				<key>path</key>
-				<string>../../../addons/ofxPDSP/src/DSP/oscillators/wavetable/TableOsc.cpp</string>
+				<string>../../../addons/ofxPDSP/src/DSP/oscillators/wavetable/WaveTableOsc.cpp</string>
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
@@ -5949,22 +6416,6 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
-			<key>1B969720BFA62937FC6493BD</key>
-			<dict>
-				<key>children</key>
-				<array>
-					<string>E67DA5A48FC9824B6F377637</string>
-					<string>456BB362779471F8A4133FC4</string>
-					<string>32E6C008A77972C061E740D1</string>
-					<string>2AFFA64BBA97172E3BECC467</string>
-				</array>
-				<key>isa</key>
-				<string>PBXGroup</string>
-				<key>name</key>
-				<string>delays</string>
-				<key>sourceTree</key>
-				<string>&lt;group&gt;</string>
-			</dict>
 			<key>6D79278D02EA105DE93F9BF7</key>
 			<dict>
 				<key>fileRef</key>
@@ -5984,6 +6435,61 @@
 				<string>DampedDelay.cpp</string>
 				<key>path</key>
 				<string>../../../addons/ofxPDSP/src/DSP/delays/DampedDelay.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>7D7720179989DE021DE59F63</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>AllPassDelay.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/src/DSP/delays/AllPassDelay.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>1B969720BFA62937FC6493BD</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>C40B8EEADD6B944E2A6E092E</string>
+					<string>7D7720179989DE021DE59F63</string>
+					<string>E67DA5A48FC9824B6F377637</string>
+					<string>456BB362779471F8A4133FC4</string>
+					<string>32E6C008A77972C061E740D1</string>
+					<string>2AFFA64BBA97172E3BECC467</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>delays</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>AE17EC6B1974E0058EFFE53F</key>
+			<dict>
+				<key>fileRef</key>
+				<string>C40B8EEADD6B944E2A6E092E</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>C40B8EEADD6B944E2A6E092E</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>AllPassDelay.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxPDSP/src/DSP/delays/AllPassDelay.cpp</string>
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
@@ -7582,6 +8088,7 @@
 					<string>4D996C3DB2776F6BB8F1B841</string>
 					<string>40FD0C10DB93F59711A63ED4</string>
 					<string>4DC0312758CA12362B18AE12</string>
+					<string>AE17EC6B1974E0058EFFE53F</string>
 					<string>6D79278D02EA105DE93F9BF7</string>
 					<string>583912E2670F8D10E8D518B9</string>
 					<string>98976B80AFE88103EE0F7F86</string>
@@ -7622,7 +8129,7 @@
 					<string>F16392092AE37A2B80F5048C</string>
 					<string>C8638D74DC086532E86E3AF1</string>
 					<string>F09B1401FF2FA8604788D020</string>
-					<string>15193A6F59B2D31C2D31240F</string>
+					<string>A0F1D050D67E2E9C6ACB4532</string>
 					<string>787B5C052084957426D52584</string>
 					<string>69450D0C4B1DA6CB96B0AD7B</string>
 					<string>DB3086ABC120CBFB7B43C646</string>
@@ -7637,12 +8144,16 @@
 					<string>4334520E99999711F7F3B9FB</string>
 					<string>E1C780A535BBD5F4FA0F1FB3</string>
 					<string>6DEC6AA27E1D7A09C77772F4</string>
+					<string>7237C6B13B14E73B7BD6C336</string>
+					<string>1146179ECB0A60BDC678E73E</string>
 					<string>13FDC68D840BE92121003988</string>
 					<string>411225F3B160321EAA4F0999</string>
 					<string>D16429E710BAB8822B6FC8A4</string>
 					<string>0B4740B306B4546117DCBA07</string>
+					<string>9273DA0C4FBD87DE6E1AFAA7</string>
 					<string>C475F228FCEF7743B22BFD52</string>
 					<string>4C0F52BCCA5B6EBF6958DFF6</string>
+					<string>43F31BCEA58D55116E8C0F64</string>
 					<string>4BECA4BDAEC9B0EF60C573B9</string>
 					<string>31905008D7D2A21002E02FCA</string>
 					<string>281BDD1451C9650084ADAA2F</string>
@@ -7664,25 +8175,30 @@
 					<string>0A3954978495756623869D7E</string>
 					<string>2B956D197D7C46BFB3ED49E1</string>
 					<string>2F87412E72C3145BEE073BD1</string>
+					<string>A982ADA9C3A8432A4B3C21C9</string>
 					<string>7FA4C904676B229545682F3A</string>
 					<string>7C27448C4E7C343342F98444</string>
 					<string>16BC77AD81BA5DB5BA779DF0</string>
 					<string>D5BBE6B38445B8231F47E133</string>
 					<string>B7B2B04D0F2CFFC866E29D7D</string>
-					<string>4FEE584151B33109C3F2F053</string>
-					<string>AEC05C4533B93FBA49C85490</string>
-					<string>30F92D4E758A45EC2B422B35</string>
 					<string>A1C1DAACFB146DACCFB61461</string>
-					<string>63BD7DCCCEDE7FED000140E7</string>
-					<string>DB9A2D131819DFCDF447D729</string>
+					<string>C9073812FCC3A0EB42A9277F</string>
 					<string>55EEAF431777946C374665C8</string>
+					<string>943927834CD36C912D672174</string>
+					<string>81899C81F1F47FEC2002D996</string>
+					<string>225BBBD96E4BCFC2A4705ADD</string>
+					<string>541B68D8D35004B64B6F774D</string>
+					<string>D26B95B6C297B3434BD32F55</string>
 					<string>FC4C72B904DA924BC7CE1A08</string>
 					<string>B9A4662852E4B9F7EBE43E06</string>
 					<string>BF7B2973B4FB9167380B7906</string>
 					<string>87012D950F4804121A148294</string>
 					<string>C19DC657AE2A71A90054DB38</string>
+					<string>98A8331C747F8AAD98BFB503</string>
 					<string>5E638E61AD4688B59B737046</string>
-					<string>103ABC6A5172EAF594669B38</string>
+					<string>EEF7EB599FD6B7E2990E4842</string>
+					<string>18F4F21244C934F8FFA7E4B6</string>
+					<string>A96B24000923D509386D50C0</string>
 					<string>38FF053AAA75A09E7B461287</string>
 					<string>A96505F69D76B05A528B5B25</string>
 				</array>
@@ -8320,6 +8836,7 @@
 					<key>HEADER_SEARCH_PATHS</key>
 					<array>
 						<string>$(OF_CORE_HEADERS)</string>
+						<string>src</string>
 						<string>../../../addons/ofxMidi/libs</string>
 						<string>../../../addons/ofxMidi/libs/pgmidi</string>
 						<string>../../../addons/ofxMidi/libs/rtmidi</string>
@@ -8327,6 +8844,9 @@
 						<string>../../../addons/ofxMidi/src/desktop</string>
 						<string>../../../addons/ofxMidi/src/ios</string>
 						<string>../../../addons/ofxPDSP/libs</string>
+						<string>../../../addons/ofxPDSP/libs/audiofft</string>
+						<string>../../../addons/ofxPDSP/libs/libaudiodecoder</string>
+						<string>../../../addons/ofxPDSP/libs/libaudiodecoder/apple</string>
 						<string>../../../addons/ofxPDSP/src</string>
 						<string>../../../addons/ofxPDSP/src/DSP</string>
 						<string>../../../addons/ofxPDSP/src/DSP/control</string>
@@ -8367,6 +8887,7 @@
 						<string>../../../addons/ofxPDSP/src/modules/effects</string>
 						<string>../../../addons/ofxPDSP/src/modules/equalizers</string>
 						<string>../../../addons/ofxPDSP/src/modules/oscillators</string>
+						<string>../../../addons/ofxPDSP/src/modules/reverbs</string>
 						<string>../../../addons/ofxPDSP/src/modules/samplers</string>
 						<string>../../../addons/ofxPDSP/src/modules/signal</string>
 						<string>../../../addons/ofxPDSP/src/ofx</string>
@@ -8439,6 +8960,7 @@
 					<key>HEADER_SEARCH_PATHS</key>
 					<array>
 						<string>$(OF_CORE_HEADERS)</string>
+						<string>src</string>
 						<string>../../../addons/ofxMidi/libs</string>
 						<string>../../../addons/ofxMidi/libs/pgmidi</string>
 						<string>../../../addons/ofxMidi/libs/rtmidi</string>
@@ -8446,6 +8968,9 @@
 						<string>../../../addons/ofxMidi/src/desktop</string>
 						<string>../../../addons/ofxMidi/src/ios</string>
 						<string>../../../addons/ofxPDSP/libs</string>
+						<string>../../../addons/ofxPDSP/libs/audiofft</string>
+						<string>../../../addons/ofxPDSP/libs/libaudiodecoder</string>
+						<string>../../../addons/ofxPDSP/libs/libaudiodecoder/apple</string>
 						<string>../../../addons/ofxPDSP/src</string>
 						<string>../../../addons/ofxPDSP/src/DSP</string>
 						<string>../../../addons/ofxPDSP/src/DSP/control</string>
@@ -8486,6 +9011,7 @@
 						<string>../../../addons/ofxPDSP/src/modules/effects</string>
 						<string>../../../addons/ofxPDSP/src/modules/equalizers</string>
 						<string>../../../addons/ofxPDSP/src/modules/oscillators</string>
+						<string>../../../addons/ofxPDSP/src/modules/reverbs</string>
 						<string>../../../addons/ofxPDSP/src/modules/samplers</string>
 						<string>../../../addons/ofxPDSP/src/modules/signal</string>
 						<string>../../../addons/ofxPDSP/src/ofx</string>
