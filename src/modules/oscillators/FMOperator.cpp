@@ -20,6 +20,8 @@ void pdsp::FMOperator::patch(){
     addModuleOutput( "sync",   phazor.out("sync") );
     
     ratioMult.set(1.0f);
+    p2f.enableBoundaries(-30000.0f, 150.0f);
+    p2f.set(69.0f); // standard freq is A4 = 440hz
     
     p2f >> ratioMult >> phazor.in_freq() >> sine;
     

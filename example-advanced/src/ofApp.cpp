@@ -3,6 +3,11 @@
 // before looking at this, be shure to check out the basics with the ofxPDSP wiki tutorials:
 // https://github.com/npisanti/ofxPDSP/wiki
 
+// this is a more advanced example of some of ofxPDSP inner workings, using the oF audio callback 
+
+// sequencing is a lot easier using Sequence class and some of the more advanced feature of ScoreSection
+// but I still have to write some lessons and examples on that
+
 // example of classes for generative music and sequencing --> score.h
 // also example of basic synth patching  -------------------> music.h
 

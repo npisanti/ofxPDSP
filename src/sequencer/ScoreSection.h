@@ -10,6 +10,9 @@
 #include <vector>
 #include "../messages/header.h"
 #include "../DSP/control/Sequencer.h"
+#include "../DSP/control/GateSequencer.h"
+#include "../DSP/control/ValueSequencer.h"
+#include "../DSP/pdspCore.h"
 #include <mutex>
 #include "../flags.h"
 
@@ -52,6 +55,7 @@ private:
 public:
 
     ScoreSection();
+    ~ScoreSection();
     ScoreSection(const ScoreSection &other);
 
     /*!
@@ -70,13 +74,42 @@ public:
     void setOutputsNumber(int size);
     
     /*!
-    @brief Set the output with the given index as selected output and return this ScoreSection for patching
+    @brief Set the output with the given index as selected output and return this ScoreSection for patching to midi outs
     @param[in] index index of the out to patch, 0 if not given
 
-    Set the output with the given index as selected output and return this ScoreSection for patching. You can connect the ScoreSection to a GateSequencer, ValueSequencer or ExtSequencer using the >> operator.
+    Set the output with the given index as selected output and return this ScoreSection for patching. Usually you patch the result to an ofxPDSPMidiOut using the >> operator, but you can also patch it to a GateSequencer or ValueSequencer. Also eventually resize the outputs number if needed.
     */     
+    ScoreSection& out_message( int index = 0 );
+    
+    
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
+    [[deprecated("deprecated function, replaced by out_message(int index)")]]
     ScoreSection& out( int index = 0 );
+/*!
+    @endcond
+*/
 
+    /*!
+    @brief Set the output with the given index as a gate output and return the GateSequencer for patching
+    @param[in] index index of the out to patch, 0 if not given
+    */     
+    GateSequencer& out_trig( int index = 0 );
+    
+    /*!
+    @brief Set the output with the given index as a value output and return the ValueSequencer reference. You can use the result for patching or for set the value slew time (slew is deactivated by default).
+    @param[in] index index of the out to patch, 0 if not given
+    */   
+    ValueSequencer& out_value( int index = 0 );
+    
+    /*!
+    @brief after the linking the messages sent to the slewControlIndex output will be used to scale the slew time of the ValueSequencer set at out_value(valueOutIndex). 
+    @param[in] valueOutIndex
+    @param[in] slewControlIndex
+    For setting the base slew time you use out_value(int index).setSlewTime(float slewTimeMs, SlewMode_t mode = Time);
+    */   
+    void linkSlewControl( int valueOutIndex, int slewControlIndex );
 
 /*!
     @cond HIDDEN_SYMBOLS
@@ -189,6 +222,9 @@ private:
     bool                        legatoLaunch;
     
     
+    std::vector<GateSequencer*>     gates;
+    std::vector<ValueSequencer*>    values;
+    
     std::vector<MessageBuffer>  outputs;
     //int                         outputSize;
     
@@ -197,8 +233,11 @@ private:
     std::mutex                  patternMutex;
     
     std::atomic<int>            atomic_meter_current;
-    std::atomic<int>            atomic_meter_next;
+    std::atomic<int>            atomic_meter_next; 
     std::atomic<float>          atomic_meter_playhead;
+    
+    static GateSequencer        invalidGate;
+    static ValueSequencer       invalidValue;
     
 };// END ScoreSection
 

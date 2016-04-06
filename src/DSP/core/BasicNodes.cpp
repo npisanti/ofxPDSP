@@ -371,18 +371,6 @@ void pdsp::InputNode::process() noexcept {
 }
 
 
-/*
-void pdsp::InputNode::connectExclusive( OutputNode& output ) {
-    this->disconnectAll();
-    connect(output);
-    
-    //inputs.push_back( OutputData( &output, output.multiply, output.nextMultiplier ) );
-    //output.multiply = false;
-    //connections = 1;
-    //output.addInputToList( this );
-}
-*/
-
 void pdsp::InputNode::connect( OutputNode& output ) {
 
     if( connections==0 ) {
@@ -485,12 +473,6 @@ void pdsp::InputNode::removeInputUnilateral( const OutputNode& outputNode ) {
     }
 }
 
-/*
-void pdsp::InputNode::connectFloatExclusive( float value ) {
-    internalScalar.set( value );
-    this->connectExclusive( internalScalar );
-}
-*/
 void pdsp::InputNode::connectFloat( float value ) {
     internalScalar.set( value );
     this->connect( internalScalar );
@@ -506,11 +488,7 @@ void pdsp::InputNode::enableBoundaries( float lo, float hi ) {
     lowBoundary = lo;
     clampToBoundaries = true;
 }
-/*
-void pdsp::InputNode::enableBoundaries() {
-    clampToBoundaries = true;
-}
-*/
+
 void pdsp::InputNode::disableBoundaries() {
     clampToBoundaries = false;
 }
@@ -636,12 +614,6 @@ void pdsp::OutputNode::disconnectAll() {
 void pdsp::OutputNode::connect( InputNode& inputNode ) {
     inputNode.connect( *this );
 }
-
-/*
-void pdsp::OutputNode::connectExclusive( InputNode& inputNode ) {
-    inputNode.connectExclusive( *this );
-}
-*/
 
 void pdsp::OutputNode::disconnect( InputNode& inputNode ) {
     inputNode.disconnect( *this );
@@ -840,11 +812,7 @@ void pdsp::Unit::setOutputToZero( OutputNode& node ) {
     node.state = Changed;
     node.buffer[0] = 0.0f;
 }
-/*
-const float* pdsp::Unit::getOutputBuffer( OutputNode& node ) {
-    return node.buffer;
-}
-*/
+
 float pdsp::Unit::processAndGetSingleValue( InputNode &input, int pos ) {
     input.process();
     if( input.state==AudioRate ) {
@@ -879,10 +847,8 @@ int pdsp::Unit::getOversampleLevel() const {
 pdsp::Patchable::Patchable() {
     inputs.reserve( 8 );
     outputs.reserve( 8 );
-    //valueins.reserve( 8 );
     inputs.clear();
     outputs.clear();
-    //valueins.clear();
     resetInputToDefault();
     resetOutputToDefault();
 }

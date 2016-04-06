@@ -125,7 +125,7 @@ struct BassPattern : public pdsp::ScoreCell{
     // on the fourth bar the second part of the returned pitches will be random values
     float pfun(int index){
         if(index>4 && counter == 3){
-            float nextPitch = static_cast<float> (pdsp::randomUnipolarInt(12) + 41.0f); 
+            float nextPitch = static_cast<float> (pdspDice(12) + 41.0f); 
             return nextPitch;            
         }else{
             return sequence[index];
@@ -169,8 +169,8 @@ struct MusicTest{
         // so they will trigger one after the other each 1/4th bars
         
         scoregen.sections[0].setOutputsNumber(2); // two outputs, 0 = gate, 1 = pitch
-        scoregen.sections[0].out(0) >> bleepGate; // a GateSequencer turns the score messages into trig values for the DSPs
-        scoregen.sections[0].out(1) >> bleepPitch;// a ValueSequencer turns the score messages into values for the DSPs
+        scoregen.sections[0].out_message(0) >> bleepGate; // a GateSequencer turns the score messages into trig values for the DSPs
+        scoregen.sections[0].out_message(1) >> bleepPitch;// a ValueSequencer turns the score messages into values for the DSPs
         // GateSequencer and ValueSequencer are a sample-accurate bridge between scored messages and DSPs
     
 
@@ -178,9 +178,9 @@ struct MusicTest{
         scoregen.sections[1].setCellTiming( 0, 1.0, true, 1.0 ); // lenght = 1bar, nextCell quantized to the next bar
         scoregen.sections[1].setCell(1, nullptr, nullptr); 
         scoregen.sections[1].setOutputsNumber(3); // 0 = gate, 1 = pitch, 2 = slew control
-        scoregen.sections[1].out(0) >> bassGate;      
-        scoregen.sections[1].out(1) >> bassPitch;        
-        scoregen.sections[1].out(2) >> bassPitch.in_slew(); // this way you can use message to control ValueSequencer slew time 
+        scoregen.sections[1].out_message(0) >> bassGate;      
+        scoregen.sections[1].out_message(1) >> bassPitch;        
+        scoregen.sections[1].out_message(2) >> bassPitch.in_slew(); // this way you can use message to control ValueSequencer slew time 
                                                             // slew time is multiplied by the message value
                                                             // so for example 0.0f deativates slew and 2.0f doubles it
                                                             // (the effect is subtle in this example but it's there)

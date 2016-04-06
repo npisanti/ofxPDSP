@@ -88,8 +88,8 @@ void pdsp::Sequence::set(const std::vector<float> &init ) noexcept{
 }
 
 
-void pdsp::Sequence::message(double step, float value) noexcept{
-    nextScore.push_back( pdsp::ScoreMessage( step * divMult, value, 0) );
+void pdsp::Sequence::message(double step, float value, int outputIndex) noexcept{
+    nextScore.push_back( pdsp::ScoreMessage( step * divMult, value, outputIndex) );
 }
 
 void pdsp::Sequence::begin() noexcept{

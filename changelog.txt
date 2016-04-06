@@ -1,4 +1,7 @@
 
+v0.1.3.1
+    - major tweaks to ScoreSection for easier sequencing
+    - minor fixes to example-advanced
 
 v0.1.3.0
     - added more asserts

@@ -61,6 +61,12 @@ public:
     @brief used by ScoreSection, loops the ScorePattern
     */
     static CellChangeSelf*          Self;
+
+    /*!
+    @brief used by ScoreSection, loops the ScorePattern
+    */
+    static CellChangeSelf*          Loop;
+    
     /*!
     @brief used by ScoreSection, plays the next ScorePattern
     */

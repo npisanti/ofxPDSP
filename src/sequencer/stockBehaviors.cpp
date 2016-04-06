@@ -50,6 +50,7 @@ int pdsp::CellChangeRandomWalk::getNextPattern( int currentPattern, int size ) {
 
 pdsp::CellChangeSelf pdsp::Behavior::staticCellChangeSelf = pdsp::CellChangeSelf();
 pdsp::CellChangeSelf* pdsp::Behavior::Self = &pdsp::Behavior::staticCellChangeSelf;
+pdsp::CellChangeSelf* pdsp::Behavior::Loop = &pdsp::Behavior::staticCellChangeSelf;
 
 pdsp::CellChangeNext pdsp::Behavior::staticCellChangeNext = pdsp::CellChangeNext(); 
 pdsp::CellChangeNext* pdsp::Behavior::Next = &pdsp::Behavior::staticCellChangeNext;

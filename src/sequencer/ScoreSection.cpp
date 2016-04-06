@@ -5,6 +5,10 @@
 #include <limits.h>
 
 
+pdsp::GateSequencer pdsp::ScoreSection::invalidGate = pdsp::GateSequencer();
+pdsp::ValueSequencer pdsp::ScoreSection::invalidValue = pdsp::ValueSequencer();
+
+
 pdsp::ScoreSection::ScoreSection() {
     
     patterns.clear();
@@ -26,11 +30,14 @@ pdsp::ScoreSection::ScoreSection() {
 
     setOutputsNumber(1);    
     
+    gates.clear();
+    values.clear();
+    
 }
 
 
 pdsp::ScoreSection::ScoreSection(const pdsp::ScoreSection &other) {
-    
+    std::cout<<"score section copy constructed\n";
     resizePatterns( (int) other.patterns.size() );
     
     for(int i=0; i< (int) other.patterns.size(); ++i){
@@ -44,6 +51,16 @@ pdsp::ScoreSection::ScoreSection(const pdsp::ScoreSection &other) {
     this->setOutputsNumber( (int)other.outputs.size() );
 }
 
+
+pdsp::ScoreSection::~ScoreSection(){
+    for( int i=0; i < (int)gates.size(); ++i ){
+        if(gates[i]!=nullptr) delete gates[i];
+    }
+    
+    for( int i=0; i < (int)values.size(); ++i ){
+        if(values[i]!=nullptr) delete values[i];
+    }
+}
 
 void pdsp::ScoreSection::resizePatterns(int size){
     if(size>0){
@@ -85,13 +102,93 @@ void pdsp::ScoreSection::launchCell( int index, bool legato, bool quantizeLaunch
     patternMutex.unlock();
 }
 
-pdsp::ScoreSection& pdsp::ScoreSection::out(int index){
-    if(index>=0 && index <outputs.size() ){
+pdsp::ScoreSection& pdsp::ScoreSection::out_message( int index ){
+    if(index>=0 ){
+        if( index >= (int)outputs.size() ){
+            setOutputsNumber(index+1);
+        }
         selectedMessageBuffer = &outputs[index];
         return *this;
     }else{
         return *this;
     }
+}
+
+pdsp::ScoreSection& pdsp::ScoreSection::out( int index ){
+    return out_message(index);
+}
+
+
+pdsp::GateSequencer& pdsp::ScoreSection::out_trig( int index ){
+    
+    if(index<0) index = 0;
+    
+    if(index < (int) values.size()){
+        if(values[index]!=nullptr){
+            std::cout<<"[pdsp] score section output already used as value out, assignation invalid\n";
+            pdsp_trace();
+            return invalidGate;
+        }
+    }
+    
+    if(index >= (int) gates.size()){
+        int oldSize = gates.size();
+        gates.resize(index+1);
+        for(int i=oldSize; i<=index; ++i){
+            gates[i] = nullptr;
+        }
+    }
+    
+    if(gates[index]==nullptr){
+        gates[index] = new GateSequencer();
+        out_message(index) >> *gates[index];
+    }
+    
+    return *gates[index];
+    
+}
+
+pdsp::ValueSequencer& pdsp::ScoreSection::out_value( int index ){
+    
+    if(index<0) index = 0;
+    
+    if(index < (int) gates.size()){
+        if(gates[index]!=nullptr){
+            std::cout<<"[pdsp] score section output already used as trigger out, assignation invalid\n";
+            pdsp_trace();
+            return invalidValue;
+        }
+    }
+    
+    if(index >= (int) values.size()){
+        int oldSize = values.size();
+        values.resize(index+1);
+        for(int i=oldSize; i<=index; ++i){
+            values[i] = nullptr;
+        }
+    }
+    
+    if(values[index]==nullptr){
+        values[index] = new ValueSequencer();
+        out_message(index) >> *values[index];
+    }
+    
+    return *values[index];  
+    
+}
+
+void pdsp::ScoreSection::linkSlewControl( int valueOutIndex, int slewControlIndex ){
+    
+    if( valueOutIndex <= 0 ) valueOutIndex = 0;
+    
+    if (valueOutIndex >= (int)values.size() ){
+        std::cout<<"[pdsp] invalid value out index for slew linking\n";
+        pdsp_trace();
+        return;
+    }
+    
+    out_message(slewControlIndex) >> (*values[valueOutIndex]).in_slew();
+    
 }
 
 void pdsp::ScoreSection::setCell( int index, ScoreCell* scoreCell, CellChange* behavior ){

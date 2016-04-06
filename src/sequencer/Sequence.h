@@ -52,8 +52,12 @@ namespace pdsp{
 
         /*!
         @brief with this method you can manually add timed values to the sequence. You have to call begin() before adding messages and end() when you've done. Also note that the old Sequence values are not kept so you are adding values to an empty sequence.
+        @param[in] step the step index 
+        @param[in] value the value of the step
+        @param[in] outputIndex when using message Sequence can transmit values to more than one GateSequencer/ValueSequencer, see ScoreCell for more
         */
-        void message(double step, float value) noexcept;
+        void message(double step, float value, int outputIndex=0) noexcept;
+        
         /*!
         @brief you call end() when you have finished adding value with Message(). When the Sequence restarts the new sequence will be played.
         */
@@ -63,7 +67,6 @@ namespace pdsp{
         @brief this lambda function is executed each time the Sequence starts from the begin. Usually is empty, but you can assign your own lambdas to generate new values each time the Sequence starts. Remember that the code executed can make a previosly called set() method ininfluent.
         */
         std::function<void()> code;
-
 
     private:
         std::vector< pdsp::ScoreMessage > nextScore;
@@ -75,13 +78,18 @@ namespace pdsp{
 
     };
     
-    
+    /*!
+    @brief class for managing sequencing of Sequence
+    This class has a assignable lambda function code() that returns an integer for the next ScoreSection index to be started. By default it returns the last used index, looping the Sequence or ScoreCell
+    */    
     class SeqChange : public CellChange{
     
     public:
     
         SeqChange();
-        
+        /*!
+        @brief lambda function to assign for selecting the next Sequencer / ScoreCell to start
+        */
         std::function<int()> code;
     
     private:

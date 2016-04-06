@@ -39,16 +39,16 @@ void ofApp::setup(){
     // you connect the ScoreSections to midiOut like this
     // outputs a midi on on a message with value > 0.0f and a midi off message for a value <= 0.0f
     // first argument of gate() is midi channel, second the default note
-    engine.score.sections[0].out() >> midiOut.gate(1, 60); 
+    engine.score.sections[0].out_message() >> midiOut.gate(1, 60); 
     
     // if you patch an out to a note() this out will control the note number of the last patched gate()
     // so beware! use gate() and note() always one after the other, like this
-    // engine.score.sections[0].out() >> midiOut.gate(1); 
-    // engine.score.sections[1].out() >> midiOut.note();
+    // engine.score.sections[0].out_message() >> midiOut.gate(1); 
+    // engine.score.sections[1].out_message() >> midiOut.note();
     
     // you can also connect the out to a midi cc like this
     // first argument of cc() is midi channel, second the  midi CC number to send
-    //engine.score.sections[0].out() >> midiOut.cc(1, 2);
+    //engine.score.sections[0].out_message() >> midiOut.cc(1, 2);
     
     // in this example we are sending messages just to gate, so they will always be on the same note
     engine.score.sections[0].launchCell(0);
