@@ -16,11 +16,14 @@ void ofApp::setup(){
     midiOut.openPort(0); // set the right midi port
     
     // some sequences, basically just on/off notes
-    sequence1.division(8.0f);
+    sequence1.setDivision(8.0);
+    sequence1.setLength(2.0);
     sequence1.set( { 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f } );
-    sequence1.division(16.0f);
+    sequence2.setDivision(16.0);
+    sequence2.setLength(2.0);
     sequence2.set( { 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f } );
-    sequence1.division(32.0f);
+    sequence3.setDivision(32.0);
+    sequence3.setLength(2.0);
     sequence3.set( { 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f } );
     
     // setup as usual, check example-scoring for more info
@@ -30,11 +33,9 @@ void ofApp::setup(){
     
     engine.score.sections[0].setOutputsNumber(3); // gate + pitch + cc
     engine.score.sections[0].setCell(0, &sequence1, pdsp::Behavior::Self);
-    engine.score.sections[0].setCellTiming( 0, 1.0, true, 1.0 );
     engine.score.sections[0].setCell(1, &sequence2, pdsp::Behavior::Self);
-    engine.score.sections[0].setCellTiming( 1, 2.0, false, 2.0 );
     engine.score.sections[0].setCell(2, &sequence3, pdsp::Behavior::Self);
-    engine.score.sections[0].setCellTiming( 2, 1.0, true, 2.0 );
+    
 
     // you connect the ScoreSections to midiOut like this
     // outputs a midi on on a message with value > 0.0f and a midi off message for a value <= 0.0f

@@ -27,17 +27,18 @@ bool pdsp::messageSort(const ScoreMessage &lhs, const ScoreMessage &rhs ) { retu
 pdsp::ScoreCell::ScoreCell(){
     score.reserve(PDSP_PATTERN_MESSAGE_RESERVE_DEFAULT);
     score.clear();
+    length = 1.0;
 }
 
-void pdsp::ScoreCell::generateScore(const float &length) noexcept {}
+void pdsp::ScoreCell::generateScore() noexcept {}
 
-void pdsp::ScoreCell::prepareScore(const float &length) noexcept {}
+void pdsp::ScoreCell::prepareScore() noexcept {}
 
-void pdsp::ScoreCell::executeGenerateScore(const float &length){
-    generateScore(length);
+void pdsp::ScoreCell::executeGenerateScore(){
+    generateScore();
     std::sort (score.begin(), score.end(), messageSort); //sort the messages
 }
-void pdsp::ScoreCell::executePrepareScore(const float &length){
-    prepareScore(length);
+void pdsp::ScoreCell::executePrepareScore(){
+    prepareScore();
 }
 

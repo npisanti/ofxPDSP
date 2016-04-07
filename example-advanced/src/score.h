@@ -27,6 +27,7 @@ struct BleepPattern : public pdsp::ScoreCell{
     BleepPattern(float pitch){
         score.push_back( pdsp::ScoreMessage(0.0, 1.0f,  0) ); // trigger
         score.push_back( pdsp::ScoreMessage(0.0, pitch, 1) ); // pitch
+        this->length = 0.25;
     }
     
     BleepPattern() : BleepPattern(69.0f){}
@@ -99,7 +100,8 @@ struct BassPattern : public pdsp::ScoreCell{
     
     // generateScore is ScoreCell method you have to override 
     // to change/generate its messages each time the cell is launched
-    void generateScore(const float &length) noexcept override {
+    void generateScore() noexcept override {
+        this->length = 1.0;
 
         shuffleSequence();            
 
@@ -161,10 +163,10 @@ struct MusicTest{
         scoregen.sections[0].setCell(2, &bleep3, &bleepSeq );
         scoregen.sections[0].setCell(3, &bleep4, &bleepSeq );
         //set up launch timigs           index length quant grid  
-        scoregen.sections[0].setCellTiming(0,   0.25, true, 0.25 );
-        scoregen.sections[0].setCellTiming(1,   0.25, true, 0.25 );
-        scoregen.sections[0].setCellTiming(2,   0.25, true, 0.25 );
-        scoregen.sections[0].setCellTiming(3,   0.25, true, 0.25 );
+        scoregen.sections[0].enableQuantizing(0, 0.25 );
+        scoregen.sections[0].enableQuantizing(1, 0.25 );
+        scoregen.sections[0].enableQuantizing(2, 0.25 );
+        scoregen.sections[0].enableQuantizing(3, 0.25 );
         // quant = quantized launch, grid = grid to quantize, 0.25 is 1/4th bars 
         // so they will trigger one after the other each 1/4th bars
         
@@ -175,7 +177,7 @@ struct MusicTest{
     
 
         scoregen.sections[1].setCell(0, &bassPattern, pdsp::Behavior::Self); //pdsp::Behavior contains some ready-made CellChange
-        scoregen.sections[1].setCellTiming( 0, 1.0, true, 1.0 ); // lenght = 1bar, nextCell quantized to the next bar
+        scoregen.sections[1].enableQuantizing( 0, 1.0 ); // nextCell quantized to the next bar
         scoregen.sections[1].setCell(1, nullptr, nullptr); 
         scoregen.sections[1].setOutputsNumber(3); // 0 = gate, 1 = pitch, 2 = slew control
         scoregen.sections[1].out_message(0) >> bassGate;      

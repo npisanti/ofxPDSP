@@ -38,11 +38,10 @@ private:
     */
     class PatternStruct{
     public:
-        PatternStruct() : scoreCell(nullptr), nextCell(nullptr), length(1.0), quantizeLaunch(false), quantizeGrid(0.0) {};
+        PatternStruct() : scoreCell(nullptr), nextCell(nullptr), quantizeLaunch(false), quantizeGrid(0.0) {};
             
         ScoreCell*      scoreCell;
         CellChange*     nextCell;
-        double          length;
         bool            quantizeLaunch;
         double          quantizeGrid;
     };    
@@ -58,12 +57,14 @@ public:
     ~ScoreSection();
     ScoreSection(const ScoreSection &other);
 
+
     /*!
     @brief Sets the number of patterns contained by this ScoreSection
     @param[in] size number of ScoreCell contained by this ScoreSection
 
     */ 
     void resizePatterns(int size);
+    
     
     /*!
     @brief Sets the number of outputs of this ScoreSection, default is 1.
@@ -72,6 +73,7 @@ public:
     Set the number of outputs that can be connected to GateSequencer or ValueSequencer, default is 1.
     */ 
     void setOutputsNumber(int size);
+    
     
     /*!
     @brief Set the output with the given index as selected output and return this ScoreSection for patching to midi outs
@@ -82,20 +84,12 @@ public:
     ScoreSection& out_message( int index = 0 );
     
     
-/*!
-    @cond HIDDEN_SYMBOLS
-*/
-    [[deprecated("deprecated function, replaced by out_message(int index)")]]
-    ScoreSection& out( int index = 0 );
-/*!
-    @endcond
-*/
-
     /*!
     @brief Set the output with the given index as a gate output and return the GateSequencer for patching
     @param[in] index index of the out to patch, 0 if not given
     */     
     GateSequencer& out_trig( int index = 0 );
+    
     
     /*!
     @brief Set the output with the given index as a value output and return the ValueSequencer reference. You can use the result for patching or for set the value slew time (slew is deactivated by default).
@@ -103,25 +97,15 @@ public:
     */   
     ValueSequencer& out_value( int index = 0 );
     
+    
     /*!
     @brief after the linking the messages sent to the slewControlIndex output will be used to scale the slew time of the ValueSequencer set at out_value(valueOutIndex). 
     @param[in] valueOutIndex
     @param[in] slewControlIndex
     For setting the base slew time you use out_value(int index).setSlewTime(float slewTimeMs, SlewMode_t mode = Time);
     */   
-    void linkSlewControl( int valueOutIndex, int slewControlIndex );
-
-/*!
-    @cond HIDDEN_SYMBOLS
-*/
-    [[deprecated("Replaced by setCell() for a less ambigous nomenclature")]]
-    void setPattern( int index, ScoreCell* scoreCell, CellChange* behavior = nullptr );
+    void linkSlewControl( int valueOutIndex, int slewControlIndex ); 
     
-    [[deprecated("Replaced by setChange() for a less ambigous nomenclature")]]
-    void setBehavior( int index, CellChange* behavior );
-/*!
-    @endcond
-*/    
     
     /*!
     @brief Sets the Cell at the given index to the given one
@@ -132,7 +116,7 @@ public:
     Sets the score pattern at a given index. If ScoreCell is set to nullptr then nothing is played, If CellChange is set to nullptr the sequencing is stopped after playing this Pattern. Sequence is a subclass of ScoreCell easiear to manage.
     */ 
     void setCell( int index, ScoreCell* scoreCell, CellChange* behavior = nullptr );
-
+    
 
     /*!
     @brief Sets the CellChange that determine what cell will be played after this
@@ -144,15 +128,31 @@ public:
     
     
     /*!
-    @brief Sets some values for the pattern execution, Thread-safe.
+    @brief Sets some values for the pattern quantized execution, Thread-safe.
     @param[in] index index of the patter to set inside the ScoreSection. This has to be a valid index.
-    @param[in] length length passed to ScoreCell when the messages are generated
     @param[in] quantizeLaunch if true the next pattern launch is quantized to the bars, if false is executed when the given length expires. 
     @param[in] quantizeGrid if the launch is quantized this is the grid division for quantizing, in bars.
 
     Sets the score pattern timing options.
     */     
-    void setCellTiming(int index, double length, bool quantizeLaunch = true, double quantizeGrid = 1.0f );
+    void setCellQuantizing(int index, bool quantizeLaunch = false, double quantizeGrid = 1.0f );
+
+    /*!
+    @brief Enable quantizing of next cell launch. Thread-safe.
+    @param[in] index index of the patter to set inside the ScoreSection. This has to be a valid index.
+    @param[in] quantizeGrid if the launch is quantized this is the grid division for quantizing, in bars.
+
+    */     
+    void enableQuantizing(int index, double quantizeGrid = 1.0f );
+    
+
+    /*!
+    @brief Enable quantizing of next cell launch. Thread-safe.
+    @param[in] index index of the patter to set inside the ScoreSection. This has to be a valid index.
+    @param[in] quantizeGrid if the launch is quantized this is the grid division for quantizing, in bars.
+
+    */     
+    void disableQuantizing(int index);
     
     
     /*!
@@ -188,6 +188,21 @@ public:
     */ 
     float meter_playhead() const; 
     
+    
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
+    [[deprecated("deprecated function, replaced by out_message(int index)")]]
+    ScoreSection& out( int index = 0 );
+    
+    [[deprecated("Replaced by setCell() for a less ambigous nomenclature")]]
+    void setPattern( int index, ScoreCell* scoreCell, CellChange* behavior = nullptr );
+    
+    [[deprecated("Replaced by setChange() for a less ambigous nomenclature")]]
+    void setBehavior( int index, CellChange* behavior );
+/*!
+    @endcond
+*/
 private:
     void processSection(const double    &startPlayHead, 
                     const double    &endPlayHead, 
