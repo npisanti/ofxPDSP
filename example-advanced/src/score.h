@@ -170,7 +170,6 @@ struct MusicTest{
         // quant = quantized launch, grid = grid to quantize, 0.25 is 1/4th bars 
         // so they will trigger one after the other each 1/4th bars
         
-        scoregen.sections[0].setOutputsNumber(2); // two outputs, 0 = gate, 1 = pitch
         scoregen.sections[0].out_message(0) >> bleepGate; // a GateSequencer turns the score messages into trig values for the DSPs
         scoregen.sections[0].out_message(1) >> bleepPitch;// a ValueSequencer turns the score messages into values for the DSPs
         // GateSequencer and ValueSequencer are a sample-accurate bridge between scored messages and DSPs
@@ -179,7 +178,7 @@ struct MusicTest{
         scoregen.sections[1].setCell(0, &bassPattern, pdsp::Behavior::Self); //pdsp::Behavior contains some ready-made CellChange
         scoregen.sections[1].enableQuantizing( 0, 1.0 ); // nextCell quantized to the next bar
         scoregen.sections[1].setCell(1, nullptr, nullptr); 
-        scoregen.sections[1].setOutputsNumber(3); // 0 = gate, 1 = pitch, 2 = slew control
+
         scoregen.sections[1].out_message(0) >> bassGate;      
         scoregen.sections[1].out_message(1) >> bassPitch;        
         scoregen.sections[1].out_message(2) >> bassPitch.in_slew(); // this way you can use message to control ValueSequencer slew time 

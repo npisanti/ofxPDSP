@@ -66,7 +66,7 @@ private:
         
         OutputNode output;
         
-        MessageBuffer* messageBuffer;
+        //MessageBuffer* messageBuffer;
         MessageBuffer* slewControl;
         bool connectToSlewControl;
         

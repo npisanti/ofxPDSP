@@ -65,14 +65,7 @@ public:
     */ 
     void resizePatterns(int size);
     
-    
-    /*!
-    @brief Sets the number of outputs of this ScoreSection, default is 1.
-    @param[in] size number of outputs for connection
 
-    Set the number of outputs that can be connected to GateSequencer or ValueSequencer, default is 1.
-    */ 
-    void setOutputsNumber(int size);
     
     
     /*!
@@ -110,8 +103,8 @@ public:
     /*!
     @brief Sets the Cell at the given index to the given one
     @param[in] index index of the ScoreCell (or Sequence) to set inside the ScoreSection. If the size is too little the ScoreSection is automatically resized.
-    @param[in] scoreCell pointer to a ScoreCell
-    @param[in] behavior pointer to a CellChange, nullptr if not given
+    @param[in] scoreCell pointer to a ScoreCell, you can also set it to nullptr
+    @param[in] behavior pointer to a CellChange, you can also set it to nullptr, nullptr if not given
 
     Sets the score pattern at a given index. If ScoreCell is set to nullptr then nothing is played, If CellChange is set to nullptr the sequencing is stopped after playing this Pattern. Sequence is a subclass of ScoreCell easiear to manage.
     */ 
@@ -204,6 +197,16 @@ public:
     @endcond
 */
 private:
+
+    
+    /*!
+    @brief Sets the number of outputs of this ScoreSection, default is 1.
+    @param[in] size number of outputs for connection
+
+    Set the number of outputs that can be connected to GateSequencer or ValueSequencer, default is 1.
+    */ 
+    void setOutputsNumber(int size);
+
     void processSection(const double    &startPlayHead, 
                     const double    &endPlayHead, 
                     const double    &playHeadDifference, 

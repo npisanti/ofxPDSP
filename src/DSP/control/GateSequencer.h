@@ -63,7 +63,7 @@ private:
 
         OutputNode output_trig;
         
-        MessageBuffer* messageBuffer;
+
         bool singleTrigger;
         bool gateState;
         

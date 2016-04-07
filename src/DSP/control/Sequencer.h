@@ -23,6 +23,7 @@ public:
         //TODO: add operator for linking MessageSources to sequencer
 protected:
         virtual void resetMessageBufferSelector() {};
+        MessageBuffer* messageBuffer;
         
 };
         

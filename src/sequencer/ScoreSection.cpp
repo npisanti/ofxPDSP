@@ -28,7 +28,7 @@ pdsp::ScoreSection::ScoreSection() {
     atomic_meter_next.store(-1);
     atomic_meter_playhead.store(0.0f);    
 
-    setOutputsNumber(1);    
+    setOutputsNumber(0);    
     
     gates.clear();
     values.clear();
@@ -69,13 +69,6 @@ void pdsp::ScoreSection::resizePatterns(int size){
         }
         patterns.resize(size);
         patternSize = size;       
-    }
-}
-
-void pdsp::ScoreSection::setOutputsNumber(int size){
-    outputs.resize(size);
-    for(MessageBuffer &buffer : outputs){
-        buffer.reserve(PDSP_SCORESECTIONMESSAGERESERVE);
     }
 }
 
@@ -320,12 +313,20 @@ void pdsp::ScoreSection::processBuffersDestinations(const int &bufferSize) noexc
     }
 }
 
+//---------------------------------------------PATCHING---------------------------------
+
+
+void pdsp::ScoreSection::setOutputsNumber(int size){
+    if( size > (int) outputs.size()){
+        outputs.resize(size);
+        //std::cout<<" outputs resize, new outputs = "<<size<<"\n";                    
+    }
+}
+
 
 pdsp::ScoreSection& pdsp::ScoreSection::out_message( int index ){
     if(index>=0 ){
-        if( index >= (int)outputs.size() ){
-            setOutputsNumber(index+1);
-        }
+        setOutputsNumber(index+1);
         selectedMessageBuffer = &outputs[index];
         return *this;
     }else{
@@ -340,7 +341,7 @@ pdsp::ScoreSection& pdsp::ScoreSection::out( int index ){
 
 pdsp::GateSequencer& pdsp::ScoreSection::out_trig( int index ){
     
-    if(index<0) index = 0;
+    if(index<0){ index = 0; }
     
     if(index < (int) values.size()){
         if(values[index]!=nullptr){
@@ -356,11 +357,14 @@ pdsp::GateSequencer& pdsp::ScoreSection::out_trig( int index ){
         for(int i=oldSize; i<=index; ++i){
             gates[i] = nullptr;
         }
+        //std::cout<<"gates resized\n";
     }
     
     if(gates[index]==nullptr){
         gates[index] = new GateSequencer();
-        out_message(index) >> *gates[index];
+        setOutputsNumber(index+1);
+        outputs[index] >> *gates[index];
+        //std::cout<<"gate linked to index"<<index<<"\n";
     }
     
     return *gates[index];
@@ -369,7 +373,7 @@ pdsp::GateSequencer& pdsp::ScoreSection::out_trig( int index ){
 
 pdsp::ValueSequencer& pdsp::ScoreSection::out_value( int index ){
     
-    if(index<0) index = 0;
+    if(index<0){ index = 0; }
     
     if(index < (int) gates.size()){
         if(gates[index]!=nullptr){
@@ -385,11 +389,14 @@ pdsp::ValueSequencer& pdsp::ScoreSection::out_value( int index ){
         for(int i=oldSize; i<=index; ++i){
             values[i] = nullptr;
         }
+        //std::cout<<"value resized\n";
     }
     
     if(values[index]==nullptr){
         values[index] = new ValueSequencer();
-        out_message(index) >> *values[index];
+        setOutputsNumber(index+1);
+        outputs[index] >> *values[index];
+        //std::cout<<"value linked to index"<<index<<"\n";
     }
     
     return *values[index];  

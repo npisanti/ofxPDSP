@@ -59,48 +59,60 @@ pdsp::Sequence& pdsp::Sequence::operator= (Sequence && other) {
 }
 
 
-void pdsp::Sequence::set( std::initializer_list<float> init ) noexcept{
+void pdsp::Sequence::set( std::initializer_list<float> init, int outputs ) noexcept{
     if(modified==true){
         std::cout<<"[pdsp] warning! you have already set this Sequence, but it hasn't been processed yet, please set it once and wait for the changes to be effective before setting it again to avoid race conditions!\n";
         pdsp_trace();
     }
     
-    double time=0.0f;
+    double time=0.0;
+    int out = 0;
     for (auto &value : init){
         if( value >= 0.0f){
-            nextScore.push_back(  pdsp::ScoreMessage( time , value, 0) );            
+            nextScore.push_back(  pdsp::ScoreMessage( time , value, out) );            
         }
-        time += divMult;
+        
+        out++;
+        if( out == outputs ){
+            time += divMult;
+            out = 0;
+        }
     }
     modified = true;
 }
 
-void pdsp::Sequence::set( std::initializer_list<float> init, double division, double length ) noexcept{
+void pdsp::Sequence::set( std::initializer_list<float> init, double division, double length, int outputs ) noexcept{
     setDivision(division);
     setLength(length);
-    set(init);
+    set(init, outputs);
 }
 
-void pdsp::Sequence::set(const std::vector<float> &init ) noexcept{
+void pdsp::Sequence::set( const std::vector<float> &init, int outputs ) noexcept{
     if(modified==true){
         std::cout<<"[pdsp] warning! you have already set this Sequence, but it hasn't been processed yet, please set it once and wait for the changes to be effective before setting it again to avoid race conditions!\n";
         pdsp_trace();
     }
     
-    float time=0.0f;
+    double time=0.0;
+    int out = 0;
     for (auto &value : init){
         if( value >= 0.0f){
-            nextScore.push_back(  pdsp::ScoreMessage( time , value, 0) );            
+            nextScore.push_back(  pdsp::ScoreMessage( time , value, out) );            
         }
-        time += divMult;
+        
+        out++;
+        if( out == outputs ){
+            time += divMult;
+            out = 0;
+        }
     }
     modified = true;
 }
 
-void pdsp::Sequence::set(const std::vector<float> &init, double division, double length  ) noexcept{
+void pdsp::Sequence::set( const std::vector<float> &init, double division, double length, int outputs ) noexcept{
     setDivision(division);
     setLength(length);
-    set(init);
+    set(init, outputs);
 }
 
 void pdsp::Sequence::message(double step, float value, int outputIndex) noexcept{

@@ -30,8 +30,6 @@ void ofApp::setup(){
     engine.score.setTempo(172.0);
     
     engine.score.sections.resize(1); // we need just one section
-    
-    engine.score.sections[0].setOutputsNumber(3); // gate + pitch + cc
     engine.score.sections[0].setCell(0, &sequence1, pdsp::Behavior::Self);
     engine.score.sections[0].setCell(1, &sequence2, pdsp::Behavior::Self);
     engine.score.sections[0].setCell(2, &sequence3, pdsp::Behavior::Self);

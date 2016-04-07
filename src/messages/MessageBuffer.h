@@ -3,12 +3,14 @@
 // ofxPDSP
 // Nicola Pisanti, MIT License, 2016
 
+
 #ifndef PDSP_MESSAGES_MESSAGEBUFFER_H_INCLUDED
 #define PDSP_MESSAGES_MESSAGEBUFFER_H_INCLUDED
 
 #include "Message.h"
 #include <vector>
 #include "../DSP/control/Sequencer.h"
+#include "../flags.h"
 
 namespace pdsp{
 
@@ -20,6 +22,8 @@ namespace pdsp{
 
     public:
         MessageBuffer();
+        MessageBuffer(const MessageBuffer & other);
+        MessageBuffer& operator=(const MessageBuffer & other);
         
         void clearMessages();
         void addMessage(float value, int sample);
