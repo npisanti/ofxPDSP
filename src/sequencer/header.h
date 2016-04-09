@@ -8,7 +8,7 @@
 
 #include "ScoreProcessor.h"
 #include "ScoreSection.h"
-#include "ScoreCell.h"
+#include "ScoreMessage.h"
 #include "stockBehaviors.h"
 #include "Sequence.h"
 

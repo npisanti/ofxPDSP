@@ -39,8 +39,8 @@ int randomBipolarInt(int min, int maxInclusive){
     return bipolarInt(globalRandom);
 }
 
-bool coin(float chance){
-    uint_fast32_t chanceInt = static_cast<uint_fast32_t>( chance * static_cast<float>(globalRandom.max()) );
+bool chance(float value){
+    uint_fast32_t chanceInt = static_cast<uint_fast32_t>( value * static_cast<float>(globalRandom.max()) );
     if ( globalRandom() <= chanceInt ){
         return true;
     }else{

@@ -40,7 +40,7 @@ pdsp::ScoreSection::ScoreSection(const pdsp::ScoreSection &other) {
     resizePatterns( (int) other.patterns.size() );
     
     for(int i=0; i< (int) other.patterns.size(); ++i){
-        patterns[i].scoreCell          = other.patterns[i].scoreCell;
+        patterns[i].sequence          = other.patterns[i].sequence;
         patterns[i].nextCell           = other.patterns[i].nextCell;
         patterns[i].quantizeLaunch     = other.patterns[i].quantizeLaunch;
         patterns[i].quantizeGrid       = other.patterns[i].quantizeGrid;
@@ -86,27 +86,27 @@ void pdsp::ScoreSection::launchCell( int index, bool legato, bool quantizeLaunch
         if(legato){ legatoLaunch = true; }
         scheduledPattern = index;
         atomic_meter_next.store(index);
-        if( index!=-1 && patterns[index].scoreCell!=nullptr){
-            patterns[index].scoreCell->executePrepareScore();
-        }
+        //if( index!=-1 && patterns[index].sequence!=nullptr){
+        //    patterns[index].sequence->executePrepareScore();
+        //}
     patternMutex.unlock();
 }
 
 
-void pdsp::ScoreSection::setCell( int index, ScoreCell* scoreCell, CellChange* behavior ){
+void pdsp::ScoreSection::setCell( int index, Sequence* sequence, SeqChange* behavior ){
     if(index>=0){
         if(index>=patternSize){
             resizePatterns(index+1);
             //all the new patterns are initialized with nullptr, nullptr, length=1.0, quantize = false and quantizeGrid=0.0
         }
         patternMutex.lock();
-            patterns[index].scoreCell = scoreCell;
+            patterns[index].sequence = sequence;
             patterns[index].nextCell  = behavior;
         patternMutex.unlock();
     }
 }
 
-void pdsp::ScoreSection::setChange( int index, CellChange* behavior ){
+void pdsp::ScoreSection::setChange( int index, SeqChange* behavior ){
     if(index>=0 && index < patternSize){
         patternMutex.lock();
             patterns[index].nextCell  = behavior;
@@ -115,7 +115,7 @@ void pdsp::ScoreSection::setChange( int index, CellChange* behavior ){
 }
 
 //remember to check for quantizeGrid to be no greater than pattern length
-void pdsp::ScoreSection::setCellQuantizing( int index, bool quantizeLaunch, double quantizeGrid ){
+void pdsp::ScoreSection::setCellQuantization( int index, bool quantizeLaunch, double quantizeGrid ){
     if(index>=0){
         if(index>=patternSize){
             resizePatterns(index+1);
@@ -129,12 +129,12 @@ void pdsp::ScoreSection::setCellQuantizing( int index, bool quantizeLaunch, doub
 }
 
    
-void pdsp::ScoreSection::enableQuantizing(int index, double quantizeGrid ){
-    setCellQuantizing(index, true, quantizeGrid);
+void pdsp::ScoreSection::enableQuantization(int index, double quantizeGrid ){
+    setCellQuantization(index, true, quantizeGrid);
 }
    
-void pdsp::ScoreSection::disableQuantizing(int index){
-    setCellQuantizing(index, false);
+void pdsp::ScoreSection::disableQuantization(int index){
+    setCellQuantization(index, false);
 }
 
 
@@ -148,7 +148,7 @@ void pdsp::ScoreSection::processSection(const double &startPlayHead,
     patternMutex.lock();
         if(scheduledTime >= maxBars+playHeadDifference){ scheduledTime -= maxBars; } //wraps scheduled time around
         
-        if(scheduledTime<0.0){ //launching scoreCell
+        if(scheduledTime<0.0){ //launching sequence
             if(quantizedLaunch && startPlayHead!=0.0){
                 double quantizeTime = - scheduledTime;
                 double timeToQuantize = startPlayHead + quantizeTime;
@@ -165,23 +165,23 @@ void pdsp::ScoreSection::processSection(const double &startPlayHead,
             double oneSlashBarsPerSample = 1.0 / barsPerSample;
 
             if(scheduledTime >= endPlayHead){   //more likely
-                if(patternIndex!=-1 && patterns[patternIndex].scoreCell!=nullptr) playScore(playHeadDifference, 0.0, oneSlashBarsPerSample);
+                if(patternIndex!=-1 && patterns[patternIndex].sequence!=nullptr) playScore(playHeadDifference, 0.0, oneSlashBarsPerSample);
                 
             }else if(scheduledTime <= startPlayHead){ 
                 //std::cout<<"scheduled now, playhead start = "<<startPlayHead<<"--------------------\n";
                 onSchedule();
                 if(clearOnChangeFlag) allNoteOff(0.0, oneSlashBarsPerSample); 
-                if(patternIndex!=-1 && patterns[patternIndex].scoreCell!=nullptr) playScore(playHeadDifference, 0.0, oneSlashBarsPerSample);
+                if(patternIndex!=-1 && patterns[patternIndex].sequence!=nullptr) playScore(playHeadDifference, 0.0, oneSlashBarsPerSample);
 
             }else{
 
                 double schedulePoint = scheduledTime - startPlayHead;
                 //std::cout<<"scheduled between, playhead start = "<<startPlayHead<<", schedule point = "<<schedulePoint<<"----------------\n";
-                if(patternIndex!=-1 && patterns[patternIndex].scoreCell!=nullptr) playScore(schedulePoint, 0.0, oneSlashBarsPerSample); //process old clip
+                if(patternIndex!=-1 && patterns[patternIndex].sequence!=nullptr) playScore(schedulePoint, 0.0, oneSlashBarsPerSample); //process old clip
                 onSchedule();
                 if(clearOnChangeFlag) allNoteOff(schedulePoint, oneSlashBarsPerSample);
                 //std::cout<<"playing remaining, playhead start = "<<startPlayHead<<"----------------\n";
-                if(patternIndex!=-1 && patterns[patternIndex].scoreCell!=nullptr) playScore(playHeadDifference, schedulePoint, oneSlashBarsPerSample);//process new clip
+                if(patternIndex!=-1 && patterns[patternIndex].sequence!=nullptr) playScore(playHeadDifference, schedulePoint, oneSlashBarsPerSample);//process new clip
                 //std::cout<<"end processing, playhead start = "<<startPlayHead<<"----------------\n";
 
             }
@@ -204,7 +204,7 @@ void pdsp::ScoreSection::processSection(const double &startPlayHead,
 //range is the quantity in bars of score to be elaborated, offset displace the start of processing
 void pdsp::ScoreSection::playScore(double const &range, double const &offset, const double &oneSlashBarsPerSample) noexcept{
 
-    ScoreCell* patternToProcess = patterns[patternIndex].scoreCell;
+    Sequence* patternToProcess = patterns[patternIndex].sequence;
         
     double patternMax = scorePlayHead + range - offset;
     
@@ -232,8 +232,8 @@ void pdsp::ScoreSection::onSchedule() noexcept{
     //clip change routines--------------------------------------------------------------------------
     patternIndex = scheduledPattern; 
 
-    if( patternIndex >=0 && patterns[patternIndex].scoreCell!=nullptr){ //if there is a pattern, execute it's generative routine
-        patterns[patternIndex].scoreCell->executeGenerateScore( );
+    if( patternIndex >=0 && patterns[patternIndex].sequence!=nullptr){ //if there is a pattern, execute it's generative routine
+        patterns[patternIndex].sequence->executeGenerateScore( );
         
         atomic_meter_current.store(patternIndex);
     }else{
@@ -252,19 +252,19 @@ void pdsp::ScoreSection::onSchedule() noexcept{
             else if( scheduledPattern>=patternSize ){  scheduledPattern = patternSize-1; }
             
             if( scheduledPattern!=-1 ){
-                if( patterns[scheduledPattern].scoreCell!=nullptr) {
-                    patterns[scheduledPattern].scoreCell->executePrepareScore();
-                }
+                //if( patterns[scheduledPattern].sequence!=nullptr) {
+                //    patterns[scheduledPattern].sequence->executePrepareScore();
+                //}
                 
-                if( patterns[scheduledPattern].quantizeLaunch ){
+                if( patterns[patternIndex].quantizeLaunch ){
                     double timeToQuantize = (scheduledTime + patterns[patternIndex].quantizeGrid);
                     int rounded = static_cast<int> ( timeToQuantize /  patterns[patternIndex].quantizeGrid ); 
                     scheduledTime = static_cast<double>(rounded) * patterns[patternIndex].quantizeGrid ;
                 }else{
-                    scheduledTime = scheduledTime + patterns[patternIndex].scoreCell->length; //+ patterns[scheduledPattern].quantizeGrid;
+                    scheduledTime = scheduledTime + patterns[patternIndex].sequence->length(); //+ patterns[scheduledPattern].quantizeGrid;
                 }                
             }else{
-                scheduledTime = scheduledTime + patterns[patternIndex].scoreCell->length; 
+                scheduledTime = scheduledTime + patterns[patternIndex].sequence->length(); 
             }
             
         }else{ //we don't have a behavior to get a next pattern --------> STOPPING ROW AFTER EXECUTION
@@ -273,7 +273,7 @@ void pdsp::ScoreSection::onSchedule() noexcept{
             //scheduledTime = std::numeric_limits<double>::infinity();
             //run = false;
             //clear = true;
-            scheduledTime = scheduledTime + patterns[patternIndex].scoreCell->length;
+            scheduledTime = scheduledTime + patterns[patternIndex].sequence->length();
             scheduledPattern = -1;
         }        
         
@@ -467,11 +467,11 @@ void pdsp::operator!= (pdsp::ScoreSection& scoreSection, pdsp::ExtSequencer& ext
 
 
 // DEPRECATED
-void pdsp::ScoreSection::setPattern( int index, ScoreCell* scoreCell, CellChange* behavior ){
-    setCell(index, scoreCell, behavior);
+void pdsp::ScoreSection::setPattern( int index, Sequence* sequence, SeqChange* behavior ){
+    setCell(index, sequence, behavior);
 }
 
 // DEPRECATED
-void pdsp::ScoreSection::setBehavior( int index, CellChange* behavior ){
+void pdsp::ScoreSection::setBehavior( int index, SeqChange* behavior ){
     setChange(index, behavior);
 }

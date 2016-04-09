@@ -22,7 +22,7 @@ namespace pdsp{
     
         void seedGlobalRandom(int seed);
         
-        bool coin(float chance);
+        bool chance(float value);
     
 }
 

@@ -12,6 +12,9 @@ pdsp::MessageBuffer::MessageBuffer(){
 pdsp::MessageBuffer::MessageBuffer(const MessageBuffer & other){
     this->messages.clear();
     this->destination = other.destination;
+    if (this->destination != nullptr ){
+        this->destination->messageBuffer = this;
+    }
     this->connectedToGate = other.connectedToGate;
     this->reserve(PDSP_SCORESECTIONMESSAGERESERVE);
     //std::cout << "message buffer copy constructed\n";
@@ -20,6 +23,9 @@ pdsp::MessageBuffer::MessageBuffer(const MessageBuffer & other){
 pdsp::MessageBuffer& pdsp::MessageBuffer::operator=(const MessageBuffer & other){
     this->messages.clear();
     this->destination = other.destination;
+    if (this->destination != nullptr ){
+        this->destination->messageBuffer = this;
+    }
     this->connectedToGate = other.connectedToGate;
     this->reserve(PDSP_SCORESECTIONMESSAGERESERVE);
     //std::cout << "message buffer moved\n";
@@ -36,7 +42,6 @@ void pdsp::MessageBuffer::addMessage(float value, int sample){
 
 void pdsp::MessageBuffer::processDestination( const int &bufferSize ){
     if(destination!=nullptr){
-        destination->messageBuffer = this;
         destination->process(bufferSize * destination->getOversampleLevel() );
     }
 }

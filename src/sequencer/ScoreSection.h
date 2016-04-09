@@ -6,7 +6,8 @@
 #ifndef PDSP_SCOREROW_H_INCLUDED
 #define PDSP_SCOREROW_H_INCLUDED
 
-#include "ScoreCell.h"
+#include "ScoreMessage.h"
+#include "Sequence.h"
 #include <vector>
 #include "../messages/header.h"
 #include "../DSP/control/Sequencer.h"
@@ -19,9 +20,9 @@
 namespace pdsp{
     
     /*!
-    @brief Plays a single ScoreCell at time, sequences ScoreCells
+    @brief Plays a single Sequence at time, sequences Sequences
     
-    This class plays a single ScoreCell at time, sequences ScoreCells and has multiple outputs to connect to GateSequencer or ValueSequencer. ScoreProcessor owns a vector of ScoreSection. Remember that the ScoreSections inside a ScoreProcessor are processed from the first to the last so it could be possible for the data generated from the first ScoreSections in the vector to influence the others (in a thread-safe manner).
+    This class plays a single Sequence at time, sequences Sequences and has multiple outputs to connect to GateSequencer or ValueSequencer. ScoreProcessor owns a vector of ScoreSection. Remember that the ScoreSections inside a ScoreProcessor are processed from the first to the last so it could be possible for the data generated from the first ScoreSections in the vector to influence the others (in a thread-safe manner).
     */
 
 class ScoreSection { 
@@ -38,10 +39,10 @@ private:
     */
     class PatternStruct{
     public:
-        PatternStruct() : scoreCell(nullptr), nextCell(nullptr), quantizeLaunch(false), quantizeGrid(0.0) {};
+        PatternStruct() : sequence(nullptr), nextCell(nullptr), quantizeLaunch(false), quantizeGrid(0.0) {};
             
-        ScoreCell*      scoreCell;
-        CellChange*     nextCell;
+        Sequence*      sequence;
+        SeqChange*     nextCell;
         bool            quantizeLaunch;
         double          quantizeGrid;
     };    
@@ -60,7 +61,7 @@ public:
 
     /*!
     @brief Sets the number of patterns contained by this ScoreSection
-    @param[in] size number of ScoreCell contained by this ScoreSection
+    @param[in] size number of Sequence contained by this ScoreSection
 
     */ 
     void resizePatterns(int size);
@@ -102,50 +103,50 @@ public:
     
     /*!
     @brief Sets the Cell at the given index to the given one
-    @param[in] index index of the ScoreCell (or Sequence) to set inside the ScoreSection. If the size is too little the ScoreSection is automatically resized.
-    @param[in] scoreCell pointer to a ScoreCell, you can also set it to nullptr
-    @param[in] behavior pointer to a CellChange, you can also set it to nullptr, nullptr if not given
+    @param[in] index index of the Sequence (or Sequence) to set inside the ScoreSection. If the size is too little the ScoreSection is automatically resized.
+    @param[in] sequence pointer to a Sequence, you can also set it to nullptr
+    @param[in] behavior pointer to a SeqChange, you can also set it to nullptr, nullptr if not given
 
-    Sets the score pattern at a given index. If ScoreCell is set to nullptr then nothing is played, If CellChange is set to nullptr the sequencing is stopped after playing this Pattern. Sequence is a subclass of ScoreCell easiear to manage.
+    Sets the score pattern at a given index. If Sequence is set to nullptr then nothing is played, If SeqChange is set to nullptr the sequencing is stopped after playing this Pattern. Sequence is a subclass of Sequence easiear to manage.
     */ 
-    void setCell( int index, ScoreCell* scoreCell, CellChange* behavior = nullptr );
+    void setCell( int index, Sequence* sequence, SeqChange* behavior = nullptr );
     
 
     /*!
-    @brief Sets the CellChange that determine what cell will be played after this
+    @brief Sets the SeqChange that determine what cell will be played after this
     @param[in] index index of the patter to set inside the ScoreSection. If the size is too little the ScoreSection is automatically resized.
-    @param[in] behavior pointer to a CellChange
+    @param[in] behavior pointer to a SeqChange
 
     */ 
-    void setChange( int index, CellChange* behavior );
+    void setChange( int index, SeqChange* behavior );
     
     
     /*!
-    @brief Sets some values for the pattern quantized execution, Thread-safe.
+    @brief Sets some values for the pattern quantized launch, Thread-safe.
     @param[in] index index of the patter to set inside the ScoreSection. This has to be a valid index.
     @param[in] quantizeLaunch if true the next pattern launch is quantized to the bars, if false is executed when the given length expires. 
     @param[in] quantizeGrid if the launch is quantized this is the grid division for quantizing, in bars.
 
     Sets the score pattern timing options.
     */     
-    void setCellQuantizing(int index, bool quantizeLaunch = false, double quantizeGrid = 1.0f );
+    void setCellQuantization(int index, bool quantizeLaunch = false, double quantizeGrid = 1.0f );
 
     /*!
-    @brief Enable quantizing of next cell launch. Thread-safe.
+    @brief enables quantization of next cell launch. Thread-safe.
     @param[in] index index of the patter to set inside the ScoreSection. This has to be a valid index.
     @param[in] quantizeGrid if the launch is quantized this is the grid division for quantizing, in bars.
 
     */     
-    void enableQuantizing(int index, double quantizeGrid = 1.0f );
+    void enableQuantization(int index, double quantizeGrid = 1.0f );
     
 
     /*!
-    @brief Enable quantizing of next cell launch. Thread-safe.
+    @brief disables quantization of next cell launch. Thread-safe.
     @param[in] index index of the patter to set inside the ScoreSection. This has to be a valid index.
     @param[in] quantizeGrid if the launch is quantized this is the grid division for quantizing, in bars.
 
     */     
-    void disableQuantizing(int index);
+    void disableQuantization(int index);
     
     
     /*!
@@ -160,7 +161,7 @@ public:
     
     
     /*!
-    @brief Set the behavior of connected GateSequencer on ScoreCell changes, if true a trigger off is sent between ScoreCells. true is the standard behavior.
+    @brief Set the behavior of connected GateSequencer on Sequence changes, if true a trigger off is sent between Sequences. true is the standard behavior.
     @param[in] active activate if true, deactivate if false
     
     */  
@@ -189,10 +190,10 @@ public:
     ScoreSection& out( int index = 0 );
     
     [[deprecated("Replaced by setCell() for a less ambigous nomenclature")]]
-    void setPattern( int index, ScoreCell* scoreCell, CellChange* behavior = nullptr );
+    void setPattern( int index, Sequence* sequence, SeqChange* behavior = nullptr );
     
     [[deprecated("Replaced by setChange() for a less ambigous nomenclature")]]
-    void setBehavior( int index, CellChange* behavior );
+    void setBehavior( int index, SeqChange* behavior );
 /*!
     @endcond
 */

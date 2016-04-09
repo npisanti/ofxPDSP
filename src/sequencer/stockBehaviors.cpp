@@ -2,12 +2,12 @@
 #include "stockBehaviors.h"
 
 
-int pdsp::CellChangeSelf::getNextPattern( int currentPattern, int size ) {
+int pdsp::SeqChangeSelf::getNextPattern( int currentPattern, int size ) noexcept {
     return currentPattern;
 }
 
 
-int pdsp::CellChangeNext::getNextPattern( int currentPattern, int size ) {
+int pdsp::SeqChangeNext::getNextPattern( int currentPattern, int size ) noexcept {
     currentPattern++;
     if(currentPattern == size){
         return 0;
@@ -17,7 +17,7 @@ int pdsp::CellChangeNext::getNextPattern( int currentPattern, int size ) {
 }
 
 
-int pdsp::CellChangePrev::getNextPattern( int currentPattern, int size ) {
+int pdsp::SeqChangePrev::getNextPattern( int currentPattern, int size ) noexcept {
     currentPattern--;
     if(currentPattern == -1){
         return (size-1);
@@ -26,14 +26,14 @@ int pdsp::CellChangePrev::getNextPattern( int currentPattern, int size ) {
     }
 }
 
-int pdsp::CellChangeRandom::getNextPattern( int currentPattern, int size ) {
+int pdsp::SeqChangeRandom::getNextPattern( int currentPattern, int size ) noexcept {
     return dice(size);
 }
 
-pdsp::CellChangeRandomWalk::CellChangeRandomWalk(int walk) : walk(walk) {}
-pdsp::CellChangeRandomWalk::CellChangeRandomWalk() : walk(2) {}
+pdsp::SeqChangeRandomWalk::SeqChangeRandomWalk(int walk) : walk(walk) {}
+pdsp::SeqChangeRandomWalk::SeqChangeRandomWalk() : walk(2) {}
 
-int pdsp::CellChangeRandomWalk::getNextPattern( int currentPattern, int size ) {
+int pdsp::SeqChangeRandomWalk::getNextPattern( int currentPattern, int size ) noexcept {
     
     int step = randomBipolarInt(-walk, walk);
     currentPattern += step;
@@ -48,18 +48,18 @@ int pdsp::CellChangeRandomWalk::getNextPattern( int currentPattern, int size ) {
 
 
 
-pdsp::CellChangeSelf pdsp::Behavior::staticCellChangeSelf = pdsp::CellChangeSelf();
-pdsp::CellChangeSelf* pdsp::Behavior::Self = &pdsp::Behavior::staticCellChangeSelf;
-pdsp::CellChangeSelf* pdsp::Behavior::Loop = &pdsp::Behavior::staticCellChangeSelf;
+pdsp::SeqChangeSelf pdsp::Behavior::staticSeqChangeSelf = pdsp::SeqChangeSelf();
+pdsp::SeqChangeSelf* pdsp::Behavior::Self = &pdsp::Behavior::staticSeqChangeSelf;
+pdsp::SeqChangeSelf* pdsp::Behavior::Loop = &pdsp::Behavior::staticSeqChangeSelf;
 
-pdsp::CellChangeNext pdsp::Behavior::staticCellChangeNext = pdsp::CellChangeNext(); 
-pdsp::CellChangeNext* pdsp::Behavior::Next = &pdsp::Behavior::staticCellChangeNext;
+pdsp::SeqChangeNext pdsp::Behavior::staticSeqChangeNext = pdsp::SeqChangeNext(); 
+pdsp::SeqChangeNext* pdsp::Behavior::Next = &pdsp::Behavior::staticSeqChangeNext;
 
-pdsp::CellChangePrev  pdsp::Behavior::staticCellChangePrev = pdsp::CellChangePrev();
-pdsp::CellChangePrev* pdsp::Behavior::Prev = &pdsp::Behavior::staticCellChangePrev;
+pdsp::SeqChangePrev  pdsp::Behavior::staticSeqChangePrev = pdsp::SeqChangePrev();
+pdsp::SeqChangePrev* pdsp::Behavior::Prev = &pdsp::Behavior::staticSeqChangePrev;
     
-pdsp::CellChangeRandom pdsp::Behavior::staticCellChangeRandom = pdsp::CellChangeRandom();
-pdsp::CellChangeRandom* pdsp::Behavior::Random = &pdsp::Behavior::staticCellChangeRandom;
+pdsp::SeqChangeRandom pdsp::Behavior::staticSeqChangeRandom = pdsp::SeqChangeRandom();
+pdsp::SeqChangeRandom* pdsp::Behavior::Random = &pdsp::Behavior::staticSeqChangeRandom;
 
-pdsp::CellChangeRandomWalk pdsp::Behavior::staticCellChangeRandomWalk = pdsp::CellChangeRandomWalk();
-pdsp::CellChangeRandomWalk* pdsp::Behavior::RandomWalk = &pdsp::Behavior::staticCellChangeRandomWalk;
+pdsp::SeqChangeRandomWalk pdsp::Behavior::staticSeqChangeRandomWalk = pdsp::SeqChangeRandomWalk();
+pdsp::SeqChangeRandomWalk* pdsp::Behavior::RandomWalk = &pdsp::Behavior::staticSeqChangeRandomWalk;

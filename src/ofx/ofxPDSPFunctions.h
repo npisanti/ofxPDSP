@@ -72,10 +72,10 @@ float dB ( float dBvalue );
 
 /*!
 @brief returns a random bool value, with the give change of having "true" as result. Use this instead of ofRandom() in the code that should run in the audio thread.
-@param[in] chance value that rapresent the possibility of a true outcome. Use values in the 0.0f - 1.0f range.
+@param[in] value value that rapresent the possibility of a true outcome. Use values in the 0.0f - 1.0f range.
 */
-inline_f bool pdspCoin( float chance ){
-    return pdsp::coin(chance);
+inline_f bool pdspChance( float value ){
+    return pdsp::chance(value);
 };
 
 /*!

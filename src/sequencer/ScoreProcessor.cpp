@@ -19,7 +19,7 @@ pdsp::ScoreProcessor::ScoreProcessor(){
     sections.reserve(16);
     sections.clear();
     
-    playing.store(false);
+    playing.store(true);
     
     if(dynamicConstruction){
         prepareToPlay(globalBufferSize, globalSampleRate);

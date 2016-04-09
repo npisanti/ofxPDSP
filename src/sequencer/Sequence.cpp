@@ -16,9 +16,17 @@ void pdsp::Sequence::setDivision( double value ){
 }
 
 void pdsp::Sequence::setLength( double value ){
-    this->length = value;
+    this->len = value;
 }
 
+double pdsp::Sequence::length() const{
+    return len;
+}
+
+void pdsp::Sequence::setTiming( double division, double length ){
+    setDivision(division);
+    setLength(length);
+}
 
 pdsp::Sequence::Sequence(const Sequence & other) {
     this->modified = other.modified.load();
@@ -123,18 +131,27 @@ void pdsp::Sequence::begin() noexcept{
     nextScore.clear();
 }
 
+
+void pdsp::Sequence::begin( double division, double length ) noexcept{
+    setDivision(division);
+    setLength(length);
+    nextScore.clear();
+}
+
 void pdsp::Sequence::end() noexcept{
     modified = true;
 }
 
 
-void pdsp::Sequence::generateScore() noexcept {
+void pdsp::Sequence::executeGenerateScore() noexcept {
     code();
     if(modified){
         score.swap( nextScore ); // swap score in a thread-safe section
+        std::sort (score.begin(), score.end(), messageSort); //sort the messages
         modified = false;
     }
 }
+
 
 pdsp::SeqChange::SeqChange(){
     code = [&]() noexcept { return self; };

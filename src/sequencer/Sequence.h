@@ -6,19 +6,20 @@
 #ifndef PDSP_SEQUENCE_H_INCLUDED
 #define PDSP_SEQUENCE_H_INCLUDED
 
-#include "ScoreCell.h"
+#include "ScoreMessage.h"
 #include <functional>
 #include <atomic>
 #include <iostream>
 #include "../DSP/pdspCore.h"
 
 namespace pdsp{
+    
     /*!
     @brief powerful class for sequencing message. 
     Sequence is a class and container for values to be sequenced. You can set the value to sequence from an inline array or a std::vector. It also has an assignable lambda function that is executed each time the Sequence starts.
     */    
-    class Sequence : public ScoreCell {
-
+    class Sequence {
+        friend class ScoreSection;
     public:
         Sequence( double stepDivision );
         Sequence();
@@ -26,7 +27,8 @@ namespace pdsp{
         Sequence(Sequence && other);
         Sequence& operator= (const Sequence & other);
         Sequence& operator= (Sequence && other);
-        
+      
+
         /*!
         @brief sets the time division to be used for each step. For example 8.0f means each step is 1/8th. Default division is 1/16th.
         @param[in] value time division
@@ -34,10 +36,22 @@ namespace pdsp{
         void setDivision( double value );
         
         /*!
-        @brief sets the time in bars before the next ScoreCell/Sequence will be launched. Messages with a time greater than this won't be played.
+        @brief sets the time in bars before the next Sequence will be launched. Messages with a time greater than this won't be played.
         @param[in] value new length
         */
         void setLength( double value );
+        
+        /*!
+        @brief returns the time in bars before the next Sequence will be launched. 
+        */
+        double length() const;
+
+        /*!
+        @brief sets the time division and length of the sequence.
+        @param[in] value time division
+        @param[in] value new length
+        */
+        void setTiming( double division, double length );
         
         /*!
         @brief sets the sequence from an inlined array. Negative values produce no messages.
@@ -86,6 +100,12 @@ namespace pdsp{
         void begin() noexcept;
 
         /*!
+        @brief you call begin() before calling message, this prepare the Sequence for the message() method, clearing the buffers. Also set division and length.
+        */
+        void begin( double division, double length ) noexcept;
+
+
+        /*!
         @brief with this method you can manually add timed values to the sequence. You have to call begin() before adding messages and end() when you've done. Also note that the old Sequence values are not kept so you are adding values to an empty sequence.
         @param[in] step the step index 
         @param[in] value the value of the step
@@ -104,21 +124,30 @@ namespace pdsp{
         */
         std::function<void()> code;
 
+        std::vector<ScoreMessage> score;   
+
     private:
+        
+        void executeGenerateScore() noexcept;
+        
         std::vector< pdsp::ScoreMessage > nextScore;
+        
         std::atomic<bool> modified;
 
-        void generateScore() noexcept override ;    
+        double len;
         double div;
         double divMult;
 
     };
     
+    
+    
+    
     /*!
     @brief class for managing sequencing of Sequence
     This class has a assignable lambda function code() that returns an integer for the next ScoreSection index to be started. By default it returns the last used index, looping the Sequence or ScoreCell
     */    
-    class SeqChange : public CellChange{
+    class SeqChange {
     
     public:
     
@@ -129,8 +158,10 @@ namespace pdsp{
         */
         std::function<int()> code;
     
+    
+        virtual int getNextPattern( int currentPattern, int size ) noexcept;
+    
     private:
-        int getNextPattern( int currentPattern, int size ) noexcept override;
         int self;
     };
 
