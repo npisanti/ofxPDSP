@@ -853,7 +853,9 @@ EXCLUDE                = src/math \
                          src/ofx/ofxMidiKeysBuffers.h \
                          example-lower_api \
                          src/ofx/ofxPositionedMidiMessage.h \
-                         example-advanced
+                         example-scoring1 \
+                         example-scoring2 \
+                         src/ofx/ofxPDSPController.h
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded

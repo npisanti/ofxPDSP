@@ -14,7 +14,7 @@ class ofxMidiCCBuffers {
 public:
     ofxMidiCCBuffers();
 
-    void processMidi ( vector<_ofxPositionedMidiMessage>* readVector, const int &bufferSize );
+    void processMidi (const vector<_ofxPositionedMidiMessage> & readVector, const int &bufferSize );
     
     void clearAll();
     

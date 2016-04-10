@@ -29,7 +29,7 @@ class ofxMidiKeysBuffers {
 public:
         ofxMidiKeysBuffers();
            
-        void processMidi (vector<_ofxPositionedMidiMessage>* readVector, const int &bufferSize ) noexcept;
+        void processMidi (const vector<_ofxPositionedMidiMessage> & readVector, const int &bufferSize ) noexcept;
         
         void setVoiceMode(VoiceMode mode);
         void setMonoPriority(MonoPriority mode);
@@ -49,10 +49,10 @@ public:
 
 private:
 
-        void processPolyMidiNoteOn( _ofxPositionedMidiMessage& midi) noexcept;
-        void processPolyMidiNoteOff(_ofxPositionedMidiMessage& midi) noexcept;
-        void processMonoMidiNoteOn( _ofxPositionedMidiMessage& midi) noexcept;
-        void processMonoMidiNoteOff(_ofxPositionedMidiMessage& midi) noexcept;
+        void processPolyMidiNoteOn( const _ofxPositionedMidiMessage& midi) noexcept;
+        void processPolyMidiNoteOff( const _ofxPositionedMidiMessage& midi) noexcept;
+        void processMonoMidiNoteOn( const _ofxPositionedMidiMessage& midi) noexcept;
+        void processMonoMidiNoteOff( const _ofxPositionedMidiMessage& midi) noexcept;
         
         int noteSteal();
         int getHighestPriorityMono();

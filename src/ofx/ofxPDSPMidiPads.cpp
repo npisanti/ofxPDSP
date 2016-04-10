@@ -13,15 +13,28 @@ ofxPDSPMidiPads::ofxPDSPMidiPads(){
 
 
 void ofxPDSPMidiPads::resizeLayers(int size){
+    
+    int oldSize = this->size;
     this->size = size;
     trigBuffers.resize(size);
     lowThreshold.resize(size);
     highThreshold.resize(size);
     outs_trig.resize(size);
-    for(int i=0; i<size; ++i){
+    
+    int base;
+    if(oldSize==0){
+        base = 36;
+    }else{
+        base = highThreshold[oldSize-1];
+    }
+    
+    for(int i=oldSize; i<size; ++i){
         trigBuffers[i] >> outs_trig[i];
         trigBuffers[i].reserve( MIDIDRUMKITPROCESSORMESSAGERESERVE );
+        setTriggerLayer(i, base, base);
+        base++;
     }
+    
 }
 
 
@@ -36,33 +49,50 @@ void ofxPDSPMidiPads::addTriggerLayer(int noteLow, int noteHigh){
 }
 
 
-void ofxPDSPMidiPads::setTriggerLayer(int noteLow, int noteHigh, int outIndex){
-    if(outIndex>=0 && outIndex<= size){
-        lowThreshold[outIndex] = noteLow;
-        highThreshold[outIndex] = noteHigh; 
+void ofxPDSPMidiPads::setTriggerLayer(int layerIndex, int noteLow, int noteHigh){
+    if(layerIndex>=0 && layerIndex<= size){
+        lowThreshold[layerIndex] = noteLow;
+        highThreshold[layerIndex] = noteHigh; 
     }
 }
 
 
-void ofxPDSPMidiPads::simpleInit(int lowNote, int numNotes, int span){
+void ofxPDSPMidiPads::simpleInit(int lowNote, int numLayer, int layerSpan){
     trigBuffers.clear();
     lowThreshold.clear();
     highThreshold.clear();
     outs_trig.clear();
     
-    trigBuffers.reserve(numNotes);
-    lowThreshold.reserve(numNotes);
-    highThreshold.reserve(numNotes);
-    outs_trig.reserve(numNotes);  
+    trigBuffers.reserve(numLayer);
+    lowThreshold.reserve(numLayer);
+    highThreshold.reserve(numLayer);
+    outs_trig.reserve(numLayer);  
     
-    for(int i=0; i<numNotes; ++i){
-        int baseNote = lowNote + i*span;
-        addTriggerLayer(baseNote, baseNote+span-1);
+    for(int i=0; i<numLayer; ++i){
+        int baseNote = lowNote + i*layerSpan;
+        addTriggerLayer(baseNote, baseNote+layerSpan-1);
     }
     
-    size = numNotes;
+    size = numLayer;
 }
 
+
+int ofxPDSPMidiPads::getLayerLow(int layerIndex) const {
+    if(layerIndex>=0 && layerIndex<= size){
+        return lowThreshold[layerIndex];
+    }else{
+        return -1;
+    }
+}
+
+
+int ofxPDSPMidiPads::getLayerHigh(int layerIndex) const {
+    if(layerIndex>=0 && layerIndex<= size){
+        return highThreshold[layerIndex];
+    }else{
+        return -1;
+    }
+}
 
 void ofxPDSPMidiPads::processMidi(const ofxPDSPMidiIn &midiInProcessor, const int &bufferSize ) noexcept{
     
@@ -70,7 +100,7 @@ void ofxPDSPMidiPads::processMidi(const ofxPDSPMidiIn &midiInProcessor, const in
         trigBuffers[i].clearMessages();
     }
     
-    for(_ofxPositionedMidiMessage &midi : *(midiInProcessor.readVector) ){
+    for( const _ofxPositionedMidiMessage & midi : midiInProcessor.getMessageVector() ){
         switch(midi.message.status){
             case MIDI_NOTE_ON:
                 for(int i=0; i<size; ++i){
@@ -96,5 +126,4 @@ void ofxPDSPMidiPads::processMidi(const ofxPDSPMidiIn &midiInProcessor, const in
     for(int i=0; i<size; ++i){
         trigBuffers[i].processDestination(bufferSize);
     }
-    
 }

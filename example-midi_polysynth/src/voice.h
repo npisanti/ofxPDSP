@@ -5,13 +5,28 @@
 #include "ofxPDSP.h"
 
 
-struct SynthVoice{
+struct SynthVoice : public pdsp::Patchable {
     
     SynthVoice();
     SynthVoice(const SynthVoice& other);
     
-    void patch();
+
     
+    float meter_mod_env() const;
+    float meter_pitch() const;
+
+    static ofxPDSPParameter     cutoffUI;
+    static ofxPDSPParameter     resoUI;
+    static ofxPDSPParameter     modAttackUI;
+    static ofxPDSPParameter     modReleaseUI;
+    
+    static ofxPDSPParameter     pwUI;
+    static ofxPDSPParameter     pwmSpeedUI;
+    static ofxPDSPParameter     pwmUI;
+
+private:
+    void patch();
+
     pdsp::PatchNode     voiceTrigger;
     pdsp::PatchNode     voicePitch;
     pdsp::PitchToFreq   p2f;
@@ -28,15 +43,6 @@ struct SynthVoice{
     pdsp::LFO           lfo;
     pdsp::Amp           lfoAmt;
 
-    pdsp::CRSlew                slew;
-
-    static ofxPDSPParameter     cutoffUI;
-    static ofxPDSPParameter     resoUI;
-    static ofxPDSPParameter     modAttackUI;
-    static ofxPDSPParameter     modReleaseUI;
-    
-    static ofxPDSPParameter     pwUI;
-    static ofxPDSPParameter     pwmSpeedUI;
-    static ofxPDSPParameter     pwmUI;
+    pdsp::CRSlew        slew;
  
 };

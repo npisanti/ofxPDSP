@@ -12,8 +12,8 @@ void ofApp::setup(){
     
     //patching-------------------------------
     //get MIDI control
-    midiInProcessor.listPorts();
-    midiInProcessor.openPort(1); //set the right port !!!
+    midiIn.listPorts();
+    midiIn.openPort(1); //set the right port !!!
 
     // set up control
     // you can use setPolyMode(int maxNotes, int unisonVoices) or setMonoMode(int unisonVoices, bool legato, MonoPriority priority)
@@ -30,11 +30,11 @@ void ofApp::setup(){
     // we patch them to the voices here
     for(int i=0; i<voicesNum; ++i){
         // connect each voice to a midi pitch and trigger output
-        midiKeys.outs_pitch[i] >> voices[i].voicePitch;
-        midiKeys.outs_trig[i]  >> voices[i].voiceTrigger;
+        midiKeys.outs_trig[i]  >> voices[i].in("trig");
+        midiKeys.outs_pitch[i] >> voices[i].in("pitch");
         // connect each voice to chorus
-        voices[i].voiceAmp  >> chorus.in_0();
-        voices[i].voiceAmp  >> chorus.in_1();
+        voices[i] >> chorus.in_0();
+        voices[i] >> chorus.in_1();
     }
     
     // set up chorus
@@ -81,7 +81,8 @@ void ofApp::setup(){
     
     
     // audio setup----------------------------
-    engine.addMidiController( midiKeys, midiInProcessor ); // add midi processing to the engine
+    // for our midi controllers to work we have to add them to the engine, so it know it has to process them
+    engine.addMidiController( midiKeys, midiIn ); // add midi processing to the engine
     engine.listDevices();
     engine.setDeviceID(0); // REMEMBER TO SET THIS AT THE RIGHT INDEX!!!!
     engine.setup( 44100, 512, 3);     
@@ -100,14 +101,14 @@ void ofApp::draw(){
     int xBase = 20;
     ofDrawBitmapString("osc pitches", xBase, 26);
     for(int i=0; i<voicesNum; ++i){
-        drawMeter( voices[i].oscillator.meter_pitch(), 36.f, 84.f, xBase, 30, 20, 200);
+        drawMeter( voices[i].meter_pitch(), 36.f, 84.f, xBase, 30, 20, 200);
         xBase+=40;
     }
     // draw mod envelope meters
     xBase += 30;
     ofDrawBitmapString("mod envs", xBase, 26);
     for(int i=0; i<voicesNum; ++i){
-        drawMeter( voices[i].modEnv.meter_output(), 0.05f, 1.0f, xBase, 30, 20, 200);
+        drawMeter( voices[i].meter_mod_env(), 0.05f, 1.0f, xBase, 30, 20, 200);
         xBase+=40;
     }
 

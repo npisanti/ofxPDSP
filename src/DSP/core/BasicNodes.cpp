@@ -654,7 +654,7 @@ pdsp::OutputNode&  pdsp::OutputNode::setMultiplyOnConnection( float multiplier )
 }
 
 
-float pdsp::OutputNode::getCRValue(){
+float pdsp::OutputNode::getCRValue() const{
     return buffer[0];
 }
 
@@ -750,7 +750,7 @@ pdsp::OutputNode& pdsp::ValueNode::setAndGetNode( float value ) {
     return *this;
 }
 
-float pdsp::ValueNode::getCRValue(){
+float pdsp::ValueNode::getCRValue() const{
     return nodeValue.load();   
 }
 

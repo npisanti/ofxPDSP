@@ -14,7 +14,7 @@ ofxPDSPMidiControls::ofxPDSPMidiControls(int maxCC){
 }
 
 void ofxPDSPMidiControls::processMidi(const ofxPDSPMidiIn &midiInProcessor, const int &bufferSize ) noexcept{
-    midiCC.processMidi(midiInProcessor.readVector, bufferSize);
+    midiCC.processMidi(midiInProcessor.getMessageVector(), bufferSize);
 }
 
 

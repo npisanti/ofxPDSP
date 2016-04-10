@@ -23,33 +23,8 @@ void ofxPDSPParameter::onSet(float &parameter){
     node.set(parameter);
 }
 
-float ofxPDSPParameter::get(){
+float ofxPDSPParameter::get() const{
     return node.getCRValue();
 }
 
-//-------------------------------------------------------------------------------------------------
 
-ofxPDSPToggle::ofxPDSPToggle(){
-    parameter.addListener(this, &ofxPDSPToggle::onSet);
-}
-
-pdsp::ValueNode& ofxPDSPToggle::set(const char * name, bool active, float low, float high){
-    parameter.set(name, active);
-    this->low  = low;
-    this->high = high;
-    return node;
-}
-
-pdsp::ValueNode& ofxPDSPToggle::set(bool active){
-    parameter.set(active);
-    return node;
-}
-
-void ofxPDSPToggle::onSet(bool &parameter){
-    if( parameter ){
-        node.set(high);
-    }else{
-        node.set(low);
-    }
-
-}

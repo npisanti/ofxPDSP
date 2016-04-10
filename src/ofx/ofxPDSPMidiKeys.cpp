@@ -14,6 +14,8 @@ ofxPDSPMidiKeys::ofxPDSPMidiKeys(){
     voiceUnisonMod.reserve(32);
     out_singletrigger.setSingleTrigger(true);
 
+    setUnisonDetune(0.3f);
+
     portamentoMode = Off;
     portamentoTime = 200.0f;
     slewMode = pdsp::Time;
@@ -24,9 +26,12 @@ ofxPDSPMidiKeys::ofxPDSPMidiKeys(){
     setPolyMode(8, 1);
 }
 
+void ofxPDSPMidiKeys::setUnisonDetune(float pitchDetune){
+    pitchDetune >> unisonDetuneAmt;
+}
 
 void ofxPDSPMidiKeys::processMidi(const ofxPDSPMidiIn &midiInProcessor, const int &bufferSize ) noexcept{
-    midiConverter.processMidi(midiInProcessor.readVector, bufferSize);
+    midiConverter.processMidi(midiInProcessor.getMessageVector() , bufferSize);
 }
 
 

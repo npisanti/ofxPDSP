@@ -391,7 +391,7 @@ public:
     /*!
     @brief returns the first value of the buffer, to use if the state is "Changed"
     */ 
-    virtual float getCRValue();
+    virtual float getCRValue() const;
 
     /*!
     @brief get the OutputNode buffer
@@ -485,7 +485,7 @@ public:
     /*!
     @brief returns the ValueNode value
     */ 
-    float getCRValue() override;
+    float getCRValue() const override;
     
     /*!
     @brief set the value

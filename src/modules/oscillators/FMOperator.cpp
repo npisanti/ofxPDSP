@@ -27,7 +27,7 @@ void pdsp::FMOperator::patch(){
     
 }
 
-float pdsp::FMOperator::meter_pitch(){
+float pdsp::FMOperator::meter_pitch() const{
     return p2f.meter_input();
 }
 

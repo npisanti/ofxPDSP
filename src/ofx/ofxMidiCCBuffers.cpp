@@ -6,7 +6,7 @@
 ofxMidiCCBuffers::ofxMidiCCBuffers(){
     sendClearMessages = true;
   
-    setMaxCCNum(8);
+    setMaxCCNum(9);
     for(int i=0; i<ccSize; ++i){
         ccMessages[i].reserve(MIDICCBUFFERSMESSAGERESERVE);
     }  
@@ -28,7 +28,7 @@ void ofxMidiCCBuffers::setMaxCCNum(int maxCC){
     }
 }
 
-void ofxMidiCCBuffers::processMidi ( vector<_ofxPositionedMidiMessage>* readVector, const int &bufferSize ){
+void ofxMidiCCBuffers::processMidi (const vector<_ofxPositionedMidiMessage> & readVector, const int &bufferSize ){
     //clear buffers
 
     for(int i=0; i<ccSize; ++i){
@@ -42,12 +42,12 @@ void ofxMidiCCBuffers::processMidi ( vector<_ofxPositionedMidiMessage>* readVect
         sendClearMessages = false;  
     }
     
-    for(_ofxPositionedMidiMessage &midi : *readVector){
+    for(const _ofxPositionedMidiMessage &midi : readVector){
 
         if(midi.message.status==MIDI_CONTROL_CHANGE && midi.message.control < ccSize){
             float value = static_cast<float>(midi.message.value +1 )*0.0078125f; 
+            if (value==0.0078125f){ value = 0.0f; }
             ccMessages[midi.message.control].addMessage(value, midi.sample); 
-
         }
     }
     

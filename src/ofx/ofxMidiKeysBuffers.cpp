@@ -53,7 +53,7 @@ void ofxMidiKeysBuffers::setNoteRange( int lowNote, int highNote ){
 }
 
 
-void ofxMidiKeysBuffers::processMidi (vector<_ofxPositionedMidiMessage>* readVector, const int &bufferSize ) noexcept{
+void ofxMidiKeysBuffers::processMidi (const vector<_ofxPositionedMidiMessage> & readVector, const int &bufferSize ) noexcept{
 
         //clear buffers
         for(int i=0; i<gateMessages.size(); ++i){
@@ -83,7 +83,7 @@ void ofxMidiKeysBuffers::processMidi (vector<_ofxPositionedMidiMessage>* readVec
 
         switch( voiceMode ){
             case Poly :
-                for(_ofxPositionedMidiMessage &msg : *readVector){
+                for(const _ofxPositionedMidiMessage &msg : readVector){
                     switch(msg.message.status){
                         case MIDI_NOTE_ON:
                             if(msg.message.pitch >= lowNote && msg.message.pitch<= highNote){
@@ -121,7 +121,7 @@ void ofxMidiKeysBuffers::processMidi (vector<_ofxPositionedMidiMessage>* readVec
                 } 
                 break;
             case Mono:
-                for(_ofxPositionedMidiMessage &msg : *readVector){
+                for(const _ofxPositionedMidiMessage &msg : readVector){
                     switch(msg.message.status){
                         case MIDI_NOTE_ON:
                             if(msg.message.pitch >= lowNote && msg.message.pitch<= highNote) {
@@ -266,7 +266,7 @@ int ofxMidiKeysBuffers::noteSteal(){
 
 
 
-void ofxMidiKeysBuffers::processPolyMidiNoteOn( _ofxPositionedMidiMessage& midi ) noexcept{
+void ofxMidiKeysBuffers::processPolyMidiNoteOn(const _ofxPositionedMidiMessage& midi ) noexcept{
         
         bool retrigger = false;
         int noteNumber = midi.message.pitch;
@@ -315,7 +315,7 @@ void ofxMidiKeysBuffers::processPolyMidiNoteOn( _ofxPositionedMidiMessage& midi 
 }
 
 
-void ofxMidiKeysBuffers::processPolyMidiNoteOff( _ofxPositionedMidiMessage& midi ) noexcept{
+void ofxMidiKeysBuffers::processPolyMidiNoteOff(const _ofxPositionedMidiMessage& midi ) noexcept{
 
         //std::cout<<"poly note off\n";
         int noteNumber = midi.message.pitch;
@@ -383,7 +383,7 @@ int ofxMidiKeysBuffers::getHighestPriorityMono(){
 
 
 
-void ofxMidiKeysBuffers::processMonoMidiNoteOn( _ofxPositionedMidiMessage& midi ) noexcept{
+void ofxMidiKeysBuffers::processMonoMidiNoteOn(const _ofxPositionedMidiMessage& midi ) noexcept{
         
         bool retrigger = false;
         int noteNumber = midi.message.pitch;
@@ -447,7 +447,7 @@ void ofxMidiKeysBuffers::processMonoMidiNoteOn( _ofxPositionedMidiMessage& midi 
 }
 
 
-void ofxMidiKeysBuffers::processMonoMidiNoteOff( _ofxPositionedMidiMessage& midi ) noexcept {
+void ofxMidiKeysBuffers::processMonoMidiNoteOff(const _ofxPositionedMidiMessage& midi ) noexcept {
        
         int noteNumber = midi.message.pitch;
         int noteIndex = -1;

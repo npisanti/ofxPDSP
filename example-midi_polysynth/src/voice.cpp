@@ -19,6 +19,10 @@ SynthVoice::SynthVoice(const SynthVoice& other){ patch(); }
 
 void SynthVoice::patch(){
 
+    addModuleInput("trig", voiceTrigger);
+    addModuleInput("pitch", voicePitch);
+    addModuleOutput("signal", voiceAmp);
+
     // SIGNAL PATH
     oscillator.out("pulse") * 4.0f >> saturator >> filter >> voiceAmp;
     
@@ -40,4 +44,13 @@ void SynthVoice::patch(){
     
                      pwmSpeedUI.set("pwm speed (hz)", 0.5f, 0.005f, 1.5f) >> lfo.in_freq();  
                      
+}
+
+
+float SynthVoice::meter_mod_env() const{
+    return modEnv.meter_output();
+}
+
+float SynthVoice::meter_pitch() const{
+    return oscillator.meter_pitch();
 }

@@ -9,7 +9,9 @@
 #include "../pdspCore.h"
 
 namespace pdsp{
-    
+/*!
+    @cond HIDDEN_SYMBOLS
+*/ 
 class MessageBuffer;
         
 class Sequencer : public Unit{
@@ -30,7 +32,9 @@ protected:
 Patchable& linkBufferToSequencer (MessageBuffer& output, Sequencer& input);
 Patchable& operator>> (MessageBuffer& output, Sequencer& input);
         
-        
+/*!
+    @endcond
+*/         
         
 } // pdsp namespace end
 

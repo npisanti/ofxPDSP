@@ -47,7 +47,7 @@ void pdsp::VAOscillator::patch(){
     
 }
 
-float pdsp::VAOscillator::meter_pitch(){
+float pdsp::VAOscillator::meter_pitch() const{
     return p2f.meter_input();
 }
 

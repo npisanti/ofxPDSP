@@ -34,7 +34,7 @@ class ofApp : public ofBaseApp{
      
         pdsp::DimensionChorus   chorus;       
         
-        ofxPDSPMidiIn        midiInProcessor;
+        ofxPDSPMidiIn        midiIn;
         ofxPDSPMidiKeys      midiKeys;
 
         ofxPanel             gui;

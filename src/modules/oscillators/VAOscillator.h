@@ -75,7 +75,7 @@ public:
     /*!
     @brief meters the oscillator pitch. This method is thread-safe.
     */ 
-    float meter_pitch();
+    float meter_pitch() const;
     
 private:
     void patch();

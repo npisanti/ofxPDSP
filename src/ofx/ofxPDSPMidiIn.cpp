@@ -69,6 +69,9 @@ void ofxPDSPMidiIn::prepareToPlay( int expectedBufferSize, double sampleRate ){
 void ofxPDSPMidiIn::releaseResources(){}
 
 
+const vector<_ofxPositionedMidiMessage> & ofxPDSPMidiIn::getMessageVector() const{
+    return *readVector;
+}
 
 
 void ofxPDSPMidiIn::newMidiMessage(ofxMidiMessage& eventArgs) noexcept{
