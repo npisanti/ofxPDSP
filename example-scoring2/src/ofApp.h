@@ -13,10 +13,6 @@ class ofApp : public ofBaseApp{
 		void update();
 		void draw();
         
-		void audioOut(ofSoundBuffer &outBuffer);
-        
-        void exit();
-
 		void keyPressed(int key);
 		void keyReleased(int key);
 		void mouseMoved(int x, int y );
@@ -31,13 +27,8 @@ class ofApp : public ofBaseApp{
         
         void visualizeSection(const pdsp::ScoreSection & sect, int numCells, int x, int y, int w, int h); 
         
-        int             expectedBufferSize;
-        double          sampleRate;		
-        ofSoundStream   audioStream;
-       
-        pdsp::Processor pdspEngine;
         
-        MusicTest       music;
+        ofxPDSPEngine   engine;
         
         SineBleep       bleep;
         BassSynth       bass;
@@ -45,4 +36,15 @@ class ofApp : public ofBaseApp{
         ofFbo           bassScoreCanvas;
         int             bassCanvasW;
         int             bassCanvasH;
+        
+        bool            oneShot;
+        
+        BassPattern     bassPattern;
+    
+        pdsp::Sequence    bleep1;
+        pdsp::Sequence    bleep2;
+        pdsp::Sequence    bleep3;
+        pdsp::Sequence    bleep4;
+            
+        
 };

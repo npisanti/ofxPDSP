@@ -29,6 +29,10 @@ struct SeqChangeRandom : public pdsp::SeqChange{
     int getNextPattern( int currentPattern, int size ) noexcept override;
 };
 
+struct SeqChangeRandomOther : public pdsp::SeqChange{
+    int getNextPattern( int currentPattern, int size ) noexcept override;
+};
+
 struct SeqChangeRandomWalk : public pdsp::SeqChange{
     SeqChangeRandomWalk(int walk);
     SeqChangeRandomWalk();
@@ -53,6 +57,7 @@ private:
     static SeqChangeNext staticSeqChangeNext;
     static SeqChangePrev staticSeqChangePrev;
     static SeqChangeRandom staticSeqChangeRandom;
+    static SeqChangeRandomOther staticSeqChangeRandomOther;
     static SeqChangeRandomWalk staticSeqChangeRandomWalk;
 
 public:
@@ -80,11 +85,21 @@ public:
     @brief used by ScoreSection, plays a random ScorePattern
     */
     static SeqChangeRandom*        Random;
+
+    /*!
+    @brief used by ScoreSection, plays a random ScorePattern different from the last played
+    */
+    static SeqChangeRandomOther*   RandomOther;
     
     /*!
     @brief used by ScoreSection, choose a ScorePattern in the next or previous two
     */    
     static SeqChangeRandomWalk*    RandomWalk;
+
+    /*!
+    @brief used by ScoreSection, nothing will play next, nullptr is the same
+    */        
+    static SeqChange*              Nothing;
 };
 
 

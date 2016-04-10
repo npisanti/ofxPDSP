@@ -37,12 +37,12 @@ private:
     /*!
         @cond HIDDEN_SYMBOLS
     */
-    class PatternStruct{
+    class SeqCell{
     public:
-        PatternStruct() : sequence(nullptr), nextCell(nullptr), quantizeLaunch(false), quantizeGrid(0.0) {};
+        SeqCell() : sequence(nullptr), nextCell(nullptr), quantizeLaunch(false), quantizeGrid(0.0) {};
             
-        Sequence*      sequence;
-        SeqChange*     nextCell;
+        Sequence*       sequence;
+        SeqChange*      nextCell;
         bool            quantizeLaunch;
         double          quantizeGrid;
     };    
@@ -150,14 +150,13 @@ public:
     
     
     /*!
-    @brief Immediately launch the selected pattern, with the given launch timings options. Thread-safe. Also execute the launched cell's prepareScore() routine immediately.
+    @brief Immediately launch the selected cell, with the given launch timings options. Thread-safe. 
     @param[in] index index of the patter to set inside the ScoreSection. This has to be a valid index. A negative index stops the playing of this section (you can perform quantized stopping if quantizeLaunch = true ).
-    @param[in] legato if true the launched pattern playhead does not start from 0.0f but take the value from the already playing pattern. If not given as argument, it is assumed false.
     @param[in] quantizeLaunch if true the next pattern launch is quantized to the bars, if false the pattern is lanched as soon as possible.  If not given as argument, it is assumed false.
     @param[in] quantizeGrid if the launch is quantized this is the grid division for quantizing, in bars.  If not given as argument, it is assumed 1.0 (one bar).
     
     */         
-    void launchCell(int index, bool legato = false, bool quantizeLaunch=false, double quantizeGrid=1.0);
+    void launchCell(int index, bool quantizeLaunch=false, double quantizeGrid=1.0);
     
     
     /*!
@@ -181,6 +180,12 @@ public:
     @brief returns the playhead position in bars. Thread-safe.
     */ 
     float meter_playhead() const; 
+    
+    
+    /*!
+    @brief returns the current sequence length in bars. Thread-safe.
+    */ 
+    float meter_length() const; 
     
     
 /*!
@@ -223,22 +228,28 @@ private:
     void clearBuffers() noexcept;
     void processBuffersDestinations(const int &bufferSize) noexcept;
     
-    std::vector<PatternStruct>     patterns;
+    std::vector<SeqCell>     patterns;
     
     int                         scheduledPattern;
     double                      scheduledTime;
     
+    int                         launchedPattern;
+    double                      launchSchedule;
+    double                      launchQuantization;
+    bool                        launchingCell;
+    bool                        quantizedLaunch;
+
+    
     int                         patternIndex;
-    int                         patternSize;
     
     double                      scorePlayHead; //position inside the actual clip
     int                         scoreIndex;
   
     bool                        run;
     bool                        clear;
-    bool                        quantizedLaunch;
+
     bool                        clearOnChangeFlag;
-    bool                        legatoLaunch;
+
     
     
     std::vector<GateSequencer*>     gates;
@@ -254,6 +265,7 @@ private:
     std::atomic<int>            atomic_meter_current;
     std::atomic<int>            atomic_meter_next; 
     std::atomic<float>          atomic_meter_playhead;
+    std::atomic<float>          atomic_meter_length;
     
     static GateSequencer        invalidGate;
     static ValueSequencer       invalidValue;

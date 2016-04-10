@@ -4,6 +4,7 @@
 pdsp::Sequence::Sequence( double stepDivision ){ 
     modified = false;    
     setDivision(stepDivision);
+    setLength(1.0);
     nextScore.reserve(PDSP_PATTERN_MESSAGE_RESERVE_DEFAULT);
     code = []() noexcept {};
 }
@@ -67,70 +68,65 @@ pdsp::Sequence& pdsp::Sequence::operator= (Sequence && other) {
 }
 
 
-void pdsp::Sequence::set( std::initializer_list<float> init, int outputs ) noexcept{
+void pdsp::Sequence::set( std::initializer_list<float> init ) noexcept {
     if(modified==true){
         std::cout<<"[pdsp] warning! you have already set this Sequence, but it hasn't been processed yet, please set it once and wait for the changes to be effective before setting it again to avoid race conditions!\n";
         pdsp_trace();
     }
     
+    nextScore.clear();
+    
     double time=0.0;
-    int out = 0;
-    for (auto &value : init){
+    for (const float & value : init){
         if( value >= 0.0f){
-            nextScore.push_back(  pdsp::ScoreMessage( time , value, out) );            
+            nextScore.push_back(  pdsp::ScoreMessage( time , value, 0) );            
         }
-        
-        out++;
-        if( out == outputs ){
-            time += divMult;
-            out = 0;
-        }
+        time += divMult;
     }
+    
     modified = true;
 }
 
-void pdsp::Sequence::set( std::initializer_list<float> init, double division, double length, int outputs ) noexcept{
-    setDivision(division);
-    setLength(length);
-    set(init, outputs);
-}
 
-void pdsp::Sequence::set( const std::vector<float> &init, int outputs ) noexcept{
+void pdsp::Sequence::set( std::initializer_list<std::initializer_list<float> >  init ) noexcept {
     if(modified==true){
         std::cout<<"[pdsp] warning! you have already set this Sequence, but it hasn't been processed yet, please set it once and wait for the changes to be effective before setting it again to avoid race conditions!\n";
         pdsp_trace();
     }
-    
-    double time=0.0;
+
+    nextScore.clear();
+
     int out = 0;
-    for (auto &value : init){
-        if( value >= 0.0f){
-            nextScore.push_back(  pdsp::ScoreMessage( time , value, out) );            
+    for(const std::initializer_list<float> & list : init){
+        double time = 0.0;
+        for ( const float & value : list){
+            if( value >= 0.0f){
+                nextScore.push_back(  pdsp::ScoreMessage( time , value, out) );            
+            }
+           time += divMult;     
         }
-        
         out++;
-        if( out == outputs ){
-            time += divMult;
-            out = 0;
-        }
     }
+    
     modified = true;
 }
 
-void pdsp::Sequence::set( const std::vector<float> &init, double division, double length, int outputs ) noexcept{
+void pdsp::Sequence::set( std::initializer_list<float> init, double division, double length ) noexcept{
     setDivision(division);
     setLength(length);
-    set(init, outputs);
+    set(init);
 }
 
-void pdsp::Sequence::message(double step, float value, int outputIndex) noexcept{
-    nextScore.push_back( pdsp::ScoreMessage( step * divMult, value, outputIndex) );
+void pdsp::Sequence::set(  std::initializer_list<std::initializer_list<float> >  init , double division, double length ) noexcept{
+    setDivision(division);
+    setLength(length);
+    set(init);
 }
+
 
 void pdsp::Sequence::begin() noexcept{
     nextScore.clear();
 }
-
 
 void pdsp::Sequence::begin( double division, double length ) noexcept{
     setDivision(division);
@@ -138,10 +134,18 @@ void pdsp::Sequence::begin( double division, double length ) noexcept{
     nextScore.clear();
 }
 
+void pdsp::Sequence::message(double step, float value, int outputIndex) noexcept {
+    nextScore.push_back( pdsp::ScoreMessage( step * divMult, value, outputIndex) );
+}
+
 void pdsp::Sequence::end() noexcept{
     modified = true;
 }
 
+
+const std::vector<pdsp::ScoreMessage> & pdsp::Sequence::getScore(){
+    return score;
+}
 
 void pdsp::Sequence::executeGenerateScore() noexcept {
     code();
@@ -161,3 +165,5 @@ int pdsp::SeqChange::getNextPattern( int currentPattern, int size ) noexcept {
     self = currentPattern;
     return code();
 }
+
+

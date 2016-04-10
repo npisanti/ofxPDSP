@@ -27,7 +27,7 @@ float panL ( float pan ){
     }else{
         theta = M_PI_4 * (pan+1.0f);        
     }
-    return sinf(theta);
+    return cosf(theta);
 }
 
 
@@ -40,7 +40,7 @@ float panR ( float pan ){
     }else{
         theta = M_PI_4 * (pan+1.0f);        
     }
-    return cosf(theta);
+    return sinf(theta);
 }
 
 float dB ( float dBvalue ){

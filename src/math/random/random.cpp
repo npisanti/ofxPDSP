@@ -30,12 +30,12 @@ int randomInt(){
 }
 
 int dice(int dice){
-    std::uniform_int_distribution<int> unipolarInt (0, dice);
+    std::uniform_int_distribution<int> unipolarInt (0, dice-1);
     return unipolarInt(globalRandom);
 }
 
 int randomBipolarInt(int min, int maxInclusive){
-    std::uniform_int_distribution<int> bipolarInt (min, maxInclusive+1);
+    std::uniform_int_distribution<int> bipolarInt (min, maxInclusive);
     return bipolarInt(globalRandom);
 }
 

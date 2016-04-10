@@ -13,20 +13,23 @@ pdsp::ScoreSection::ScoreSection() {
     
     patterns.clear();
     scheduledPattern = -1;
-    scheduledTime = std::numeric_limits<double>::infinity();
+    scheduledTime  = 10000000000000000000.0;
+    launchSchedule = std::numeric_limits<double>::infinity();
+
     patternIndex = -1;
-    patternSize = 0;
     scorePlayHead = 0.0;
     scoreIndex = 0;
     clearOnChangeFlag = true;
     run = false; //change to false in definitive version
     clear = true;
     quantizedLaunch = false;
+    launchingCell = false;
     selectedMessageBuffer = nullptr;
-
+    
     atomic_meter_current.store(-1);
     atomic_meter_next.store(-1);
     atomic_meter_playhead.store(0.0f);    
+    atomic_meter_length.store(0.0f);    
 
     setOutputsNumber(0);    
     
@@ -61,41 +64,42 @@ pdsp::ScoreSection::~ScoreSection(){
 
 void pdsp::ScoreSection::resizePatterns(int size){
     if(size>0){
-        if(size<patternSize){
+        if(size<(int)patterns.size()){
             if(patternIndex>=size){
                 patternIndex = size-1;
                 if(patternIndex<0) patternIndex = 0;
             }
         }
-        patterns.resize(size);
-        patternSize = size;       
+        patterns.resize(size);   
     }
 }
 
-void pdsp::ScoreSection::launchCell( int index, bool legato, bool quantizeLaunch, double quantizeGrid ){
+void pdsp::ScoreSection::launchCell( int index, bool quantizeLaunch, double quantizeGrid ){
     if     ( index < 0        ) { index = -1; }
-    else if( index >= patternSize ) { index = patternSize-1; }
+    else if( index >= (int)patterns.size() ) { index = (int)patterns.size()-1; }
 
     patternMutex.lock();
         if(quantizeLaunch){
             this->quantizedLaunch = true;
-            scheduledTime = -quantizeGrid;
+            //scheduledTime = -quantizeGrid;
+            this->launchQuantization = quantizeGrid;
         }else{
-            scheduledTime = -1.0;
+            this->quantizedLaunch = false;
+            //scheduledTime = -1.0;
         }
-        if(legato){ legatoLaunch = true; }
-        scheduledPattern = index;
-        atomic_meter_next.store(index);
-        //if( index!=-1 && patterns[index].sequence!=nullptr){
-        //    patterns[index].sequence->executePrepareScore();
-        //}
+        this->launchedPattern = index;
+        
+        this->launchingCell = true;
+        //scheduledPattern = index;
+        //atomic_meter_next.store(index);
+
     patternMutex.unlock();
 }
 
 
 void pdsp::ScoreSection::setCell( int index, Sequence* sequence, SeqChange* behavior ){
     if(index>=0){
-        if(index>=patternSize){
+        if(index>=(int)patterns.size()){
             resizePatterns(index+1);
             //all the new patterns are initialized with nullptr, nullptr, length=1.0, quantize = false and quantizeGrid=0.0
         }
@@ -107,7 +111,7 @@ void pdsp::ScoreSection::setCell( int index, Sequence* sequence, SeqChange* beha
 }
 
 void pdsp::ScoreSection::setChange( int index, SeqChange* behavior ){
-    if(index>=0 && index < patternSize){
+    if(index>=0 && index < (int) patterns.size()){
         patternMutex.lock();
             patterns[index].nextCell  = behavior;
         patternMutex.unlock();
@@ -117,7 +121,7 @@ void pdsp::ScoreSection::setChange( int index, SeqChange* behavior ){
 //remember to check for quantizeGrid to be no greater than pattern length
 void pdsp::ScoreSection::setCellQuantization( int index, bool quantizeLaunch, double quantizeGrid ){
     if(index>=0){
-        if(index>=patternSize){
+        if(index>=(int) patterns.size()){
             resizePatterns(index+1);
             //all the new patterns are initialized with nullptr, nullptr, length=1.0, quantize = false and quantizeGrid=0.0
         }
@@ -148,19 +152,31 @@ void pdsp::ScoreSection::processSection(const double &startPlayHead,
     patternMutex.lock();
         if(scheduledTime >= maxBars+playHeadDifference){ scheduledTime -= maxBars; } //wraps scheduled time around
         
-        if(scheduledTime<0.0){ //launching sequence
+        
+        // if we have launched a cell schedules the triggering
+        if(launchingCell){
             if(quantizedLaunch && startPlayHead!=0.0){
-                double quantizeTime = - scheduledTime;
-                double timeToQuantize = startPlayHead + quantizeTime;
-                int rounded = static_cast<int> ( timeToQuantize / quantizeTime ); 
-                scheduledTime = static_cast<double>(rounded) * quantizeTime ;
+                double timeToQuantize = startPlayHead + launchQuantization;
+                int rounded = static_cast<int> ( timeToQuantize / launchQuantization ); 
+                launchSchedule = static_cast<double>(rounded) * launchQuantization ;
             }else{
+                launchSchedule = std::numeric_limits<double>::infinity();
                 scheduledTime = startPlayHead;
+                scheduledPattern = launchedPattern;
             }
             run = true;
-        } 
+            launchingCell = false;
+        }
+        
+        // activate a scheduled launch when it's time
+        if( launchSchedule <= scheduledTime ){
+            scheduledTime = launchSchedule;
+            scheduledPattern = launchedPattern;
+            launchSchedule = std::numeric_limits<double>::infinity();
+        }
 
-        if( run && patternSize>0 ){
+
+        if( run && ((int)patterns.size())>0 ){
             clearBuffers();
             double oneSlashBarsPerSample = 1.0 / barsPerSample;
 
@@ -236,26 +252,17 @@ void pdsp::ScoreSection::onSchedule() noexcept{
         patterns[patternIndex].sequence->executeGenerateScore( );
         
         atomic_meter_current.store(patternIndex);
-    }else{
-        atomic_meter_current.store(-1);
-        run = false;
-        clear = true;
-    }
-
-    if( patternIndex >=0){
-            
+        atomic_meter_length.store(patterns[patternIndex].sequence->length());
+     
         if(patterns[patternIndex].nextCell!=nullptr){ //we have a behavior to get next pattern
-            scheduledPattern = patterns[patternIndex].nextCell->getNextPattern(patternIndex, patternSize);
+            scheduledPattern = patterns[patternIndex].nextCell->getNextPattern(patternIndex, (int) patterns.size());
             atomic_meter_next.store(scheduledPattern);
 
             if(scheduledPattern<0 ){                scheduledPattern=-1; }
-            else if( scheduledPattern>=patternSize ){  scheduledPattern = patternSize-1; }
+            else if( scheduledPattern>=(int) patterns.size() ){  scheduledPattern = ((int)patterns.size())-1; }
             
             if( scheduledPattern!=-1 ){
-                //if( patterns[scheduledPattern].sequence!=nullptr) {
-                //    patterns[scheduledPattern].sequence->executePrepareScore();
-                //}
-                
+
                 if( patterns[patternIndex].quantizeLaunch ){
                     double timeToQuantize = (scheduledTime + patterns[patternIndex].quantizeGrid);
                     int rounded = static_cast<int> ( timeToQuantize /  patterns[patternIndex].quantizeGrid ); 
@@ -269,31 +276,30 @@ void pdsp::ScoreSection::onSchedule() noexcept{
             
         }else{ //we don't have a behavior to get a next pattern --------> STOPPING ROW AFTER EXECUTION
             atomic_meter_next.store(-1);        
-            //scheduledPattern = patternIndex;
-            //scheduledTime = std::numeric_limits<double>::infinity();
-            //run = false;
-            //clear = true;
+            //atomic_meter_length.store(0.0f);
             scheduledTime = scheduledTime + patterns[patternIndex].sequence->length();
             scheduledPattern = -1;
-        }        
-        
+        }   
+              
+    }else{
+        atomic_meter_current.store(-1);
+        atomic_meter_next.store(-1);
+        atomic_meter_length.store(0.0f);   
+        run = false;
+        clear = true;
+        scheduledPattern = -1;
+        scheduledTime  = 10000000000000000000.0;
     }
 
     //reset score playhead
-    if (legatoLaunch) {
-        legatoLaunch = false; // automatic pattern launch is never legato
-    }else{
-        // SET THIS TO START_TIME <-----------------------------------------------------------------------
-        scorePlayHead = 0.0; // reset pattern playhead to zero
-    }
+    scorePlayHead = 0.0; // reset pattern playhead to zero
 
 }
 
 void pdsp::ScoreSection::allNoteOff(double const &offset, const double &oneSlashBarsPerSample) noexcept{
     
     int sample = static_cast<int>( offset * oneSlashBarsPerSample);
-    //std::cout<<"clearing with sample value:"<<sample<<"\n";
-    
+
     for(MessageBuffer &buffer : outputs){
         if(buffer.connectedToGate){
             buffer.addMessage(0.0f, sample);
@@ -318,8 +324,7 @@ void pdsp::ScoreSection::processBuffersDestinations(const int &bufferSize) noexc
 
 void pdsp::ScoreSection::setOutputsNumber(int size){
     if( size > (int) outputs.size()){
-        outputs.resize(size);
-        //std::cout<<" outputs resize, new outputs = "<<size<<"\n";                    
+        outputs.resize(size);                
     }
 }
 
@@ -357,14 +362,12 @@ pdsp::GateSequencer& pdsp::ScoreSection::out_trig( int index ){
         for(int i=oldSize; i<=index; ++i){
             gates[i] = nullptr;
         }
-        //std::cout<<"gates resized\n";
     }
     
     if(gates[index]==nullptr){
         gates[index] = new GateSequencer();
         setOutputsNumber(index+1);
         outputs[index] >> *gates[index];
-        //std::cout<<"gate linked to index"<<index<<"\n";
     }
     
     return *gates[index];
@@ -389,14 +392,12 @@ pdsp::ValueSequencer& pdsp::ScoreSection::out_value( int index ){
         for(int i=oldSize; i<=index; ++i){
             values[i] = nullptr;
         }
-        //std::cout<<"value resized\n";
     }
     
     if(values[index]==nullptr){
         values[index] = new ValueSequencer();
         setOutputsNumber(index+1);
         outputs[index] >> *values[index];
-        //std::cout<<"value linked to index"<<index<<"\n";
     }
     
     return *values[index];  
@@ -427,6 +428,10 @@ int pdsp::ScoreSection::meter_next() const {
 
 float pdsp::ScoreSection::meter_playhead() const {
     return atomic_meter_playhead.load(); 
+}
+
+float pdsp::ScoreSection::meter_length() const {
+    return atomic_meter_length.load(); 
 }
 
 void pdsp::ScoreSection::clearOnChange(bool active) {

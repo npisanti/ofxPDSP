@@ -56,43 +56,37 @@ namespace pdsp{
         /*!
         @brief sets the sequence from an inlined array. Negative values produce no messages.
         @param[in] init an inline array, for example {1.0f, 0.0f, -1.0f, -1.0f, 0.25f, 0.5f, 0.0f, -1.0f }
-        @param[in] outputs how many outputs has the sequence, 1 if the argument is not given.
         
         If outputs>1 then consecutive values are send to sequentially numerated outputs, see lessons in the wiki for a pratical example.
         */
-        void set( std::initializer_list<float> init, int outputs = 1 ) noexcept;
+        void set( std::initializer_list<float> init ) noexcept;
+
+        /*!
+        @brief sets the sequence from an inlined array. Negative values produce no messages.
+        @param[in] init an inline array 2d, for example { {1.0f, 0.0f, 1.0f, 0.0f}, {43.f, 24.f, 43.5f, 55.f } }
+        @param[in] outputs how many outputs has the sequence, 1 if the argument is not given.
+        
+        */
+        void set( std::initializer_list<std::initializer_list<float> >  init ) noexcept;
 
         /*!
         @brief sets the sequence from an inlined array. Negative values produce no messages.
         @param[in] init an inline array, for example {1.0f, 0.0f, -1.0f, -1.0f, 0.25f, 0.5f, 0.0f, -1.0f }
-        @param[in] value time division
+        @param[in] division time division
         @param[in] length time before the next Sequence/ScoreCell will be started
-        @param[in] outputs how many outputs has the sequence, 1 if the argument is not given.
         
-        If outputs>1 then consecutive values are send to sequentially numerated outputs, see lessons in the wiki for a pratical example.
         */
-        void set( std::initializer_list<float> init, double division, double length, int outputs = 1 ) noexcept;
+        void set( std::initializer_list<float> init, double division, double length  ) noexcept;
 
         /*!
-        @brief sets the sequence from a float vector. Negative values produce no messages.
-        @param[in] init a std:vector<float> for setting the Sequence
-        @param[in] outputs how many outputs has the sequence, 1 if the argument is not given.
-        
-        If outputs>1 then consecutive values are send to sequentially numerated outputs, see lessons in the wiki for a pratical example.
-        */
-        void set(const std::vector<float> &init, int outputs = 1 ) noexcept;
-        
-        /*!
-        @brief sets the sequence from a float vector. Negative values produce no messages.
-        @param[in] init a std:vector<float> for setting the Sequence
-        @param[in] value time division
+        @brief sets the sequence from an inlined 2d array. Negative values produce no messages.
+        @param[in] init an inline array 2d, for example { {1.0f, 0.0f, 1.0f, 0.0f}, {43.f, 24.f, 43.5f, 55.f } }
+        @param[in] division time division
         @param[in] length time before the next Sequence/ScoreCell will be started
-        @param[in] outputs how many outputs has the sequence, 1 if the argument is not given.
         
-        If outputs>1 then consecutive values are send to sequentially numerated outputs, see lessons in the wiki for a pratical example.
         */
-        void set(const std::vector<float> &init, double division, double length, int outputs = 1 ) noexcept;
-        
+        void set( std::initializer_list<std::initializer_list<float> >  init , double division, double length  ) noexcept;
+   
         
         /*!
         @brief you call begin() before calling message, this prepare the Sequence for the message() method, clearing the buffers.
@@ -124,14 +118,16 @@ namespace pdsp{
         */
         std::function<void()> code;
 
-        std::vector<ScoreMessage> score;   
-
+        /*!
+        @brief returns a read-only reference to the internal ScoreMessage vector
+        */
+        const std::vector<ScoreMessage> & getScore();
+  
     private:
-        
         void executeGenerateScore() noexcept;
         
-        std::vector< pdsp::ScoreMessage > nextScore;
-        
+        std::vector<ScoreMessage> score;   
+        std::vector<ScoreMessage> nextScore;
         std::atomic<bool> modified;
 
         double len;
