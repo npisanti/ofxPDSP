@@ -15,6 +15,16 @@ On top of that some other classes that uses openFrameworks for adding midi in/ou
 
 Requires [ofxMidi](https://github.com/danomatika/ofxMidi) and [ofxSIMDFloats.](https://github.com/npisanti/ofxSIMDFloats)
 
+
+Check out the videos of some included examples:
+
+[![ofxPDSP example-midi_polysynth](http://img.youtube.com/vi/LvABH2Sdsqw/0.jpg)](https://www.youtube.com/watch?v=LvABH2Sdsqw "ofxPDSP example-midi_polysynth")
+
+[![ofxPDSP example-graincloud](http://img.youtube.com/vi/t04So5y3hrI/0.jpg)](https://www.youtube.com/watch?v=t04So5y3hrI "ofxPDSP example-graincloud")
+
+[![ofxPDSP example-wolfram_beats](http://img.youtube.com/vi/Dzli9RytUyY/0.jpg)](https://www.youtube.com/watch?v=Dzli9RytUyY "ofxPDSP example-wolfram_beats")
+
+
 Nicola Pisanti, MIT License 2016.  
 For FFT the AudioFFT wrapper is used, Copyright (c) 2013 [HiFi-LoFi](https://github.com/HiFi-LoFi).  
 For loading audio file on OSX [libaudiodecoder](https://github.com/asantoni/libaudiodecoder) is used, Copyright (c) 2010-2012 Albert Santoni, Bill Good, RJ Ryan.
