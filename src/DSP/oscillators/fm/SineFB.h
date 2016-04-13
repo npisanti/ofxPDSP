@@ -45,7 +45,7 @@ private:
     float z1;
 
     static float* sineTable;
-    static const float tableFakeSize;
+    static const double tableFakeSize;
     static uint64_t sineOscillatorsCreated;
 
 };

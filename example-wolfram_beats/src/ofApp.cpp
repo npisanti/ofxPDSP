@@ -13,6 +13,7 @@ void ofApp::setup(){
     //------------------- graphics --------------
     ofBackground(0);
     ofSetFrameRate(30);
+    ofDisableAntiAliasing();
     ofSetWindowShape(640, 360);
     offsetX = (640 - SIDE*64)/2;
     blink = 0;
@@ -44,36 +45,9 @@ void ofApp::setup(){
     engine.score.sections[0].enableQuantization( 0, 1.0 );
     engine.score.sections[0].launchCell(0);        
 
-    // code for sequencing wolfram CA values
-    // this code is running in the audio thread
-    // we are also updating the wolfram automaton inside this code
-    wolframSequence.code = [&]() noexcept {
-        // update rules
-        if(ruleChanged){ initRule(); }
-        
-        // update or init automaton
-        if(initFirstFlag){
-            initFirst();
-            initFirstFlag = false;
-        }else if(initRandomFlag){
-            initRandom();
-            initRandomFlag = false;
-        }else{
-            newGeneration();        
-        }
-        // convert the sums of the automaton generations to float values
-        wolframToPatterns();
-        // we use those float values to set the sequences steps
-        // this sequence has 4 outputs, we have patched to the zaps
-        wolframSequence.begin(16.0, 1.0);
-        for(int out=0; out<ZAPS_NUMBER; ++out){
-            for(int x=0; x<16; ++x){    //16 steps
-                int bar = x + out*16;
-                wolframSequence.message( (double)(x), bars[bar], out);
-            }
-        }
-        wolframSequence.end();
-    };
+
+    // instead of a lambda we can assign a function of our sequence code this way
+    wolframSequence.code = bind(&ofApp::processSequence, this); 
     
     //--------PATCHING-------
     zaps.resize(ZAPS_NUMBER);
@@ -101,7 +75,7 @@ void ofApp::setup(){
 }
 
 //--------------------------------------------------------------
-void ofApp::initRule() { // init wolfram rules from number bits
+void ofApp::initRule() noexcept { // init wolfram rules from number bits
     int rulebits = rule;
     for(int i=0; i<8; ++i){ // inits the rules
         wrules[i] = rulebits & 0x0001;  // take just the lowest bit
@@ -111,7 +85,7 @@ void ofApp::initRule() { // init wolfram rules from number bits
 }
 
 //--------------------------------------------------------------
-void ofApp::newGeneration(){ // update the automaton
+void ofApp::newGeneration() noexcept{ // update the automaton
     
     int oldGeneration = caGenerationIndex;
     caGenerationIndex--;
@@ -129,7 +103,7 @@ void ofApp::newGeneration(){ // update the automaton
 
 }
 
-void ofApp::wolframToPatterns(){ // convert the automaton generations sum to float values
+void ofApp::wolframToPatterns() noexcept{ // convert the automaton generations sum to float values
     
     for(int x =0; x<64; ++x){
         int sum = 0;
@@ -146,7 +120,7 @@ void ofApp::wolframToPatterns(){ // convert the automaton generations sum to flo
 
 }
 //--------------------------------------------------------------
-void ofApp::initFirst(){ // init the automaton with just an active cell in the top left
+void ofApp::initFirst() noexcept{ // init the automaton with just an active cell in the top left
 
     for( vector<int> & v: wolframCA ){
         for( int i=0; i<66; ++i){
@@ -167,7 +141,7 @@ void ofApp::initFirst(){ // init the automaton with just an active cell in the t
 }
 
 //--------------------------------------------------------------
-void ofApp::initRandom(){ // randomly inits the automaton
+void ofApp::initRandom() noexcept{ // randomly inits the automaton
 
     for( vector<int> & v: wolframCA ){
         for( int i=0; i<66; ++i){
@@ -179,8 +153,46 @@ void ofApp::initRandom(){ // randomly inits the automaton
         // pdspChange(float value) controls the chance of having an alive cell
         wolframCA[caGenerationIndex][x] = pdspChance(0.15f) ? 1 : 0; 
     }
+    
+    // always also make the first active
+    wolframCA[caGenerationIndex][1] = 1;    
+    
     triggerScaling = 1.0f;
 
+}
+
+//--------------------------------------------------------------
+void ofApp::processSequence() noexcept{
+        
+    // code for sequencing wolfram CA values
+    // this code is running in the audio thread
+    // we are also updating the wolfram automaton inside this code
+   
+    // update rules
+    if(ruleChanged){ initRule(); }
+    
+    // update or init automaton
+    if(initFirstFlag){
+        initFirst();
+        initFirstFlag = false;
+    }else if(initRandomFlag){
+        initRandom();
+        initRandomFlag = false;
+    }else{
+        newGeneration();        
+    }
+    // convert the sums of the automaton generations to float values
+    wolframToPatterns();
+    // we use those float values to set the sequences steps
+    // this sequence has 4 outputs, we have patched to the zaps
+    wolframSequence.begin(16.0, 1.0);
+    for(int out=0; out<ZAPS_NUMBER; ++out){
+        for(int x=0; x<16; ++x){    //16 steps
+            int bar = x + out*16;
+            wolframSequence.message( (double)(x), bars[bar], out);
+        }
+    }
+    wolframSequence.end();
 }
 
 //--------------------------------------------------------------
@@ -207,31 +219,38 @@ void ofApp::draw(){
         for(int x = 1; x<65; ++x){
             if(wolframCA[genIndex][x] == 0){
                 ofNoFill();
+                ofDrawRectangle(SIDE*x, 0, SIDE, SIDE);    
             }else{
                 ofFill();
+                ofDrawRectangle(SIDE*x -1 , -1, SIDE+1, SIDE+1);    
             }
-            ofDrawRectangle(SIDE*x, 0, SIDE, SIDE);            
-        }        
+        } 
+               
         genIndex++; 
         if(genIndex==MAX_GENERATIONS) genIndex = 0;
         ofTranslate(0, SIDE);
+        
     }
     
     // draw the bars
     ofTranslate(SIDE, SIDE);    
+    
     for(int x =0; x<64; ++x){
+        
         ofNoFill();
         ofDrawRectangle(SIDE*x, 0, SIDE, BARH); 
         ofFill();
         float height = bars[x] * BARH;
         float yy = BARH - height;
         ofDrawRectangle(SIDE*x, yy, SIDE, height); 
+   
     }
     
     ofTranslate(0, BARH);  
 
     // draw the playhead and envelope meters
     float playhead = engine.score.sections[0].meter_playhead();
+    
     ofPushMatrix();    
     for(int i=0; i<4; ++i){
 
@@ -255,6 +274,7 @@ void ofApp::draw(){
         ofDrawRectangle( 0, METERH, SIDE*16, METERH );
         
         ofTranslate(SIDE*16,0);
+        
     }
     ofPopMatrix();
 

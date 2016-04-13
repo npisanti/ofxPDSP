@@ -52,13 +52,13 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-        void newGeneration();
-        void wolframToPatterns();
-        void initFirst();
-        void initRandom();
+        void newGeneration() noexcept;
+        void wolframToPatterns() noexcept;
+        void initFirst() noexcept;
+        void initRandom() noexcept;
         void switchRule();
-        void initRule();
-
+        void initRule() noexcept;
+        void processSequence() noexcept;
 
         // pdsp modules
         ofxPDSPEngine   engine; 

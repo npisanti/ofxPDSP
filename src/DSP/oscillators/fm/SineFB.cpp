@@ -6,7 +6,7 @@ namespace pdsp {
 
 float* SineFB::sineTable = nullptr;
 uint64_t SineFB::sineOscillatorsCreated = 0;
-const float SineFB::tableFakeSize = 4096.0f;
+const double SineFB::tableFakeSize = 4096.0;
 
 SineFB::SineFB(){
 
@@ -17,7 +17,7 @@ SineFB::SineFB(){
         int max = static_cast<int> (tableFakeSize);
         sineTable = new float[max + 1];
         for (int i = 0; i < max; i++){
-                sineTable[i] = sin((static_cast<float>(i) / tableFakeSize) * M_PI * 2.0);
+                sineTable[i] = sin((static_cast<double>(i) / tableFakeSize) * M_PI * 2.0);
         }
         sineTable[max] = sineTable[0]; //extra position to eliminate an if / else into the oscillator processing
     }
