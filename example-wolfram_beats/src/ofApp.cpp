@@ -52,7 +52,7 @@ void ofApp::setup(){
     //--------PATCHING-------
     zaps.resize(ZAPS_NUMBER);
 
-    float scaleGain = 1.0f / ZAPS_NUMBER;
+    float scaleGain = 2.0f / ZAPS_NUMBER;
     float basePitch = 53.0f; // F3
     
     for ( int i=0; i<ZAPS_NUMBER; ++i ) {
