@@ -74,6 +74,10 @@ void pdsp::ScoreSection::resizePatterns(int size){
     }
 }
 
+int pdsp::ScoreSection::getPatternsNumber() const{
+    return patterns.size();
+}
+
 void pdsp::ScoreSection::launchCell( int index, bool quantizeLaunch, double quantizeGrid ){
     if     ( index < 0        ) { index = -1; }
     else if( index >= (int)patterns.size() ) { index = (int)patterns.size()-1; }
@@ -91,7 +95,7 @@ void pdsp::ScoreSection::launchCell( int index, bool quantizeLaunch, double quan
         
         this->launchingCell = true;
         //scheduledPattern = index;
-        //atomic_meter_next.store(index);
+        atomic_meter_next.store(index);
 
     patternMutex.unlock();
 }

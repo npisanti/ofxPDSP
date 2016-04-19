@@ -24,6 +24,10 @@ double pdsp::Sequence::length() const{
     return len;
 }
 
+double pdsp::Sequence::division() const{
+    return div;
+}
+
 void pdsp::Sequence::setTiming( double division, double length ){
     setDivision(division);
     setLength(length);

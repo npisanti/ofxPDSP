@@ -47,6 +47,11 @@ namespace pdsp{
         double length() const;
 
         /*!
+        @brief returns the currently set time division, for example 8.0 is 1/8th. 
+        */
+        double division() const;
+
+        /*!
         @brief sets the time division and length of the sequence.
         @param[in] value time division
         @param[in] value new length

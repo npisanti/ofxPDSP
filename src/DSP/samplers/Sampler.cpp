@@ -20,7 +20,7 @@ pdsp::Sampler::Sampler(){
         direction = 1.0f;
         
         positionMeter.store(0.0f);
-        positionDivider = 0.000000000001f;
+        positionDivider = 0.001f;
 
         input_pitch_mod.setDefaultValue(0.0f);
         input_select.setDefaultValue(0.0f);
@@ -94,7 +94,7 @@ void pdsp::Sampler::prepareUnit( int expectedBufferSize, double sampleRate ) {
 
 void pdsp::Sampler::process(int bufferSize) noexcept {
         
-        if(sample!=nullptr){
+        if(sample!=nullptr && sample->loaded()){
         
                 int selectState;
                 const float* selectBuffer = nullptr;

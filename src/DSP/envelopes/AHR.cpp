@@ -55,6 +55,10 @@ pdsp::Patchable& pdsp::AHR::in_release(){
     return in("release");
 }
 
+pdsp::Patchable& pdsp::AHR::in_velocity(){
+    return in("velocity");
+}
+
 pdsp::Patchable& pdsp::AHR::out_signal(){
     return out("signal");
 }

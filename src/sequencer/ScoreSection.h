@@ -65,6 +65,12 @@ public:
 
     */ 
     void resizePatterns(int size);
+
+    /*!
+    @brief returns the number of patterns contained by this ScoreSection
+
+    */ 
+    int getPatternsNumber() const;
     
 
     
