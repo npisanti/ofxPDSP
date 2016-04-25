@@ -90,7 +90,7 @@ void pdsp::PRNoiseGen::process_PA(const float* &trigSyncBuffer, const int &buffe
         
         for (int n = 0; n < bufferSize; ++n){
                 //resetting on cycle
-                if (checkSync(trigSyncBuffer[n])){
+                if (checkTrigger(trigSyncBuffer[n])){
                         pnRegister = seed;
                 }
                 outputBuffer[n] = PNSequenceNext(pnRegister);
@@ -108,7 +108,7 @@ void pdsp::PRNoiseGen::process_SA_TA(const float* &trigSyncBuffer, const float* 
                         reSeed();
                 }
                 //resetting on cycle
-                if (checkSync(trigSyncBuffer[n])){
+                if (checkTrigger(trigSyncBuffer[n])){
                         pnRegister = seed;
                 }
                 outputBuffer[n] = PNSequenceNext(pnRegister);

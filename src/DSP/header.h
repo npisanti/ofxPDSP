@@ -89,6 +89,8 @@
 #include "utility/MaxValue.h"
 #include "utility/OneBarTimeMs.h"
 #include "utility/FreqToMs.h"
+#include "utility/SaturatorThreshold.h"
+#include "utility/SamplesDelay.h"
 
 #include "convolution/FDLConvolver.h"
 

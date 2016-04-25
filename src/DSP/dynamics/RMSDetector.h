@@ -24,7 +24,7 @@ public:
     RMSDetector(float maxWindowTimeMs);
 
     /*!
-    @brief sets the window millisecond value and returns this unit ready to be patched. An array of values will be deallocated and the allocated again so this is not thread-safe. 
+    @brief sets the window millisecond value and returns this unit ready to be patched. An array of values will be deallocated and the allocated again so this is ABSOLUTELY not thread-safe to run in the audio-thread. 
     @param[in] window_ms value in milliseconds of the RMS-window time.
     */    
     Patchable& set(float window_ms);
@@ -44,6 +44,10 @@ public:
     */ 
     float meter_output() const;
 
+    /*!
+    @brief return the ms window in samples, useful for set a delay for lookahead correction with a SamplesDelay.
+    */ 
+    int getWindowSamples() const ;
     
 protected:
     void prepareUnit( int expectedBufferSize, double sampleRate ) override;

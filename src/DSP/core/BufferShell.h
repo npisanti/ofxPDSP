@@ -8,7 +8,7 @@
 #define PDSP_CORE_BUFFERSHELL_H_INCLUDED
 
 #include "Preparable.h"
-#include "../flags.h"
+#include "../../flags.h"
 
 namespace pdsp {
 

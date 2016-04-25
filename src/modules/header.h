@@ -7,6 +7,7 @@
 #define PDSP_MODULEHEADER_H_INCLUDED
 
 #include "dynamics/Compressor1.h"
+#include "dynamics/Compressor2.h"
 
 #include "oscillators/VAOscillator.h"
 #include "oscillators/LFO.h"

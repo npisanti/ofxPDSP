@@ -1,10 +1,10 @@
 
-// Compressor1.h
+// Compressor2.h
 // ofxPDSP
 // Nicola Pisanti, MIT License, 2016
 
-#ifndef PDSP_MODULE_COMPRESSOR1_H_INCLUDED
-#define PDSP_MODULE_COMPRESSOR1_H_INCLUDED
+#ifndef PDSP_MODULE_COMPRESSOR2_H_INCLUDED
+#define PDSP_MODULE_COMPRESSOR2_H_INCLUDED
 
 #include "../../DSP/pdspCore.h"
 #include "../../DSP/dynamics/FullWavePeakDetector.h"
@@ -14,29 +14,38 @@
 #include "../../DSP/utility/DBtoLin.h"
 #include "../../DSP/utility/LinToDB.h"
 #include "../../DSP/utility/MaxValue.h"
+#include "../../DSP/utility/SamplesDelay.h"
 
 
 namespace pdsp{
 /*!
-@brief Feedfordward stereo compressor with peak-based detection.
+@brief Feedfordward stereo compressor with RMS-based detection.
 
-Feedfordward stereo compressor with peak-based detection, settable attack, release, threshold, ratio and knee. There is also a method for link the signal detection of the stereo channels, by default they are linked. If you set the ratio to a value greater than 40 the compressor will act as a limiter.
+Feedfordward stereo compressor with RMS detection, optional lookahead function, settable attack, release, threshold, ratio and knee. There is also a method for link the signal detection of the stereo channels, by default they are linked. When lookahead is activated the signal is delayed to match the RMS window time.
 */       
 
-class Compressor1 : public Patchable {
+class Compressor2 : public Patchable {
     
 public:
-    Compressor1( bool linkChannels ){ patch(linkChannels); };
+    Compressor2( bool linkChannels ){ patch(linkChannels); };
     
-    Compressor1(){ patch(true); };
-    Compressor1(const Compressor1& other){ patch(false); };
-    Compressor1& operator=(const Compressor1& other){ return *this; };
+    Compressor2(){ patch(true); };
+    Compressor2(const Compressor2& other){ patch(false); };
+    Compressor2& operator=(const Compressor2& other){ return *this; };
 
     /*!
     @brief links the signal detection for stereo channels. Activated by default.
     @param[in] active activate the stereo link
     */          
     void stereoLink(bool active);
+
+    /*!
+    @brief set the ms window for the RMS detector
+    @param[in] window_ms window milliseconds for detection
+    @param[in] lookahead activate a delay for lookahead correction
+    */          
+    void setRMSWindow(float window_ms, bool lookahead);
+
     
     /*!
     @brief Sets "0" as selected input and returns this module ready to be patched. This is the default input. This is the left input channel.
@@ -93,8 +102,11 @@ private:
     
     PatchNode               input1;
     PatchNode               input2;
-    FullWavePeakDetector    detector1;
-    FullWavePeakDetector    detector2;
+    RMSDetector             detector1;
+    RMSDetector             detector2;
+    
+    SamplesDelay            delay1;
+    SamplesDelay            delay2;
     
     PatchNode               attack;
     PatchNode               release;
@@ -126,4 +138,4 @@ private:
 
 
 
-#endif // PDSP_MODULE_COMPRESSOR1_H_INCLUDED
+#endif // PDSP_MODULE_COMPRESSOR2_H_INCLUDED

@@ -1,4 +1,11 @@
 
+v0.1.3.2
+    - added Compressor2, RMS compressor with optional lookahead
+    - added SaturatorThreshold, an Unit with send/return to be used with Saturators
+    - added enableDBTriggering() method to envelope for dB-based sensitivity to trigger dynamics
+    - added utility class SamplesDelay
+    - minor fixes
+
 v0.1.3.1
     - major tweaks to ScoreSection and ScoreCell for easier sequencing
     - ScoreCell and CellChange classes removed, use Sequence and SeqChange instead

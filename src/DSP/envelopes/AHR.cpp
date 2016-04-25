@@ -23,6 +23,8 @@ pdsp::AHR::AHR(){
         input_release.setDefaultValue(50.0f);
         input_velocity.setDefaultValue(1.0f);
         
+        dBtrig = false;
+        
         if(dynamicConstruction){
                 prepareToPlay(globalBufferSize, globalSampleRate);
         }
@@ -34,6 +36,18 @@ pdsp::Patchable& pdsp::AHR::set(float attackTimeMs, float holdTimeMs, float rele
         input_release.setDefaultValue(releaseTimeMs);
         return *this;
 }
+
+
+void pdsp::AHR::enableDBTriggering(float dBmin, float dBmax){
+    this->dBmin = dBmin;
+    this->dBmax = dBmax;
+    dBtrig = true;
+}
+
+void pdsp::AHR::disableDBTriggering(){
+    dBtrig = false;
+}
+
 
 float pdsp::AHR::meter_output() const{
     return meter.load();
@@ -108,8 +122,14 @@ void pdsp::AHR::onRetrigger(float triggerValue, int n) {
         triggerValue = (triggerValue > 1.0f) ? 1.0f : triggerValue;
         
         if( triggerValue > 0.0f ){
-                float veloCtrl = processAndGetSingleValue(input_velocity, n);
-                this->intensity = (triggerValue * veloCtrl)  + (1.0f-veloCtrl); 
+                if(dBtrig){
+                    float dB = dBmin*(1.0f - triggerValue) + dBmax*triggerValue;
+                    this->intensity = pow(10.0f, dB*0.05f);
+                }else{
+                    float veloCtrl = processAndGetSingleValue(input_velocity, n);
+                    this->intensity = (triggerValue * veloCtrl)  + (1.0f-veloCtrl);                     
+                }
+                
                 stageSwitch = attackStage;
         }        
 

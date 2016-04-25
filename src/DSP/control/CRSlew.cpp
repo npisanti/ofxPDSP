@@ -11,6 +11,10 @@ pdsp::CRSlew::CRSlew(){
     }
 }
 
+pdsp::CRSlew::CRSlew(const CRSlew & other){
+    std::cout<<"[pdsp] do not copy construct CRSlew!\n";
+    pdsp_trace();    
+}
 
 pdsp::Patchable& pdsp::CRSlew::in_signal(){
     return in("signal");

@@ -46,6 +46,18 @@ pdsp::Patchable& pdsp::ADSR::set(float attackTimeMs, float decayTimeMs, float su
         return *this;
 }
 
+
+void pdsp::ADSR::enableDBTriggering(float dBmin, float dBmax){
+    this->dBmin = dBmin;
+    this->dBmax = dBmax;
+    dBtrig = true;
+}
+
+void pdsp::ADSR::disableDBTriggering(){
+    dBtrig = false;
+}
+
+
 float pdsp::ADSR::meter_output() const{
     return meter.load();
 }
@@ -130,8 +142,8 @@ void pdsp::ADSR::process(int bufferSize) noexcept{
 
 void pdsp::ADSR::onRetrigger(float triggerValue, int n) {
     
-        
-        
+        /* 
+        // LEGACY CODE, still testing the dB function
         if(triggerValue == pdspTriggerOff){
                 stageSwitch = releaseStage;
 
@@ -153,6 +165,32 @@ void pdsp::ADSR::onRetrigger(float triggerValue, int n) {
                 }
                 float veloCtrl = processAndGetSingleValue(input_velocity, n);
                 this->intensity = (newIntensity * veloCtrl)  + (1.0f-veloCtrl); 
+        }
+        */
+        
+        if(triggerValue == pdspTriggerOff){
+                stageSwitch = releaseStage;
+        }else if( triggerValue > 0.0f ){
+                stageSwitch = attackStage;
+        }else if( triggerValue < 0.0f ){ //legato triggers
+                triggerValue = -triggerValue;
+                if(stageSwitch!=attackStage){
+                        if(triggerValue <= this->intensity){
+                                stageSwitch = decayStage;
+                        }else{
+                                stageSwitch = riseStage;
+                        }   
+                }
+        }
+        
+        triggerValue = (triggerValue > 1.0f) ? 1.0f : triggerValue;
+
+        if(dBtrig){
+            float dB = dBmin*(1.0f - triggerValue) + dBmax*triggerValue;
+            this->intensity = pow(10.0f, dB*0.05f);
+        }else{
+            float veloCtrl = processAndGetSingleValue(input_velocity, n);
+            this->intensity = (triggerValue * veloCtrl)  + (1.0f-veloCtrl); 
         }
 
         setAttackTime( processAndGetSingleValue(input_attack, n));

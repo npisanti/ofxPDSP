@@ -123,7 +123,7 @@ void pdsp::ScoreProcessor::stop(){
         sect.scorePlayHead = 0.0;
         //sect.scheduledTime -= oldPlayhead;
         sect.atomic_meter_playhead.store(0.0f);
-        sect.launchCell(sect.patternIndex);
+        sect.launchCell(sect.atomic_meter_next);
     } 
 }    
 

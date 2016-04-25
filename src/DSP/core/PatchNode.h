@@ -34,7 +34,7 @@ public:
 
 //--------------PATCH NODE------------------------------------------------
 /*!
-@brief A Unit with no dsp inside, it just pass it's input to the output
+@brief A Unit with no dsp inside, it just pass it's input to the output. Patching float to this Unit is thread-safe.
 
 This is a class can be used as a patch point, it has no dsp inside and can be useful for managing connection to and from a module. You connect to and from it just using >> with no in() and out() methods.
 */  

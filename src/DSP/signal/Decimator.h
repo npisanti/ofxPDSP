@@ -8,7 +8,7 @@
 #define PDSP_SIGNAL_DECIMATOR_H_INCLUDED
 
 
-#include "../../pdspCore.h"
+#include "../pdspCore.h"
 
 
 namespace pdsp{

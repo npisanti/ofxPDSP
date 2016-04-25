@@ -468,7 +468,7 @@ private:
 
 //-------------------------------------VALUE NODE------------------------------------------------
 /*!
-@brief An OutputNode that is always set at control rate with a set value. Thread-Safe to set.
+@brief An OutputNode that is always set at control rate with a set value. Setting or patching float to this class is thread-safe.
 
 ValueNode can be use as OutputNode but it holds a single scalar value that is thread-safe to set even when the processing is running.
 */

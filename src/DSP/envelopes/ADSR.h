@@ -45,6 +45,18 @@ public:
     Patchable& set(float attackTimeMs, float decayTimeMs, float sustainLevel, float releaseTimeMs);
 
     /*!
+    @brief enable an alternate mode for the trigger dynamics, trigger will output linear value that are the equivalent of dBmin at 0.0f and dBmax at 1.0f
+    @param[in] dBmin minimum dB output
+    @param[in] dBmax maximum dB output
+    */
+    void enableDBTriggering(float dBmin, float dBmax);
+    
+    /*!
+    @brief disable the alternate mode for the trigger dynamics.
+    */
+    void disableDBTriggering();
+
+    /*!
     @brief Sets "trig" as selected input and returns this Unit ready to be patched. This is the default input. This input is the trigger input of the envelope, you should patch an out_trig() to this input.
     */   
     Patchable& in_trig();
@@ -119,7 +131,9 @@ private:
     InputNode input_release;
     InputNode input_velocity;
 
-    
+    std::atomic<bool> dBtrig;
+    float dBmin;
+    float dBmax;    
     
     int              stageSwitch;
     

@@ -12,9 +12,9 @@
 namespace pdsp{
 
 /*!
-@brief Slews inputs running at control rate.
+@brief Slews inputs running at control rate. Patching float to this Unit is thread-safe.
 
-Slews inputs running at control rate, if an input is running at audio rate just the first element of the buffer is sampled, so it's mostly useful to patch ValueNode to this unit, or to directly send floats to its input using the >> operator. When the program starts the slew will start from an init value, that is also settable. This unit has just one input and one output, so it has no in_ or out_ methods to select. For slewing Units running at audio rate you should use a OnePole lpf filter.
+Slews inputs running at control rate, if an input is running at audio rate just the first element of the buffer is sampled, so it's mostly useful to patch ValueNode to this unit, or to directly send floats to its input using the >> operator. When the program starts the slew will start from an init value, that is also settable. This unit has just one input and one output, so it has no in_ or out_ methods to select. For slewing Units running at audio rate you should use a OnePole lpf filter. Patching float to this Unit is thread-safe.
 
 */
 
@@ -22,6 +22,7 @@ class CRSlew : public Unit, public UsesSlew {
 
 public:
         CRSlew();
+        CRSlew(const CRSlew & other);
 
         /*!
         @brief Sets the slew time and returns the unit ready to be patched
