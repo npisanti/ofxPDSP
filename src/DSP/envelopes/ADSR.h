@@ -114,7 +114,7 @@ private:
             case decayStage  : Decay(stageSwitch, sustainStage); break;
             case sustainStage: Sustain(); break;
             case releaseStage: Release(stageSwitch, off); break;
-            case riseStage   : Rise(stageSwitch, sustainStage); break;
+            case riseStage   : Rise(stageSwitch, decayStage); break;
             }
     };
 

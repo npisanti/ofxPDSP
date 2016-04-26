@@ -38,7 +38,7 @@ public:
     @param[in] true if you want to retrigger the envelopes only when all the key are released
     @param[in] priority you can use Last, Low or High as parameter
     */  
-    void setMonoMode(int unisonVoices, bool legato, MonoPriority priority);
+    void setMonoMode(int unisonVoices, bool legato, MonoPriority priority = Last);
 
     /*!
     @brief sets the pitch bend amount for up and down bending

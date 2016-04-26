@@ -175,7 +175,7 @@ void pdsp::ADSR::onRetrigger(float triggerValue, int n) {
         }else if( triggerValue < 0.0f ){ //legato triggers
                 triggerValue = -triggerValue;
                 if(stageSwitch!=attackStage){
-                        if(triggerValue <= this->intensity){
+                        if(triggerValue <= this->envelopeOutput){
                                 stageSwitch = decayStage;
                         }else{
                                 stageSwitch = riseStage;
@@ -193,10 +193,27 @@ void pdsp::ADSR::onRetrigger(float triggerValue, int n) {
             this->intensity = (triggerValue * veloCtrl)  + (1.0f-veloCtrl); 
         }
 
-        setAttackTime( processAndGetSingleValue(input_attack, n));
         setSustainLevel(processAndGetSingleValue(input_sustain, n));
-        setDecayTime( processAndGetSingleValue(input_decay, n), sustainLevel);
-        setRiseTime( processAndGetSingleValue( input_decay, n), sustainLevel);
+
+        float riseT;
+        float riseNextLevel;
+        float decayT = processAndGetSingleValue(input_decay, n);
+        float attackT = processAndGetSingleValue(input_attack, n);
+        if(decayT < attackT){
+            riseT = decayT;
+        }else{
+            riseT = attackT;
+        }
+        if( this->intensity > envelopeOutput){
+            riseNextLevel = this->intensity;
+        }else{
+            riseNextLevel = sustainLevel;
+        }
+        
+
+        setAttackTime( attackT );
+        setDecayTime( decayT, sustainLevel);
+        setRiseTime( riseT, riseNextLevel);
         setReleaseTime(processAndGetSingleValue(input_release, n));
 }
         
