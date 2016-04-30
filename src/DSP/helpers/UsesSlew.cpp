@@ -77,7 +77,7 @@ void pdsp::UsesSlew::valueChange( const float &slewValueDest ) noexcept{
 void pdsp::UsesSlew::runSlewBlock(float* &buffer, const int &start, const int &stopExclusive) noexcept{
     
 	int n = start;
-	
+    
 	for( ; n<stopExclusive; ++n){
 		buffer[n] = slewValueStart + slewAccumulator * slewValueInterval;
 		slewAccumulator = slewOffset + (slewAccumulator * slewCoeff);
@@ -95,8 +95,6 @@ void pdsp::UsesSlew::runSlewBlock(float* &buffer, const int &start, const int &s
                 
 	}else if(start!=stopExclusive) {
         slewLastValue = buffer[stopExclusive-1];
-        //std::cout<<"last value set to  "<<slewLastValue<<"\n";
     }
-
         
 }

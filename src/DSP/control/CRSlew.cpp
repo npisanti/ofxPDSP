@@ -51,16 +51,15 @@ void pdsp::CRSlew::process (int bufferSize) noexcept {
 
     if(inputChanged){
             valueChange(inputBuffer[0]);
-            float* outputBuffer = getOutputBufferToFill(output);
-            runSlewBlock(outputBuffer, 0, bufferSize);
-    }else{
-        if(slewRun){
-            float* outputBuffer = getOutputBufferToFill(output);
-            runSlewBlock(outputBuffer, 0, bufferSize);         
-        }else{
-            setControlRateOutput(output, slewLastValue);
-        }
     }
+    
+    if(slewRun){
+        float* outputBuffer = getOutputBufferToFill(output);
+        runSlewBlock(outputBuffer, 0, bufferSize);         
+    }else{
+        setControlRateOutput(output, slewLastValue);
+    }
+
     meter.store(slewLastValue);
 }
 

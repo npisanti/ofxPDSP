@@ -101,4 +101,13 @@ inline_f float pdspBRan(){
 };
 
 
+/*!
+@brief returns a value for panning voices in an uniform distribution into the stereo panorama
+@param[in] index index of the voice to pan
+@param[in] max number of max voices
+@param[in] spread spread of the total panorama, value should range from 0.0f to 1.0f
+*/
+float pdspSpread(int index, int max, float spread);
+
+
 #endif // OFXPDSP_FUNCTIONS_INCLUDED

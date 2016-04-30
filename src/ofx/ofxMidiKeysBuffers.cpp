@@ -87,7 +87,11 @@ void ofxMidiKeysBuffers::processMidi (const vector<_ofxPositionedMidiMessage> & 
                     switch(msg.message.status){
                         case MIDI_NOTE_ON:
                             if(msg.message.pitch >= lowNote && msg.message.pitch<= highNote){
-                                processPolyMidiNoteOn( msg);
+                                if(msg.message.velocity == 0){
+                                    processPolyMidiNoteOff( msg);
+                                }else{
+                                    processPolyMidiNoteOn( msg);
+                                }
                             }
                         break;
                         
@@ -125,7 +129,11 @@ void ofxMidiKeysBuffers::processMidi (const vector<_ofxPositionedMidiMessage> & 
                     switch(msg.message.status){
                         case MIDI_NOTE_ON:
                             if(msg.message.pitch >= lowNote && msg.message.pitch<= highNote) {
-                                processMonoMidiNoteOn( msg);
+                                if(msg.message.velocity == 0){
+                                    processMonoMidiNoteOff( msg);
+                                }else{
+                                    processMonoMidiNoteOn( msg);
+                                }
                             }
                         break;
                         

@@ -1,4 +1,9 @@
 
+v0.1.3.3
+    - added ofxPDSPValue, utility class for thread-safe setting of values with optional smoothing
+    - added pdspSpread() function for easy spreading of voices in the panorama
+    - ofxPDSPMidiKeys fix: some midi keyboards use midi note on messages with 0 value instead of midi note off, now the behavior should be correct even with those controllers
+
 v0.1.3.2
     - added Compressor2, RMS compressor with optional lookahead
     - added SaturatorThreshold, an Unit with send/return to be used with Saturators

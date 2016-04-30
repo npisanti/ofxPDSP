@@ -16,6 +16,7 @@
 #include "ofx/ofxPDSPMidi.h"
 
 #include "ofx/ofxPDSPParameters.h"
+#include "ofx/ofxPDSPValue.h"
 
 #include "ofx/ofxSampleBufferPlotter.h"
 

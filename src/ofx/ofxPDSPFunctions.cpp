@@ -46,3 +46,10 @@ float panR ( float pan ){
 float dB ( float dBvalue ){
     return pdsp::DBtoLin::eval(dBvalue);
 }
+
+float pdspSpread(int index, int max, float spread){
+    float offset = ((float)(max-1))*0.5f;
+    float pan = (float(index)) - offset; 
+    float panScale = spread / offset; 
+    return pan * panScale;
+}

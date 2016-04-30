@@ -13,14 +13,13 @@ ofxPDSPMidiKeys::ofxPDSPMidiKeys(){
     unisonPitchDetune.reserve(32);
     voiceUnisonMod.reserve(32);
     out_singletrigger.setSingleTrigger(true);
-
     setUnisonDetune(0.3f);
 
     portamentoMode = Off;
     portamentoTime = 200.0f;
     slewMode = pdsp::Time;
 
-    setSlew(20.0f);
+    setSlew(40.0f);
     setPitchBend(-2, 2);
 
     setPolyMode(8, 1);
