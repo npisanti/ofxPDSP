@@ -8,6 +8,7 @@
 #define PDSP_ENVSTAGE_ENVELOPESTAGE_H_INCLUDED
 
 #include "../../../flags.h"
+#include <math.h>
 
 namespace pdsp {
 
@@ -24,6 +25,11 @@ namespace pdsp {
 		};
 	
 	protected:
+
+        static const float digitalAttackTCO;
+        static const float analogAttackTCO;
+        static const float digitalDecayTCO;
+        static const float analogDecayTCO;
 
         float intensity;
 		float sampleRate;

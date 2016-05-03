@@ -38,6 +38,27 @@ pdsp::Patchable& pdsp::AHR::set(float attackTimeMs, float holdTimeMs, float rele
 }
 
 
+void pdsp::AHR::setAttackCurve(float hardness){
+    if(hardness < 0.0f) hardness = 0.0f;
+    if(hardness > 1.0f) hardness = 1.0f;
+    
+    float attackTCO = interpolate_linear(EnvelopeStage::digitalAttackTCO, EnvelopeStage::analogAttackTCO, hardness);
+    setAttackTCO(attackTCO);
+}
+
+void pdsp::AHR::setReleaseCurve(float hardness){
+    if(hardness < 0.0f) hardness = 0.0f;
+    if(hardness > 1.0f) hardness = 1.0f;
+    
+    float decayTCO  = interpolate_linear(EnvelopeStage::digitalDecayTCO, EnvelopeStage::analogDecayTCO, hardness);
+    setReleaseTCO(decayTCO);
+}
+
+
+void pdsp::AHR::setCurve(float hardness){
+    setAttackCurve(hardness);
+    setReleaseCurve(hardness);
+}
 void pdsp::AHR::enableDBTriggering(float dBmin, float dBmax){
     this->dBmin = dBmin;
     this->dBmax = dBmax;

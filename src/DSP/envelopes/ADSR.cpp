@@ -47,6 +47,30 @@ pdsp::Patchable& pdsp::ADSR::set(float attackTimeMs, float decayTimeMs, float su
 }
 
 
+void pdsp::ADSR::setAttackCurve(float hardness){
+    if(hardness < 0.0f) hardness = 0.0f;
+    if(hardness > 1.0f) hardness = 1.0f;
+    
+    float attackTCO = interpolate_linear(EnvelopeStage::digitalAttackTCO, EnvelopeStage::analogAttackTCO, hardness);
+    setAttackTCO(attackTCO);
+}
+
+void pdsp::ADSR::setReleaseCurve(float hardness){
+    if(hardness < 0.0f) hardness = 0.0f;
+    if(hardness > 1.0f) hardness = 1.0f;
+    
+    float decayTCO  = interpolate_linear(EnvelopeStage::digitalDecayTCO, EnvelopeStage::analogDecayTCO, hardness);
+    setDecayTCO(decayTCO);
+    setRiseTCO(decayTCO);
+    setReleaseTCO(decayTCO);
+}
+
+
+void pdsp::ADSR::setCurve(float hardness){
+    setAttackCurve(hardness);
+    setReleaseCurve(hardness);
+}
+
 void pdsp::ADSR::enableDBTriggering(float dBmin, float dBmax){
     this->dBmin = dBmin;
     this->dBmax = dBmax;

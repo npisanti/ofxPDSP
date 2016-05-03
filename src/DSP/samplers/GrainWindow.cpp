@@ -125,6 +125,7 @@ void pdsp::GrainWindow::process_audio( const float* inputBuffer,  const float* t
 
     for(int n=0; n<bufferSize; ++n){
         
+        
         if(run){
             
             float index = phase*grainShape->length_f;
@@ -147,15 +148,15 @@ void pdsp::GrainWindow::process_audio( const float* inputBuffer,  const float* t
             outputBuffer[n] = 0.0f;
         }
         
+        phase+=baseInc;
+        if(phase>=1.0f){ run = false; }
+
         if(triggerAR){
             if(checkTrigger(triggerBuffer[n])){
                 run = true;
                 phase = 0.0f;
             }
         }
-        
-        phase+=baseInc;
-        if(phase>=1.0f){ run = false; }
         
     }  
 

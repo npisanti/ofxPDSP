@@ -74,6 +74,15 @@ public:
     void setMaxBars(double maxBars);
     //void synchronizeInterface(bool active);
 
+
+    /*!
+    @brief gets the maximum value the global playhead can take, in bars, after it wraps back
+    
+    */ 
+    double getMaxBars() const;
+
+
+
     /*!
     @brief returns the playhead position in bars. Thread-safe.
     */ 

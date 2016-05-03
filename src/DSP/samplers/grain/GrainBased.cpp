@@ -3,8 +3,15 @@
 
 std::vector<pdsp::GrainTable> pdsp::GrainBased::tables = std::vector<pdsp::GrainTable>();
 
+/* this has to be recoded with a counter for instances
+ * and a vector of pointers instead of objecs
+ * when the vector is resized the old pointers already given to the modules are no longer valid!!
+ * for the moment there is a quick fix at line 14
+ */
 
 pdsp::GrainTable*  pdsp::GrainBased::getTable(Window_t type, int length){
+    
+    tables.reserve(256); // quick fix for making this work
     
     GrainTable* toReturn = nullptr;
     
@@ -15,10 +22,11 @@ pdsp::GrainTable*  pdsp::GrainBased::getTable(Window_t type, int length){
     }
     
     if (toReturn==nullptr) {
-        tables.push_back(GrainTable());
+        tables.resize(tables.size()+1);
         tables[tables.size()-1].setTable(type, length);
         toReturn = &tables[tables.size()-1];
     }
+    
     
     return toReturn;
     
@@ -50,7 +58,7 @@ void pdsp::GrainBased::addTable(Window_t type, int length){
         }
     }
     if (! found) {
-        tables.push_back(GrainTable());
+        tables.resize(tables.size()+1);
         tables[tables.size()-1].setTable(type, length);
     }
 }

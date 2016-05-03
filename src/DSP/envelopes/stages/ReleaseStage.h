@@ -18,7 +18,7 @@ namespace pdsp{
 */
 		ReleaseStage(){
 			releaseTimeMs = 50.0;
-			releaseTCO = exp(-4.95); //digital 
+			releaseTCO = EnvelopeStage::analogDecayTCO;
 			calculateReleaseTime();
 		};
 

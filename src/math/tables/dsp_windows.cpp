@@ -3,7 +3,6 @@
 #include "dsp_windows.h"
 
 
-
 float* pdsp::windowTriangular( int len, int L_offset ){
     
     float* table;

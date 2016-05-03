@@ -39,6 +39,25 @@ public:
     */
     Patchable& set(float attackTimeMs, float holdTimeMs, float releaseTimeMs);
     
+  
+    /*!
+    @brief sets the curve of the attack stage the envelope, from a smoother linear in dB curve to an harder analog-like curve. By default is 0.0f ( linear in dB attack ).
+    @param[in] hardness how much analog-like the analog curve is, value is clampet to the 0.0<-->1.0f range, 
+    */
+    void setAttackCurve(float hardness); 
+ 
+    /*!
+    @brief sets the curve of the release stage of the envelope, from a smoother linear in dB curve to an harder analog-like curve. By default is 1.0f ( analog-like releases ).
+    @param[in] hardness how much analog-like the analog curve is, value is clampet to the 0.0<-->1.0f range, 
+    */
+    void setReleaseCurve(float hardness); 
+
+    /*!
+    @brief sets the curve of the envelope, from a smoother linear in dB curve to an harder analog-like curve.
+    @param[in] hardness how much analog-like the analog curve is, value is clampet to the 0.0<-->1.0f range, 
+    */
+    void setCurve(float hardness);
+    
     
     /*!
     @brief enable an alternate mode for the trigger dynamics, trigger will output linear value that are the equivalent of dBmin at 0.0f and dBmax at 1.0f

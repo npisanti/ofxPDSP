@@ -19,7 +19,7 @@ class DecayStage : public virtual EnvelopeStage{
 public:
         DecayStage(){
                 decayTimeMs = 50.0;
-                decayTCO = exp(-4.95); //digital 
+                decayTCO = EnvelopeStage::analogDecayTCO;
                 calculateDecayTime();
         };
 /*!

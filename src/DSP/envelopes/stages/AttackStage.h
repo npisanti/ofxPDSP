@@ -19,7 +19,7 @@ namespace pdsp{
 
 		AttackStage(){
 			attackTimeMs = 50.0f;
-			attackTCO = 0.99999f; //digital 
+			attackTCO = EnvelopeStage::digitalAttackTCO;
 			calculateAttackTime();
 		};
 /*!

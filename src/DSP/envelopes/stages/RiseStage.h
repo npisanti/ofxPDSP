@@ -18,7 +18,7 @@ public:
 */
         RiseStage(){
                 riseTimeMs = 50.0;
-                riseTCO = exp(-4.95); //digital 
+                riseTCO = EnvelopeStage::analogDecayTCO;
                 calculateRiseTime();
         };
 

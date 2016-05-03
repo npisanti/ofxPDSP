@@ -137,6 +137,10 @@ float pdsp::ScoreProcessor::meter_playhead(){
     return playhead_meter.load();
 }
 
+double pdsp::ScoreProcessor::getMaxBars() const{
+    return maxBars;
+}
+
 bool pdsp::ScoreProcessor::isPlaying(){
     return playing.load();
 }
