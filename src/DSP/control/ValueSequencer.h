@@ -69,8 +69,6 @@ private:
         //MessageBuffer* messageBuffer;
         MessageBuffer* slewControl;
         bool connectToSlewControl;
-        
-        std::atomic<float> meter;
 };
 
 } // pdsp namespace end

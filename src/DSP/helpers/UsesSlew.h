@@ -59,7 +59,7 @@ protected:
     void prepareSlew(float sampleRate, float initValue);
 
     float slewInitValue;
-    float slewLastValue;
+    std::atomic<float> slewLastValue;
     float slewTimeMod;
     
     float sampleRate;

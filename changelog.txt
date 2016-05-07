@@ -1,4 +1,9 @@
 
+v0.1.3.4
+    - added LowCut class, a 12db non-resonant highpass filter
+    - added KneeClipper class, some kinde of distortion / limiter
+    - moved doxygen files for generating doxygen by command line inside the library
+
 v0.1.3.3
     - added ofxPDSPValue, utility class for thread-safe setting of values with optional smoothing
     - added pdspSpread() function for easy spreading of voices in the panorama

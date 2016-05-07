@@ -29,7 +29,7 @@ pdsp::Patchable& pdsp::ValueSequencer::out_signal(){
 }
 
 float pdsp::ValueSequencer::meter_output() const{
-    return meter.load();
+    return slewLastValue.load();
 }
 
 void pdsp::ValueSequencer::link(MessageBuffer &messageBuffer){
@@ -65,7 +65,6 @@ void pdsp::ValueSequencer::unLink(){
 void pdsp::ValueSequencer::prepareUnit( int expectedBufferSize, double sampleRate ) {
         this->sampleRate = sampleRate;
         slewLastValue = slewInitValue;
-        meter = slewLastValue;
 }
 
 
@@ -78,7 +77,6 @@ void pdsp::ValueSequencer::process (int bufferSize) noexcept {
         //std::cout<<"valuesequencer slewLastValue = "<<slewLastValue<<"\n";
         if(messageBuffer!=nullptr){
                 //updateBuffer(messageBuffer, bufferSize);
-                meter = slewLastValue;
                 
                 if( messageBuffer->empty() ){
                         //std::cout<<"message queue empty, broadcasting last value\n";

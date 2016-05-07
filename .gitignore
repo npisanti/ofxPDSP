@@ -1,3 +1,10 @@
+
+# custom exclusions for ofxPDSP
+
+doxygen/doxygen_sqlite3.db
+doxygen/html
+
+
 # Some general ignore patterns
 
 */bin/*

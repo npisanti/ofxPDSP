@@ -19,6 +19,7 @@
 
 #include "signal/LinearCrossfader.h"
 #include "signal/Panner.h"
+#include "signal/KneeClipper.h"
 
 #include "effects/DimensionChorus.h"
 #include "effects/StereoConvolver.h"
@@ -29,6 +30,7 @@
 #include "equalizers/HighShelfEQ.h"
 #include "equalizers/LowShelfEQ.h"
 #include "equalizers/PeakEQ.h"
+#include "equalizers/LowCut.h"
 
 #include "reverbs/BasiVerb.h"
 

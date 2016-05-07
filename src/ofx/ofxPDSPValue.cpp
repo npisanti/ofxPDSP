@@ -102,3 +102,6 @@ void ofxPDSPValue::process (int bufferSize) noexcept {
     lastValue = newValue;
 }
 
+float ofxPDSPValue::meter_output() const{
+    return slewLastValue.load();
+}  

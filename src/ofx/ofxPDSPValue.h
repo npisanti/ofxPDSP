@@ -89,7 +89,11 @@ public:
     @brief gets the value
     */       
     float get() const;
-     
+
+    /*!
+    @brief returns the actual output value. Thread-safe.
+    */ 
+    float meter_output() const;     
 
 private:
 
@@ -105,6 +109,8 @@ private:
     atomic<float> value;
     
     void onSet(float &newValue);
+
+    //std::atomic<float> meter;
     
 };
 

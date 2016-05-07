@@ -29,7 +29,7 @@ public:
     Compressor1( bool linkChannels ){ patch(linkChannels); };
     
     Compressor1(){ patch(true); };
-    Compressor1(const Compressor1& other){ patch(false); };
+    Compressor1(const Compressor1& other){ patch(true); };
     Compressor1& operator=(const Compressor1& other){ return *this; };
 
     /*!
