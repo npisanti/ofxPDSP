@@ -39,11 +39,16 @@ void pdsp::TriggeredGrain::patch(){
 
 }
 
-float pdsp::TriggeredGrain::meter_env(){
+float pdsp::TriggeredGrain::meter_env() const{
     return window.meter_window();
 }
-float pdsp::TriggeredGrain::meter_position(){
+
+float pdsp::TriggeredGrain::meter_position() const{
     return grain.meter_position();
+}
+
+float pdsp::TriggeredGrain::meter_jitter() const{
+    return jitter.meter_output();
 }
 
 pdsp::Patchable& pdsp::TriggeredGrain::in_position(){

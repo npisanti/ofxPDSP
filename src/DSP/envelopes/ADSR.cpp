@@ -20,7 +20,7 @@ pdsp::ADSR::ADSR(){
         attackTCO                       = 0.99999;    //digital 
         decayTCO = riseTCO = releaseTCO = exp(-4.95); //digital 
         
-        
+        dBtrig = false;
         
         sustainLevel = 0.0f;
         decayNextStageLevel = 0.0f;
@@ -213,7 +213,7 @@ void pdsp::ADSR::onRetrigger(float triggerValue, int n) {
             float dB = dBmin*(1.0f - triggerValue) + dBmax*triggerValue;
             this->intensity = pow(10.0f, dB*0.05f);
         }else{
-            float veloCtrl = processAndGetSingleValue(input_velocity, n);
+            float veloCtrl = processAndGetSingleValue(input_velocity, n);            
             this->intensity = (triggerValue * veloCtrl)  + (1.0f-veloCtrl); 
         }
 
@@ -233,7 +233,7 @@ void pdsp::ADSR::onRetrigger(float triggerValue, int n) {
         }else{
             riseNextLevel = sustainLevel;
         }
-        
+
 
         setAttackTime( attackT );
         setDecayTime( decayT, sustainLevel);

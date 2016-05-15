@@ -134,11 +134,16 @@ void pdsp::GrainCloud::patch(){
 }
 
 
-float pdsp::GrainCloud::meter_env(int voice){
+float pdsp::GrainCloud::meter_env(int voice) const {
     return streams[voice].meter_env();
 }
-float pdsp::GrainCloud::meter_position(int voice){
+
+float pdsp::GrainCloud::meter_position(int voice) const{
     return streams[voice].meter_position();
+}
+
+float pdsp::GrainCloud::meter_jitter(int voice) const{
+    return streams[voice].meter_jitter();
 }
 
 pdsp::Patchable& pdsp::GrainCloud::in_position(){

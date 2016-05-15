@@ -20,7 +20,9 @@ pdsp::DampedDelay::DampedDelay( float timeMs){
         feedback = 0.0;
         g = 0.33f;
         setDamping(g);
-
+        
+        input_damping.enableBoundaries( 0.0f, 0.99f);
+        
         maxDelayTimeMs = timeMs;
         delayBuffer = nullptr;
         writeIndex = 0;
@@ -146,41 +148,102 @@ void pdsp::DampedDelay::initDelayBuffer(){
 
 void pdsp::DampedDelay::process(int bufferSize) noexcept{
         
-        int changed;
-        const float* feedbackBuffer = processInput(input_feedback, changed);
-        if(changed){
-                setFeedback(feedbackBuffer[0]);
-        }
+        int fbBufferState;
+        const float* fbBuffer = processInput(input_feedback, fbBufferState);
         
-        
-        const float* dampingBuffer = processInput(input_damping, changed);
-        if(changed){
-                setDamping(dampingBuffer[0]);
-        }
+        int dampBufferState;
+        const float* dampBuffer = processInput(input_damping, dampBufferState);
 
         int inputBufferState;
         const float* inputBuffer = processInput( input, inputBufferState );
+
         int timeBufferState;
         const float* timeBuffer = processInput( in_time_ms, timeBufferState );
 
-        if(timeBufferState==Changed){
-                process_once(timeBuffer);
-        }
-
-        int switcher = inputBufferState + timeBufferState*4;
-
-        switch ( switcher & processAudioBitMask ) {
-        case audioFFFF:
-                process_audio<false, false> (inputBuffer, timeBuffer, bufferSize);
+        
+        int switcherOnce = timeBufferState + fbBufferState*4 + dampBufferState*16;
+        
+        switch ( switcherOnce & processOnceBitMask ) {
+        case onceFFFF:
+                process_once<false, false, false> ( timeBuffer, fbBuffer, dampBuffer);
                 break;
-        case audioTFFF:
-                process_audio<true, false> (inputBuffer, timeBuffer, bufferSize);
+        case onceTFFF:
+                process_once<true, false, false> ( timeBuffer, fbBuffer, dampBuffer);
+                break;
+        case onceFTFF:
+                process_once<false, true, false> ( timeBuffer, fbBuffer, dampBuffer);
+                break;
+        case onceTTFF:
+                process_once<true, true, false> ( timeBuffer, fbBuffer, dampBuffer);
+                break;
+        case onceFFTF:
+                process_once<false, false, true> ( timeBuffer, fbBuffer, dampBuffer);
+                break;
+        case onceTFTF:
+                process_once<true, false, true> ( timeBuffer, fbBuffer, dampBuffer);
+                break;
+        case onceFTTF:
+                process_once<false, true, true> ( timeBuffer, fbBuffer, dampBuffer);
+                break;
+        case onceTTTF:
+                process_once<true, true, true> ( timeBuffer, fbBuffer, dampBuffer);
+                break;
+        }        
+
+
+        int switcherAudio = inputBufferState + switcherOnce*4;
+
+        switch ( switcherAudio & processAudioBitMask ) {
+        case audioFFFF:
+                process_audio<false, false, false, false> (inputBuffer, timeBuffer, fbBuffer, dampBuffer, bufferSize);
+                break;
+        case audioTFFF: 
+                process_audio<true, false, false, false> (inputBuffer, timeBuffer, fbBuffer, dampBuffer,bufferSize);
                 break;
         case audioFTFF:
-                process_audio<false, true> (inputBuffer, timeBuffer, bufferSize);
+                process_audio<false, true, false, false> (inputBuffer, timeBuffer, fbBuffer, dampBuffer, bufferSize);
                 break;
         case audioTTFF:
-                process_audio<true, true> (inputBuffer, timeBuffer, bufferSize);
+                process_audio<true, true, false, false> (inputBuffer, timeBuffer, fbBuffer, dampBuffer, bufferSize);
+                break;
+      
+        case audioFFTF:
+                process_audio<false, false, true, false> (inputBuffer, timeBuffer, fbBuffer, dampBuffer, bufferSize);
+                break;
+        case audioTFTF:
+                process_audio<true, false, true, false> (inputBuffer, timeBuffer, fbBuffer, dampBuffer, bufferSize);
+                break;
+        case audioFTTF:
+                process_audio<false, true, true, false> (inputBuffer, timeBuffer, fbBuffer, dampBuffer, bufferSize);
+                break;
+        case audioTTTF:
+                process_audio<true, true, true, false> (inputBuffer, timeBuffer, fbBuffer, dampBuffer, bufferSize);
+                break;
+      
+        case audioFFFT:
+                process_audio<false, false, false, true> (inputBuffer, timeBuffer, fbBuffer, dampBuffer, bufferSize);
+                break;
+        case audioTFFT:
+                process_audio<true, false, false, true> (inputBuffer, timeBuffer, fbBuffer, dampBuffer, bufferSize);
+                break;
+        case audioFTFT:
+                process_audio<false, true, false, true> (inputBuffer, timeBuffer, fbBuffer, dampBuffer, bufferSize);
+                break;
+        case audioTTFT:
+                process_audio<true, true, false, true> (inputBuffer, timeBuffer, fbBuffer, dampBuffer, bufferSize);
+                break;
+    
+        case audioFFTT:
+                process_audio<false, false, true, true> (inputBuffer, timeBuffer, fbBuffer, dampBuffer, bufferSize);
+                break;
+        case audioTFTT:
+                process_audio<true, false, true, true> (inputBuffer, timeBuffer, fbBuffer, dampBuffer, bufferSize);
+                break;
+        case audioFTTT:
+                process_audio<false, true, true, true> (inputBuffer, timeBuffer, fbBuffer, dampBuffer, bufferSize);
+                break;
+        case audioTTTT:
+                process_audio<true, true, true, true> (inputBuffer, timeBuffer, fbBuffer, dampBuffer, bufferSize);
                 break;
         }
         
@@ -189,15 +252,31 @@ void pdsp::DampedDelay::process(int bufferSize) noexcept{
 
 
 
-void pdsp::DampedDelay::process_once(const float* timeBuffer)noexcept{
-        readIndex = static_cast<float>(writeIndex) - timeBuffer[0]*msToSamplesMultiplier;
-        if (readIndex < 0) readIndex = maxDelayTimeSamples + readIndex;
+template<bool timeChange, bool fbChange, bool dampChange>    
+void pdsp::DampedDelay::process_once(const float* timeBuffer, const float* fbBuffer, const float* dampBuffer )noexcept {
+    
+        if( timeChange ){
+            readIndex = static_cast<float>(writeIndex) - timeBuffer[0]*msToSamplesMultiplier;
+            if (readIndex < 0) readIndex = maxDelayTimeSamples + readIndex;
+        }
+        
+        if(fbChange){
+            feedback = fbBuffer[0];
+            
+        }
+        
+        if(dampChange){
+            g = dampBuffer[0];
+        }
+        
+        if(fbChange || dampChange){
+            gLPF = g * (1.0f - feedback);
+        }
 }
 
 
-template<bool inputAR, bool timeAR>
-void pdsp::DampedDelay::process_audio(const float* inputBuffer, const float* timeBuffer, int bufferSize)noexcept{
-     
+template<bool inputAR, bool timeAR, bool fbAR, bool dampAR>
+void pdsp::DampedDelay::process_audio(const float* inputBuffer, const float* timeBuffer, const float* fbBuffer, const float* dampBuffer, int bufferSize )noexcept{
 
         float* outputBuffer = getOutputBufferToFill( output );
 
@@ -209,6 +288,16 @@ void pdsp::DampedDelay::process_audio(const float* inputBuffer, const float* tim
                 
                 outputBuffer[n] = interShell.interpolate(delayBuffer, readIndex, maxDelayTimeSamples);
                 
+                if(fbAR){
+                    feedback = fbBuffer[n];
+                }
+                if(dampAR){
+                    g = dampBuffer[n];
+                }                
+                if(fbAR || dampAR){
+                    gLPF = g * (1.0f - feedback);
+                }            
+                    
                 //filter code
                 float readValue = (outputBuffer[n] + gLPF * z1);
                 z1 = readValue;

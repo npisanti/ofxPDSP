@@ -50,14 +50,19 @@ public:
     GrainCloud& operator=(const GrainCloud &other);
 
     /*!
-    @brief returns the last processed envelope amplitude value. This method is thread-safe.
+    @brief returns the last processed envelope amplitude value of the selected grain. This method is thread-safe.
     */
-    float meter_env(int voice);
+    float meter_env(int voice) const;
     
     /*!
-    @brief returns a value from 0.0f to 1.0f that broadly rapresent the "playhead" of the current sample. This method is thread-safe.
+    @brief returns a value from 0.0f to 1.0f that broadly rapresent the "playhead" of the selected grain. This method is thread-safe.
     */ 
-    float meter_position(int voice);
+    float meter_position(int voice) const;
+
+    /*!
+    @brief returns a value from -1.0f to 1.0f that rapresent the jitter of the selected grain. This method is thread-safe.
+    */ 
+    float meter_jitter(int voice) const;
 
     /*!
     @brief Sets "position" as selected input and returns this module ready to be patched. This is the default input. Send a value between 0.0f and 1.0f to control the position of the grains inside the sample.

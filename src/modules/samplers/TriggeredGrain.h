@@ -28,13 +28,18 @@ public:
     /*!
     @brief returns the last processed envelope amplitude value. This method is thread-safe.
     */
-    float meter_env();
+    float meter_env() const;
     
     /*!
     @brief returns a value from 0.0f to 1.0f that broadly rapresent the "playhead" of the current sample. This method is thread-safe.
     */ 
-    float meter_position();
-
+    float meter_position() const;
+    
+    /*!
+    @brief returns a value from -1.0f to 1.0f that rapresent the jitter of the grain. This method is thread-safe.
+    */ 
+    float meter_jitter() const;
+    
     /*!
     @brief Sets "trig" as selected input and returns this module ready to be patched. This is the default input. Each time a trigger is received a grain is triggered.
     */ 

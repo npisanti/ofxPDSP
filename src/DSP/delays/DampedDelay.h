@@ -45,12 +45,12 @@ public:
     Patchable& in_time();
     
     /*!
-    @brief Sets "feedback" as selected output and returns this Unit ready to be patched. The result of the processing of this input is used at control rate, so it has no much sense to patch Units running at audio rate into this input. This input is the feedback amount of delay.
+    @brief Sets "feedback" as selected output and returns this Unit ready to be patched. This input is the feedback amount of delay and supports audio-rate modulation.
     */      
     Patchable& in_feedback();
     
     /*!
-    @brief Sets "damping" as selected output and returns this Unit ready to be patched. The result of the processing of this input is used at control rate, so it has no much sense to patch Units running at audio rate into this input. This input control how much the signal in the delay feedback path will be filtered.
+    @brief Sets "damping" as selected output and returns this Unit ready to be patched. This input control how much the signal in the delay feedback path will be filtered and supports audio-rate modulation..
     */          
     Patchable& in_damping();    
     
@@ -105,11 +105,12 @@ private:
 
     void setFeedback(float feedback);
     void setDamping(float hiDamp);
+
+    template<bool timeChange, bool fbChange, bool dampChange>    
+    void process_once(const float* timeBuffer, const float* fbBuffer, const float* dampBuffer )noexcept;
     
-    void process_once(const float* timeBuffer)noexcept;
-    
-    template<bool inputAR, bool timeAR>
-    void process_audio(const float* inputBuffer, const float* timeBuffer, int bufferSize)noexcept;
+    template<bool inputAR, bool timeAR, bool fbAR, bool dampAR>
+    void process_audio(const float* inputBuffer, const float* timeBuffer, const float* fbBuffer, const float* dampBuffer, int bufferSize )noexcept;
 
     void updateBoundaries();
     
