@@ -59,6 +59,17 @@ pdsp::Patchable& pdsp::Amp::out_signal(){
     return out("signal");
 }
 
+
+void pdsp::Amp::enableBoundaries(float low, float high){
+    input_mod.enableBoundaries(low, high);
+}
+
+
+void pdsp::Amp::disableBoundaries(){
+    input_mod.disableBoundaries();
+}
+    
+
 void pdsp::Amp::prepareUnit ( int expectedBufferSize, double sampleRate ) {
 
 }
@@ -99,6 +110,4 @@ void pdsp::Amp::process (int bufferSize) noexcept {
         
     }
     
-
-
 }

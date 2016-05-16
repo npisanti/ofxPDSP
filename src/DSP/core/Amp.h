@@ -61,6 +61,17 @@ public:
     */ 
     float meter_output() const;
     
+    /*!
+    @brief enable some value boundaries for the "mod" input. By default there are no boundaries.
+    */ 
+    void enableBoundaries(float low, float high);
+
+    /*!
+    @brief disable the "mod" input boundaries, if they were set.
+    */ 
+    void disableBoundaries();
+    
+    
 private:
 
     void prepareUnit ( int expectedBufferSize, double sampleRate ) override;

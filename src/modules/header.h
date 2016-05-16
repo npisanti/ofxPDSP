@@ -21,6 +21,7 @@
 #include "signal/Panner.h"
 #include "signal/KneeClipper.h"
 
+#include "effects/CombFilter.h"
 #include "effects/DimensionChorus.h"
 #include "effects/StereoConvolver.h"
 
