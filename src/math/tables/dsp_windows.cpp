@@ -141,6 +141,60 @@ float* pdsp::windowWelch(int len){
     return table;
 }
 
+
+float* pdsp::windowGaussian(int len, double alpha){
+    float* table;
+    ofx_allocate_aligned(table, len+1);
+    double N = static_cast<double>(len);
+    
+    if (alpha > 0.5) alpha = 0.5;
+   
+    for(int i=0; i<len; ++i){
+        double n = static_cast<double>(i);
+        
+        double exponent = ( n - (N-1.0)*0.5 ) / ( alpha * (N-1) * 0.5 );
+        exponent = -0.5 * (exponent*exponent); 
+        
+        table[i] = static_cast<float>( exp(exponent) );
+    }
+    
+    table[len] = table[0];
+    return table;
+}
+
+
+
+float* pdsp::windowTukey(int len, double alpha){
+   
+    float* table;
+    ofx_allocate_aligned(table, len+1);
+    double N = static_cast<double>(len);
+    
+    if (alpha > 0.5) alpha = 0.5;
+    
+    double low = alpha * (N-1.0) * 0.5;
+    double high = (N-1) * (1.0 - alpha*0.5);
+   
+    for(int i=0; i<len; ++i){
+        double n = static_cast<double>(i);
+        
+        if(n<low){
+            float value = 0.5 * ( 1.0 + cos( M_PI * ( ((2.0*n) / ( alpha*(N-1.0) )) - 1.0  ) ) );
+            table[i] = static_cast<float> ( value );
+        }else if( n> high ){
+            float value = 0.5 * ( 1.0 + cos( M_PI * ( ((2.0*n) / ( alpha*(N-1.0) )) -(2.0/alpha) + 1.0  ) ) );
+            table[i] = static_cast<float> ( value );
+        }else{
+            table[i] = 1.0f;
+
+        } 
+    }
+    
+    table[len] = table[0];
+    return table;
+}
+
+
 float* pdsp::window(Window_t type, int len){
     switch (type) {
             
@@ -163,6 +217,12 @@ float* pdsp::window(Window_t type, int len){
             return windowSine(len); break;
             
         case Welch:
+            return windowWelch(len); break;
+       
+        case Gaussian:
+            return windowWelch(len); break;
+       
+        case Tukey:
             return windowWelch(len); break;
             
         default: //Rectangular

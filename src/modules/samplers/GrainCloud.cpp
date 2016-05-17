@@ -129,6 +129,7 @@ void pdsp::GrainCloud::patch(){
     ctrl_density.enableBoundaries(0.0f, 1.0f);
     density_amp >> triggers.in("distance");
 
+    setWindowType(Tukey, 1024);
     //ctr_grain_length * (1.0f/static_cast<float>(streams)) >> triggers.in("distance");
     //distance could became "density"
 }

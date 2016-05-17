@@ -10,7 +10,7 @@
 
 namespace pdsp{
 
-enum Window_t { Rectangular, Triangular, Hann, Hamming, Blackman, BlackmanHarris, SineWindow, Welch };
+enum Window_t { Rectangular, Triangular, Hann, Hamming, Blackman, BlackmanHarris, SineWindow, Welch, Gaussian, Tukey };
 
 enum Interpolator_t {Linear, Smooth};
 

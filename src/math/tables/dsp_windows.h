@@ -28,6 +28,10 @@ namespace pdsp{
 
     float* windowWelch(int len);
     
+    float* windowGaussian(int len, double alpha=0.5);
+    
+    float* windowTukey(int len, double alpha=0.5);
+    
     float* window(Window_t type, int len);
     
 }
