@@ -106,8 +106,10 @@ inline_f float pdspBRan(){
 @param[in] index index of the voice to pan
 @param[in] max number of max voices
 @param[in] spread spread of the total panorama, value should range from 0.0f to 1.0f
+@param[in] fromCenter if true the spreading will start from the center and alternate notes at right and left
+
 */
-float pdspSpread(int index, int max, float spread);
+float pdspSpread(int index, int max, float spread, bool fromCenter = false);
 
 
 #endif // OFXPDSP_FUNCTIONS_INCLUDED

@@ -68,6 +68,8 @@ void pdsp::MultiLadder4::prepareUnit( int expectedBufferSize, double sampleRate 
         
         K = 0.0f;
         
+        calculateAlphaZero(K);
+        
         halfT = 0.5/ sampleRate;
         twoSlashT = 1.0 / halfT;
 }
@@ -162,9 +164,13 @@ void pdsp::MultiLadder4::process_once(const float* cutoffBuffer, const float* re
                 vect_warpCutoff(&wa, cutoffBuffer, halfT, twoSlashT, 1);//cutoff warping
                 
                 coefficientCalculation(wa);
-                calculateAlphaZero(K);
-
-        }else if (resoChange){
+               
+                if(!resoChange){
+                    calculateAlphaZero(K);
+                }
+        }
+        
+        if (resoChange){
                 K = resoBuffer[0] * 4.0f;
                 calculateAlphaZero(K);
         }

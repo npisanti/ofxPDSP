@@ -47,9 +47,26 @@ float dB ( float dBvalue ){
     return pdsp::DBtoLin::eval(dBvalue);
 }
 
-float pdspSpread(int index, int max, float spread){
-    float offset = ((float)(max-1))*0.5f;
-    float pan = (float(index)) - offset; 
-    float panScale = spread / offset; 
-    return pan * panScale;
+float pdspSpread(int index, int max, float spread, bool fromCenter){
+    if(fromCenter){
+        float offset = spread / static_cast<float>(max/2);
+        float mult;
+        if(max%2==0){
+            mult = static_cast<float>((index+2)/2);
+        }else{
+            mult = static_cast<float>((index+1)/2);
+        }
+        if(index%2==0){
+            return -mult*offset;
+        }else{
+            return mult*offset;
+        }
+    }else{
+        float offset = ((float)(max-1))*0.5f;
+        float pan = (float(index)) - offset; 
+        float panScale = spread / offset; 
+        return pan * panScale;        
+    }
+    
+
 }
