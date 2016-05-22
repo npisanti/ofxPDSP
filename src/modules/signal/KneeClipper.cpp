@@ -20,11 +20,11 @@ void pdsp::KneeClipper::patch(){
     threshold0.out_send() >> sat0 >> threshold0.in_return();
     threshold1.out_send() >> sat1 >> threshold1.in_return();
     
-    threshold_ctrl >> input_gain_db >> input_gain0.in_mod();
-                      input_gain_db >> input_gain1.in_mod();
+    threshold_ctrl * -1.0f >> input_gain_db >> input_gain0.in_mod();
+                              input_gain_db >> input_gain1.in_mod();
                       
-    threshold_ctrl * -1.0f >> output_gain_db >> output_gain0.in_mod();
-                              output_gain_db >> output_gain1.in_mod();
+    threshold_ctrl  >> output_gain_db >> output_gain0.in_mod();
+                       output_gain_db >> output_gain1.in_mod();
                               
     input_gain0 >> threshold0 >> output_gain0;                          
     input_gain1 >> threshold1 >> output_gain1;                          

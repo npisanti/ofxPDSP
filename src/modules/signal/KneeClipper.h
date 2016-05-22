@@ -16,6 +16,8 @@ namespace pdsp{
     
     /*!
     @brief Clipper with adjustable knee, for saturating limitation of signals.
+    
+    It works better with signals below the 0dB range, high gain signals will make it sound almost like a ringmodulator.
     */  
        
 class KneeClipper : public Patchable {
