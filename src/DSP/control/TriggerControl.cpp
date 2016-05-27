@@ -12,6 +12,11 @@ pdsp::TriggerControl::TriggerControl(){
     }    
 }
 
+pdsp::TriggerControl::TriggerControl(const pdsp::TriggerControl & other) {
+    std::cout<<"[pdsp] do not copy construct TriggerControls!\n";
+    pdsp_trace();    
+}
+
 
 pdsp::Patchable& pdsp::TriggerControl::out_trig(){
     return out("trig");

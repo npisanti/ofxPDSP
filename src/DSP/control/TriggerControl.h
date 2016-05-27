@@ -20,6 +20,8 @@ class TriggerControl : public Unit {
 
 public:
         TriggerControl();
+        
+        TriggerControl(const TriggerControl & other);
 
         /*!
         @brief Sets "trig" as selected output and returns this Unit ready to be patched. This is the default output. This is the trigger output to connect to envelopes or "trig" inputs.
