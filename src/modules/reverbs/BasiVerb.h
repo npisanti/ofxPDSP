@@ -12,6 +12,7 @@
 #include "../../DSP/delays/DampedDelay.h"
 #include "../../DSP/delays/AllPassDelay.h"
 #include "../../DSP/filters/OnePole.h"
+#include "../../DSP/filters/APF1.h"
 #include "../../DSP/utility/BipolarToUnipolar.h"
 
 namespace pdsp{
@@ -100,6 +101,16 @@ public:
     @brief Sets "1" as selected output and returns this module ready to be patched. This is the right output channel. 
     */  
     Patchable& out_1();
+    
+    /*!
+    @brief Sets "0" as selected output and returns this module ready to be patched. This is the default output. This is the left output channel.
+    */  
+    Patchable& out_L();
+    
+    /*!
+    @brief Sets "1" as selected output and returns this module ready to be patched. This is the right output channel. 
+    */  
+    Patchable& out_R();
 
     /*!
     @brief returns a value between 0.0f and 1.0f that rapresent the mod LFO signal. This method is thread-safe.
@@ -132,6 +143,9 @@ private:
     
     BipolarToUnipolar lfoOut;
     Amp               modAmt;
+    
+    APF1              apf1L;
+    APF1              apf1R;
 
     
 

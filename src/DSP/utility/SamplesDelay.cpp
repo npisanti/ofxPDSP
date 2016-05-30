@@ -20,6 +20,7 @@ pdsp::SamplesDelay::SamplesDelay( int samples ){
 
 pdsp::Patchable& pdsp::SamplesDelay::set( int samples){
     setSamples(samples);
+    return *this;
 }
 
 void pdsp::SamplesDelay::setSamples( int samples){

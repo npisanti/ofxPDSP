@@ -15,7 +15,7 @@
 #include "../../DSP/utility/LinToDB.h"
 #include "../../DSP/utility/MaxValue.h"
 #include "../../DSP/utility/SamplesDelay.h"
-
+#include "../../DSP/filters/OnePole.h"
 
 namespace pdsp{
 /*!
@@ -122,6 +122,9 @@ private:
     GainComputer            gr2;
     DBtoLin                 dbToLin2;
     LinToDB                 linToDB2;
+
+    OnePole                 leakDC1;
+    OnePole                 leakDC2;
 
     MaxValue2               stereoLinker;
 

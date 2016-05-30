@@ -17,7 +17,8 @@ pdsp::AllPassDelay::AllPassDelay( float timeMs){
         msToSamplesMultiplier = sampleRate * 0.001;
 
         g = 0.0f;
-
+        outGcoeff = 1.0f;
+        
         maxDelayTimeMs = timeMs;
         delayBuffer = nullptr;
         writeIndex = 0;
@@ -61,14 +62,6 @@ pdsp::Patchable& pdsp::AllPassDelay::in_feedback(){
 void pdsp::AllPassDelay::changeInterpolator(Interpolator_t interpolatorMode){
         interShell.changeInterpolator(interpolatorMode);
 }
-
-/*
-void pdsp::AllPassDelay::timeBoundaryEnabled(bool enable){
-        this->boundaries = enable;
-                
-        updateBoundaries();
-}
-*/
 
 void pdsp::AllPassDelay::updateBoundaries(){
         
@@ -189,9 +182,12 @@ void pdsp::AllPassDelay::process_audio(const float* inputBuffer, const float* ti
                         vn = readValue * g;
                 }
                 
+
                 delayBuffer[writeIndex] = vn;
+                //sanity_check( delayBuffer[writeIndex] );                  
                 
                 outputBuffer[n] = (outGcoeff * readValue) - (g * vn);
+                //sanity_check( outputBuffer[n] );                
                 
                 if (++writeIndex > maxDelayTimeSamples){
                         writeIndex = 1;

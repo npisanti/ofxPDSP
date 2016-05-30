@@ -105,8 +105,10 @@ void pdsp::BasiVerb::patch(){
     phazor.set(0.5f); // standar freq = 0.1hz
 
 
+    phazor.in_freq() >> LFO >> lfoOut >> modAmt;
+    
     for(int i=0; i<6; ++i){
-        
+
         input_signal >> delays[i] >> lpf1; 
         if(i%2==0){
             delays[i] >> lpf2;
@@ -122,15 +124,15 @@ void pdsp::BasiVerb::patch(){
 
     }
     
+    54.81f >> apf1L.in_freq();
+    62.64f >> apf1R.in_freq();
     
-    APF_1.set(9.0f, 0.7f);
-    APF_2.set(11.0f, -0.7f);
-    lpf1 >> APF_1 * 0.1f >> output1;
-    lpf2 >> APF_2 * 0.1f >> output2;
-
-    phazor.in_freq() >> LFO >> lfoOut >> modAmt;
-
+    -0.707f >> apf1L.in_feedback();
+    -0.707f >> apf1R.in_feedback();
     
+    lpf1 >> apf1L * 0.1f >> output1;
+    lpf2 >> apf1R * 0.1f >> output2;
+
 }
 
 pdsp::Patchable& pdsp::BasiVerb::in_signal(){
@@ -166,6 +168,14 @@ pdsp::Patchable& pdsp::BasiVerb::out_0(){
 }
 
 pdsp::Patchable& pdsp::BasiVerb::out_1(){
+    return out("1");
+}
+
+pdsp::Patchable& pdsp::BasiVerb::out_L(){
+    return out("0");
+}
+
+pdsp::Patchable& pdsp::BasiVerb::out_R(){
     return out("1");
 }
 

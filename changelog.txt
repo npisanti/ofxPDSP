@@ -1,19 +1,28 @@
 
+v0.1.3.5
+    - adds denormals, infinities and NaN sanity check to DampedDelay
+    - DampedDelay now supports feedback and damping audio rate modulation
+    - adds APF1 class, a one pole AllPass Filter
+    - adds CombFilter class
+    - adds optional mod boundaries to Amp
+    - tweaks BasiVerb
+    - various bug fixes
+
 v0.1.3.4
-    - added LowCut class, a 12db non-resonant highpass filter
-    - added KneeClipper class, some kinde of distortion / limiter
-    - moved doxygen files for generating doxygen by command line inside the library
+    - adds LowCut class, a 12db non-resonant highpass filter
+    - adds KneeClipper class, some kinde of distortion / limiter
+    - move doxygen files for generating doxygen by command line inside the library
 
 v0.1.3.3
-    - added ofxPDSPValue, utility class for thread-safe setting of values with optional smoothing
-    - added pdspSpread() function for easy spreading of voices in the panorama
+    - adds ofxPDSPValue, utility class for thread-safe setting of values with optional smoothing
+    - adds pdspSpread() function for easy spreading of voices in the panorama
     - ofxPDSPMidiKeys fix: some midi keyboards use midi note on messages with 0 value instead of midi note off, now the behavior should be correct even with those controllers
 
 v0.1.3.2
-    - added Compressor2, RMS compressor with optional lookahead
-    - added SaturatorThreshold, an Unit with send/return to be used with Saturators
-    - added enableDBTriggering() method to envelope for dB-based sensitivity to trigger dynamics
-    - added utility class SamplesDelay
+    - adds Compressor2, RMS compressor with optional lookahead
+    - adds SaturatorThreshold, an Unit with send/return to be used with Saturators
+    - adds enableDBTriggering() method to envelope for dB-based sensitivity to trigger dynamics
+    - adds utility class SamplesDelay
     - minor fixes
 
 v0.1.3.1
@@ -23,9 +32,9 @@ v0.1.3.1
     - fixed dice random function
 
 v0.1.3.0
-    - added more asserts
-    - added Sequence and SeqChange classes for easy and powerful sequencing
-    - added ofxPDSPEngine for managing audioStreams and midi processing
+    - adds more asserts
+    - adds Sequence and SeqChange classes for easy and powerful sequencing
+    - adds ofxPDSPEngine for managing audioStreams and midi processing
     - some midi utility classe are renamed, old names are deprecated but always available thanks to a typedef
 
 v0.1.2.4
@@ -38,21 +47,21 @@ v0.1.2.3
 
 v0.1.2.2
     - TableOsc changed to WaveTableOsc, now support interpolation of different loaded waves with in_shape()
-    - added BitCruncher unit
-    - added Decimator unit
-    - added BasiVerb module
+    - adds BitCruncher unit
+    - adds Decimator unit
+    - adds BasiVerb module
 
 v0.1.2.1
-    - added AllPassDelay unit
-    - added OneBarTimeMs unit
-    - added FreqToMs unit
+    - adds AllPassDelay unit
+    - adds OneBarTimeMs unit
+    - adds FreqToMs unit
     - corrected envelopes trigger sensitivy behavior and time settings
-    - added init() method to SampleBuffer 
+    - adds init() method to SampleBuffer 
     
 v0.1.1
-    - added native audio loading on OSX using libaudiodecoder
-    - corrected behavior for example-graincloud
-    - added meter function to CRSlew
+    - adds native audio loading on OSX using libaudiodecoder
+    - corrects behavior for example-graincloud
+    - adds meter function to CRSlew
 
 v0.1 
     - First commit.

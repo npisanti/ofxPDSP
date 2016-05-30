@@ -30,6 +30,7 @@
 #include "dsphelpers/genSaw.h"
 #include "dsphelpers/genTriangle.h"
 #include "dsphelpers/calculateGainReduction.h"
+#include "dsphelpers/sanity_check.h"
 
 #include "tables/dsp_windows.h"
 #include "tables/blep.h"

@@ -143,6 +143,7 @@ void pdsp::OnePole::process_audio(const float* &inputBuffer, const float* &cutof
                 z1 = vn + lpf;
                 lpfBuffer[n] = lpf;
                 hpfBuffer[n] = inputBuffer[n] - lpf;
+
         }
 
 }

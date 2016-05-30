@@ -306,8 +306,10 @@ void pdsp::DampedDelay::process_audio(const float* inputBuffer, const float* tim
                 if(inputAR){
                         delayBuffer[writeIndex] = inputBuffer[n] + readValue * feedback;
                 }else{
-                        delayBuffer[writeIndex] =  readValue * feedback;
+                        delayBuffer[writeIndex] = readValue * feedback;
                 }
+                
+                sanity_check( delayBuffer[writeIndex] );
                 
                 
                 if (++writeIndex > maxDelayTimeSamples){

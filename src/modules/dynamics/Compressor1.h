@@ -11,6 +11,7 @@
 #include "../../DSP/dynamics/RMSDetector.h"
 #include "../../DSP/dynamics/EnvelopeFollower.h"
 #include "../../DSP/dynamics/GainComputer.h"
+#include "../../DSP/filters/OnePole.h"
 #include "../../DSP/utility/DBtoLin.h"
 #include "../../DSP/utility/LinToDB.h"
 #include "../../DSP/utility/MaxValue.h"
@@ -110,6 +111,9 @@ private:
     GainComputer            gr2;
     DBtoLin                 dbToLin2;
     LinToDB                 linToDB2;
+
+    OnePole                 leakDC1;
+    OnePole                 leakDC2;
 
     MaxValue2               stereoLinker;
 

@@ -32,8 +32,10 @@ void pdsp::Compressor2::patch(bool linkChannels){
     knee >> gr1.in_knee();
     knee >> gr2.in_knee();
     
-    input1 >> detector1;
-    input2 >> detector2;
+    20.0f >> leakDC1.in_cutoff();
+    20.0f >> leakDC2.in_cutoff();    
+    input1 >> leakDC1.out_hpf() >> detector1;
+    input2 >> leakDC2.out_hpf() >> detector2;
 
     stereoLink( linkChannels );
  

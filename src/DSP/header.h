@@ -60,6 +60,7 @@
 #include "filters/MultiLadder4.h"
 #include "filters/SVF2.h"
 #include "filters/APF4.h"
+#include "filters/APF1.h"
 
 #include "filters/biquads/BiquadLPF2.h"
 #include "filters/biquads/BiquadHPF2.h"
@@ -76,7 +77,6 @@
 
 #include "delays/MainDelay.h"
 #include "delays/DampedDelay.h"
-#include "delays/AllPassDelay.h"
 
 #include "envelopes/ADSR.h"
 #include "envelopes/AHR.h"

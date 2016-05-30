@@ -350,6 +350,9 @@ void pdsp::InputNode::process() noexcept {
             }
 
             lastValue = buffer[0];
+            
+            //vect_sanity_check(buffer, 1); // maybe i will activate this in future
+            
             break;
         
         case AudioRate:
@@ -360,6 +363,9 @@ void pdsp::InputNode::process() noexcept {
                 ofx_Aeq_clipB( sumBuffer, sumBuffer, lowBoundary, highBoundary, bufferSize * requiredOversampleLevel );
             }
             lastValue = sumBuffer[bufferSize*requiredOversampleLevel -1 ];
+            
+            //vect_sanity_check(buffer, bufferSize); // maybe i will activate this in future
+            
             break;
       
         default: break;
