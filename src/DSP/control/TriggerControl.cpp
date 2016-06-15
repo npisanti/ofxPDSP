@@ -7,6 +7,8 @@ pdsp::TriggerControl::TriggerControl(){
     addOutput("trig", output);
     updateOutputNodes();
     
+    nextTrigger.store(0.0f);
+    
     if(dynamicConstruction){
         prepareToPlay(globalBufferSize, globalSampleRate);
     }    
@@ -32,7 +34,7 @@ void pdsp::TriggerControl::off(){
 }
 
 void pdsp::TriggerControl::prepareUnit( int expectedBufferSize, double sampleRate ){
-    nextTrigger.store(0.0f);
+    
 }
 
 void pdsp::TriggerControl::releaseResources () {}

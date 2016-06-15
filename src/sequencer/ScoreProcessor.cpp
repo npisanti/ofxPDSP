@@ -9,6 +9,8 @@ pdsp::ScoreProcessor::ScoreProcessor(){
     tempo = 120.0;
     playHead = 0.0;
     playHeadEnd = 0.0;
+    newPlayHead = 0.0f;
+    
     maxBars = 32000.0;
     
     clearToken = 0;
@@ -37,20 +39,21 @@ void pdsp::ScoreProcessor::setMaxBars(double maxBars){
     }
 }
 
-//void pdsp::ScoreProcessor::synchronizeInterface(bool active){
-//    synchronizeClockable = active;
-//}
 
 void pdsp::ScoreProcessor::process(int const &bufferSize) noexcept{
    
     if( playing.load() ){
-        playheadMutex.lock();
-            playHead = playHeadEnd;
-            if( playHead > maxBars ) { playHead -= maxBars; } //wrap score
-            double playHeadDifference = bufferSize * barsPerSample;
-            playHeadEnd = playHead + playHeadDifference;
-        playheadMutex.unlock();
         
+        if(newPlayHead >= 0.0f){
+            playHeadEnd = newPlayHead;
+            newPlayHead = -1.0f;
+        }
+    
+        playHead = playHeadEnd;
+        if( playHead > maxBars ) { playHead -= maxBars; } //wrap score
+        double playHeadDifference = bufferSize * barsPerSample;
+        playHeadEnd = playHead + playHeadDifference;
+
         playhead_meter.store(playHead);
         
         //now process sections-----------------
@@ -59,10 +62,8 @@ void pdsp::ScoreProcessor::process(int const &bufferSize) noexcept{
         }
         //---------------------------------
 
-        //if(synchronizeClockable){
-            Clockable::globalBarPosition = playHead;
-            Clockable::playing = true;
-        //}
+        Clockable::globalBarPosition = playHead;
+        Clockable::playing = true;
         
     }else{
         // on pause we send trigger offs to gates and set all the sequencers to control rate
@@ -89,19 +90,16 @@ void pdsp::ScoreProcessor::releaseResources() {}
 void pdsp::ScoreProcessor::setTempo( float tempo ){
     this->tempo = tempo;
     barsPerSample = static_cast<double>(tempo)  / ((60.0 * 4.0) * sampleRate )  ;
-    
-    //if(synchronizeClockable){
-        Clockable::setTempo(tempo);
-    //}
-    
+
+    Clockable::setTempo(tempo);
+
 }
 
 
-void pdsp::ScoreProcessor::setPlayhead(double newPlayhead){
-    playheadMutex.lock();
-        playHeadEnd = newPlayhead;
-        playhead_meter.store(0.0);
-    playheadMutex.unlock();
+void pdsp::ScoreProcessor::setPlayHead(float newPlayHead){
+
+    this->newPlayHead = newPlayHead;
+
 }
 
 void pdsp::ScoreProcessor::pause(){
@@ -115,7 +113,7 @@ void pdsp::ScoreProcessor::stop(){
     clearToken = 2;
     playing.store(false);
     Clockable::playing = false;
-    setPlayhead(0.0);
+    setPlayHead(0.0f);
 
     for(ScoreSection &sect : sections){
         sect.scoreIndex = 0;

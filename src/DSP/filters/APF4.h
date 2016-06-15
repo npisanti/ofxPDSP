@@ -24,12 +24,12 @@ public:
     */  
     Patchable& in_signal();
 
-    /*
+    /*!
     @brief Sets "freq" as selected input and returns this Unit ready to be patched. This is the frequency at which the first APF operates, this frequency is multiplied by a value based on in_spread for the other poles. 
     */
     Patchable& in_freq();
 
-    /*
+    /*!
     @brief Sets "feedback" as selected input and returns this Unit ready to be patched. This is the filter feedback amount.
     */
     Patchable& in_feedback();

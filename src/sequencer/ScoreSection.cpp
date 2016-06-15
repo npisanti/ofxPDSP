@@ -53,13 +53,15 @@ pdsp::ScoreSection::ScoreSection(const pdsp::ScoreSection &other) {
 }
 
 pdsp::ScoreSection::~ScoreSection(){
+
     for( int i=0; i < (int)gates.size(); ++i ){
         if(gates[i]!=nullptr) delete gates[i];
     }
-    
+
     for( int i=0; i < (int)values.size(); ++i ){
         if(values[i]!=nullptr) delete values[i];
     }
+
 }
 
 void pdsp::ScoreSection::resizePatterns(int size){
@@ -82,22 +84,19 @@ void pdsp::ScoreSection::launchCell( int index, bool quantizeLaunch, double quan
     if     ( index < 0        ) { index = -1; }
     else if( index >= (int)patterns.size() ) { index = (int)patterns.size()-1; }
 
-    patternMutex.lock();
-        if(quantizeLaunch){
-            this->quantizedLaunch = true;
-            //scheduledTime = -quantizeGrid;
-            this->launchQuantization = quantizeGrid;
-        }else{
-            this->quantizedLaunch = false;
-            //scheduledTime = -1.0;
-        }
-        this->launchedPattern = index;
-        
-        this->launchingCell = true;
-        //scheduledPattern = index;
-        atomic_meter_next.store(index);
+    //patternMutex.lock();
+    if(quantizeLaunch){
+        this->quantizedLaunch = true;
+        this->launchQuantization = quantizeGrid;
+    }else{
+        this->quantizedLaunch = false;
+    }
+    this->launchedPattern = index;
+    
 
-    patternMutex.unlock();
+    atomic_meter_next.store(index);
+    this->launchingCell = true;
+    //patternMutex.unlock();
 }
 
 
@@ -107,18 +106,18 @@ void pdsp::ScoreSection::setCell( int index, Sequence* sequence, SeqChange* beha
             resizePatterns(index+1);
             //all the new patterns are initialized with nullptr, nullptr, length=1.0, quantize = false and quantizeGrid=0.0
         }
-        patternMutex.lock();
-            patterns[index].sequence = sequence;
-            patterns[index].nextCell  = behavior;
-        patternMutex.unlock();
+        //patternMutex.lock();
+        patterns[index].sequence = sequence;
+        patterns[index].nextCell  = behavior;
+        //patternMutex.unlock();
     }
 }
 
 void pdsp::ScoreSection::setChange( int index, SeqChange* behavior ){
     if(index>=0 && index < (int) patterns.size()){
-        patternMutex.lock();
-            patterns[index].nextCell  = behavior;
-        patternMutex.unlock();
+        //patternMutex.lock();
+        patterns[index].nextCell  = behavior;
+        //patternMutex.unlock();
     }
 }
 
@@ -129,10 +128,10 @@ void pdsp::ScoreSection::setCellQuantization( int index, bool quantizeLaunch, do
             resizePatterns(index+1);
             //all the new patterns are initialized with nullptr, nullptr, length=1.0, quantize = false and quantizeGrid=0.0
         }
-        patternMutex.lock();
-            patterns[index].quantizeLaunch     = quantizeLaunch;
-            patterns[index].quantizeGrid       = quantizeGrid;   
-        patternMutex.unlock();
+        //patternMutex.lock();
+        patterns[index].quantizeLaunch     = quantizeLaunch;
+        patterns[index].quantizeGrid       = quantizeGrid;   
+        //patternMutex.unlock();
     }   
 }
 
@@ -153,29 +152,31 @@ void pdsp::ScoreSection::processSection(const double &startPlayHead,
                                 const double &barsPerSample, 
                                 const int &bufferSize) noexcept {
     
-    patternMutex.lock();
+    //patternMutex.lock();
         if(scheduledTime >= maxBars+playHeadDifference){ scheduledTime -= maxBars; } //wraps scheduled time around
         
         
         // if we have launched a cell schedules the triggering
         if(launchingCell){
+            
             if(quantizedLaunch && startPlayHead!=0.0){
                 double timeToQuantize = startPlayHead + launchQuantization;
                 int rounded = static_cast<int> ( timeToQuantize / launchQuantization ); 
                 launchSchedule = static_cast<double>(rounded) * launchQuantization ;
+                launchedPattern2 = launchedPattern;
             }else{
                 launchSchedule = std::numeric_limits<double>::infinity();
                 scheduledTime = startPlayHead;
                 scheduledPattern = launchedPattern;
             }
-            run = true;
             launchingCell = false;
+            run = true;
         }
         
         // activate a scheduled launch when it's time
         if( launchSchedule <= scheduledTime ){
             scheduledTime = launchSchedule;
-            scheduledPattern = launchedPattern;
+            scheduledPattern = launchedPattern2;
             launchSchedule = std::numeric_limits<double>::infinity();
         }
 
@@ -215,7 +216,7 @@ void pdsp::ScoreSection::processSection(const double &startPlayHead,
         }
 
         atomic_meter_playhead.store(scorePlayHead);   
-    patternMutex.unlock();
+    //patternMutex.unlock();
     
 }
 

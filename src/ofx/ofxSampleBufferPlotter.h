@@ -33,6 +33,15 @@ public:
     #param[in] y y coordinate
     */ 
     void draw(int x, int y);
+    
+    /*!
+    @brief draws the waveform to the given coordinates
+    #param[in] x x coordinate
+    #param[in] y y coordinate
+    #param[in] w width
+    #param[in] h height
+    */ 
+    void draw(int x, int y, int w, int h);
 
     /*!
     @brief returns a read-only reference to the internally stored ofFbo

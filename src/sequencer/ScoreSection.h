@@ -128,7 +128,7 @@ public:
     
     
     /*!
-    @brief Sets some values for the pattern quantized launch, Thread-safe.
+    @brief Sets some values for the pattern quantized launch.
     @param[in] index index of the patter to set inside the ScoreSection. This has to be a valid index.
     @param[in] quantizeLaunch if true the next pattern launch is quantized to the bars, if false is executed when the given length expires. 
     @param[in] quantizeGrid if the launch is quantized this is the grid division for quantizing, in bars.
@@ -138,7 +138,7 @@ public:
     void setCellQuantization(int index, bool quantizeLaunch = false, double quantizeGrid = 1.0f );
 
     /*!
-    @brief enables quantization of next cell launch. Thread-safe.
+    @brief enables quantization of next cell launch.
     @param[in] index index of the patter to set inside the ScoreSection. This has to be a valid index.
     @param[in] quantizeGrid if the launch is quantized this is the grid division for quantizing, in bars.
 
@@ -147,7 +147,7 @@ public:
     
 
     /*!
-    @brief disables quantization of next cell launch. Thread-safe.
+    @brief disables quantization of next cell launch.
     @param[in] index index of the patter to set inside the ScoreSection. This has to be a valid index.
     @param[in] quantizeGrid if the launch is quantized this is the grid division for quantizing, in bars.
 
@@ -240,9 +240,10 @@ private:
     double                      scheduledTime;
     
     int                         launchedPattern;
+    int                         launchedPattern2;
     double                      launchSchedule;
     double                      launchQuantization;
-    bool                        launchingCell;
+    std::atomic<bool>           launchingCell;
     bool                        quantizedLaunch;
 
     
@@ -266,7 +267,7 @@ private:
     
     MessageBuffer*              selectedMessageBuffer;
     
-    std::mutex                  patternMutex;
+    //std::mutex                  patternMutex;
     
     std::atomic<int>            atomic_meter_current;
     std::atomic<int>            atomic_meter_next; 

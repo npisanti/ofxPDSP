@@ -24,6 +24,7 @@
 #include "core/PatchNode.h"
 #include "core/Preparable.h"
 #include "core/PatchNode.h"
+#include "core/Switch.h"
 #include "core/leftSum.h"
 #include "core/operators.h"
 #include "core/BufferShell.h"

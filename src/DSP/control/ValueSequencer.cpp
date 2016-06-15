@@ -74,59 +74,58 @@ void pdsp::ValueSequencer::releaseResources (){ }
 
 
 void pdsp::ValueSequencer::process (int bufferSize) noexcept {
-        //std::cout<<"valuesequencer slewLastValue = "<<slewLastValue<<"\n";
-        if(messageBuffer!=nullptr){
-                //updateBuffer(messageBuffer, bufferSize);
-                
-                if( messageBuffer->empty() ){
-                        //std::cout<<"message queue empty, broadcasting last value\n";
-                        if(slewRun){
-                                float* outputBuffer = getOutputBufferToFill(output);
-                                runSlewBlock( outputBuffer, 0, bufferSize);
-                        }else{
-                                setControlRateOutput(output, slewLastValue);
-                        }
-                } else {
+        
+        //if(messageBuffer!=nullptr){
+               
+        if( messageBuffer->empty() ){
 
+                if(slewRun){
                         float* outputBuffer = getOutputBufferToFill(output);
-                        
-                        int n=0;
-                        int k=0;
-                        int imax = messageBuffer->size();
-                        for( int i=0; i<imax; ++i){
-                                ControlMessage &msg = messageBuffer->messages[i];
-                                //std::cout<<"broadcast message value = "<<messageBuffer->messages[i].value<<"\n";
-                                if(slewRun){
-                                         runSlewBlock(outputBuffer, n, msg.sample * getOversampleLevel());
-                                }else{
-                                         ofx_Aeq_S_range(outputBuffer, slewLastValue, n, msg.sample * getOversampleLevel());
-                                }
-                                
-                                if( slewControl != nullptr && 
-                                   (k < slewControl->messages.size()) && 
-                                   (slewControl->messages[k].sample <= msg.sample))
-                                {
-                                        //std::cout<<"got slew message, value "<<slewControl->messages[k].value<<"\n";
-                                        slewTimeMod = slewControl->messages[k].value;
-                                        k++; 
-                                }
-                                
-                                valueChange(msg.value);
-                                
-                                n = msg.sample * getOversampleLevel();
-                                
-                        }
+                        runSlewBlock( outputBuffer, 0, bufferSize);
+                }else{
+                        setControlRateOutput(output, slewLastValue);
+                }
+                
+        } else {
+
+                float* outputBuffer = getOutputBufferToFill(output);
+                
+                int n=0;
+                int k=0;
+                int imax = messageBuffer->size();
+                for( int i=0; i<imax; ++i){
+                        ControlMessage &msg = messageBuffer->messages[i];
 
                         if(slewRun){
-                                 runSlewBlock(outputBuffer, n, bufferSize );
+                                 runSlewBlock(outputBuffer, n, msg.sample * getOversampleLevel());
                         }else{
-                                 ofx_Aeq_S_range(outputBuffer, slewLastValue, n, bufferSize);
-                        }               
-                        //std::cout<<"last message value = "<<slewLastValue<<"\n";
+                                 ofx_Aeq_S_range(outputBuffer, slewLastValue, n, msg.sample * getOversampleLevel());
+                        }
+                        
+                        if( slewControl != nullptr && 
+                           (k < slewControl->messages.size()) && 
+                           (slewControl->messages[k].sample <= msg.sample))
+                        {
+                                slewTimeMod = slewControl->messages[k].value;
+                                k++; 
+                        }
+                        
+                        valueChange(msg.value);
+                        
+                        n = msg.sample * getOversampleLevel();
+                        
                 }
-        }else{
-                setControlRateOutput(output, slewLastValue);
+
+                if(slewRun){
+                         runSlewBlock(outputBuffer, n, bufferSize );
+                }else{
+                         ofx_Aeq_S_range(outputBuffer, slewLastValue, n, bufferSize);
+                }               
+
         }
+        //}else{
+        //        setControlRateOutput(output, slewLastValue);
+        //}
         
         if(slewControl != nullptr && !slewControl->empty() ){ //we set the slew control with the last of the buffer
                 slewTimeMod = slewControl->messages[ slewControl->messages.size() - 1 ].value;

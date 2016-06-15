@@ -71,7 +71,7 @@ public:
     /*!
     @brief returns the ofParameter ready to be added to the UI
     */  
-    ofParameter<float>& getParameterSettings();
+    ofParameter<float>& getOFParameter();
 
 
     /*!

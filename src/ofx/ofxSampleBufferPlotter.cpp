@@ -43,3 +43,11 @@ void ofxSampleBufferPlotter::setWaveform(pdsp::SampleBuffer& sampleBuffer, int c
 void ofxSampleBufferPlotter::draw(int x, int y){
     waveformCanvas.draw(x, y);
 }
+
+void ofxSampleBufferPlotter::draw(int x, int y, int w, int h){
+    waveformCanvas.draw(x, y, w, h);
+}
+
+const ofFbo& ofxSampleBufferPlotter::getFbo(){
+    return waveformCanvas;
+}

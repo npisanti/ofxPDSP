@@ -130,8 +130,8 @@ void pdsp::BasiVerb::patch(){
     -0.707f >> apf1L.in_feedback();
     -0.707f >> apf1R.in_feedback();
     
-    lpf1 >> apf1L * 0.1f >> output1;
-    lpf2 >> apf1R * 0.1f >> output2;
+    lpf1 >> apf1L * 0.05f >> output1;
+    lpf2 >> apf1R * 0.05f >> output2;
 
 }
 

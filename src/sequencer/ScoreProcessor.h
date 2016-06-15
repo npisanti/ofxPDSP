@@ -104,10 +104,12 @@ private:
     @brief sets actual playhead value directly. Thread-safe.
     @param newPlayhead playhead value to set
     */ 
-    void setPlayhead(double newPlayhead);
+    void setPlayHead(float newPlayHead);
     
     double playHead;
     double playHeadEnd;
+    std::atomic<float> newPlayHead;
+    
     double tempo;
     double barsPerSample;
     double sampleRate;

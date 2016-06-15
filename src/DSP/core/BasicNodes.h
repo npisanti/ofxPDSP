@@ -82,6 +82,7 @@ Patchable is a base class that rapresent everything that has in_ and out_ method
 class Patchable {
     friend class Unit;
     friend class InputNode;
+    friend class Switch;
     
 public:
     Patchable();

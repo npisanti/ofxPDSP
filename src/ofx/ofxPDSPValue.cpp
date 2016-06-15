@@ -47,7 +47,7 @@ ofParameter<float>& ofxPDSPValue::set(const char * name, float min, float max){
     return parameter;
 }
 
-ofParameter<float>& ofxPDSPValue::getParameterSettings(){
+ofParameter<float>& ofxPDSPValue::getOFParameter(){
     return parameter;
 }
 
