@@ -153,7 +153,7 @@ void pdsp::ScoreSection::processSection(const double &startPlayHead,
                                 const int &bufferSize) noexcept {
     
     //patternMutex.lock();
-        if(scheduledTime >= maxBars+playHeadDifference){ scheduledTime -= maxBars; } //wraps scheduled time around
+        if( scheduledTime >= maxBars+playHeadDifference ){ scheduledTime -= maxBars; } //wraps scheduled time around
         
         
         // if we have launched a cell schedules the triggering
@@ -188,14 +188,13 @@ void pdsp::ScoreSection::processSection(const double &startPlayHead,
             if(scheduledTime >= endPlayHead){   //more likely
                 if(patternIndex!=-1 && patterns[patternIndex].sequence!=nullptr) playScore(playHeadDifference, 0.0, oneSlashBarsPerSample);
                 
-            }else if(scheduledTime <= startPlayHead){ 
+            }else if(scheduledTime == startPlayHead){ 
                 //std::cout<<"scheduled now, playhead start = "<<startPlayHead<<"--------------------\n";
                 onSchedule();
                 if(clearOnChangeFlag) allNoteOff(0.0, oneSlashBarsPerSample); 
                 if(patternIndex!=-1 && patterns[patternIndex].sequence!=nullptr) playScore(playHeadDifference, 0.0, oneSlashBarsPerSample);
 
-            }else{
-
+            }else if(scheduledTime > startPlayHead && scheduledTime < endPlayHead ){
                 double schedulePoint = scheduledTime - startPlayHead;
                 //std::cout<<"scheduled between, playhead start = "<<startPlayHead<<", schedule point = "<<schedulePoint<<"----------------\n";
                 if(patternIndex!=-1 && patterns[patternIndex].sequence!=nullptr) playScore(schedulePoint, 0.0, oneSlashBarsPerSample); //process old clip
@@ -206,6 +205,7 @@ void pdsp::ScoreSection::processSection(const double &startPlayHead,
                 //std::cout<<"end processing, playhead start = "<<startPlayHead<<"----------------\n";
 
             }
+            
             processBuffersDestinations(bufferSize);
             
         }else if(clear==true){
