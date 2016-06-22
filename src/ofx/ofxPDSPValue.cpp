@@ -55,7 +55,7 @@ void ofxPDSPValue::setv(float value){
     this->value = value;
 }
 
-pdsp::Patchable& ofxPDSPValue::set(float value){
+pdsp::Patchable& ofxPDSPValue::setp(float value){
     parameter.set(value);
     return *this;
 }

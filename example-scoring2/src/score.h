@@ -61,6 +61,7 @@ struct BassPattern : public pdsp::Sequence{
             shuffleSequence();            
 
             begin(16.0, 1.0);
+         
             //   step   velo    pitch       slew%    duration
             note(0.0,   1.0f,   29.0f,      0.0f,    gate_long);
             note(2.0,   0.5f,   pfun(0),    0.0f,    gate_long);
@@ -71,6 +72,7 @@ struct BassPattern : public pdsp::Sequence{
             note(11.0,  0.5f,   pfun(5),    0.0f,    gate_short);        
             note(12.0,  0.5f,   pfun(6),    0.0f,    gate_short);        
             note(13.0,  0.5f,   pfun(7),    0.0f,    gate_short);
+           
             end();
             
             if(++counter == 4) counter = 0;
@@ -86,6 +88,7 @@ struct BassPattern : public pdsp::Sequence{
     const double gate_long =  0.95;  // a bit more than 1/16       
     const double gate_short = 0.4; // almost 1/32th
     vector<float> sequence;
+    
 };
 
 

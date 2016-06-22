@@ -41,17 +41,17 @@ class ofApp : public ofBaseApp{
         ofParameterGroup     comp_gui;
         ofParameterGroup     delay_gui;
 
-        ofxPDSPParameter     d1_time_ctrl; 
-        ofxPDSPParameter     d2_time_ctrl; 
-        ofxPDSPParameter     d_fb_ctrl;         
-        ofxPDSPParameter     d_damp_ctrl;     
-        ofxPDSPParameter     gain_ctrl;         
-        ofxPDSPParameter     send_ctrl;         
+        ofxPDSPValue     d1_time_ctrl; 
+        ofxPDSPValue     d2_time_ctrl; 
+        ofxPDSPValue     d_fb_ctrl;         
+        ofxPDSPValue     d_damp_ctrl;     
+        ofxPDSPValue     gain_ctrl;         
+        ofxPDSPValue     send_ctrl;         
 
-        ofxPDSPParameter     comp_threshold_ctrl;
-        ofxPDSPParameter     comp_attack_ctrl;
-        ofxPDSPParameter     comp_release_ctrl;
-        ofxPDSPParameter     comp_meter;
+        ofxPDSPValue        comp_threshold_ctrl;
+        ofxPDSPValue        comp_attack_ctrl;
+        ofxPDSPValue        comp_release_ctrl;
+        ofParameter<float>  comp_meter;
         
 
 };

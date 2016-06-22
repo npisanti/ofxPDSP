@@ -7,7 +7,10 @@
 // by declaring them sublcasses of pdsp::Patchable
 class SineBleep : public pdsp::Patchable{
 public:
-    SineBleep() {
+    SineBleep() { patch(); } 
+    SineBleep(const SineBleep & other) { patch(); } 
+
+    void patch() {
         //add inputs / outputs with these methods 
         addModuleInput("trig", env.in_trig()); // arguments are tag and the Unit in/out to link to that tag
         addModuleInput("pitch", osc.in_pitch());
@@ -27,7 +30,10 @@ private:
 
 class BassSynth : public pdsp::Patchable{
 public:
-    BassSynth() {
+    BassSynth() { patch(); }
+    BassSynth( const BassSynth & other ) { patch(); }
+    
+    void patch (){
         //set inputs/outputs
         addModuleInput("trig", trigger_in);
         addModuleInput("pitch", osc.in_pitch());

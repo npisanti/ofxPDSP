@@ -61,11 +61,11 @@ public:
 
 
     /*!
-    @brief sets the ofParameter, triggering a callback that also update the value. It isn't fast as setf(). Returns the unit ready to be patched.
+    @brief sets the ofParameter, triggering a callback that also update the value. It isn't fast as setv(). Returns the unit ready to be patched.
     @param[in] value new value
     
     */   
-    pdsp::Patchable& set(float value);
+    pdsp::Patchable& setp(float value);
 
 
     /*!

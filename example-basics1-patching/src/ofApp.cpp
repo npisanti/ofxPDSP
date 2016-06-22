@@ -5,8 +5,6 @@
 // before running this also check that the basic oF audio output example is working
 // ofxx_folder/examples/sound/audioOutputExample/
 
-// also be shure to check out the basics with the ofxPDSP wiki tutorials:
-// https://github.com/npisanti/ofxPDSP/wiki
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -26,18 +24,50 @@ void ofApp::setup(){
     // the * operator when used before patching scales the output signal
     osc.out_sine() * 0.25f >> engine.audio_out(0); // connect to left output channel
     osc.out_sine() * 0.25f >> engine.audio_out(1); // connect to right right channel
+    // ( a pdsp::VAOscillator produces a cyclic waveform in the audio range, with a control in semitones )
 
-    // decomment this for setting the oscillator pitch to another fixed value
-    // 81.0f >> osc.in_pitch();
+    // you can patch a float value to an input, only the last one patched is used
+    // 72.0f >> osc.in_pitch();
+    // 84.0f >> osc.in_pitch(); // higher
 
-    cout<<"finished patching\n";
-    
+
+/*
+    // decomment also this to add a cyclic modulation to the oscillator pitch
+    0.5f >> lfo;
+            lfo * 48.0f >> osc;
+    // ( a pdsp::LFO is a Low Frequency Oscillator module )
+*/
+
+    // if you forgot to decomment the float patching before this before docommenting the lines above 
+    // you will get a low rumble as the pitch of the oscillator will range from -48.0f to 48.0f (semitones) 
+    // every unit or module has some default values that are used when nothing is patched
+    // but when you patch the lfo the default osc.in_pitch() value is overrided by the lfo output
+    // so you need to patch also a float value to make the pitch stay in the audio range
+    // as thumb rule: all the classes patched to an input with >> and also ONE float value are summed together
+
+    // when an output or an input ar not selected before patching the default one are used
+    // the lines abobe are the same of 
+    // 0.5f >> lfo.in_freq();
+    //         lfo.out_triangle() * 48.0f >> osc.in_pitch();
+
+
+/*
+    // you can also scale the audio by dB values using the dB() function, multiplying again will override the last value
+    // and you can pan with the panL() and panR() functions, you have to pass the same value to both, from -1.0f to 1.0f
+    // combine those function together by multiplying their results before patching
+    float pan = 0.5f;
+    osc.out_sine() * (dB(-12.0f) * panL(pan)) >> engine.audio_out(0); // connect to left output channel
+    osc.out_sine() * (dB(-12.0f) * panR(pan)) >> engine.audio_out(1); // connect to right right channel  
+*/
+
+    cout<<"[example] finished patching\n";
     //----------------------AUDIO SETUP-------------
-
-    // start your audio engines!
+    
+    // set up the audio output device
     engine.listDevices();
     engine.setDeviceID(0); // REMEMBER TO SET THIS AT THE RIGHT INDEX!!!!
 
+    // start your audio engine !
     engine.setup( 44100, 512, 3); 
     // arguments are : sample rate, buffer size, and how many buffer there are in the audio callback queue
     // 512 is the minimum buffer size for the raspberry Pi to work
