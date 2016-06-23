@@ -2,7 +2,6 @@
 #include "ofxPDSPValue.h"
 
 ofxPDSPValue::ofxPDSPValue(){
-
     addOutput("signal", output);
     updateOutputNodes();
     slewInitValue = 0.0f;
@@ -23,12 +22,16 @@ ofxPDSPValue::ofxPDSPValue(const ofxPDSPValue & other) : ofxPDSPValue(){
     if(dynamicConstruction){
             prepareSlew(sampleRate, slewInitValue);   
     }
-    
 }
 
 ofxPDSPValue& ofxPDSPValue::operator=(const ofxPDSPValue & other){
+
     this->parameter = other.parameter;
     this->value.store( other.value );
+    this->slewInitValue = this->value;    
+    if(dynamicConstruction){
+            prepareSlew(sampleRate, slewInitValue);   
+    }
     return *this;
 }
 

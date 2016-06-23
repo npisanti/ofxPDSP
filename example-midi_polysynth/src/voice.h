@@ -5,27 +5,38 @@
 #include "ofxPDSP.h"
 
 
+// this class contains the ui controls
+
+struct SynthUI {
+
+    SynthUI();
+
+    ofParameterGroup controls;
+
+    ofxPDSPValue     cutoff;
+    ofxPDSPValue     reso;
+    ofxPDSPValue     modAttack;
+    ofxPDSPValue     modRelease;
+    
+    ofxPDSPValue     pw;
+    ofxPDSPValue     pwmSpeed;
+    ofxPDSPValue     pwm;    
+
+};
+
+// this class rapresent each synth voice
+
 struct SynthVoice : public pdsp::Patchable {
     
-    SynthVoice();
-    SynthVoice(const SynthVoice& other);
+    SynthVoice(){}
+    SynthVoice(const SynthVoice& other){}
     
-
+    void setup(SynthUI & ui);
     
     float meter_mod_env() const;
     float meter_pitch() const;
 
-    static ofxPDSPParameter     cutoffUI;
-    static ofxPDSPParameter     resoUI;
-    static ofxPDSPParameter     modAttackUI;
-    static ofxPDSPParameter     modReleaseUI;
-    
-    static ofxPDSPParameter     pwUI;
-    static ofxPDSPParameter     pwmSpeedUI;
-    static ofxPDSPParameter     pwmUI;
-
 private:
-    void patch();
 
     pdsp::PatchNode     voiceTrigger;
     pdsp::PatchNode     voicePitch;
@@ -42,7 +53,5 @@ private:
     
     pdsp::LFO           lfo;
     pdsp::Amp           lfoAmt;
-
-    pdsp::CRSlew        slew;
  
 };

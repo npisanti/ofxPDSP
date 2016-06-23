@@ -3,8 +3,7 @@
 // this is a basic ios example,
 // it is just a little more than a "hello world" program to test that everything is working
 
-// also be shure to check out the basics with the ofxPDSP wiki tutorials:
-// https://github.com/npisanti/ofxPDSP/wiki
+// before looking at this check out the basics examples
 
 //--------------------------------------------------------------
 void ofApp::setup(){

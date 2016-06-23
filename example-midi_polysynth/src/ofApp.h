@@ -31,6 +31,7 @@ class ofApp : public ofBaseApp{
 
         int                     voicesNum;
         vector<SynthVoice>      voices;
+        SynthUI                 synthUI;
      
         pdsp::DimensionChorus   chorus;       
         
@@ -40,9 +41,8 @@ class ofApp : public ofBaseApp{
         ofxPanel             gui;
         
         ofParameterGroup     chorusUI;
-        ofParameterGroup     synthUI;
-    
-        ofxPDSPParameter     chorusSpeed;
-        ofxPDSPParameter     chorusDepth;
+
+        ofxPDSPValue     chorusSpeed;
+        ofxPDSPValue     chorusDepth;
     
 };

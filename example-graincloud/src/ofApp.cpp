@@ -1,7 +1,6 @@
 #include "ofApp.h"
 
-// before looking at this, be shure to check out the lessons on the gitHub wiki:
-// https://github.com/npisanti/ofxPDSP/wiki
+// before looking at this check out the basics examples
 
 // Graincloud example. At the moment file loading is managed using libsndfile on Linux / Win
 // it will work on Linux out of the box 

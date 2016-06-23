@@ -1,7 +1,6 @@
 #include "ofApp.h"
 
-// before looking at this, be shure to check out the basics with the ofxPDSP wiki tutorials:
-// https://github.com/npisanti/ofxPDSP/wiki
+// before looking at this check the basics and scoring examples
 
 //--------------------------------------------------------------
 void ofApp::setup(){

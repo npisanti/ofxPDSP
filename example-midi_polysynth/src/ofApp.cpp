@@ -1,7 +1,6 @@
 #include "ofApp.h"
 
-// before looking at this, be shure to check out the basics with the ofxPDSP wiki tutorials:
-// https://github.com/npisanti/ofxPDSP/wiki
+// before looking at this check out the basics examples
 
 // midi controlled polysynth example
 // you need a midi keyboard for trying this! 
@@ -11,9 +10,6 @@
 void ofApp::setup(){
     
     //patching-------------------------------
-    //get MIDI control
-    midiIn.listPorts();
-    midiIn.openPort(1); //set the right port !!!
 
     // set up control
     // you can use setPolyMode(int maxNotes, int unisonVoices) or setMonoMode(int unisonVoices, bool legato, MonoPriority priority)
@@ -29,20 +25,25 @@ void ofApp::setup(){
     // midiKeys has a vector for the pitch outputs and one for the trigger outputs
     // we patch them to the voices here
     for(int i=0; i<voicesNum; ++i){
+        
+        // setup voice
+        voices[i].setup( synthUI );
+        
         // connect each voice to a midi pitch and trigger output
         midiKeys.outs_trig[i]  >> voices[i].in("trig");
         midiKeys.outs_pitch[i] >> voices[i].in("pitch");
         // connect each voice to chorus
         voices[i] >> chorus.in_0();
         voices[i] >> chorus.in_1();
+    
     }
     
     // set up chorus
     chorus.out_0() >> engine.audio_out(0);
     chorus.out_1() >> engine.audio_out(1);
 
-    chorusSpeed.set("speed (hz)", 0.25f, 0.25f, 0.5f) >> chorus.in_speed();
-    chorusDepth.set("depth (ms)", 10.f, 0.05f, 30.0f) >> chorus.in_depth();
+    chorusSpeed >> chorus.in_speed();
+    chorusDepth >> chorus.in_depth();
 
   
     // graphic setup---------------------------
@@ -61,26 +62,21 @@ void ofApp::setup(){
     gui.setDefaultFillColor(ofColor(0,90,90));
     gui.setDefaultBackgroundColor(ofColor(0,0,0));
     
-    synthUI.setName("synth parameters");
-    synthUI.add(voices[0].pwUI.parameter);
-    synthUI.add(voices[0].pwmUI.parameter);
-    synthUI.add(voices[0].pwmSpeedUI.parameter);
-    synthUI.add(voices[0].cutoffUI.parameter);
-    synthUI.add(voices[0].resoUI.parameter);
-    synthUI.add(voices[0].modAttackUI.parameter);
-    synthUI.add(voices[0].modReleaseUI.parameter);
-
     chorusUI.setName("chorus parameters");
-    chorusUI.add(chorusSpeed.parameter);
-    chorusUI.add(chorusDepth.parameter);
+    chorusUI.add(chorusSpeed.set("speed (hz)", 0.25f, 0.25f, 0.5f));
+    chorusUI.add(chorusDepth.set("depth (ms)", 10.f, 0.05f, 30.0f));
 
     gui.setup("panel");
-    gui.add(synthUI);
-    gui.add(chorusUI);
+    gui.add( synthUI.controls );
+    gui.add( chorusUI );
     gui.setPosition(400, 20);
     
     
-    // audio setup----------------------------
+    // audio / midi setup----------------------------
+    
+    //get MIDI control
+    midiIn.listPorts();
+    midiIn.openPort(2); //set the right port !!!
     // for our midi controllers to work we have to add them to the engine, so it know it has to process them
     engine.addMidiController( midiKeys, midiIn ); // add midi processing to the engine
     engine.listDevices();

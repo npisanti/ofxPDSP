@@ -55,6 +55,15 @@ pdsp::Sequencer& pdsp::ValueSequencer::in_slew(){
         return *this;
 }
 
+void pdsp::ValueSequencer::enableSmoothing(float timeMs){
+    this->setSlewTime(timeMs);
+    
+}
+
+void pdsp::ValueSequencer::disableSmoothing(){
+    this->deactivateSlew();
+}
+
 void pdsp::ValueSequencer::unLink(){
     if(messageBuffer != nullptr){
         messageBuffer->destination = nullptr;

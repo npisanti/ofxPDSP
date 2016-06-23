@@ -58,6 +58,18 @@ public:
         */ 
         float meter_output() const;
 
+
+        /*!
+        @brief enables the smoothing the outputted values
+        @param[in] timeMs how many milliseconds will take to reach the setted value
+        */  
+        void enableSmoothing(float timeMs);
+        
+        /*!
+        @brief disable the smoothing the outputted values. smoothing is disabled by default
+        */  
+        void disableSmoothing();
+
 private:
         void prepareUnit( int expectedBufferSize, double sampleRate ) override;
         void releaseResources () override;

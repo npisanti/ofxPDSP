@@ -6,6 +6,7 @@
 #define BARH 60
 #define METERH 25
 
+// before looking at this check out the basics and scoring examples
 
 //--------------------------------------------------------------
 void ofApp::setup(){

@@ -1,7 +1,6 @@
 #include "ofApp.h"
 
-// before looking at this, be shure to check out the basics with the ofxPDSP wiki tutorials:
-// https://github.com/npisanti/ofxPDSP/wiki
+// before looking at this check out the basics examples and the scoring1 example
 
 // this is a more advanced example of some of ofxPDSP sequencing, check out score.h for the bass pattern code
 

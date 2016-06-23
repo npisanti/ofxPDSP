@@ -1,7 +1,6 @@
 #include "ofApp.h"
 
-// before looking at this, be shure to check out the basics with the ofxPDSP wiki tutorials:
-// https://github.com/npisanti/ofxPDSP/wiki
+// before looking at this check out the basics examples
 
 // audio input example, and UI example
 // at the moment on some systems the input comes in distorted, 
