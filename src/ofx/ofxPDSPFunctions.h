@@ -19,9 +19,11 @@ class ofxPDSPFunctions{
     friend float panL ( float pan );
     friend float panR ( float pan );
     friend float dB ( float dBvalue );
-    friend bool pdspCoin( float chance );
+    friend bool pdspChance( float chance );
     friend float pdspURan( );
-    friend float pdspRan( );
+    friend float pdspBRan( );
+    friend int pdspDice( int sides );
+    friend float pdspSpread(int index, int max, float spread, bool fromCenter);
 };
 
 /*!
@@ -82,12 +84,13 @@ inline_f bool pdspChance( float value ){
 @brief returns a random int value that ranges from 0 to sides-1
 @param[in] sides number of possible outcomes
 */
-inline_f int pdspDice( float sides ){
+inline_f int pdspDice( int sides ){
     return pdsp::dice(sides);
 };
 
 /*!
 @brief returns a random float value ranging from 0.0f, to the 1.0f. Use this instead of ofRandom() in the code that should run in the audio thread.
+
 */
 inline_f float pdspURan( ){
     return pdsp::randomUnipolarInclusive();
@@ -95,6 +98,7 @@ inline_f float pdspURan( ){
 
 /*!
 @brief returns a random float value ranging from -1.0f to 1.0f. Use this instead of ofRandom() in the code that should run in the audio thread.
+
 */
 inline_f float pdspBRan(){
     return pdsp::randomBipolar();

@@ -20,11 +20,11 @@ void pdsp::DimensionChorus::patch(){
     addModuleInput("delay", delay);
     
     speed.set(0.25);
-    speed.enableBoundaries(0.15f, 0.6f);
-    depth.set(10.0f);
-    depth.enableBoundaries(0.5f, 30.0f);
-    delay.set(80.0f);
-    delay.enableBoundaries(40.0f, 100.0f);
+    //speed.enableBoundaries(0.15f, 0.6f);
+    depth.set(3.5f);
+    //depth.enableBoundaries(0.0f, 30.0f);
+    delay.set(9.0f);
+    //delay.enableBoundaries(1.0f, 100.0f);
 
 
                        input1 >>           output1;

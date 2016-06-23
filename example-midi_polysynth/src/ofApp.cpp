@@ -63,8 +63,8 @@ void ofApp::setup(){
     gui.setDefaultBackgroundColor(ofColor(0,0,0));
     
     chorusUI.setName("chorus parameters");
-    chorusUI.add(chorusSpeed.set("speed (hz)", 0.25f, 0.25f, 0.5f));
-    chorusUI.add(chorusDepth.set("depth (ms)", 10.f, 0.05f, 30.0f));
+    chorusUI.add(chorusSpeed.set("speed (hz)", 0.25f, 0.25f, 1.0f));
+    chorusUI.add(chorusDepth.set("depth (ms)", 3.5f, 1.0f, 10.0f));
 
     gui.setup("panel");
     gui.add( synthUI.controls );
