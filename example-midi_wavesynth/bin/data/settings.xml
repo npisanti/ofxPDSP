@@ -1,0 +1,16 @@
+<panel>
+    <synth_parameters>
+        <pulse_width>0.5</pulse_width>
+        <pwm_amount>0.3</pwm_amount>
+        <pwm_speed__hz_>0.5</pwm_speed__hz_>
+        <cutoff_pitch>82.6</cutoff_pitch>
+        <resonance>0</resonance>
+        <mod_env_attack>400</mod_env_attack>
+        <mod_env_release>900</mod_env_release>
+    </synth_parameters>
+    <chorus_parameters>
+        <speed__hz_>0.25</speed__hz_>
+        <depth__ms_>10</depth__ms_>
+    </chorus_parameters>
+<panel/>
+</panel>

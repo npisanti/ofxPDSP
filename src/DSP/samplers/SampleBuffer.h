@@ -33,8 +33,8 @@ class SampleBuffer {
 
 public:
     SampleBuffer();
-    SampleBuffer(const SampleBuffer& other) = delete;
-    SampleBuffer& operator= (const SampleBuffer& other) = delete;
+    SampleBuffer(const SampleBuffer& other);
+    SampleBuffer& operator= (const SampleBuffer& other);
     ~SampleBuffer();
     
     /*!

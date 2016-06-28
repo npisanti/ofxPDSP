@@ -10,6 +10,8 @@
 
 #include "../pdspCore.h"
 #include "../interpolators/interpolators.h"
+#include "../../math/dsphelpers/sanity_check.h"
+
 
 namespace pdsp{
 

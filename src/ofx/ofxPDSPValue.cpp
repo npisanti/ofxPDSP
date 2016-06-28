@@ -8,7 +8,12 @@ ofxPDSPValue::ofxPDSPValue(){
     value = 0.0f;
     lastValue = numeric_limits<float>::infinity();
     this->deactivateSlew();
+  
     parameter.addListener(this, &ofxPDSPValue::onSet);
+    parameter_i.addListener(this, &ofxPDSPValue::onSetI);
+    parameter.set( 0.0f );
+    parameter_i.set( 0 );
+    
     if(dynamicConstruction){
             prepareToPlay(globalBufferSize, globalSampleRate);
     }
@@ -35,9 +40,9 @@ ofxPDSPValue& ofxPDSPValue::operator=(const ofxPDSPValue & other){
     return *this;
 }
 
-
 ofxPDSPValue::~ofxPDSPValue(){
     parameter.removeListener(this, &ofxPDSPValue::onSet);
+    parameter_i.removeListener(this, &ofxPDSPValue::onSetI);
 }
 
 ofParameter<float>& ofxPDSPValue::set(const char * name, float value, float min, float max){
@@ -46,25 +51,41 @@ ofParameter<float>& ofxPDSPValue::set(const char * name, float value, float min,
 }
 
 ofParameter<float>& ofxPDSPValue::set(const char * name, float min, float max){
-    parameter.set(name, this->value, min, max);
+    parameter.set(name, parameter.get(), min, max);
     return parameter;
 }
 
-ofParameter<float>& ofxPDSPValue::getOFParameter(){
+ofParameter<int>& ofxPDSPValue::set(const char * name, int value, int min, int max){
+    parameter_i.set(name, value, min, max);
+    return parameter_i;
+}
+
+ofParameter<int>& ofxPDSPValue::set(const char * name, int min, int max){
+    parameter.set(name, parameter_i.get(), min, max);
+    return parameter_i;
+}
+
+ofParameter<float>& ofxPDSPValue::getOFParameterFloat(){
     return parameter;
+}
+
+ofParameter<int>& ofxPDSPValue::getOFParameterInt(){
+    return parameter_i;
 }
 
 void ofxPDSPValue::setv(float value){
     this->value = value;
 }
 
-pdsp::Patchable& ofxPDSPValue::setp(float value){
-    parameter.set(value);
-    return *this;
-}
 
 void ofxPDSPValue::onSet(float &newValue){
-    value = newValue;
+    //value = newValue;
+    value = parameter.get() + static_cast<float>(parameter_i.get());
+}
+
+void ofxPDSPValue::onSetI(int  &newValue){
+    //value = newValue;
+    value = parameter.get() + static_cast<float>(parameter_i.get());
 }
 
 float ofxPDSPValue::get() const{

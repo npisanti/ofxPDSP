@@ -85,7 +85,14 @@ void pdsp::EnvelopeFollower::process (int bufferSize) noexcept {
         }
         
         meter.store(outputBuffer[0]);
+        
+    }else{
+        
+        setOutputToZero( output );
+        meter.store( 0.0f );
+        
     }
+    
 }
 
 

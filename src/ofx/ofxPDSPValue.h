@@ -33,7 +33,7 @@ public:
     
     
     /*!
-    @brief sets the and returns the internal ofParameter, useful to set up an UI
+    @brief sets the and returns the internal ofParameter<float>, useful to set up an UI. This parameter is summed to another ofParameter<int>, that you access passing all ints as parameters
     @param[in] name this will become the name of the ofParameter
     @param[in] value default value
     @param[in] min minimum value 
@@ -41,18 +41,35 @@ public:
     */    
     ofParameter<float>& set(const char * name, float value, float min, float max);
 
+    /*!
+    @brief sets the and returns the internal ofParameter<int>, useful to set up an UI. This parameter is summed to another ofParameter<float>, that you access passing all ints as parameters
+    @param[in] name this will become the name of the ofParameter
+    @param[in] value default value
+    @param[in] min minimum value 
+    @param[in] max maximum value
+    */    
+    ofParameter<int>& set(const char * name, int value, int min, int max);
+
 
     /*!
-    @brief sets the value min and max boundary when operated by the ofParameter in the UI and returns the parameter ready to be added to the UI
+    @brief sets the value min and max boundary when operated by the ofParameter<float> in the UI and returns the parameter ready to be added to the UI
     @param[in] name this will become the name of the ofParameter
     @param[in] min minimum value 
     @param[in] max maximum value
     */  
     ofParameter<float>& set(const char * name, float min, float max);
 
+    /*!
+    @brief sets the value min and max boundary when operated by the ofParameter<int> in the UI and returns the parameter ready to be added to the UI
+    @param[in] name this will become the name of the ofParameter
+    @param[in] min minimum value 
+    @param[in] max maximum value
+    */  
+    ofParameter<int>& set(const char * name, int min, int max);
+
 
     /*!
-    @brief sets the value and returns this unit ready to be patched, without updating the ofParameter
+    @brief sets the value and returns this unit ready to be patched, without updating the ofParameters
     @param[in] value new value
     
     This set method don't update the ofParameter, for faster computation when you're not using this class for UI
@@ -61,17 +78,14 @@ public:
 
 
     /*!
-    @brief sets the ofParameter, triggering a callback that also update the value. It isn't fast as setv(). Returns the unit ready to be patched.
-    @param[in] value new value
-    
-    */   
-    pdsp::Patchable& setp(float value);
-
+    @brief returns the ofParameter ready to be added to the UI
+    */  
+    ofParameter<float>& getOFParameterFloat();
 
     /*!
     @brief returns the ofParameter ready to be added to the UI
     */  
-    ofParameter<float>& getOFParameter();
+    ofParameter<int>& getOFParameterInt();
 
 
     /*!
@@ -98,6 +112,7 @@ public:
 private:
 
     ofParameter<float>  parameter;
+    ofParameter<int>    parameter_i;
     
     pdsp::OutputNode output;
     
@@ -109,8 +124,8 @@ private:
     atomic<float> value;
     
     void onSet(float &newValue);
+    void onSetI(int   &newValue);
 
-    //std::atomic<float> meter;
     
 };
 

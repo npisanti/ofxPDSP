@@ -13,6 +13,7 @@
 #include "oscillators/LFO.h"
 #include "oscillators/ClockedLFO.h"
 #include "oscillators/FMOperator.h"
+#include "oscillators/TableOscillator.h"
 
 #include "samplers/GrainCloud.h"
 #include "samplers/TriggeredGrain.h"

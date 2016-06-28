@@ -19,6 +19,47 @@ pdsp::SampleBuffer::~SampleBuffer(){
     }
 }
 
+pdsp::SampleBuffer::SampleBuffer(const pdsp::SampleBuffer& other) {
+    init( other.length, other.channels );
+    
+    if( buffer!=nullptr || other.buffer==nullptr ){
+        this->filePath = other.filePath;
+        this->channels = other.channels;
+        this->length = other.length;
+        this->fileSampleRate = other.fileSampleRate;
+        this->verbose = other.verbose;
+        this->mono = other.mono;
+        
+        for(int i=0; i<channels; ++i){
+            for( int n=0; n<length; ++n ){
+                this->buffer[i][n] = other.buffer[i][n];
+            }
+        }
+    }
+}
+
+pdsp::SampleBuffer& pdsp::SampleBuffer::operator= (const pdsp::SampleBuffer& other) {
+    unLoad();
+  
+    init( other.length, other.channels );
+    
+    if( buffer!=nullptr || other.buffer==nullptr ){
+        this->filePath = other.filePath;
+        this->channels = other.channels;
+        this->length = other.length;
+        this->fileSampleRate = other.fileSampleRate;
+        this->verbose = other.verbose;
+        this->mono = other.mono;
+        
+        for(int i=0; i<channels; ++i){
+            for( int n=0; n<length; ++n ){
+                this->buffer[i][n] = other.buffer[i][n];
+            }
+        }
+    }
+     
+}
+
 void pdsp::SampleBuffer::setVerbose(bool verbose){
     this->verbose = verbose;
 }

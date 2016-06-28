@@ -5,6 +5,7 @@
 
 #include "../base/OscillatorVariShape.h"
 #include "../../samplers/SampleBuffer.h"
+#include "WaveTable.h"
 
 namespace pdsp{
 
@@ -19,17 +20,19 @@ public:
     WaveTableOsc();
     
     /*!
-    @brief sets the Wavetable. The last channels of the wavetable is used as guard point for interpolation, so remember leaving it empty and to 0.0f
-    @param[in] waveTable valid pointer to a SampleBuffer with a loaded waveform inside
+    @brief sets the Wavetable. 
+    @param[in] waveTable WaveTable class object
     */
-    void setTable(SampleBuffer* waveTable);
+    void setTable(WaveTable& waveTable);
     
 private:
+    
+    void prepareOscillator(double sampleRate) override;
     
     void oscillateShapeCR(float* outputBuffer, const float* phaseBuffer, const float shape, int bufferSize) noexcept override;
     void oscillateShapeAR(float* outputBuffer, const float* phaseBuffer, const float* shapeBuffer, int bufferSize) noexcept override;
     
-    SampleBuffer* waveTable;
+    WaveTable* waveTable;
 };
 
 } // end pdsp namespace

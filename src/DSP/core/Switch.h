@@ -30,16 +30,14 @@ public:
     Switch& operator=(const Switch& other);
     ~Switch();
     
-    /*!
-    @brief sets the default input channel and returns the Unit ready to be patched.
-    */  
-    Patchable& set(int input);
     
     void resize(int size);
     
+    
     Patchable& in_select();
-    Patchable& in_signal( int channel );
     Patchable& out_signal();
+    InputNode& input( int channel );
+
     
                             
 private:
