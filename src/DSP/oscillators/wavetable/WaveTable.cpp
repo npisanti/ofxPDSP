@@ -52,7 +52,7 @@ void pdsp::WaveTable::setVerbose( bool verbose ){
 }
 
 
-void pdsp::WaveTable::addEmpty( int numToAdd ) {
+void pdsp::WaveTable::addEmpty( ) {
     if( length!= -1 ){
         if(buffer == nullptr){
             
@@ -152,6 +152,51 @@ void pdsp::WaveTable::addAdditiveWave( std::initializer_list<double> partials, b
     
     buffer[index][length] = buffer[index][0];
 
+
+}
+
+
+void pdsp::WaveTable::addAdditiveWave( const std::vector<double> & partials, bool harmonicScale ){
+   
+    addEmpty();
+
+    int index = tableSize-1;
+    
+    int partial_i = 1; 
+    double multiply = 1.0 / (double) length;
+    
+    for (const double & value : partials){
+        
+        double harmonic_amp = value;
+        double partial = (double) partial_i;
+
+        if(harmonicScale){
+            double harmonic = 1.0 / partial;
+            if(partial_i%2 == 0) harmonic = -harmonic;
+            harmonic_amp *= harmonic;  
+        }
+        
+        for(int n=0; n<length; ++n){
+            double theta = static_cast<double>(n) * multiply * M_TAU_DOUBLE * partial;
+            buffer[index][n] += sin ( theta ) * harmonic_amp;
+        }        
+        
+        partial_i++;
+    }
+
+    float normalize = -1.0f;
+    for(int n=0; n<length; ++n){
+        float value = std::abs ( buffer[index][n] );
+        if(value > normalize) normalize = value;
+    }  
+    
+    normalize = 1.0f / normalize;
+   
+    for(int n=0; n<length; ++n){
+        buffer[index][n] *= normalize;
+    }  
+    
+    buffer[index][length] = buffer[index][0];
 
 }
 

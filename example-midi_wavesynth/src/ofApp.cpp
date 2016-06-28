@@ -9,6 +9,8 @@
 // the code here in ofApp.cpp is similar to the midi_polysynth example
 // most of the work is done in synth.h and synth.cpp
 
+// as usual, remember to set the right midi port index and deviceID
+
 //--------------------------------------------------------------
 void ofApp::setup(){
     
@@ -68,7 +70,7 @@ void ofApp::setup(){
     
     //get MIDI control
     midiIn.listPorts();
-    midiIn.openPort(1); //set the right port !!!
+    midiIn.openPort(0); //set the right port !!!
     // for our midi controllers to work we have to add them to the engine, so it know it has to process them
     engine.addMidiController( midiKeys, midiIn ); // add midi processing to the engine
     engine.listDevices();

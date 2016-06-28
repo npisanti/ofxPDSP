@@ -54,6 +54,8 @@ struct SynthGlobal {
 
     ofxPDSPValue     chorus_speed_ctrl;
     ofxPDSPValue     chorus_depth_ctrl;
+    
+    vector<double> partials_vector;
 
 };
 

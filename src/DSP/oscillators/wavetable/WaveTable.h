@@ -18,7 +18,7 @@ public:
     /*!
     @brief add an empty wavetable to the buffer, 
     */    
-    void addEmpty( int numToAdd = 1);
+    void addEmpty();
     
     /*!
     @brief add a waveform from a sample file located at path
@@ -34,6 +34,14 @@ public:
     
     */    
     void addAdditiveWave( std::initializer_list<double> partials, bool harmonicScale = false );
+
+    /*!
+    @brief generate a waveform from a given vector of partials. This function is precise but not fast, use it before starting the DSP engine.
+    @param[in] partials inlined array of partials 
+    @param[in] harmonicScale if true each value is multiplied by a saw wave corresponding partial
+    
+    */    
+    void addAdditiveWave( const std::vector<double> & partials, bool harmonicScale = false );
 
 
     /*!

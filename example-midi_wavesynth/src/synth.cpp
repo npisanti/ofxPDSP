@@ -4,7 +4,8 @@
 SynthGlobal::SynthGlobal(){
     
     // WAVETABLE OPERATION EXAMPLE -----------------------------------------------------------------
-    // wavetable.setVerbose( true );
+    // wavetable.setVerbose( true ); // activate logs of waveform loadings and size increments
+   
    
     // adding waveforms from samples
     // the old trusty Adventure Kid WaveForms   
@@ -13,14 +14,31 @@ SynthGlobal::SynthGlobal(){
     wavetable.addSample( "data/AKWF_0022.wav");
     wavetable.addSample( "data/AKWF_0042.wav");
     
-    // creating a wave from an harmonic series 
+    
+    // creating a wave from the values of each partial sine wave amplitude
     wavetable.addAdditiveWave ( { 1.0, 1.0, 1.0, 1.0 } ); // first 4 partial at full amplitude, like an hammond organ set at 8888
+    
     
     // this waveform is harmonically scaled to the standard harmonic series, so just the first partial is at full amplitude
     // (unless you use values greater than 1.0f for the other partials )
     // true == harmonically scaling active, false by default 
     wavetable.addAdditiveWave ( { 1.0, 0.0, -1.0, 0.5, 0.5, 1.0, -1.0, 0.5, 0.5, 1.0, -1.0, 0.5, 0.5, 1.0, -1.0, 0.5, }, true ); 
-    
+  
+  
+    // additive wave from a vector, we set only the odd partials to 1, creating a 64 partials square wave
+    // remember that index 0 of the vector is the fundamental
+    partials_vector.resize(64);
+    for(int i=0; i<(int)partials_vector.size(); ++i){
+        if(i%2==0){
+            partials_vector[i] = 1.0; // odd harmonics 100%
+        }else{
+            partials_vector[i] = 0.0; // no even harmonics
+        }
+    }
+    // remember to set "true" for harmonic scaling, otherwise you should have set the partials directly to the scaled amplitude
+    wavetable.addAdditiveWave ( partials_vector, true ); 
+  
+  
     // creating a NOISY WAVE, manually setting the buffer values
     // half of the waveform shape is just noise, the other half is silence
     wavetable.addEmpty();
