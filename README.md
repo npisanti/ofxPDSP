@@ -24,6 +24,8 @@ Check out the videos of some included examples:
 
 [![ofxPDSP example-wolfram_beats](http://img.youtube.com/vi/Dzli9RytUyY/0.jpg)](https://www.youtube.com/watch?v=Dzli9RytUyY "ofxPDSP example-wolfram_beats")
 
+[![ofxPDSP example-serial-arduino](http://img.youtube.com/vi/MPi8LDFv7s8/0.jpg)](https://www.youtube.com/watch?v=MPi8LDFv7s8 "ofxPDSP example-serial-arduino")
+
 
 Nicola Pisanti, MIT License 2016.  
 For FFT the AudioFFT wrapper is used, Copyright (c) 2013 [HiFi-LoFi](https://github.com/HiFi-LoFi).  

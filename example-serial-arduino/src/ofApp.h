@@ -3,8 +3,6 @@
 #include "ofMain.h"
 #include "ofxSIMDFloats.h"
 #include "ofxPDSP.h"
-#include "bpattern.h"
-#include "synths.h"
 
 class ofApp : public ofBaseApp{
 
@@ -12,7 +10,7 @@ class ofApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
-        
+
 		void keyPressed(int key);
 		void keyReleased(int key);
 		void mouseMoved(int x, int y );
@@ -25,26 +23,9 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
         
-        void visualizeSection(const pdsp::ScoreSection & sect, int numCells, int x, int y, int w, int h); 
-        
-        
         ofxPDSPEngine   engine;
-        
-        SineBleep       bleep;
-        BassSynth       bass;
-        
-        ofFbo           bassScoreCanvas;
-        int             bassCanvasW;
-        int             bassCanvasH;
-        
-        bool            oneShot;
-        
-        BassPattern     bassPattern;
-    
-        pdsp::Sequence    bleep1;
-        pdsp::Sequence    bleep2;
-        pdsp::Sequence    bleep3;
-        pdsp::Sequence    bleep4;
-            
+        ofxPDSPSerialOut  serialOut;
+                        
+        pdsp::Sequence  sequence;
         
 };

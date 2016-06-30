@@ -14,6 +14,7 @@
 #include "modules/header.h"
 
 #include "ofx/ofxPDSPMidi.h"
+#include "ofx/ofxPDSPSerialOut.h"
 
 #include "ofx/ofxPDSPParameters.h"
 #include "ofx/ofxPDSPValue.h"

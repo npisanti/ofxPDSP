@@ -1,4 +1,20 @@
 
+v0.1.3.6
+    - adds example-basics1-patching
+    - adds example-basics2-control
+    - adds example-basics3-ui 
+    - adds example-basics4-modules
+    - adds example-midi_wavesynth
+    - adds example-serial-arduino
+    - adds Switch class
+    - adds ofxPDSPValue for control and ui
+    - TriggerControl now also typedefined as ofxPDSPTrigger
+    - adds ofxPDSPSerialOut class for controlling arduino and other boards
+    - tweaked WaveTableOsc and new class WaveTable for managing sampled waveforms
+    - added Gaussian and Tukey window for GrainCloud
+    - bug fixes
+    
+
 v0.1.3.5
     - adds denormals, infinities and NaN sanity check to DampedDelay
     - DampedDelay now supports feedback and damping audio rate modulation

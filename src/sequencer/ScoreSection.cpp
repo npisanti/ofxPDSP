@@ -24,7 +24,7 @@ pdsp::ScoreSection::ScoreSection() {
     clear = true;
     quantizedLaunch = false;
     launchingCell = false;
-    selectedMessageBuffer = nullptr;
+    //selectedMessageBuffer = nullptr;
     
     atomic_meter_current.store(-1);
     atomic_meter_next.store(-1);
@@ -60,6 +60,10 @@ pdsp::ScoreSection::~ScoreSection(){
 
     for( int i=0; i < (int)values.size(); ++i ){
         if(values[i]!=nullptr) delete values[i];
+    }
+
+    for( int i=0; i < (int)outputs.size(); ++i ){
+        if(outputs[i]!=nullptr) delete outputs[i];
     }
 
 }
@@ -233,7 +237,7 @@ void pdsp::ScoreSection::playScore(double const &range, double const &offset, co
         
         if( (patternToProcess->score[scoreIndex].time >= scorePlayHead) && (patternToProcess->score[scoreIndex].lane < (int)outputs.size() )   ){ //check if we are inside the outputs boundaries and inside the processed time
             int sample = static_cast<int>( (patternToProcess->score[scoreIndex].time - scorePlayHead + offset) * oneSlashBarsPerSample);
-            outputs[patternToProcess->score[scoreIndex].lane].addMessage(patternToProcess->score[scoreIndex].value, sample);
+            outputs[patternToProcess->score[scoreIndex].lane]->addMessage(patternToProcess->score[scoreIndex].value, sample);
             //std::cout<<"added message with sample value:"<<sample<<"\n";
         }
         
@@ -305,22 +309,22 @@ void pdsp::ScoreSection::allNoteOff(double const &offset, const double &oneSlash
     
     int sample = static_cast<int>( offset * oneSlashBarsPerSample);
 
-    for(MessageBuffer &buffer : outputs){
-        if(buffer.connectedToGate){
-            buffer.addMessage(0.0f, sample);
+    for(MessageBuffer* &buffer : outputs){
+        if(buffer->connectedToGate){
+            buffer->addMessage(0.0f, sample);
         }
     }
 }
 
 void pdsp::ScoreSection::clearBuffers() noexcept {
-    for(MessageBuffer &buffer : outputs){
-        buffer.clearMessages();
+    for(MessageBuffer* &buffer : outputs){
+        buffer->clearMessages();
     }
 }
 
 void pdsp::ScoreSection::processBuffersDestinations(const int &bufferSize) noexcept {
-    for(MessageBuffer &buffer : outputs){
-        buffer.processDestination(bufferSize);
+    for(MessageBuffer* &buffer : outputs){
+        buffer->processDestination(bufferSize);
     }
 }
 
@@ -329,22 +333,23 @@ void pdsp::ScoreSection::processBuffersDestinations(const int &bufferSize) noexc
 
 void pdsp::ScoreSection::setOutputsNumber(int size){
     if( size > (int) outputs.size()){
-        outputs.resize(size);                
+        int oldSize = outputs.size();
+        outputs.resize(size);        
+        for(int i=oldSize; i<size; ++i){
+            outputs[i] = new MessageBuffer();
+        }        
     }
 }
 
 
-pdsp::ScoreSection& pdsp::ScoreSection::out_message( int index ){
-    if(index>=0 ){
-        setOutputsNumber(index+1);
-        selectedMessageBuffer = &outputs[index];
-        return *this;
-    }else{
-        return *this;
-    }
+pdsp::MessageBuffer& pdsp::ScoreSection::out_message( int index ){
+    if(index<0) index = 0;
+
+    setOutputsNumber(index+1); // make the array larger if needed
+    return *outputs[index];
 }
 
-pdsp::ScoreSection& pdsp::ScoreSection::out( int index ){
+pdsp::MessageBuffer& pdsp::ScoreSection::out( int index ){
     return out_message(index);
 }
 
@@ -372,7 +377,7 @@ pdsp::GateSequencer& pdsp::ScoreSection::out_trig( int index ){
     if(gates[index]==nullptr){
         gates[index] = new GateSequencer();
         setOutputsNumber(index+1);
-        outputs[index] >> *gates[index];
+        *outputs[index] >> *gates[index];
     }
     
     return *gates[index];
@@ -402,7 +407,7 @@ pdsp::ValueSequencer& pdsp::ScoreSection::out_value( int index ){
     if(values[index]==nullptr){
         values[index] = new ValueSequencer();
         setOutputsNumber(index+1);
-        outputs[index] >> *values[index];
+        *outputs[index] >> *values[index];
     }
     
     return *values[index];  
@@ -444,35 +449,6 @@ void pdsp::ScoreSection::clearOnChange(bool active) {
 }
 
 
-//---------------------------------------------------------------------------------------------
-
-pdsp::Patchable& pdsp::linkSelectedOutputToSequencer (pdsp::ScoreSection& scoreSection, pdsp::Sequencer& input){
-    *(scoreSection.selectedMessageBuffer) >> input;
-    scoreSection.selectedMessageBuffer = &scoreSection.outputs[0];
-    return input;
-}
-
-pdsp::Patchable& pdsp::operator>> (pdsp::ScoreSection& scoreSection, pdsp::Sequencer& input){
-    return linkSelectedOutputToSequencer(scoreSection, input); 
-}
-
-void pdsp::linkSelectedOutputToExtSequencer (pdsp::ScoreSection& scoreSection, pdsp::ExtSequencer& ext){
-    ext.linkToMessageBuffer( *(scoreSection.selectedMessageBuffer) );
-    scoreSection.selectedMessageBuffer = &scoreSection.outputs[0]; //reset selected out to default
-}
-
-void pdsp::operator>> (pdsp::ScoreSection& scoreSection, pdsp::ExtSequencer& ext){
-    linkSelectedOutputToExtSequencer(scoreSection, ext);
-}
-
-void pdsp::unlinkSelectedOutputToExtSequencer (pdsp::ScoreSection& scoreSection, pdsp::ExtSequencer& ext){
-    ext.unlinkMessageBuffer( *(scoreSection.selectedMessageBuffer) );
-    scoreSection.selectedMessageBuffer = &scoreSection.outputs[0]; //reset selected out to default
-}
-
-void pdsp::operator!= (pdsp::ScoreSection& scoreSection, pdsp::ExtSequencer& ext){
-    unlinkSelectedOutputToExtSequencer(scoreSection, ext);
-}
 
 
 

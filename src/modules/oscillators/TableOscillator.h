@@ -17,7 +17,7 @@
 namespace pdsp{
 
     /*!
-    @brief FM operator based on a wavetable sine.
+    @brief pdsp::WaveTable based oscillator
     */  
 
 class TableOscillator : public Patchable {

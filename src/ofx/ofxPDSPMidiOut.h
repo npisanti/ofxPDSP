@@ -101,7 +101,7 @@ public:
 /*!
     @cond HIDDEN_SYMBOLS
 */  
-    void process() noexcept;
+    void process( int bufferSize ) noexcept;
 
     void linkToMessageBuffer(pdsp::MessageBuffer &messageBuffer) override;
     void unlinkMessageBuffer(pdsp::MessageBuffer &messageBuffer) override;
@@ -151,6 +151,7 @@ private:
     atomic<bool>                                        runMidiDaemon;
     
     //midi output processing members
+    bool                                                chronoStarted;
     chrono::time_point<chrono::high_resolution_clock>   bufferChrono;     
     double                                              usecPerSample;
     vector<ofxScheduledMidiMessage>                     circularBuffer;

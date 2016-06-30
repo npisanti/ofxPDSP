@@ -23,6 +23,7 @@ ofxPDSPEngine::ofxPDSPEngine(){
     controllers.clear();
     hasMidiIn = false;
     hasMidiOut = false;
+    hasSerialOut = false;
 
     ofAddListener( ofEvents().exit, this, &ofxPDSPEngine::onExit );
 }
@@ -205,23 +206,30 @@ void ofxPDSPEngine::close(){
 
 void ofxPDSPEngine::audioOut(ofSoundBuffer &outBuffer) {
     
+    int bufferSize =  outBuffer.getNumFrames() ;
     // score and playhead processing
-    score.process( outBuffer.getNumFrames() );
+    score.process( bufferSize );
     
     // midi input processing
     if(hasMidiIn){
         for( ofxPDSPMidiIn * &in : midiIns){
-            in->processMidi( outBuffer.getNumFrames() );
+            in->processMidi( bufferSize );
         } 
         for(int i=0; i<(int)controllers.size(); ++i){
-            controllers[i]->processMidi( *(controllerLinkedMidis[i]), outBuffer.getNumFrames() );
+            controllers[i]->processMidi( *(controllerLinkedMidis[i]), bufferSize );
         }
     }
     
     // midi output processing
     if(hasMidiOut){
         for( ofxPDSPMidiOut * &out : midiOuts){
-            out->process();
+            out->process( bufferSize );
+        } 
+    }
+    // serial output processing
+    if(hasSerialOut){
+        for( ofxPDSPSerialOut * &out : serialOuts){
+            out->process( bufferSize );
         } 
     }
     
@@ -253,9 +261,7 @@ void ofxPDSPEngine::addMidiController( ofxPDSPController & controller, ofxPDSPMi
         if( ptr == &controller ){
             midiControllerFound = true;
             cout<<"[pdsp] warning! you have already added this controller, you shouldn't add it twice\n";
-            #ifdef NDEBUG
-            std::cout<<"[pdsp] build in debug mode for triggering an assert\n";
-            #endif 
+            pdsp::pdsp_trace();
             assert(false);
         } 
     }
@@ -275,9 +281,7 @@ void  ofxPDSPEngine::addMidiOut( ofxPDSPMidiOut & midiOut ){
         if( ptr == &midiOut ){
             midiOutFound = true;
             cout<<"[pdsp] warning! you have already added this midi out to the engine, you shouldn't add it twice\n";
-            #ifdef NDEBUG
-            std::cout<<"[pdsp] build in debug mode for triggering an assert\n";
-            #endif 
+            pdsp::pdsp_trace();
             assert(false);
         } 
     }
@@ -288,3 +292,18 @@ void  ofxPDSPEngine::addMidiOut( ofxPDSPMidiOut & midiOut ){
 }
 
 
+void ofxPDSPEngine::addSerialOut( ofxPDSPSerialOut & serialOut ) {
+   
+    bool serialOutFound = false;
+    for( ofxPDSPSerialOut * &ptr : serialOuts ){
+        if( ptr == &serialOut ){
+            serialOutFound = true;
+            cout<<"[pdsp] warning! you have already added this serial out to the engine, you shouldn't add it twice\n";
+            pdsp::pdsp_trace();
+        } 
+    }
+    if( ! serialOutFound ){
+        serialOuts.push_back( &serialOut );
+    }
+    hasSerialOut = true;
+}

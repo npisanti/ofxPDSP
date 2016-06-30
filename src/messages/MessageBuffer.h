@@ -11,14 +11,18 @@
 #include <vector>
 #include "../DSP/control/Sequencer.h"
 #include "../flags.h"
+#include "ExtSequencer.h"
 
 namespace pdsp{
 
     class Sequencer;
+    
 /*!
     @cond HIDDEN_SYMBOLS
 */
     class MessageBuffer{
+        friend void linkSelectedOutputToExtSequencer    (MessageBuffer& messageBuffer, ExtSequencer& ext);
+        friend void unlinkSelectedOutputToExtSequencer  (MessageBuffer& messageBuffer, ExtSequencer& ext);
 
     public:
         MessageBuffer();
@@ -39,6 +43,13 @@ namespace pdsp{
             
     };
     
+
+    void linkSelectedOutputToExtSequencer (MessageBuffer& messageBuffer, ExtSequencer& ext);
+    void operator>> (MessageBuffer& messageBuffer, ExtSequencer& ext);
+
+    void unlinkSelectedOutputToExtSequencer (MessageBuffer& messageBuffer, ExtSequencer& ext);
+    void operator!= (MessageBuffer& messageBuffer, ExtSequencer& ext);    
+
 /*!
     @endcond
 */

@@ -57,3 +57,22 @@ void pdsp::MessageBuffer::reserve(int size){
 bool pdsp::MessageBuffer::empty(){
     return messages.empty();
 }
+
+//---------------------------------------------------------------------------------------------
+
+
+void pdsp::linkSelectedOutputToExtSequencer (pdsp::MessageBuffer& messageBuffer, pdsp::ExtSequencer& ext){
+    ext.linkToMessageBuffer( messageBuffer );
+}
+
+void pdsp::operator>> (pdsp::MessageBuffer& messageBuffer, pdsp::ExtSequencer& ext){
+    linkSelectedOutputToExtSequencer( messageBuffer, ext );
+}
+
+void pdsp::unlinkSelectedOutputToExtSequencer (pdsp::MessageBuffer& messageBuffer, pdsp::ExtSequencer& ext){
+    ext.unlinkMessageBuffer( messageBuffer );
+}
+
+void pdsp::operator!= (pdsp::MessageBuffer& messageBuffer, pdsp::ExtSequencer& ext){
+    unlinkSelectedOutputToExtSequencer( messageBuffer, ext );
+}

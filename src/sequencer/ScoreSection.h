@@ -27,9 +27,7 @@ namespace pdsp{
 
 class ScoreSection { 
     friend class ScoreProcessor;   
-    friend Patchable& linkSelectedOutputToSequencer (ScoreSection& scoreSection, Sequencer& input);
-    friend void linkSelectedOutputToExtSequencer (ScoreSection& scoreSection, ExtSequencer& ext);
-    friend void unlinkSelectedOutputToExtSequencer (ScoreSection& scoreSection, ExtSequencer& ext);
+
     
 private:
 
@@ -76,12 +74,12 @@ public:
     
     
     /*!
-    @brief Set the output with the given index as selected output and return this ScoreSection for patching to midi outs
+    @brief Set the output with the given index as selected output and return a MessageBuffer for patching to external outs (like midi or serial)
     @param[in] index index of the out to patch, 0 if not given
 
     Set the output with the given index as selected output and return this ScoreSection for patching. Usually you patch the result to an ofxPDSPMidiOut using the >> operator, but you can also patch it to a GateSequencer or ValueSequencer. Also eventually resize the outputs number if needed.
     */     
-    ScoreSection& out_message( int index = 0 );
+    pdsp::MessageBuffer& out_message( int index = 0 );
     
     
     /*!
@@ -198,7 +196,7 @@ public:
     @cond HIDDEN_SYMBOLS
 */
     [[deprecated("deprecated function, replaced by out_message(int index)")]]
-    ScoreSection& out( int index = 0 );
+    MessageBuffer& out( int index = 0 );
     
     [[deprecated("Replaced by setCell() for a less ambigous nomenclature")]]
     void setPattern( int index, Sequence* sequence, SeqChange* behavior = nullptr );
@@ -262,10 +260,8 @@ private:
     std::vector<GateSequencer*>     gates;
     std::vector<ValueSequencer*>    values;
     
-    std::vector<MessageBuffer>  outputs;
-    //int                         outputSize;
+    std::vector<MessageBuffer*>  outputs;
     
-    MessageBuffer*              selectedMessageBuffer;
     
     //std::mutex                  patternMutex;
     
@@ -279,14 +275,6 @@ private:
     
 };// END ScoreSection
 
-Patchable& linkSelectedOutputToSequencer (ScoreSection& scoreSection, Sequencer& input);
-Patchable& operator>> (ScoreSection& scoreSection, Sequencer& input);
-
-void linkSelectedOutputToExtSequencer (ScoreSection& scoreSection, ExtSequencer& ext);
-void operator>> (ScoreSection& scoreSection, ExtSequencer& ext);
-
-void unlinkSelectedOutputToExtSequencer (ScoreSection& scoreSection, ExtSequencer& ext);
-void operator!= (ScoreSection& scoreSection, ExtSequencer& ext);
 
 }//END NAMESPACE
 

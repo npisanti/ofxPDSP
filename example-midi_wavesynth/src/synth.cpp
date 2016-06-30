@@ -16,13 +16,13 @@ SynthGlobal::SynthGlobal(){
     
     
     // creating a wave from the values of each partial sine wave amplitude
-    wavetable.addAdditiveWave ( { 1.0, 1.0, 1.0, 1.0 } ); // first 4 partial at full amplitude, like an hammond organ set at 8888
+    wavetable.addAdditiveWave ( { 1.0, 1.0, 1.0, 1.0 } ); // first 4 partial at full amplitude, like an hammond set at 8888
     
     
     // this waveform is harmonically scaled to the standard harmonic series, so just the first partial is at full amplitude
     // (unless you use values greater than 1.0f for the other partials )
     // true == harmonically scaling active, false by default 
-    wavetable.addAdditiveWave ( { 1.0, 0.0, -1.0, 0.5, 0.5, 1.0, -1.0, 0.5, 0.5, 1.0, -1.0, 0.5, 0.5, 1.0, -1.0, 0.5, }, true ); 
+    wavetable.addAdditiveWave ({ 1.0, 0.0, -1.0, 0.5, 0.5, 1.0, -1.0, 0.5, 0.5, 1.0, -1.0, 0.5, 0.5, 1.0, -1.0, 0.5, }, true ); 
   
   
     // additive wave from a vector, we set only the odd partials to 1, creating a 64 partials square wave

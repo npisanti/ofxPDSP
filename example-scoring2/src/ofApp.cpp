@@ -34,7 +34,7 @@ void ofApp::setup(){
     engine.score.sections[0].setCell(1, &bleep2, pdsp::Behavior::Next );
     engine.score.sections[0].setCell(2, &bleep3, pdsp::Behavior::Next );
     engine.score.sections[0].setCell(3, &bleep4, pdsp::Behavior::Next );
-    // enable quantization to 1/4th
+    // SeqChange triggering quantized to 1/4th
     engine.score.sections[0].enableQuantization(0, 0.25 );
     engine.score.sections[0].enableQuantization(1, 0.25 );
     engine.score.sections[0].enableQuantization(2, 0.25 );

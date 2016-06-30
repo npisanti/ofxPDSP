@@ -51,6 +51,7 @@ void ofApp::setup(){
     wolframSequence.code = bind(&ofApp::processSequence, this); 
     
     //--------PATCHING-------
+    // Zap is defined in ofApp.h
     zaps.resize(ZAPS_NUMBER);
 
     float scaleGain = 2.0f / ZAPS_NUMBER;

@@ -18,7 +18,9 @@ void ofApp::setup(){
     // sampleData is an instance of pdsp::SampleBuffer
     sampleData.setVerbose(true); 
     sampleData.load("data/dreadlock_ride2.wav"); // at the moment this will work only on linux and osx
-                                                 // sometimes on osx you have to use an absolute path
+                                                 // many debugger (included gdb and xcode) change the base path 
+                                                 // when you run your app in debug mode
+                                                 // so sometimes on you have to use an absolute path
     cloud.setWindowType(pdsp::Triangular); // select the shape of the grain envelope
             // available windows: Rectangular, Triangular, Hann, Hamming, Blackman, BlackmanHarris, SineWindow, Welch
     cloud.setSample(&sampleData); // give to the pdsp::GrainCloud the reference to the sample

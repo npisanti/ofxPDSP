@@ -12,6 +12,7 @@
 #include "ofxPDSPController.h"
 #include "ofxPDSPMidiIn.h"
 #include "ofxPDSPMidiOut.h"
+#include "ofxPDSPSerialOut.h"
 
 
 /*!
@@ -91,6 +92,12 @@ public:
     void addMidiOut( ofxPDSPMidiOut & midiOut );
 
     /*!
+    @brief adds a serial output to the engine, making it active.
+    @param[in] serialOut serial out object to activate
+    */
+    void addSerialOut( ofxPDSPSerialOut & serialOut );
+
+    /*!
     @brief returns a Patchable object that rapresent the audio out of the system. Patch your module to this for connecting them to the selected device audio output.
     @param[in] channel channel to connect
     */
@@ -130,7 +137,9 @@ private:
     bool                                hasMidiIn;
 
     std::vector<ofxPDSPMidiOut*>        midiOuts;  
+    std::vector<ofxPDSPSerialOut*>      serialOuts;  
     bool                                hasMidiOut;
+    bool                                hasSerialOut;
     
     int state;
 

@@ -7,6 +7,11 @@
 
 namespace pdsp {
     
+    /*!
+    @brief Utility class for storing and loading buffers of waveforms
+    
+    */
+    
 class WaveTable {
     friend class WaveTableOsc;
     
@@ -16,7 +21,7 @@ public:
     ~WaveTable();
 
     /*!
-    @brief add an empty wavetable to the buffer, 
+    @brief add an empty waveform to the buffer, 
     */    
     void addEmpty();
     

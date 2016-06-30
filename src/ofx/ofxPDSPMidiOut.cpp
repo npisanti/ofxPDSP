@@ -45,6 +45,7 @@ ofxPDSPMidiOut::ofxPDSPMidiOut(){
     //midi daemon init
     messagesReady = false;
     runMidiDaemon = false;
+    chronoStarted = false;
     
     //processing init
 
@@ -200,9 +201,18 @@ void ofxPDSPMidiOut::prepareToPlay( int expectedBufferSize, double sampleRate ){
 void ofxPDSPMidiOut::releaseResources() {}
 
 
-void ofxPDSPMidiOut::process() noexcept{
+void ofxPDSPMidiOut::process( int bufferSize ) noexcept{
     
     if(connected){
+        
+        if(chronoStarted){
+            chrono::nanoseconds bufferOffset = chrono::nanoseconds (static_cast<long> ( bufferSize * usecPerSample ));
+            bufferChrono = bufferChrono + bufferOffset;
+        }else{
+            bufferChrono = chrono::high_resolution_clock::now();
+            chronoStarted = true;
+        }
+        
         //clear messages
         messagesToSend.clear();
         
@@ -219,9 +229,9 @@ void ofxPDSPMidiOut::process() noexcept{
             if( noteBufferI == nullptr ){ noteMax = 0; } //this deactivates the search for pitch
             else{ noteMax = noteBufferI->size(); }
           
-            
+            /* // OLD WAY
             bufferChrono = chrono::high_resolution_clock::now();
-          
+            */
             for(int gateIndex=0; gateIndex<gateMax; ++gateIndex){
                 //check if we have to change the pitch
                 if(  noteIndex<noteMax && 

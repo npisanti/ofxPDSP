@@ -41,12 +41,12 @@ void ofApp::setup(){
     
     // if you patch an out to a note() this out will control the note number of the last patched gate()
     // so beware! use gate() and note() always one after the other, like this
-    // engine.score.sections[0].out_message() >> midiOut.gate(1); 
-    // engine.score.sections[1].out_message() >> midiOut.note();
+    // engine.score.sections[0].out_message( 0 ) >> midiOut.gate(1); 
+    // engine.score.sections[0].out_message( 1 ) >> midiOut.note();
     
     // you can also connect the out to a midi cc like this
     // first argument of cc() is midi channel, second the  midi CC number to send
-    //engine.score.sections[0].out_message() >> midiOut.cc(1, 2);
+    //engine.score.sections[0].out_message( 2 ) >> midiOut.cc(1, 2);
     
     // in this example we are sending messages just to gate, so they will always be on the same note
     engine.score.sections[0].launchCell(0);
