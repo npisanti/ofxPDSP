@@ -24,7 +24,7 @@ meta:
 common:
 	# dependencies with other addons, a list of them separated by spaces 
 	# or use += in several lines
-	ADDON_DEPENDENCIES = ofxSIMDFloats ofxMidi
+	# ADDON_DEPENDENCIES = ofxSIMDFloats ofxMidi
 	
 	# include search paths, this will be usually parsed from the file system
 	# but if the addon or addon libraries need special search paths they can be
@@ -87,22 +87,22 @@ vs:
     ADDON_SOURCES_EXCLUDE = libs/libaudiodecoder/%
 	
 linuxarmv6l:
-	# NEON is required, adding here for raspbian distro
-	ADDON_CFLAGS = -mfpu=neon-vfpv4 -mfloat-abi=hard -ftree-vectorize
+    # when parsing the file system looking for sources exclude this for all or
+    # a specific platform
     ADDON_SOURCES_EXCLUDE = libs/libaudiodecoder/%
 
 	
 linuxarmv7l:
-	# enable NEON as is not enabled by default
-	ADDON_CFLAGS = -march=armv7-a -mfpu=neon-vfpv4 -mfloat-abi=hard -ftree-vectorize
+    # when parsing the file system looking for sources exclude this for all or
+    # a specific platform
     ADDON_SOURCES_EXCLUDE = libs/libaudiodecoder/%
 
 android/armeabi:	
 	
 	
 android/armeabi-v7a:	
-	# enable NEON as is not enabled by default
-	ADDON_CFLAGS = -march=armv7-a -mfpu=neon-vfpv4 -mfloat-abi=hard -ftree-vectorize
+    # when parsing the file system looking for sources exclude this for all or
+    # a specific platform
     ADDON_SOURCES_EXCLUDE = libs/libaudiodecoder/%
 
 osx:
