@@ -31,13 +31,7 @@ class ofApp : public ofBaseApp{
         vector<SynthVoice>      voices;
         SynthGlobal             synthGlobal;
      
-    
-        
-        ofxPDSPMidiIn        midiIn;
-        ofxPDSPMidiKeys      midiKeys;
-
-        ofxPanel             gui;
+        ofxPDSPComputerKeyboard     keyboard;
+        ofxPanel                    gui;
       
-
-    
 };

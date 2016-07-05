@@ -34,8 +34,8 @@ public:
 
     /*!
     @brief set the mode to Mono, with the given unison voices value and priority 
-    @param[in] 
-    @param[in] true if you want to retrigger the envelopes only when all the key are released
+    @param[in] unisonVoices number of unison voices
+    @param[in] legato true if you want to retrigger the envelopes only when all the key are released
     @param[in] priority you can use Last, Low or High as parameter
     */  
     void setMonoMode(int unisonVoices, bool legato, MonoPriority priority = Last);

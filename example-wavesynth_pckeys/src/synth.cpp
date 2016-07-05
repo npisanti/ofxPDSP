@@ -77,6 +77,7 @@ SynthGlobal::SynthGlobal(){
     // CONTROLS ------------------------------------------------------------------------------------
     ui_osc.setName("oscillator");
     ui_osc.add(table_ctrl.set("table index", 3.0f, 0.0f, (float)(wavetable.size()-1) ) );
+    table_ctrl.enableSmoothing(200.0f);
 
     ui_filter.setName("filter");
     ui_filter.add(cutoff_ctrl.set("cutoff", 82, 10, 120));
@@ -134,7 +135,7 @@ void SynthVoice::setup( SynthGlobal & m ){
               m.table_ctrl >> oscillator.in_table();
                 voicePitch >> oscillator.in_pitch();
 
-    voiceTrigger >> envelope * 0.25f >> voiceAmp.in_mod();
+    voiceTrigger >> envelope * 0.12f >> voiceAmp.in_mod();
                     envelope >> envToFilter >> p2f;
                               m.lfoToFilter >> p2f;
                               m.cutoff_ctrl >> p2f;

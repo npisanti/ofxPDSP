@@ -14,6 +14,9 @@
 #include "modules/header.h"
 
 #include "ofx/ofxPDSPMidi.h"
+
+#include "ofx/ofxPDSPComputerKeyboard.h"
+
 #include "ofx/ofxPDSPSerialOut.h"
 
 #include "ofx/ofxPDSPParameters.h"
