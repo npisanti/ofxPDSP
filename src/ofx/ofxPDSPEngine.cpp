@@ -17,13 +17,12 @@ ofxPDSPEngine::ofxPDSPEngine(){
     controllers.reserve(20);
     controllerLinkedMidis.reserve(20);
     
-    midiOuts.reserve(10);
+    externalOuts.reserve(10);
     
     midiIns.clear();
     controllers.clear();
     hasMidiIn = false;
-    hasMidiOut = false;
-    hasSerialOut = false;
+    hasExternalOut = false;
 
     ofAddListener( ofEvents().exit, this, &ofxPDSPEngine::onExit );
 }
@@ -41,8 +40,8 @@ void ofxPDSPEngine::onExit( ofEventArgs &args){
     }
 }
 
-void ofxPDSPEngine::listDevices(){
-    ofSoundStreamListDevices();
+std::vector<ofSoundDevice> ofxPDSPEngine::listDevices(){
+    return ofSoundStreamListDevices();
 }
 
 void ofxPDSPEngine::setDeviceID(int deviceID){
@@ -184,9 +183,9 @@ void ofxPDSPEngine::close(){
         } 
     }
 
-    if(hasMidiOut){
-        for( ofxPDSPMidiOut * &out : midiOuts ){
-            out->closePort();
+    if(hasExternalOut){
+        for( pdsp::ExtSequencer * &out : externalOuts ){
+            out->close();
         } 
     }
     
@@ -220,19 +219,12 @@ void ofxPDSPEngine::audioOut(ofSoundBuffer &outBuffer) {
         }
     }
     
-    // midi output processing
-    if(hasMidiOut){
-        for( ofxPDSPMidiOut * &out : midiOuts){
+    // external outputs processing
+    if(hasExternalOut){
+        for( pdsp::ExtSequencer * &out : externalOuts){
             out->process( bufferSize );
-        } 
+        }
     }
-    // serial output processing
-    if(hasSerialOut){
-        for( ofxPDSPSerialOut * &out : serialOuts){
-            out->process( bufferSize );
-        } 
-    }
-    
     //DSP processing
     processor.processAndCopyInterleaved(outBuffer.getBuffer().data(), outBuffer.getNumChannels(), outBuffer.getNumFrames());    
 }
@@ -275,35 +267,26 @@ void ofxPDSPEngine::addMidiController( ofxPDSPController & controller, ofxPDSPMi
 
 
 void  ofxPDSPEngine::addMidiOut( ofxPDSPMidiOut & midiOut ){
-   
-    bool midiOutFound = false;
-    for( ofxPDSPMidiOut * &ptr : midiOuts ){
-        if( ptr == &midiOut ){
-            midiOutFound = true;
-            cout<<"[pdsp] warning! you have already added this midi out to the engine, you shouldn't add it twice\n";
-            pdsp::pdsp_trace();
-            assert(false);
-        } 
-    }
-    if( ! midiOutFound ){
-        midiOuts.push_back( &midiOut );
-    }
-    hasMidiOut = true;
+    addExternalOut( midiOut );
 }
 
 
 void ofxPDSPEngine::addSerialOut( ofxPDSPSerialOut & serialOut ) {
+    addExternalOut( serialOut );
+}
+
+void ofxPDSPEngine::addExternalOut( pdsp::ExtSequencer & externalOut ) {
    
-    bool serialOutFound = false;
-    for( ofxPDSPSerialOut * &ptr : serialOuts ){
-        if( ptr == &serialOut ){
-            serialOutFound = true;
-            cout<<"[pdsp] warning! you have already added this serial out to the engine, you shouldn't add it twice\n";
+    bool externalOutFound = false;
+    for( pdsp::ExtSequencer * &ptr : externalOuts ){
+        if( ptr == &externalOut ){
+            externalOutFound = true;
+            cout<<"[pdsp] warning! you have already added this external output to the engine, you shouldn't add it twice\n";
             pdsp::pdsp_trace();
         } 
     }
-    if( ! serialOutFound ){
-        serialOuts.push_back( &serialOut );
+    if( ! externalOutFound ){
+        externalOuts.push_back( &externalOut );
     }
-    hasSerialOut = true;
+    hasExternalOut = true;
 }

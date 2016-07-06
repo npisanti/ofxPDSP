@@ -60,7 +60,7 @@ ofxPDSPMidiOut::ofxPDSPMidiOut(){
 
 ofxPDSPMidiOut::~ofxPDSPMidiOut(){
     if(connected){
-        closePort();
+        close();
     }
 }
 
@@ -72,7 +72,7 @@ void ofxPDSPMidiOut::linkToMidiOut(ofxMidiOut &midiOut){
 
     if( midiOut.isOpen() ){
         if(connected){
-            closePort();
+            close();
         }
 
         midiOut_p = &midiOut;
@@ -92,7 +92,7 @@ void ofxPDSPMidiOut::listPorts(){
 
 void ofxPDSPMidiOut::openPort(int portIndex){
     if(connected){
-        closePort();
+        close();
     }
     
     midiOut.openPort( portIndex );
@@ -108,7 +108,7 @@ void ofxPDSPMidiOut::openPort(int portIndex){
     }
 }
 
-void ofxPDSPMidiOut:: closePort(){
+void ofxPDSPMidiOut:: close(){
     if(connected){
         if(verbose) cout<<"[pdsp] shutting down midi out\n";
         //stop the daemon before

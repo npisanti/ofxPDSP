@@ -57,7 +57,7 @@ pdsp::SampleBuffer& pdsp::SampleBuffer::operator= (const pdsp::SampleBuffer& oth
             }
         }
     }
-     
+    return *this;
 }
 
 void pdsp::SampleBuffer::setVerbose(bool verbose){

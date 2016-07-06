@@ -75,7 +75,7 @@ public:
     /*!
     @brief close the opened port
     */   
-    void closePort();
+    void close() override;
 
     /*!
     @brief list the available ports
@@ -103,7 +103,7 @@ public:
 /*!
     @cond HIDDEN_SYMBOLS
 */  
-    void process( int bufferSize ) noexcept;
+    void process( int bufferSize ) noexcept override;
 
     void linkToMessageBuffer(pdsp::MessageBuffer &messageBuffer) override;
     void unlinkMessageBuffer(pdsp::MessageBuffer &messageBuffer) override;

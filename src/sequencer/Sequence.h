@@ -126,8 +126,13 @@ namespace pdsp{
         /*!
         @brief returns a read-only reference to the internal ScoreMessage vector
         */
-        const std::vector<ScoreMessage> & getScore();
+        const std::vector<ScoreMessage> & getScore() const;
   
+        /*!
+        @brief if the returned number is different than the last one you've got, then a score change happened and now is safe to access the score
+        */
+        int getChangeID() const;
+    
     private:
         void executeGenerateScore() noexcept;
         
@@ -138,6 +143,8 @@ namespace pdsp{
         double len;
         double div;
         double divMult;
+
+        int id;
 
     };
     

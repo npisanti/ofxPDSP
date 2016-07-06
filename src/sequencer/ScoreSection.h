@@ -57,19 +57,19 @@ public:
     ScoreSection(const ScoreSection &other);
 
 
+
     /*!
-    @brief Sets the number of patterns contained by this ScoreSection
+    @brief Sets the number of Cells contained by this ScoreSection
     @param[in] size number of Sequence contained by this ScoreSection
 
     */ 
-    void resizePatterns(int size);
+    void resizeCells(int size);
 
     /*!
-    @brief returns the number of patterns contained by this ScoreSection
+    @brief returns the number of Cells contained by this ScoreSection
 
     */ 
-    int getPatternsNumber() const;
-    
+    int getCellsNumber() const;    
 
     
     
@@ -191,10 +191,21 @@ public:
     */ 
     float meter_length() const; 
     
+    /*!
+    @brief returns the sequence at the given index
+    */ 
+    const Sequence & getSequence( int i ) const;
     
 /*!
     @cond HIDDEN_SYMBOLS
 */
+
+    [[deprecated("deprecated function, replaced by resizeCells(int size)")]]
+    void resizePatterns(int size);
+
+    [[deprecated("deprecated function, replaced by getCellssNumber()")]]
+    int getPatternsNumber() const;
+
     [[deprecated("deprecated function, replaced by out_message(int index)")]]
     MessageBuffer& out( int index = 0 );
     

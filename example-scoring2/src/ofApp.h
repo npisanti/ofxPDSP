@@ -25,9 +25,6 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
         
-        void visualizeSection(const pdsp::ScoreSection & sect, int numCells, int x, int y, int w, int h); 
-        
-        
         ofxPDSPEngine   engine;
         
         SineBleep       bleep;
@@ -46,5 +43,8 @@ class ofApp : public ofBaseApp{
         pdsp::Sequence    bleep3;
         pdsp::Sequence    bleep4;
             
-        
+        ofxScoreSectionPlotter  bassPatternGraphics;
+        ofxScoreSectionPlotter  bleepPatternGraphics;
+
+
 };

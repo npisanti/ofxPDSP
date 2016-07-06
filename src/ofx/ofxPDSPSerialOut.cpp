@@ -72,7 +72,7 @@ ofxPDSPSerialOut::ofxPDSPSerialOut(){
 
 ofxPDSPSerialOut::~ofxPDSPSerialOut(){
     if(connected){
-        closePort();
+        close();
     }
 }
 
@@ -86,7 +86,7 @@ void ofxPDSPSerialOut::listPorts(){
 
 void ofxPDSPSerialOut::openPort(int portIndex, int baudRate){
     if(connected){
-        closePort();
+        close();
     }
     
     serial.setup( portIndex, baudRate );
@@ -105,7 +105,7 @@ void ofxPDSPSerialOut::openPort(int portIndex, int baudRate){
 
 void ofxPDSPSerialOut::openPort(string name, int baudRate){
     if(connected){
-        closePort();
+        close();
     }
     
     serial.setup( name, baudRate );
@@ -121,7 +121,7 @@ void ofxPDSPSerialOut::openPort(string name, int baudRate){
     }
 }
 
-void ofxPDSPSerialOut:: closePort(){
+void ofxPDSPSerialOut:: close(){
     if(connected){
         if(verbose) cout<<"[pdsp] shutting down serial out\n";
         //stop the daemon before

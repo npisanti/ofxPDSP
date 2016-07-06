@@ -57,7 +57,7 @@ public:
     /*!
     @brief calls ofSoundStreamListDevices() for listing the available audio devices. 
     */
-    void listDevices();
+    std::vector<ofSoundDevice> listDevices();
     
     /*!
     @brief sets the ID of the audio device to open. You can get the available ID with listDevices(). Sometimes you have to use different ID for input and output devices, for that use setInputDeviceID() and setOutputDeviceID().
@@ -96,6 +96,12 @@ public:
     @param[in] serialOut serial out object to activate
     */
     void addSerialOut( ofxPDSPSerialOut & serialOut );
+    
+    /*!
+    @brief adds an external output to the engine, like an ofxPDSPSerialOut or an ofxPDSPMidiOut making it active.
+    @param[in] externalOut external out object to activate
+    */
+    void addExternalOut( pdsp::ExtSequencer & externalOut );
 
     /*!
     @brief returns a Patchable object that rapresent the audio out of the system. Patch your module to this for connecting them to the selected device audio output.
@@ -136,10 +142,8 @@ private:
     std::vector<ofxPDSPMidiIn*>         controllerLinkedMidis;
     bool                                hasMidiIn;
 
-    std::vector<ofxPDSPMidiOut*>        midiOuts;  
-    std::vector<ofxPDSPSerialOut*>      serialOuts;  
-    bool                                hasMidiOut;
-    bool                                hasSerialOut;
+    std::vector<pdsp::ExtSequencer*>          externalOuts;  
+    bool                                hasExternalOut;
     
     int state;
 

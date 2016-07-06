@@ -17,6 +17,9 @@ class ExtSequencer{
 public:
     virtual void linkToMessageBuffer(MessageBuffer &messageBuffer) = 0;
     virtual void unlinkMessageBuffer(MessageBuffer &messageBuffer) = 0;
+    
+    virtual void process( int bufferSize ) = 0;
+    virtual void close() = 0;
 };
 /*!
     @endcond

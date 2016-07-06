@@ -7,6 +7,8 @@ pdsp::Sequence::Sequence( double stepDivision ){
     setLength(1.0);
     nextScore.reserve(PDSP_PATTERN_MESSAGE_RESERVE_DEFAULT);
     code = []() noexcept {};
+    
+    id = 1;
 }
 
 pdsp::Sequence::Sequence() : Sequence (16.0){}
@@ -147,7 +149,7 @@ void pdsp::Sequence::end() noexcept{
 }
 
 
-const std::vector<pdsp::ScoreMessage> & pdsp::Sequence::getScore(){
+const std::vector<pdsp::ScoreMessage> & pdsp::Sequence::getScore() const{
     return score;
 }
 
@@ -156,10 +158,14 @@ void pdsp::Sequence::executeGenerateScore() noexcept {
     if(modified){
         score.swap( nextScore ); // swap score in a thread-safe section
         std::sort (score.begin(), score.end(), messageSort); //sort the messages
+        id = (id == 1) ? 2 : 1;
         modified = false;
     }
 }
 
+int pdsp::Sequence::getChangeID() const {
+    return id;
+}
 
 pdsp::SeqChange::SeqChange(){
     code = [&]() noexcept { return self; };
@@ -169,5 +175,4 @@ int pdsp::SeqChange::getNextPattern( int currentPattern, int size ) noexcept {
     self = currentPattern;
     return code();
 }
-
 

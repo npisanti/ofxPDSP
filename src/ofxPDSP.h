@@ -23,6 +23,7 @@
 #include "ofx/ofxPDSPValue.h"
 
 #include "ofx/ofxSampleBufferPlotter.h"
+#include "ofx/ofxScoreSectionPlotter.h"
 
 #include "ofx/ofxPDSPFunctions.h"
 

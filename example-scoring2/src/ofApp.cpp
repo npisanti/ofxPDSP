@@ -70,6 +70,12 @@ void ofApp::setup(){
     bleep * (panL(0.5f) * dB(-6.0f)) >> engine.audio_out(0);
     bleep * (panR(0.5f) * dB(-6.0f)) >> engine.audio_out(1);
     
+    // graphics
+    // ofxScoreSectionPlotter is an utility class for displaying active cells and sequences values
+    bleepPatternGraphics.setup(400, 20, 0, engine.score.sections[0] ); // with 0 outputs we just draw the sequence visualizer
+    
+    bassPatternGraphics.setup(400, 100, 2, engine.score.sections[1] ); // width, eight, outputs to monitor, section to monitor
+    bassPatternGraphics.setRange(1, 24.0f, 60.0f); // setting the range for the pitch output, otherwise the range is 0.0f<->1.0f
 
     //------------SETUPS AND START AUDIO-------------
     engine.listDevices();
@@ -79,67 +85,25 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
-    // update bass pattern graphics when bass pattern changes
-    // music.bassPattern.updateScoreDraw is a bool used to make this operation thread-safe
-    if(bassPattern.updateScoreDraw){
-        bassScoreCanvas.begin();
-            ofClear(255,255,255, 255);
-            ofBackground(0);
-            ofNoFill();
-            ofSetColor(255);
-            ofDrawRectangle(1, 1, bassCanvasW-2, bassCanvasH-2);
-            
-            double gateStart;
-            double gateStop;
-            double gateVal;
-            bool gate = false;
-            
-            for(const pdsp::ScoreMessage &msg : bassPattern.getScore()){
-                if(msg.lane == 0){
-                    if(msg.value>0.0){
-                        gateVal = msg.value;
-                        if(!gate){
-                            gateStart = msg.time;
-                            gate = true;
-                        }
-                    }else{
-                        if(gate){
-                            gateStop = msg.time;
-                            gate = false;
-                            int rectH  = (gateStop - gateStart) * bassCanvasH;
-                            ofSetColor( static_cast<int> (100.0 * gateVal));
-                            ofFill();
-                            ofDrawRectangle(2, gateStart*bassCanvasH +2, bassCanvasW-4, rectH);
-                        }
-                    }
-                }
-            }
-            
-            for(const pdsp::ScoreMessage &msg : bassPattern.getScore()){
-                if(msg.lane == 1){
-                    ofSetColor(255);
-                    ofDrawBitmapString( msg.value, 9, (msg.time*bassCanvasH + 12) );
-                }
-            }
-            
-        bassScoreCanvas.end();
-        bassPattern.updateScoreDraw = false;
-    }
+    // do not forget to update your plotters!
+    bleepPatternGraphics.update();
+    bassPatternGraphics.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     
-    bassScoreCanvas.draw(16, 10);
+    float masterX = (ofGetWidth() - 400) * 0.5f;
     
-    double playY = engine.score.sections[1].meter_playhead() * bassCanvasH + 11;
-    ofSetColor(255);
-    ofDrawLine(56, playY, 80, playY);
+    ofSetColor(255); // this will change the color of the plotted graphics
+    
+    ofDrawBitmapString("bleep patterns:", masterX, 25 );    
+    bleepPatternGraphics.draw(masterX, 30);
+    
+    ofDrawBitmapString("bass pattern:", masterX, 75 );
+    bassPatternGraphics.draw(masterX, 80);
 
-    visualizeSection(engine.score.sections[0], 4, 100, 11, 25, 25);
-    visualizeSection(engine.score.sections[1], 2, 100, 36, 25, 25);
-    
+
     string info = "master playhead (bars): ";
     info += to_string( engine.score.meter_playhead() );
     info += " / 16.0. \n";
@@ -156,29 +120,10 @@ void ofApp::draw(){
     info += "space : pause/play.\n";
     info += "s : stop.\n";
     
-    ofDrawBitmapString(info, 100, 90 );
-}
+    ofDrawBitmapString(info, masterX, 230 );
 
-//--------------------------------------------------------------
-void ofApp::visualizeSection(const pdsp::ScoreSection & sect, int numCells, int x, int y, int w, int h){
-        
-    for(int i=0; i<numCells; ++i){
-        if( sect.meter_next() == i ){
-            ofSetColor(50);
-            ofFill();
-            ofDrawRectangle( x + i*w, y, w, h);
-        }
-        if( sect.meter_current() == i){
-            ofSetColor(150);
-            ofFill();
-            ofDrawRectangle( x + i*w, y, w, h);
-        }
-        ofSetColor(255);
-        ofNoFill();
-        ofDrawRectangle( x + i*w, y, w, h); 
-    }
-}
 
+}
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){

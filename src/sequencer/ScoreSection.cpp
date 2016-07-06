@@ -40,7 +40,7 @@ pdsp::ScoreSection::ScoreSection() {
 
 pdsp::ScoreSection::ScoreSection(const pdsp::ScoreSection &other) {
     std::cout<<"score section copy constructed\n";
-    resizePatterns( (int) other.patterns.size() );
+    resizeCells( (int) other.patterns.size() );
     
     for(int i=0; i< (int) other.patterns.size(); ++i){
         patterns[i].sequence          = other.patterns[i].sequence;
@@ -68,7 +68,12 @@ pdsp::ScoreSection::~ScoreSection(){
 
 }
 
+
 void pdsp::ScoreSection::resizePatterns(int size){
+    resizeCells(size);
+}
+
+void pdsp::ScoreSection::resizeCells(int size){
     if(size>0){
         if(size<(int)patterns.size()){
             if(patternIndex>=size){
@@ -80,8 +85,12 @@ void pdsp::ScoreSection::resizePatterns(int size){
     }
 }
 
-int pdsp::ScoreSection::getPatternsNumber() const{
+int pdsp::ScoreSection::getCellsNumber() const{
     return patterns.size();
+}
+
+int pdsp::ScoreSection::getPatternsNumber() const{
+    return getCellsNumber();
 }
 
 void pdsp::ScoreSection::launchCell( int index, bool quantizeLaunch, double quantizeGrid ){
@@ -107,7 +116,7 @@ void pdsp::ScoreSection::launchCell( int index, bool quantizeLaunch, double quan
 void pdsp::ScoreSection::setCell( int index, Sequence* sequence, SeqChange* behavior ){
     if(index>=0){
         if(index>=(int)patterns.size()){
-            resizePatterns(index+1);
+            resizeCells(index+1);
             //all the new patterns are initialized with nullptr, nullptr, length=1.0, quantize = false and quantizeGrid=0.0
         }
         //patternMutex.lock();
@@ -129,7 +138,7 @@ void pdsp::ScoreSection::setChange( int index, SeqChange* behavior ){
 void pdsp::ScoreSection::setCellQuantization( int index, bool quantizeLaunch, double quantizeGrid ){
     if(index>=0){
         if(index>=(int) patterns.size()){
-            resizePatterns(index+1);
+            resizeCells(index+1);
             //all the new patterns are initialized with nullptr, nullptr, length=1.0, quantize = false and quantizeGrid=0.0
         }
         //patternMutex.lock();
@@ -448,7 +457,12 @@ void pdsp::ScoreSection::clearOnChange(bool active) {
     clearOnChangeFlag = active;
 }
 
-
+/*!
+@brief returns the sequence at the given index
+*/ 
+const pdsp::Sequence & pdsp::ScoreSection::getSequence( int i ) const{
+    return *(patterns[i].sequence);
+}
 
 
 
