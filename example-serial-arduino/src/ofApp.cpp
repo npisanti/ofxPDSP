@@ -44,16 +44,8 @@ void ofApp::setup(){
                            // that will cause bad timing
   
     sequence.begin(16.0, 1.0);    
-    for(int i=0; i<16; ++i){
-        if( channel1[i] > 0.0f ){ // ignoring negativa values
-            sequence.message( (double) i,              channel1[i], 0 );
-            sequence.message( ((double) i) + duration, 0.0f,        0 );            
-        }
-        if( channel2[i] > 0.0f ){ // ignoring negativa values
-            sequence.message( (double) i,              channel2[i], 1 );
-            sequence.message( ((double) i) + duration, 0.0f,        1 );
-        }
-    }
+    sequence.trigVector( channel1, duration, 0); // this will add all the values of an std::vector<float> as messages
+    sequence.trigVector( channel2, duration, 1); // and also generate trigger off signals (0.0f values)
     sequence.end();
     
     // each "channel" can trigger different actions in the arduino sketch

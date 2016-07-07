@@ -100,6 +100,8 @@ namespace pdsp{
 
         /*!
         @brief you call begin() before calling message, this prepare the Sequence for the message() method, clearing the buffers. Also set division and length.
+        @param[in] division time division
+        @param[in] length time before the next Sequence/ScoreCell will be started
         */
         void begin( double division, double length ) noexcept;
 
@@ -108,7 +110,7 @@ namespace pdsp{
         @brief with this method you can manually add timed values to the sequence. You have to call begin() before adding messages and end() when you've done. Also note that the old Sequence values are not kept so you are adding values to an empty sequence.
         @param[in] step the step index 
         @param[in] value the value of the step
-        @param[in] outputIndex when using message Sequence can transmit values to more than one GateSequencer/ValueSequencer, see ScoreCell for more
+        @param[in] outputIndex the output of the ScoreSection that will operate with the message, 0 if not given
         */
         void message(double step, float value, int outputIndex=0) noexcept;
         
@@ -116,6 +118,23 @@ namespace pdsp{
         @brief you call end() when you have finished adding value with Message(). When the Sequence restarts the new sequence will be played.
         */
         void end() noexcept;
+
+
+        /*!
+        @brief call begin() before calling this function. This function will add all the values of the array with the given division.
+        @param[in] vect std::vector<float> of values to add to the sequence, negative values will be ignored
+        @param[in] outputIndex the output of the ScoreSection that will operate with the message, 0 if not given
+        */
+        void messageVector( std::vector<float> vect, int outputIndex = 0);
+
+        /*!
+        @brief call begin() before calling this function. This function will add all the values of the array with the given division and will also add a 0.0f value after each value. The distange of the 0.0f value is given by gateLength.
+        @param[in] vect std::vector<float> of values to add to the sequence, negative values will be ignored
+        @param[in] gateLength length of gate = division * gateLength
+        @param[in] outputIndex the output of the ScoreSection that will operate with the message, 0 if not given
+        */
+        void trigVector( std::vector<float> vect, double gateLength, int outputIndex = 0);
+        
 
         /*!
         @brief this lambda function is executed each time the Sequence starts from the begin. Assign your own functions to it.

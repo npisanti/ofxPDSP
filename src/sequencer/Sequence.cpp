@@ -148,6 +148,32 @@ void pdsp::Sequence::end() noexcept{
     modified = true;
 }
 
+void pdsp::Sequence::messageVector( std::vector<float> vect, int outputIndex) {
+    
+    double time=0.0;
+    for (const float & value : vect){
+        if( value >= 0.0f){
+            nextScore.push_back(  pdsp::ScoreMessage( time , value, outputIndex) );            
+        }
+        time += divMult;
+    }
+        
+}
+
+void pdsp::Sequence::trigVector( std::vector<float> vect, double gateLength, int outputIndex) {
+    
+    double time=0.0;
+    double offTime = gateLength * divMult;
+    for (const float & value : vect){
+        if( value >= 0.0f){
+            nextScore.push_back(  pdsp::ScoreMessage( time,    value, outputIndex) );            
+            nextScore.push_back(  pdsp::ScoreMessage( offTime , 0.0f, outputIndex) );            
+        }
+        time    += divMult;
+        offTime += divMult;
+    }
+        
+}
 
 const std::vector<pdsp::ScoreMessage> & pdsp::Sequence::getScore() const{
     return score;

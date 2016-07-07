@@ -30,10 +30,6 @@ class ofApp : public ofBaseApp{
         SineBleep       bleep;
         BassSynth       bass;
         
-        ofFbo           bassScoreCanvas;
-        int             bassCanvasW;
-        int             bassCanvasH;
-        
         bool            oneShot;
         
         BassPattern     bassPattern;

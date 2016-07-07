@@ -11,9 +11,7 @@ void ofApp::setup(){
     ofBackground(0);
     ofDisableAntiAliasing();
     ofSetFrameRate(60);
-    bassCanvasW = 36;
-    bassCanvasH = 340;
-    bassScoreCanvas.allocate(bassCanvasW, bassCanvasH, GL_RGBA);
+    
     oneShot = false;
     
     //-------------------------SETTING UP SCORE--------------
