@@ -203,7 +203,7 @@ public:
     [[deprecated("deprecated function, replaced by resizeCells(int size)")]]
     void resizePatterns(int size);
 
-    [[deprecated("deprecated function, replaced by getCellssNumber()")]]
+    [[deprecated("deprecated function, replaced by getCellsNumber()")]]
     int getPatternsNumber() const;
 
     [[deprecated("deprecated function, replaced by out_message(int index)")]]

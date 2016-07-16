@@ -19,6 +19,24 @@ void ofApp::setup(){
     // you can use setPolyMode(int maxNotes) or setMonoMode(bool legato, MonoPriority priority)
     keyboard.setPolyMode( 8 );
     
+    /*
+    // keyboard is set up froa a qwerty keyboard, but you can define your own key accessing to the keys vector (it's public)
+    keyboard.keys[0]  = 'a';
+    keyboard.keys[1]  = 'w';
+    keyboard.keys[2]  = 's';
+    keyboard.keys[3]  = 'e';
+    keyboard.keys[4]  = 'd';
+    keyboard.keys[5]  = 'f';
+    keyboard.keys[6]  = 't';
+    keyboard.keys[7]  = 'g';
+    keyboard.keys[8]  = 'y';
+    keyboard.keys[9]  = 'h';
+    keyboard.keys[10] = 'u';
+    keyboard.keys[11] = 'j';
+    keyboard.keys[12] = 'k';
+    // remember that 12345567890 are already assigned to dynamic and octave control
+    */
+    
     // activate portamento, in poly mode you can notice portamento only on note stealing
     //keyboard.setPortamento(On, 250.0f);
 
