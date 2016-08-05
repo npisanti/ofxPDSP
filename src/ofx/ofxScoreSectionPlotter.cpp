@@ -1,12 +1,23 @@
 
 #include "ofxScoreSectionPlotter.h"
 
+ofxScoreSectionPlotter::ofxScoreSectionPlotter() {
+    setColor( ofColor(255, 255, 255) );
+}
 
-void ofxScoreSectionPlotter::setup( int w, int h, int outputs, pdsp::ScoreSection &assignedSection) {
+void ofxScoreSectionPlotter::setColor( ofColor color ){
+    this->color = color;
+    this->colorDim = color.getLerped( ofColor::black, 0.6f);
+}
+
+
+void ofxScoreSectionPlotter::setup( int w, int graphH, int outputs, pdsp::ScoreSection &assignedSection) {
 
     section = &assignedSection;
+
+    headerH = 20;
     
-    fbo.allocate(w+2, h+2, GL_RGBA);
+    fbo.allocate(w+2, graphH+2+headerH, GL_RGBA);
     fbo.begin();
     ofClear(255,255,255, 0);
     fbo.end();
@@ -33,18 +44,16 @@ void ofxScoreSectionPlotter::setup( int w, int h, int outputs, pdsp::ScoreSectio
 
     this->outputs = outputs;
 
-    if(outputs == 0){
-        headerH = h;
-    }else{
-        headerH = h * 0.2f;        
-    }
+
+
     width = w;
-    height = h;
-    outH = (h -headerH) / outputs;
+    height = graphH + headerH;
+    outH = (float)(graphH) / (float)outputs;
     
     lastSeqNumber = -1;
     lastSeqID = -1;
     timeMult = 1.0;
+
 }
 
 void ofxScoreSectionPlotter::update() {
@@ -81,7 +90,7 @@ void ofxScoreSectionPlotter::updateGraphics( const pdsp::Sequence & seq ){
         
         for( int i=0; i<outputs; ++i ){
             lastX[i]     = 0.0f;
-            lastY[i]     = 0.0f;
+            lastY[i]     = outH;
         }
 
         fbo.begin();
@@ -91,23 +100,21 @@ void ofxScoreSectionPlotter::updateGraphics( const pdsp::Sequence & seq ){
         ofSetColor(255);
         ofTranslate(1,1);
         
-        int cells = section->getCellsNumber();
+        cells = section->getCellsNumber();
         headerW = width / (float) cells;
+        
         for(int i=0; i<cells; ++i){
-            
             if(section->meter_current() == i){
                 headerX = headerW*i;
             }else if(section->meter_next() == i ){
-                ofSetColor(80);
+                ofSetColor(40);
                 ofFill();
                 ofDrawRectangle(headerW*i, 0, headerW, headerH);
-                ofNoFill();
-                ofSetColor(255);
             }
-            
+            ofNoFill();
+            ofSetColor(255);            
             ofDrawRectangle(headerW*i, 0, headerW, headerH);
 
-            
         }
         
         ofTranslate(0, headerH);
@@ -151,18 +158,18 @@ void ofxScoreSectionPlotter::clearGraphics (){
         ofSetColor(255);
         ofTranslate(1,1);
         
-        int cells = section->getCellsNumber();
+        cells = section->getCellsNumber();
         headerW = width / (float) cells;
         for(int i=0; i<cells; ++i){
             
             if(section->meter_current() == i){
                 headerX = headerW*i;
             }else if(section->meter_next() == i ){
-                ofSetColor(80);
+                ofSetColor( 40 );
                 ofFill();
                 ofDrawRectangle(headerW*i, 0, headerW, headerH);
                 ofNoFill();
-                ofSetColor(255);
+                ofSetColor( 255 );
             }
             
             ofDrawRectangle(headerW*i, 0, headerW, headerH);
@@ -175,16 +182,20 @@ void ofxScoreSectionPlotter::clearGraphics (){
 }
 
 void ofxScoreSectionPlotter::draw() {
-
+    
+    ofSetColor(colorDim);
     float playhead = section->meter_playhead() * timeMult;
     float lineX = playhead * width;
     ofFill(); 
     ofDrawRectangle( headerX, 0, headerW*playhead, headerH);
     
+    ofSetColor(color);
     fbo.draw( 0, 0);
-    ofNoFill();
-    ofDrawLine(lineX, headerH, lineX, height);
-    
+    if(outputs != 0){  
+        ofNoFill();
+        ofDrawLine(lineX, headerH, lineX, height);
+    }
+
 }
 
 
@@ -201,4 +212,12 @@ void ofxScoreSectionPlotter::setRange( int index, float min, float max ){
     
     rangeMin[index] = min;
     rangeMax[index] = max;
+}
+
+float ofxScoreSectionPlotter::getCellWidth() const {
+    return headerW;
+}
+
+int   ofxScoreSectionPlotter::getCellsNumber() const {
+    return cells;
 }

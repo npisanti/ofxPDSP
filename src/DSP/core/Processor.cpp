@@ -50,7 +50,10 @@ void pdsp::Processor::processAndCopyOutput(float** bufferToFill, const int &chan
                         }
                 }
         }
+        
+        blackhole.process(bufferSize);
 }
+
 
 void pdsp::Processor::processAndCopyInterleaved(float* bufferToFill, const int &channelsNum, const int &bufferSize) noexcept{
       
@@ -81,5 +84,8 @@ void pdsp::Processor::processAndCopyInterleaved(float* bufferToFill, const int &
                         }
                 }
         }
+ 
+        blackhole.process(bufferSize);
+
 }
 

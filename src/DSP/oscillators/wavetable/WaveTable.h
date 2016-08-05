@@ -48,6 +48,35 @@ public:
     */    
     void addAdditiveWave( const std::vector<double> & partials, bool harmonicScale = false );
 
+    /*!
+    @brief generate a sawtooth waveform with the given number of of partials. This function is precise but not fast, use it before starting the DSP engine.
+    @param[in] partials number of partials
+    
+    */    
+    void addSawWave( int partials );
+
+
+    /*!
+    @brief generate a square waveform with the given number of of partials. This function is precise but not fast, use it before starting the DSP engine.
+    @param[in] partials number of partials
+    
+    */    
+    void addSquareWave ( int partials );
+    
+
+    /*!
+    @brief generate a triangle waveform with the given number of of partials. This function is precise but not fast, use it before starting the DSP engine.
+    @param[in] partials number of partials
+    
+    */        
+    void addTriangleWave ( int partials );
+
+
+    /*!
+    @brief generate a sine waveform. This function is precise but not fast, use it before starting the DSP engine.
+    
+    */        
+    void addSineWave ( );
 
     /*!
     @brief returns an handle to the buffer of the wave at the given index

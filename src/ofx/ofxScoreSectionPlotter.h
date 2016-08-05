@@ -11,18 +11,19 @@
 */    
 
 class ofxScoreSectionPlotter {
+    friend class ofxPDSPEngineGraphics;
     
 public:
-
+    ofxScoreSectionPlotter();
 
     /*!
     @brief set ups the class
     @param[in] w width of the graphics
-    @param[in] h height of the graphics
+    @param[in] graphH height of the graphics, header excluded
     @param[in] outputs number of outputs to monitor
     @param[in] assignedSection 
     */
-    void setup( int w, int h, int outputs, pdsp::ScoreSection &assignedSection);
+    void setup( int w, int graphH, int outputs, pdsp::ScoreSection &assignedSection);
 
     /*!
     @brief this is mandatory in your app update() for the plotters to work
@@ -49,9 +50,20 @@ public:
     */    
     void setRange( int index, float min, float max );
     
+    /*!
+    @brief sets the color of the graphics
+    @param color color to set
+    */     
+    void setColor( ofColor color );
+    
+    
 private:
+
     void updateGraphics( const pdsp::Sequence & seq );
     void clearGraphics ();
+
+    float getCellWidth() const;
+    int   getCellsNumber() const;
 
     vector<float> lastX;
     vector<float> lastY;
@@ -65,6 +77,7 @@ private:
     int lastSeqID;
   
   
+    int cells;
     float headerH;
     float headerW;
     float headerX;
@@ -77,6 +90,9 @@ private:
     int outputs;
     
     pdsp::ScoreSection * section;
+    
+    ofColor color;
+    ofColor colorDim;
     
 };
 

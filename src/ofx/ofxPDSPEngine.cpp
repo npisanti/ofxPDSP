@@ -24,6 +24,8 @@ ofxPDSPEngine::ofxPDSPEngine(){
     hasMidiIn = false;
     hasExternalOut = false;
 
+    graphics.setParent( score );
+
     ofAddListener( ofEvents().exit, this, &ofxPDSPEngine::onExit );
 }
 
@@ -34,7 +36,7 @@ ofxPDSPEngine::~ofxPDSPEngine(){
     }
 }
 
-void ofxPDSPEngine::onExit( ofEventArgs &args){
+void ofxPDSPEngine::onExit( ofEventArgs &args ){
     if(state!= closedState){
         close();
     }
@@ -93,6 +95,10 @@ pdsp::Patchable& ofxPDSPEngine::audio_in( int channel ){
     
 }
 
+pdsp::Patchable& ofxPDSPEngine::blackhole( ) {
+    return processor.blackhole;
+}
+
 void ofxPDSPEngine::setChannels( int inputChannels, int outputChannels ){
     if(this->inputChannels != inputChannels){
         this->inputChannels = inputChannels;
@@ -143,6 +149,10 @@ void ofxPDSPEngine::setup( int sampleRate, int bufferSize, int nBuffers){
             inputStream.setDeviceID( inputID );
             inputStream.setup(0, inputChannels, sampleRate, bufferSize, nBuffers);
         }     
+    }
+
+    if( outputChannels > 0 ){
+        testOscillator >> testAmp >> processor.channels[0];
     }
 
     state = startedState;
@@ -289,4 +299,12 @@ void ofxPDSPEngine::addExternalOut( pdsp::ExtSequencer & externalOut ) {
         externalOuts.push_back( &externalOut );
     }
     hasExternalOut = true;
+}
+
+void ofxPDSPEngine::test( bool testingActive, float testingDB ){
+    if( true ){
+        dB(testingDB) >> testAmp.in_mod();
+    }else{
+        0.0f >> testAmp.in_mod();
+    }
 }

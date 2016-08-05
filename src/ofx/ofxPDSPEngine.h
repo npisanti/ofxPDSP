@@ -9,11 +9,13 @@
 #include "ofMain.h"
 #include "../DSP/pdspCore.h"
 #include "../sequencer/ScoreProcessor.h"
+#include "../modules/oscillators/FMOperator.h"
 #include "ofxPDSPController.h"
 #include "ofxPDSPMidiIn.h"
 #include "ofxPDSPMidiOut.h"
 #include "ofxPDSPSerialOut.h"
-
+#include "ofxPDSPEngineGraphics.h"
+#include "ofxPDSPFunctions.h"
 
 /*!
 @brief utility class to manage input/output audio streams, acquire and release resources and process midi input/output. It also has an internal ScoreProcessor for sequencing.
@@ -114,12 +116,29 @@ public:
     @param[in] channel channel to connect
     */
     pdsp::Patchable& audio_in(  int channel );
+    
+    /*!
+    @brief returns a Patchable object that continously process all output patched to it without outputting nothing. Patch your Units and modules to this channels if you need them to be always active for some reason;
+    */    
+    pdsp::Patchable& blackhole( );
+    
 
     /*!
     @brief a ScoreProcessor class to manage the playhead and for sequencing. Look ScoreProcessor page for knowing more.
     */
     pdsp::ScoreProcessor score;
     
+    /*!
+    @brief manages a class to graphically monitor sequences
+    */    
+    ofxPDSPEngineGraphics graphics;
+    
+    /*!
+    @brief activate/deactivate a sine tone patched to the left output to testing that the engine is running.
+    @param testingActive pass true to activate testing, false to deactivate
+    @param testingDB optional volume of testing tone, -12dB if not given
+    */       
+    void test( bool testingActive, float testingDB=-12.0f );
     
 private:
     ofSoundStream inputStream;
@@ -154,6 +173,9 @@ private:
     void audioOut(ofSoundBuffer &outBuffer);
     void audioIn (ofSoundBuffer &outBuffer);
     void onExit( ofEventArgs &args);
+    
+    pdsp::FMOperator testOscillator;
+    pdsp::Amp        testAmp;
     
 };
 

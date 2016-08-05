@@ -24,6 +24,7 @@
 
 #include "ofx/ofxSampleBufferPlotter.h"
 #include "ofx/ofxScoreSectionPlotter.h"
+#include "ofx/ofxPDSPEngineGraphics.h"
 
 #include "ofx/ofxPDSPFunctions.h"
 

@@ -8,6 +8,7 @@
 
 #include "ScoreMessage.h"
 #include "Sequence.h"
+#include "stockBehaviors.h"
 #include <vector>
 #include "../messages/header.h"
 #include "../DSP/control/Sequencer.h"
@@ -37,12 +38,13 @@ private:
     */
     class SeqCell{
     public:
-        SeqCell() : sequence(nullptr), nextCell(nullptr), quantizeLaunch(false), quantizeGrid(0.0) {};
+        SeqCell() : sequence(nullptr), nextCell(nullptr), quantizeLaunch(false), quantizeGrid(0.0), label("") {};
             
         Sequence*       sequence;
         SeqChange*      nextCell;
         bool            quantizeLaunch;
         double          quantizeGrid;
+        std::string     label;
     };    
     /*!
         @endcond
@@ -71,7 +73,32 @@ public:
     */ 
     int getCellsNumber() const;    
 
+
+    /*!
+    @brief returns the sequence at the given index, trigger an assert if the sequence is not set so it's nullptr
+    */ 
+    Sequence& sequence( int index );
+
+
+    /*!
+    @brief Sets the SeqChange that determine what cell will be played after this, this is an alias for setChange()
+    */ 
+    void behavior (int index, pdsp::SeqChange* newBehavior );
     
+    /*!
+    @brief enables quantization of next cell launch.
+    @param[in] index index of the patter to set inside the ScoreSection. This has to be a valid index.
+    @param[in] quantizeGrid if the launch is quantized this is the grid division for quantizing, in bars.
+    */     
+    void quantize (int index, double quantizeTime);
+
+    /*!
+    @brief sets the label for the given cell
+    @param[in] index index of the patter to set inside the ScoreSection. This has to be a valid index.
+    @param[in] name new label
+    */       
+    void label ( int index, std::string name ); 
+
     
     /*!
     @brief Set the output with the given index as selected output and return a MessageBuffer for patching to external outs (like midi or serial)
@@ -110,10 +137,27 @@ public:
     @param[in] index index of the Sequence (or Sequence) to set inside the ScoreSection. If the size is too little the ScoreSection is automatically resized.
     @param[in] sequence pointer to a Sequence, you can also set it to nullptr
     @param[in] behavior pointer to a SeqChange, you can also set it to nullptr, nullptr if not given
+    @param[in] label an optional string to identify this cell
 
     Sets the score pattern at a given index. If Sequence is set to nullptr then nothing is played, If SeqChange is set to nullptr the sequencing is stopped after playing this Pattern. Sequence is a subclass of Sequence easiear to manage.
     */ 
-    void setCell( int index, Sequence* sequence, SeqChange* behavior = nullptr );
+    void setCell( int index, Sequence* sequence, SeqChange* behavior = nullptr, std::string label = "" );
+    
+    
+    /*!
+    @brief Sets the label for the cell at the given index
+    @param[in] index index of the Sequence (or Sequence) for setting the label
+    @param[in] label an optional string to identify this cell
+
+    */ 
+    void setLabel( int index, std::string label );
+    
+    /*!
+    @brief Gets the label for the cell at the given index
+    @param[in] index index of the Sequence (or Sequence) for setting the label
+
+    */ 
+    std::string  getLabel( int index);
     
 
     /*!
@@ -192,9 +236,15 @@ public:
     float meter_length() const; 
     
     /*!
-    @brief returns the sequence at the given index
+    @brief returns the sequence at the given index, read only
     */ 
     const Sequence & getSequence( int i ) const;
+    
+
+    /*!
+    @brief create and assign a fresh sequence to each Cell, sets the change to pdsp::Behavior::Loop
+    */     
+    void autoInitCells();
     
 /*!
     @cond HIDDEN_SYMBOLS
@@ -280,9 +330,14 @@ private:
     std::atomic<int>            atomic_meter_next; 
     std::atomic<float>          atomic_meter_playhead;
     std::atomic<float>          atomic_meter_length;
+
+    std::vector<pdsp::Sequence> seqs;
     
     static GateSequencer        invalidGate;
     static ValueSequencer       invalidValue;
+    
+    static Sequence             dummySeq;
+
     
 };// END ScoreSection
 

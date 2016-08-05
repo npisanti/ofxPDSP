@@ -6,7 +6,16 @@ SynthGlobal::SynthGlobal(){
     // WAVETABLE OPERATION EXAMPLE -----------------------------------------------------------------
     // wavetable.setVerbose( true ); // activate logs of waveform loadings and size increments
    
+    wavetable.initLength( 600 ); // 600 samples is AKWF sample length
+
+
+    // methods for classic waveforms, 64 partials used here
+    wavetable.addSawWave( 64 );
+    wavetable.addSquareWave( 64 );
+    wavetable.addTriangleWave( 64 );
+    wavetable.addSineWave();
    
+
     // adding waveforms from samples
     // the old trusty Adventure Kid WaveForms   
     // http://www.adventurekid.se/akrt/waveforms/adventure-kid-waveforms/
@@ -14,7 +23,7 @@ SynthGlobal::SynthGlobal(){
     wavetable.addSample( "data/AKWF_0022.wav");
     wavetable.addSample( "data/AKWF_0042.wav");
     
-    
+
     // creating a wave from the values of each partial sine wave amplitude
     wavetable.addAdditiveWave ( { 1.0, 1.0, 1.0, 1.0 } ); // first 4 partial at full amplitude, like an hammond set at 8888
     
@@ -25,11 +34,11 @@ SynthGlobal::SynthGlobal(){
     wavetable.addAdditiveWave ({ 1.0, 0.0, -1.0, 0.5, 0.5, 1.0, -1.0, 0.5, 0.5, 1.0, -1.0, 0.5, 0.5, 1.0, -1.0, 0.5, }, true ); 
   
   
-    // additive wave from a vector, we set only the odd partials to 1, creating a 64 partials square wave
+    // additive wave from a vector, we set a partial every three to 1
     // remember that index 0 of the vector is the fundamental
     partials_vector.resize(64);
     for(int i=0; i<(int)partials_vector.size(); ++i){
-        if(i%2==0){
+        if(i%3==0){
             partials_vector[i] = 1.0; // odd harmonics 100%
         }else{
             partials_vector[i] = 0.0; // no even harmonics
@@ -76,7 +85,7 @@ SynthGlobal::SynthGlobal(){
     
     // CONTROLS ------------------------------------------------------------------------------------
     ui_osc.setName("oscillator");
-    ui_osc.add(table_ctrl.set("table index", 3.0f, 0.0f, (float)(wavetable.size()-1) ) );
+    ui_osc.add(table_ctrl.set("table index", 6.0f, 0.0f, (float)(wavetable.size()-1) ) );
     table_ctrl.enableSmoothing(200.0f);
 
     ui_filter.setName("filter");

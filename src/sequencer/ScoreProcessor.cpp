@@ -63,7 +63,6 @@ void pdsp::ScoreProcessor::process(int const &bufferSize) noexcept{
         //---------------------------------
 
         Clockable::globalBarPosition = playHead;
-        Clockable::playing = true;
         
     }else{
         // on pause we send trigger offs to gates and set all the sequencers to control rate
@@ -141,4 +140,23 @@ double pdsp::ScoreProcessor::getMaxBars() const{
 
 bool pdsp::ScoreProcessor::isPlaying(){
     return playing.load();
+}
+
+
+void pdsp::ScoreProcessor::init ( int sections, int sequences, float tempo ){
+    
+    this->sections.resize( sections );
+    for ( int s=0; s<sections; ++s ){
+        this->sections[s].resizeCells(sequences);
+        this->sections[s].autoInitCells();
+    }
+    
+    setTempo(tempo);
+    
+}
+
+void pdsp::ScoreProcessor::launchMultipleCells(int index, bool quantizeLaunch, double quantizeGrid) {
+    for (int i=0; i<(int)sections.size(); ++i){
+        sections[i].launchCell(index, quantizeLaunch, quantizeGrid );
+    }
 }

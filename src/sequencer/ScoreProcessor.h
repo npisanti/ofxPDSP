@@ -11,6 +11,7 @@
 #include "ScoreSection.h"
 #include <vector>
 
+
 namespace pdsp{
     /*!
     @brief Contains all the needed framework for generating and sequencing messages for the DSPs
@@ -92,6 +93,26 @@ public:
     @brief You directly access the ScoreSections with this vector.
     */     
     std::vector<ScoreSection> sections;
+
+
+    /*!
+    @brief sets the sections number and the number of cells for each section, and assign a fresh new sequence to each cell. It also the tempo of the music. All the behaviors for each cells are set to pdsp::Behavior::Loop, the quantizing is deactivated by default. Using this method is not mandatory, you can set the tempo with setTempo(), directly resize the sections array and set your own cells with setCell()
+    @param sections number of sections
+    @param sequences number of cells for each section
+    @param tempo tempo to set
+    */ 
+    void init ( int sections, int sequences, float tempo );
+
+    
+    /*!
+    @brief Immediately launch the cells at the selected index of each section, with the given launch timings options. Thread-safe. 
+    @param[in] index index of the patter to set inside the ScoreSection. This has to be a valid index. A negative index stops the playing of this section (you can perform quantized stopping if quantizeLaunch = true ).
+    @param[in] quantizeLaunch if true the next pattern launch is quantized to the bars, if false the pattern is lanched as soon as possible.  If not given as argument, it is assumed false.
+    @param[in] quantizeGrid if the launch is quantized this is the grid division for quantizing, in bars.  If not given as argument, it is assumed 1.0 (one bar).
+    
+    */         
+    void launchMultipleCells(int index, bool quantizeLaunch=false, double quantizeGrid=1.0);
+
 
 protected:
     void prepareToPlay( int expectedBufferSize, double sampleRate ) override;

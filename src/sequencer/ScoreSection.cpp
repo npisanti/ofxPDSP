@@ -7,7 +7,7 @@
 
 pdsp::GateSequencer pdsp::ScoreSection::invalidGate = pdsp::GateSequencer();
 pdsp::ValueSequencer pdsp::ScoreSection::invalidValue = pdsp::ValueSequencer();
-
+pdsp::Sequence pdsp::ScoreSection::dummySeq  = pdsp::Sequence();
 
 pdsp::ScoreSection::ScoreSection() {
     
@@ -113,7 +113,7 @@ void pdsp::ScoreSection::launchCell( int index, bool quantizeLaunch, double quan
 }
 
 
-void pdsp::ScoreSection::setCell( int index, Sequence* sequence, SeqChange* behavior ){
+void pdsp::ScoreSection::setCell( int index, Sequence* sequence, SeqChange* behavior, std::string label ){
     if(index>=0){
         if(index>=(int)patterns.size()){
             resizeCells(index+1);
@@ -122,6 +122,7 @@ void pdsp::ScoreSection::setCell( int index, Sequence* sequence, SeqChange* beha
         //patternMutex.lock();
         patterns[index].sequence = sequence;
         patterns[index].nextCell  = behavior;
+        patterns[index].label = label;
         //patternMutex.unlock();
     }
 }
@@ -132,6 +133,18 @@ void pdsp::ScoreSection::setChange( int index, SeqChange* behavior ){
         patterns[index].nextCell  = behavior;
         //patternMutex.unlock();
     }
+}
+
+void pdsp::ScoreSection::setLabel( int index, std::string label ){
+    if(index < 0) index = 0;
+    if(index >= (int) patterns.size()) index = patterns.size() -1;
+    patterns[index].label = label;
+}
+
+std::string pdsp::ScoreSection::getLabel( int index){
+    if(index < 0) index = 0;
+    if(index >= (int) patterns.size()) index = patterns.size() -1;
+    return patterns[index].label;
 }
 
 //remember to check for quantizeGrid to be no greater than pattern length
@@ -475,3 +488,49 @@ void pdsp::ScoreSection::setPattern( int index, Sequence* sequence, SeqChange* b
 void pdsp::ScoreSection::setBehavior( int index, SeqChange* behavior ){
     setChange(index, behavior);
 }
+
+
+void pdsp::ScoreSection::autoInitCells(){
+    
+    seqs.resize( patterns.size() );
+    for( int i=0; i<(int)seqs.size(); ++i){
+        // ADD SEQ CLEAR METHOD <----------------------------------------------------
+        //seqs[i].setLength(1.0);
+        //seqs[i].setDivision(16.0);
+        //seqs[i].begin();
+        //seqs[i].end();
+        setCell(i, &seqs[i], pdsp::Behavior::Loop); 
+    }
+    
+}
+
+pdsp::Sequence& pdsp::ScoreSection::sequence( int index ){
+    if(index<0) index = 0;
+    if(index>=patterns.size()) index = patterns.size() - 1;
+    if (patterns[index].sequence == nullptr){
+        std::cout<<"[pdsp] warning, asking for sequence not set yet, returning dummy sequence for avoiding fatal error\n";
+        pdsp_trace();
+        return dummySeq;
+    }else{
+        return *(patterns[index].sequence);
+    }
+}
+
+void pdsp::ScoreSection::behavior ( int index, pdsp::SeqChange* newBehavior ){
+    if( index < 0) index = 0;
+    if( index >= (int) patterns.size() ) index = patterns.size() -1;
+    setChange( index, newBehavior );
+}
+
+void pdsp::ScoreSection::quantize ( int index, double quantizeTime) {
+    if( index < 0) index = 0;
+    if( index >= (int) patterns.size() ) index = patterns.size() -1;
+    enableQuantization(index, quantizeTime );
+}
+
+void pdsp::ScoreSection::label ( int index, std::string name ) {
+    if( index < 0) index = 0;
+    if( index >= (int) patterns.size() ) index = patterns.size() -1;
+    patterns[index].label = name;
+}
+

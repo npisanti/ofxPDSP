@@ -57,7 +57,11 @@ public:
     @param[in] channelsNum number of channels
     */  
     void resize( int channelsNum );
-        
+    
+    /*!
+    @brief all the connectio patched to this will be processed but not outputted. Patch your Units and modules to this channels if you need them to be always active for some reason;
+    */  
+    PatchNode blackhole;
 };
         
         

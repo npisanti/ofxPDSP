@@ -1,4 +1,16 @@
 
+v0.1.3.7
+    - adds ofxPDSPEngineGraphics for easy monitoring of patterns, it is included by standard in the engine
+    - ofxPDSPEngineGraphics has also a keys( { {...}, {...}, {...}, ... } ) method for easy sequence launch with pc keys
+    - adds new methods to pdsp::WaveTable: addSawWave(), addSquareWave(), addTriangleWave(), addSineWave()
+    - adds test( bool testingActive ) method to the engine for easy testing
+    - adds blackhole() input to the engine for continously processing some modules without outputting any sound
+        ( useful for audio input analysis )
+    - adds init( int sections, int sequences, float tempo) method to pdsp::ScoreProcessor for easily setting it up
+    - adds ofxScoreSectionPlotter
+    - adds ofxPDSPComputerKeyboard for playing notes with your keyboard, adds example-wavesynth-pc-keys
+    - minor fixes and tweaks
+
 v0.1.3.6
     - adds example-basics1-patching
     - adds example-basics2-control
