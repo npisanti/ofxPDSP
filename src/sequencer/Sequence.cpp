@@ -165,9 +165,24 @@ void pdsp::Sequence::trigVector( std::vector<float> vect, double gateLength, int
     double time=0.0;
     double offTime = gateLength * divMult;
     for (const float & value : vect){
-        if( value >= 0.0f){
+        if( value > 0.0f){
             nextScore.push_back(  pdsp::ScoreMessage( time,    value, outputIndex) );            
             nextScore.push_back(  pdsp::ScoreMessage( offTime , 0.0f, outputIndex) );            
+        }
+        time    += divMult;
+        offTime += divMult;
+    }
+        
+}
+
+void pdsp::Sequence::trigVector( std::vector<float> vect, double gateLength, int outputIndex, float multiply) {
+    
+    double time=0.0;
+    double offTime = gateLength * divMult;
+    for (const float & value : vect){
+        if( value > 0.0f){
+            nextScore.push_back(  pdsp::ScoreMessage( time,    value*multiply, outputIndex) );            
+            nextScore.push_back(  pdsp::ScoreMessage( offTime , 0.0f,          outputIndex) );            
         }
         time    += divMult;
         offTime += divMult;

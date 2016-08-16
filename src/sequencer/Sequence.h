@@ -133,12 +133,21 @@ namespace pdsp{
         void messageVector( std::vector<float> vect, int outputIndex = 0);
 
         /*!
-        @brief call begin() before calling this function. This function will add all the values of the array with the given division and will also add a 0.0f value after each value. The distange of the 0.0f value is given by gateLength.
+        @brief call begin() before calling this function. This function will add all the values of the array with the given division and will also add a 0.0f value after each value. The distange of the 0.0f value is given by gateLength. Only values greater than 0.0f are used.
         @param[in] vect std::vector<float> of values to add to the sequence, negative values will be ignored
         @param[in] gateLength length of gate = division * gateLength
         @param[in] outputIndex the output of the ScoreSection that will operate with the message, 0 if not given
         */
         void trigVector( std::vector<float> vect, double gateLength, int outputIndex = 0);
+
+        /*!
+        @brief call begin() before calling this function. This function will add all the values of the array with the given division and will also add a 0.0f value after each value. The distange of the 0.0f value is given by gateLength. Only values greater than 0.0f are used. All the values are multiplied for multiply.
+        @param[in] vect std::vector<float> of values to add to the sequence, negative values will be ignored
+        @param[in] gateLength length of gate = division * gateLength
+        @param[in] outputIndex the output of the ScoreSection that will operate with the message, 0 if not given
+        @param[in] multiply multiply all the messages for this value, useful for scaling for external sequencers
+        */
+        void trigVector( std::vector<float> vect, double gateLength, int outputIndex, float multiply );
         
 
         /*!

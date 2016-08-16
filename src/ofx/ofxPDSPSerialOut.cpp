@@ -139,7 +139,9 @@ pdsp::ExtSequencer& ofxPDSPSerialOut::channel(int channelNumber) {
 }
 
 void ofxPDSPSerialOut::linkToMessageBuffer(pdsp::MessageBuffer &messageBuffer) {
-    cout<<"linking message buffer\n";
+#ifndef NDEBUG
+    cout<<"[pdsp] linking message buffer\n";
+#endif
     inputs.push_back(&messageBuffer);
     channels.push_back(selectedChannel);
 }
