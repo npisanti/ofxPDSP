@@ -32,8 +32,9 @@ struct BassPattern : public pdsp::Sequence{
     // this returns the pitches for the generative routine
     // returns the pitches from the sequence the first, second and third bar
     // on the fourth bar the second part of the returned pitches will be random values
+    // counter() returns the value of an internal counter that measure how many time the sequence has been looped
     float pfun(int index){
-        if(index>4 && counter == 3){
+        if(index>4 && counter() == 3){
             float nextPitch = static_cast<float> (pdspDice(12) + 41.0f); 
             return nextPitch;            
         }else{
@@ -44,8 +45,7 @@ struct BassPattern : public pdsp::Sequence{
 
     //inits the pattern and set the pitches to use
     BassPattern(){
-        updateScoreDraw = false;
-        counter = 0;
+
         sequence.resize(8);
         sequence[0] = 29.0f;
         sequence[1] = 31.0f;
@@ -57,6 +57,8 @@ struct BassPattern : public pdsp::Sequence{
         sequence[7] = 29.0f;
         
         code = [&] () noexcept {
+            if (counter() == 4 ) resetCount(); // pdsp::Sequence has an internal counter that you can reset with resetCount() 
+                                            // this counter is automatically reset on Sequence change or launch
 
             shuffleSequence();            
 
@@ -74,17 +76,11 @@ struct BassPattern : public pdsp::Sequence{
             note(13.0,  0.5f,   pfun(7),    0.0f,    gate_short);
            
             end();
-            
-            if(++counter == 4) counter = 0;
-
-            updateScoreDraw = true; // now is safe to update the bass pattern graphics            
+                      
         };
         
     }
 
-    bool updateScoreDraw; // flag for thread-safe pattern graphics visualization
-    
-    int counter;
     const double gate_long =  0.95;  // a bit more than 1/16       
     const double gate_short = 0.4; // almost 1/32th
     vector<float> sequence;

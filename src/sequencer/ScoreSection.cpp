@@ -106,7 +106,8 @@ void pdsp::ScoreSection::launchCell( int index, bool quantizeLaunch, double quan
     }
     this->launchedPattern = index;
     
-
+    if(patterns[index].sequence != nullptr ){ patterns[index].sequence->resetCount(); }
+    
     atomic_meter_next.store(index);
     this->launchingCell = true;
     //patternMutex.unlock();
@@ -277,9 +278,13 @@ void pdsp::ScoreSection::onSchedule() noexcept{
     scoreIndex = 0;
     
     //clip change routines--------------------------------------------------------------------------
+    bool reset = ( patternIndex != scheduledPattern ) ? true : false;
+    
     patternIndex = scheduledPattern; 
 
     if( patternIndex >=0 && patterns[patternIndex].sequence!=nullptr){ //if there is a pattern, execute it's generative routine
+        if(reset) patterns[patternIndex].sequence->resetCount();
+        
         patterns[patternIndex].sequence->executeGenerateScore( );
         
         atomic_meter_current.store(patternIndex);

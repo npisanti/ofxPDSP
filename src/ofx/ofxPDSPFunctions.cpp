@@ -13,6 +13,21 @@ float p2f( float pitch){
     return pdsp::PitchToFreq::eval( pitch );
 }
 
+int highestPartial( float pitch ) {
+    
+    float freq = p2f(pitch);
+
+    int partial = 1;
+    float partialFreq = freq;
+    
+    while( partialFreq < 11050.0f ){
+        partial++;
+        partialFreq = freq * (float)partial;
+    } 
+    
+    return partial;
+}
+
 void setReferenceFrequency(float frequency){
     pdsp::PitchToFreq::setTuning(frequency);
 }

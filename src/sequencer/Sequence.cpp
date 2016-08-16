@@ -7,7 +7,7 @@ pdsp::Sequence::Sequence( double stepDivision ){
     setLength(1.0);
     nextScore.reserve(PDSP_PATTERN_MESSAGE_RESERVE_DEFAULT);
     code = []() noexcept {};
-    
+    loopCounter = 0;
     id = 1;
 }
 
@@ -187,10 +187,20 @@ void pdsp::Sequence::executeGenerateScore() noexcept {
         id = (id == 1) ? 2 : 1;
         modified = false;
     }
+    loopCounter++;
 }
 
 int pdsp::Sequence::getChangeID() const {
     return id;
+}
+
+
+int pdsp::Sequence::counter() const {
+    return loopCounter;
+}
+
+void pdsp::Sequence::resetCount() {
+    loopCounter = 0;
 }
 
 pdsp::SeqChange::SeqChange(){

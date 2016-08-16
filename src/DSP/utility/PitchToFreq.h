@@ -20,8 +20,10 @@ class PitchToFreq : public Formula {
     
 public:
 
+    PitchToFreq();
+
     /** 
-    @brief static function that set the reference tuning frequency, standard is 440hz
+    @brief static function that sets the reference tuning frequency, standard is 440hz
     @param[in] tuningFrequency reference frequency
     */   
     static void setTuning(float tuningFrequency);
@@ -31,6 +33,11 @@ public:
     @param[in] value pitch to convert to freq
     */    
     static float eval(float value);
+    
+    /** 
+    @brief static function that returns the reference tuning frequency
+    */
+    static float getTuningFrequency();
            
 private:
         
@@ -39,6 +46,7 @@ private:
     void formulaAudioRate(float* &output, const float* &input, const int &bufferSize) noexcept override;
     
     static float freqCalculationMultiplier;
+    static float tuning;
     
 };
             

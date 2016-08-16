@@ -58,14 +58,6 @@ namespace pdsp{
     inline_f void vect_calculateIncrement (float* incBuffer, const float* pitchBuffer, const float incMultiplier, const int len){
         
         ofx::transform_n(incBuffer, pitchBuffer, len, calc_inc_kernel(incMultiplier));
-       
-        
-        /*for (int i=0; i<len; ++i) {
-            incBuffer[i] = powf(2.0f, incBuffer[i]);
-        }
-        Aeq_AxS(incBuffer, incMultiplier, len);
-        
-        */
    
     }
     

@@ -46,13 +46,16 @@ void ofxPDSPRelease();
 */
 float p2f( float pitch);
 
+/*!
+@brief take a pitch value as input an returns the highest partial before 20000hz of a waweform with that base pitch. Useful for initializing pdsp::WaveTable, to avoid aliasing use the pitch of the maximum note you want to use with that oscillator. This function is calibrated for 44.1 kHz sapling rate.
+*/
+int highestPartial( float pitch );
 
 /*!
 @brief set the reference tuning frequency. Standard reference tuning is 440hz.
 @param[in] frequency new reference tuning
 */
 void setReferenceFrequency(float frequency);
-
 
 /*!
 @brief returns a float value you can use to multiply your signal for panning when patching to a left channel

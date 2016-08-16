@@ -5,17 +5,17 @@ SynthGlobal::SynthGlobal(){
     
     // WAVETABLE OPERATION EXAMPLE -----------------------------------------------------------------
     // wavetable.setVerbose( true ); // activate logs of waveform loadings and size increments
-   
+    
     wavetable.initLength( 600 ); // 600 samples is AKWF sample length
 
-
-    // methods for classic waveforms, 64 partials used here
-    wavetable.addSawWave( 64 );
-    wavetable.addSquareWave( 64 );
-    wavetable.addTriangleWave( 64 );
+    // methods for classic waveforms, you can give the number of partials of the waveform
+    // more partial = fuller sound but with more aliasing, less partial = duller but with less aliasing
+    // highestPartial( float pitch) gives you the max number of partial before aliasing at a given pitch
+    wavetable.addSawWave( highestPartial(60.0f) ); // this saw wave won't alias before C3=60
+    wavetable.addSquareWave( highestPartial(72.0f) ); // this saw wave won't alias before C4=72
+    wavetable.addTriangleWave( 64 ); // Triangle wave with 64 partials
     wavetable.addSineWave();
    
-
     // adding waveforms from samples
     // the old trusty Adventure Kid WaveForms   
     // http://www.adventurekid.se/akrt/waveforms/adventure-kid-waveforms/

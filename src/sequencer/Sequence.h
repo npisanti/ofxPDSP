@@ -50,6 +50,11 @@ namespace pdsp{
         @brief returns the currently set time division, for example 8.0 is 1/8th. 
         */
         double division() const;
+      
+        /*!
+        @brief returns how many time this Sequence has been restarted (0 if it is the first time it starts). This internal counter can be reset to zero with resetCount().
+        */
+        int counter() const;
 
         /*!
         @brief sets the time division and length of the sequence.
@@ -151,6 +156,11 @@ namespace pdsp{
         @brief if the returned number is different than the last one you've got, then a score change happened and now is safe to access the score
         */
         int getChangeID() const;
+        
+        /*!
+        @brief resets the internal counter you can get with counter(). This counter is resetted automatically when there is a change from a sequence to another or when a Sequence is launched manually.
+        */
+        void resetCount();
     
     private:
         void executeGenerateScore() noexcept;
@@ -165,6 +175,7 @@ namespace pdsp{
 
         int id;
 
+        int loopCounter;
     };
     
     
