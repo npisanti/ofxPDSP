@@ -32,11 +32,13 @@ namespace pdsp {
             ofx::m_store( outputBuffer + n , result1);
             ofx::m_store( outputBuffer + n +4, result2);
         }
-#endif
+#else
         
         for (; n<len; ++n) {
             outputBuffer[n] = (phaseBuffer[n] * 2.0f) - 1.0f;
         }
+#endif
+
     }
     
     

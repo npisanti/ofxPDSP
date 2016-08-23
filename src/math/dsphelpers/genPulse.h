@@ -70,7 +70,7 @@ namespace pdsp {
             ofx::m_store( outputBuffer + n , result1);
             ofx::m_store( outputBuffer + n +4, result2);
         }
-        #endif
+        #else
         
         for (; n<len; ++n) {
             if(phaseBuffer[n]<=pwBuffer[n]){
@@ -79,6 +79,8 @@ namespace pdsp {
                 (*(outputBuffer+n)) = -1.0f;
             }
         }
+        #endif
+
     }
     
     
@@ -106,7 +108,7 @@ namespace pdsp {
             ofx::m_store( outputBuffer + n , result1);
             ofx::m_store( outputBuffer + n +4, result2);
         }
-#endif
+#else
         
         for (; n<len; ++n) {
             if(phaseBuffer[n]<=pw){
@@ -115,6 +117,9 @@ namespace pdsp {
                 (*(outputBuffer+n)) = -1.0f;
             }
         }
+#endif
+
+
     }
     
 }

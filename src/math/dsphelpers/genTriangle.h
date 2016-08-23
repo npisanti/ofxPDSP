@@ -40,11 +40,14 @@ namespace pdsp {
             ofx::m_store( outputBuffer + n +4, result2);
             
         }
-#endif
-        
+
+#else
         for (; n<len; ++n) {
             outputBuffer[n] = ((fabs((phaseBuffer[n] * 2.0f) - 1.0f))*2.0f) - 1.0f;
         }
+#endif        
+        
+        
     }
     
     inline_f void genTriangleUnipolar(float* outputBuffer, const float* phaseBuffer, int len){
@@ -71,11 +74,13 @@ namespace pdsp {
             ofx::m_store( outputBuffer + n +4, result2);
             
         }
-#endif
+#else
         
         for (; n<len; ++n) {
             outputBuffer[n] = ((fabs((phaseBuffer[n] * 2.0f) - 1.0f))*2.0f) - 1.0f;
         }
+#endif
+
     }
     
     
