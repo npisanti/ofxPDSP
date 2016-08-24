@@ -1,5 +1,5 @@
+ofxSIMDFloats
 ofxMidi
 ofxPDSP
-ofxSIMDFloats
-ofxGui
 ofxOsc
+
