@@ -308,3 +308,7 @@ void ofxPDSPEngine::test( bool testingActive, float testingDB ){
         0.0f >> testAmp.in_mod();
     }
 }
+
+ofSoundStream & ofxPDSPEngine::getInputStream() {
+    return inputStream;
+}

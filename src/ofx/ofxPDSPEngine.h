@@ -140,6 +140,11 @@ public:
     */       
     void test( bool testingActive, float testingDB=-12.0f );
     
+    /*!
+    @brief returns the initialized input stream for using it with other input processors / analyzers
+    */    
+    ofSoundStream & getInputStream();
+    
 private:
     ofSoundStream inputStream;
     ofSoundStream outputStream;

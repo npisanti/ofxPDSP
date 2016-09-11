@@ -66,7 +66,7 @@ public:
     @param quantize true for activating the quantization when launching sequences with the key
     @param quantizeTime grid divison of quantization when launching sequences with the key
     */             
-    void keys( std::initializer_list<std::initializer_list<char>> initArray, char stopAndPlayKey, bool quantize = false, double quantizeTime = 1.0 );
+    void keys( std::initializer_list<std::initializer_list<char>> initArray, int stopAndPlayKey, bool quantize = false, double quantizeTime = 1.0 );
     
     /*!
     @brief disables the key control

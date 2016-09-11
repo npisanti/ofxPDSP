@@ -139,7 +139,7 @@ void ofxPDSPEngineGraphics::draw( ) {
 }
 
 
-void ofxPDSPEngineGraphics::keys( std::initializer_list<std::initializer_list<char>> initArray, char stopAndPlayKey, bool quantize, double quantizeTime ) {
+void ofxPDSPEngineGraphics::keys( std::initializer_list<std::initializer_list<char>> initArray, int stopAndPlayKey, bool quantize, double quantizeTime ) {
     
     int s = 0;
     for(const std::initializer_list<char> & list : initArray){
