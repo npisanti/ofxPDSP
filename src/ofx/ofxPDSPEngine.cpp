@@ -309,6 +309,3 @@ void ofxPDSPEngine::test( bool testingActive, float testingDB ){
     }
 }
 
-ofSoundStream & ofxPDSPEngine::getInputStream() {
-    return inputStream;
-}
