@@ -18,7 +18,6 @@
 #include "ofx/ofxPDSPComputerKeyboard.h"
 
 #include "ofx/ofxPDSPSerialOut.h"
-#include "ofx/ofxPDSPOscOut.h"
 
 #include "ofx/ofxPDSPParameters.h"
 #include "ofx/ofxPDSPValue.h"
