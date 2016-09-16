@@ -1,14 +1,14 @@
 
-#include "ofxPDSPAddonBridge.h"
+#include "ofxPDSPWrapper.h"
 
-ofxPDSPAddonBridge::ofxPDSPAddonBridge() {
+ofxPDSPWrapper::ofxPDSPWrapper() {
     
     maxChannels = 0;
     buffer = nullptr;
 
 }
 
-void ofxPDSPAddonBridge::setChannels ( int inputs, int outputs ) {
+void ofxPDSPWrapper::setChannels ( int inputs, int outputs ) {
     
     if(inputs<0) inputs = 0;
     if(outputs<0) outputs = 0;
@@ -35,25 +35,25 @@ void ofxPDSPAddonBridge::setChannels ( int inputs, int outputs ) {
     
 }
 
-pdsp::InputNode & ofxPDSPAddonBridge::in( int num ) {
+pdsp::InputNode & ofxPDSPWrapper::in( int num ) {
     if( num<0 ) num = 0;
     if( num>=(int)inputs.size() ) num = inputs.size() - 1 ;
     
     return inputs[num];
 }
 
-pdsp::OutputNode & ofxPDSPAddonBridge::out( int num ) {
+pdsp::OutputNode & ofxPDSPWrapper::out( int num ) {
     if( num<0 ) num = 0;
     if( num>=(int)outputs.size() ) num = outputs.size() - 1 ;
     
     return outputs[num];    
 }
 
-pdsp::OutputNode & ofxPDSPAddonBridge::out_silent(){
+pdsp::OutputNode & ofxPDSPWrapper::out_silent(){
     return dummyOut;
 }
 
-void ofxPDSPAddonBridge::process(int bufferSize) noexcept {
+void ofxPDSPWrapper::process(int bufferSize) noexcept {
     
     ofx_Aeq_Zero( buffer, bufferLength);
     
@@ -93,12 +93,12 @@ void ofxPDSPAddonBridge::process(int bufferSize) noexcept {
 }
 
 
-void ofxPDSPAddonBridge::prepareUnit( int expectedBufferSize, double sampleRate ) {
+void ofxPDSPWrapper::prepareUnit( int expectedBufferSize, double sampleRate ) {
     if (buffer != nullptr){
         ofx_deallocate_aligned(buffer);
     }
     if( maxChannels == 0){
-        std::cout<<"[pdsp] warning, ofxPDSPAddonBridge setup() not executed\n";
+        std::cout<<"[pdsp] warning, ofxPDSPWrapper setup() not executed\n";
         pdsp::pdsp_trace();
     }
     bufferLength = expectedBufferSize*maxChannels;
@@ -106,7 +106,7 @@ void ofxPDSPAddonBridge::prepareUnit( int expectedBufferSize, double sampleRate 
 }
 
 
-void ofxPDSPAddonBridge::releaseResources()  {
+void ofxPDSPWrapper::releaseResources()  {
     if (buffer != nullptr){
         ofx_deallocate_aligned(buffer);
     }    

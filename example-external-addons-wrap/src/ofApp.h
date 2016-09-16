@@ -4,7 +4,7 @@
 #include "ofxPDSP.h"
 
 
-class AddonWrapper : public ofxPDSPAddonBridge {
+class AddonWrapper : public ofxPDSPWrapper {
 
 public:
     void setup( int bufferSize );
