@@ -3,6 +3,7 @@
 #include <iostream>
 
 pdsp::ExternalInput::ExternalInput(){
+    buffer = nullptr;
     output.buffer = nullptr;
     output.state = AudioRate;
     addOutput("signal", output);

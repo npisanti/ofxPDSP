@@ -26,6 +26,8 @@
 #include "ofx/ofxScoreSectionPlotter.h"
 #include "ofx/ofxPDSPEngineGraphics.h"
 
+#include "ofx/ofxPDSPAddonBridge.h"
+
 #include "ofx/ofxPDSPFunctions.h"
 
 #include "ofx/ofxPDSPEngine.h"
