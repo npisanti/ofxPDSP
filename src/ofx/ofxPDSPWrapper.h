@@ -1,5 +1,5 @@
 
-// ofxPDSPAddonWrapper.h
+// ofxPDSPWrapper.h
 // ofxPDSP
 // Nicola Pisanti, MIT License, 2016
 
