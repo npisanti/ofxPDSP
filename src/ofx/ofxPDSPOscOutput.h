@@ -22,7 +22,7 @@
 
 
 /*!
-@brief utility class manage serial output ports and send bytes from the internal generative music system
+@brief utility class manage OSC output from the sequencer
 */
 class ofxPDSPOscOutput : public pdsp::ExtSequencer, public pdsp::Preparable {
 

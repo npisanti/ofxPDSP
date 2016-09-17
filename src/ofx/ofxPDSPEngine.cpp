@@ -23,6 +23,7 @@ ofxPDSPEngine::ofxPDSPEngine(){
     controllers.clear();
     hasMidiIn = false;
     hasExternalOut = false;
+    hasOscIn = false;
 
     graphics.setParent( score );
 
@@ -193,6 +194,12 @@ void ofxPDSPEngine::close(){
         } 
     }
 
+    if(hasOscIn){
+        for( ofxPDSPOscInput * &in : oscIns){
+            in->close();
+        } 
+    }
+    
     if(hasExternalOut){
         for( pdsp::ExtSequencer * &out : externalOuts ){
             out->close();
@@ -227,6 +234,12 @@ void ofxPDSPEngine::audioOut(ofSoundBuffer &outBuffer) {
         for(int i=0; i<(int)controllers.size(); ++i){
             controllers[i]->processMidi( *(controllerLinkedMidis[i]), bufferSize );
         }
+    }
+    
+    if(hasOscIn){
+        for( ofxPDSPOscInput * &in : oscIns){
+            in->processOsc( bufferSize );
+        } 
     }
     
     // external outputs processing
@@ -299,6 +312,22 @@ void ofxPDSPEngine::addExternalOut( pdsp::ExtSequencer & externalOut ) {
         externalOuts.push_back( &externalOut );
     }
     hasExternalOut = true;
+}
+
+void ofxPDSPEngine::addOscInput( ofxPDSPOscInput & oscInput ) {
+   
+    bool oscInputFound = false;
+    for( ofxPDSPOscInput * &ptr : oscIns ){
+        if( ptr == &oscInput ){
+            oscInputFound = true;
+            cout<<"[pdsp] warning! you have already added this OSC input to the engine, you shouldn't add it twice\n";
+            pdsp::pdsp_trace();
+        } 
+    }
+    if( ! oscInputFound ){
+        oscIns.push_back( &oscInput );
+    }
+    hasOscIn = true;    
 }
 
 void ofxPDSPEngine::test( bool testingActive, float testingDB ){

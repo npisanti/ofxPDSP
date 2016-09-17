@@ -43,6 +43,7 @@ void ofxPDSPMidiIn::openPort(int index){
         midiIn_p = &midiIn;
         midiIn_p->addListener(this); // add ofApp as a listener
         connected = true;
+        bufferChrono = chrono::high_resolution_clock::now();
     }
 }
 
@@ -101,7 +102,8 @@ void ofxPDSPMidiIn::processMidi( const int &bufferSize ) noexcept{
         
         //now sanitize messages to bufferSize
         for(_ofxPositionedMidiMessage &msg : *readVector){
-            if(msg.sample >= bufferSize){ msg.sample = bufferSize-1; }
+            if(msg.sample >= bufferSize){ msg.sample = bufferSize-1; } else 
+            if(msg.sample < 0 ) { msg.sample = 0; }
         }            
     }
 }

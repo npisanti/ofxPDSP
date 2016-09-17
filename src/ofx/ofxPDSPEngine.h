@@ -14,6 +14,7 @@
 #include "ofxPDSPMidiIn.h"
 #include "ofxPDSPMidiOut.h"
 #include "ofxPDSPSerialOut.h"
+#include "ofxPDSPOscInput.h"
 #include "ofxPDSPEngineGraphics.h"
 #include "ofxPDSPFunctions.h"
 
@@ -86,6 +87,13 @@ public:
     Adds a midi controller and a relative midi input to the engine, making them active. You can use the same ofxPDSPMidiIn for multiple controllers, that are parsing the midi data in different way, for example if you have a keyboard with some knob and faders you can use the same midiIn with a ofxPDSPMidiKeys for the key, pitch bend and pressure output and a ofxPDSPMidiControls for the knobs and faders.
     */
     void addMidiController( ofxPDSPController & controller, ofxPDSPMidiIn & midiIn );
+
+    /*!
+    @brief adds an OSC input to the engine, making it active.
+    @param[in] oscInput osc input object to activate
+    */
+    void addOscInput( ofxPDSPOscInput & oscInput );
+
 
     /*!
     @brief adds a midi output to the engine, making it active.
@@ -162,7 +170,10 @@ private:
     std::vector<ofxPDSPMidiIn*>         controllerLinkedMidis;
     bool                                hasMidiIn;
 
-    std::vector<pdsp::ExtSequencer*>          externalOuts;  
+    std::vector<ofxPDSPOscInput*>       oscIns;
+    bool                                hasOscIn;
+
+    std::vector<pdsp::ExtSequencer*>    externalOuts;  
     bool                                hasExternalOut;
     
     int state;
