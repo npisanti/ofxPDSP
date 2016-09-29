@@ -1,4 +1,4 @@
 ofxMidi
+ofxOsc
 ofxPDSP
 ofxSIMDFloats
-ofxOsc

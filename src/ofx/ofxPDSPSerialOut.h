@@ -6,8 +6,11 @@
 #ifndef OFXPDSPMIDI_PDSPSERIALOUT_H_INCLUDED
 #define OFXPDSPMIDI_PDSPSERIALOUT_H_INCLUDED
 
-#include "ofxMidi.h"
 #include "ofMain.h"
+
+#ifndef TARGET_OF_IOS
+
+#include "ofxMidi.h"
 #include <chrono>
 #include "ofxPositionedMidiMessage.h"
 #include <algorithm>
@@ -17,7 +20,6 @@
 #include <atomic>
 #include "../DSP/pdspCore.h"
 #include "../sequencer/ScoreSection.h"
-
 
 
 
@@ -154,5 +156,6 @@ private:
 
 };
 
+#endif // TARGET_OF_IOS
 
 #endif //OFXPDSPMIDI_PDSPSERIALOUT_H_INCLUDED

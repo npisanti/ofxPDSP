@@ -293,10 +293,11 @@ void  ofxPDSPEngine::addMidiOut( ofxPDSPMidiOut & midiOut ){
     addExternalOut( midiOut );
 }
 
-
+#ifndef TARGET_OF_IOS
 void ofxPDSPEngine::addSerialOut( ofxPDSPSerialOut & serialOut ) {
-    addExternalOut( serialOut );
+    addExternalOut( serialOut ); 
 }
+#endif
 
 void ofxPDSPEngine::addExternalOut( pdsp::ExtSequencer & externalOut ) {
    

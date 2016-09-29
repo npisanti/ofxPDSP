@@ -101,11 +101,13 @@ public:
     */
     void addMidiOut( ofxPDSPMidiOut & midiOut );
 
+#ifndef TARGET_OF_IOS
     /*!
     @brief adds a serial output to the engine, making it active.
     @param[in] serialOut serial out object to activate
     */
     void addSerialOut( ofxPDSPSerialOut & serialOut );
+#endif
     
     /*!
     @brief adds an external output to the engine, like an ofxPDSPSerialOut or an ofxPDSPMidiOut making it active.

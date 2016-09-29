@@ -1,6 +1,8 @@
 
 #include "ofxPDSPSerialOut.h"
 
+#ifndef TARGET_OF_IOS
+
 #define OFXPDSP_SERIALOUTPUTCIRCULARBUFFERSIZE 1024
 
 
@@ -300,6 +302,8 @@ void ofxPDSPSerialOut::closeDaemon(){
     daemonThread.detach();
 
 }
-    
+
+                        
+#endif // TARGET_OF_IOS
     
     
