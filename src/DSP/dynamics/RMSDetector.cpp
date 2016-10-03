@@ -3,12 +3,14 @@
 
 
 
-pdsp::RMSDetector::RMSDetector(float window_ms){
+pdsp::RMSDetector::RMSDetector(){
     addInput("signal", input);
     addOutput("signal", output);
     updateOutputNodes();
 
-    setWindowTime(window_ms);
+    autoSetWindow = true;
+    
+    //setWindowTime(window_ms);
 
     squaresDividedBuffer = nullptr;
     
@@ -16,9 +18,6 @@ pdsp::RMSDetector::RMSDetector(float window_ms){
         prepareToPlay(globalBufferSize, globalSampleRate);
     }  
 }
-
-
-pdsp::RMSDetector::RMSDetector() : RMSDetector(50.0f) {}
 
 
 pdsp::Patchable& pdsp::RMSDetector::in_signal(){
@@ -44,6 +43,12 @@ pdsp::Patchable& pdsp::RMSDetector::set(float window_ms){
 }
 
 void pdsp::RMSDetector::prepareUnit( int expectedBufferSize, double sampleRate ) {
+    
+    if(autoSetWindow){ // sets window based on buffer size
+        this->window_ms = (double) expectedBufferSize * ( 1000.0 / sampleRate );
+        bufferLength = expectedBufferSize;
+    }
+    
     sampleRateMultiplier = sampleRate * 0.001f;
     updateWindowBuffer();
 }
@@ -56,6 +61,7 @@ void pdsp::RMSDetector::releaseResources () {
 }
 
 void pdsp::RMSDetector::setWindowTime(float window_ms){
+    autoSetWindow = false;
     this->window_ms = window_ms;
     bufferLength = static_cast<int>(window_ms * sampleRateMultiplier);    
     

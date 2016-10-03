@@ -13,7 +13,7 @@ namespace pdsp{
     /*!
     @brief An RMS signal detector.
     
-    This Unit makes for each samples the Root Mean Squared of the values inside a given time window. It is useful as first step for dynamic processing. Default window time is 50ms .
+    This Unit makes for each samples the Root Mean Squared of the values inside a given time window. It is useful as first step for dynamic processing. If set(float window_ms) is not used the window is as large as the buffersize.
 
     */
     
@@ -21,7 +21,6 @@ class RMSDetector : public Unit{
 
 public:        
     RMSDetector();
-    RMSDetector(float maxWindowTimeMs);
 
     /*!
     @brief sets the window millisecond value and returns this unit ready to be patched. An array of values will be deallocated and the allocated again so this is ABSOLUTELY not thread-safe to run in the audio-thread. 
@@ -73,6 +72,8 @@ private:
     float   sampleRateMultiplier;
     
     std::atomic<float> meter;
+    
+    bool autoSetWindow;
 };
 
 }//END NAMESPACE

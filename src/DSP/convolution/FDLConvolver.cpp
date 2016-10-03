@@ -1,6 +1,7 @@
 
 #include "FDLConvolver.h"
 
+pdsp::FFTWorker pdsp::FDLConvolver::fftWorker = FFTWorker();
 
 
 pdsp::FDLConvolver::FDLConvolver(){
@@ -45,7 +46,7 @@ pdsp::Patchable& pdsp::FDLConvolver::out_signal(){
 void pdsp::FDLConvolver::prepareUnit( int expectedBufferSize, double sampleRate ) {
         this->sampleRate=sampleRate;
 
-        initFFT(expectedBufferSize);
+        fftWorker.initFFT(expectedBufferSize);
 
         prepareIR();
 }
@@ -58,8 +59,12 @@ void pdsp::FDLConvolver::releaseResources () {
 
 
 void pdsp::FDLConvolver::loadIR ( SampleBuffer* impulseResponse, int channel){
+    loadIR( *impulseResponse, channel);
+}
+
+void pdsp::FDLConvolver::loadIR ( SampleBuffer & impulseResponse, int channel){
     this->IRChannel = channel;
-    this->impulseResponse = impulseResponse;
+    this->impulseResponse = &impulseResponse;
     
     if(dynamicConstruction){
         prepareIR();
@@ -91,9 +96,9 @@ void pdsp::FDLConvolver::prepareIR ( ){
                         convertedLen = (impulseLength);     
                 }
                 
-                signalBlock = getFFTBlockSize();
+                signalBlock = fftWorker.getFFTBlockSize();
                 processingSize = signalBlock/2;
-                complexSize = getFFTComplexSize();               
+                complexSize = fftWorker.getFFTComplexSize();               
                 numBlocks = (convertedLen / processingSize) + 1;
                 
                 if( allocateBlocksBuffers() && loadImpulseResponseSegments(inc, convertedLen) ){
@@ -301,7 +306,7 @@ bool pdsp::FDLConvolver::loadImpulseResponseSegments(const float &inc, const int
                 }
                 
                 //fft and put into IR block buffer
-                FFT( tempBuffer, impulseR[i], impulseI[i] );
+                fftWorker.FFT( tempBuffer, impulseR[i], impulseI[i] );
         } 
         
         delete [] tempBuffer;
@@ -352,7 +357,7 @@ void pdsp::FDLConvolver::process (int bufferSize) noexcept {
                                 for(; n<signalBlock; ++n){
                                         paddedInput[n] = 0.0f;
                                 }
-                                FFT(paddedInput, circularR[blockIndex], circularI[blockIndex]);
+                                fftWorker.FFT(paddedInput, circularR[blockIndex], circularI[blockIndex]);
                                 silenceCount=0;
                         }
                                 break;
@@ -383,7 +388,7 @@ void pdsp::FDLConvolver::process (int bufferSize) noexcept {
                         //inverse FFT
                         float* outputBuffer = getOutputBufferToFill(output);
                         
-                        iFFT(paddedInput, addR, addI);  
+                        fftWorker.iFFT(paddedInput, addR, addI);  
                         
                         
                         for(int n=0; n<processingSize; ++n){

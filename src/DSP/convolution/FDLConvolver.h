@@ -8,7 +8,7 @@
 
 
 #include "../pdspCore.h"
-#include "../helpers/UsesFFT.h"
+#include "../helpers/FFTWorker.h"
 #include "../samplers/SampleBuffer.h"
 #include "../interpolators/interpolators.h"
 
@@ -20,7 +20,7 @@ namespace pdsp{
 This Units implement partitioned convolution using a Frequency-Domain Delay Line. Expecially useful if you have some real space impulse response to be used to make a IR Reverb.
 */
 
-class FDLConvolver : public Unit, public UsesFFT{
+class FDLConvolver : public Unit {
 
 public:
         FDLConvolver();
@@ -37,10 +37,19 @@ public:
         
         /*!
         @brief Sets the impulse response for the convolution.
-        @param[in] impulseResponse A pointer to the SampleBuffer to load as Impulse Response for the convolution.
+        @param[in] impulseResponse SampleBuffer to load as Impulse Response for the convolution.
         @param[in] channel select the channel to be if the SampleBuffer has more than one. If omitted the first channel is selected.
         */
+        void loadIR ( SampleBuffer & impulseResponse, int channel=0);
+       
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
+        [[deprecated("deprecated, now direclty pass your SampleBuffer")]]
         void loadIR ( SampleBuffer* impulseResponse, int channel=0);
+/*!
+    @endcond
+*/
 
 private:
         void prepareUnit( int expectedBufferSize, double sampleRate ) override;
@@ -79,6 +88,8 @@ private:
         SampleBuffer*   impulseResponse;
         bool            IRLoaded; 
         double          sampleRate;
+        
+        static FFTWorker    fftWorker;
            
 };    
 

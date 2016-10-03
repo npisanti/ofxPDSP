@@ -1,5 +1,5 @@
 
-// UsesFFT.h
+// FFTWorker.h
 // ofxPDSP
 // Nicola Pisanti, MIT License, 2016
 
@@ -12,15 +12,15 @@
 namespace pdsp{
         
     /*!
-    @brief FFT Implementation 
+    @brief Class to use an FFT Implementation 
     
-    This manage the instantiation and initialization of an FFT algorithm to be used into subclasses. It use the AudioFFT library so the implementation is chosen at compile time setting the right flag. Warning! all the Units share the same  implementation. This is usually not a problem until you set the oversampling of one of the UsesFFT subclasses to a value different than 1 (no oversampling). In that case there will be conflict between the various initFFT() and the behavior is undefined. Long story short: don't oversample classes that UsesFFT .
+    This manage the instantiation and initialization of an FFT algorithm to be used into subclasses. It use the AudioFFT library so the implementation is chosen at compile time setting the right flag. 
     */        
 
-class UsesFFT {
+class FFTWorker {
 public:       
-    UsesFFT();
-    ~UsesFFT();
+    FFTWorker();
+    ~FFTWorker();
     
     /*!
     @brief inits the fft
@@ -54,11 +54,11 @@ public:
     void    iFFT (float* outSignal, const float* re, const float* im);
 
 private:
-    static int blockSize;
-    static int complexSize;
-    static audiofft::AudioFFTBase* fftImplementation;
-    static int lastBufferSize;
-    static int unitsCount;
+    int blockSize;
+    int complexSize;
+    audiofft::AudioFFTBase* fftImplementation;
+    int lastBufferSize;
+
 };
     
 
