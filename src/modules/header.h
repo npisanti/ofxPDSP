@@ -35,6 +35,7 @@
 #include "equalizers/LowCut.h"
 
 #include "reverbs/BasiVerb.h"
+#include "reverbs/IRVerb.h"
 
 
 #endif // PDSP_MODULEHEADER_H_INCLUDED

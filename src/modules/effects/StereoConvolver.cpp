@@ -5,8 +5,6 @@ pdsp::StereoConvolver::StereoConvolver() { patch(); }
 pdsp::StereoConvolver::StereoConvolver(const StereoConvolver& other){ patch(); }
 pdsp::StereoConvolver& pdsp::StereoConvolver::operator=(const StereoConvolver& other){ return *this; }
 
-//pdsp::StereoConvolver::StereoConvolver(StereoConvolver&& other){ patch(); }
-//pdsp::StereoConvolver::StereoConvolver& operator=( StereoConvolver&& other){ return *this; }
 
 void pdsp::StereoConvolver::patch(){
     

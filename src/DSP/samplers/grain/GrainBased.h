@@ -18,12 +18,18 @@ namespace pdsp
     class GrainBased{
    
     public:
-        static std::vector<GrainTable> tables;
+        GrainBased();
+        ~GrainBased();
+   
+        static std::vector<GrainTable*> tables;
+        static int unitCount;
+        
         GrainTable* getTable(Window_t type, int length);
         GrainTable* getTable(int index);
         const int getAvailableTablesNumber() const;
         
         static void addTable(Window_t type, int length);
+        
     };
 /*!
     @endcond

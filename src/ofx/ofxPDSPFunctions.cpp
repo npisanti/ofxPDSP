@@ -10,7 +10,17 @@ void ofxPDSPRelease(){
 }
 
 float p2f( float pitch){
-    return pdsp::PitchToFreq::eval( pitch );
+    return pow( 2.0, (pitch-69.0)/12.0 ) * pdsp::PitchToFreq::getTuningFrequency();
+}
+
+float f2p( float freq){
+    return (log2( freq / pdsp::PitchToFreq::getTuningFrequency()) * 12.0f) + 69.0f;
+}
+
+float pratio ( float pitch, float ratio ){
+    float f = p2f ( pitch );
+    f = f*ratio;
+    return f2p(f);
 }
 
 int highestPartial( float pitch ) {

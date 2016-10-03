@@ -41,10 +41,24 @@ void ofxPDSPRelease();
 
 
 /*!
-@brief take a pitch value as input an returns a frequency value. Standard reference tuning is 440hz, you can set it with setReferencyFrequency().
+@brief take a pitch value as input an returns a frequency value. Standard reference tuning is 440hz, you can set it with setReferencyFrequency() (remember to set it before using this function!).
 @param[in] pitch pitch value to convert
 */
 float p2f( float pitch);
+
+/*!
+@brief take a frequency value as input an returns a pitch value. Standard reference tuning is 440hz, you can set it with setReferencyFrequency() (remember to set it before using this function!).
+@param[in] freq freq value to convert
+*/
+float f2p( float freq);
+
+
+/*!
+@brief take a pitch value and a float ratio. The returns a pitch that is the pitch value of the frequency corresponding to the first pitch, multiplied by the ratio.
+@param[in] pitch base pitch value
+@param[in] ratio ratio of the frequency multiplication
+*/
+float pratio ( float pitch, float ratio );
 
 /*!
 @brief take a pitch value as input an returns the highest partial before 20000hz of a waweform with that base pitch. Useful for initializing pdsp::WaveTable, to avoid aliasing use the pitch of the maximum note you want to use with that oscillator. This function is calibrated for 44.1 kHz sapling rate.

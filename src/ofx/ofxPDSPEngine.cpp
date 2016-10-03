@@ -339,3 +339,6 @@ void ofxPDSPEngine::test( bool testingActive, float testingDB ){
     }
 }
 
+pdsp::Patchable & ofxPDSPEngine::out_bar_ms(){
+    return barTime.out_signal();
+}

@@ -9,6 +9,7 @@
 #include "ofMain.h"
 #include "../DSP/pdspCore.h"
 #include "../sequencer/ScoreProcessor.h"
+#include "../DSP/utility/OneBarTimeMs.h"
 #include "../modules/oscillators/FMOperator.h"
 #include "ofxPDSPController.h"
 #include "ofxPDSPMidiIn.h"
@@ -142,14 +143,19 @@ public:
     @brief manages a class to graphically monitor sequences
     */    
     ofxPDSPEngineGraphics graphics;
-    
+   
+    /*!
+    @brief returns a module that outputs the time of a musical bar in milliseconds
+    */    
+    pdsp::Patchable & out_bar_ms();
+           
     /*!
     @brief activate/deactivate a sine tone patched to the left output to testing that the engine is running.
     @param testingActive pass true to activate testing, false to deactivate
     @param testingDB optional volume of testing tone, -12dB if not given
     */       
     void test( bool testingActive, float testingDB=-12.0f );
-
+    
     
 private:
     ofSoundStream inputStream;
@@ -190,6 +196,7 @@ private:
     
     pdsp::FMOperator testOscillator;
     pdsp::Amp        testAmp;
+    pdsp::OneBarTimeMs barTime;
     
 };
 
