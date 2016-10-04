@@ -1,5 +1,6 @@
 #include "ofApp.h"
 
+// use this example together with example-osc-input
 
 #define HOST "localhost"
 #define PORT 12345
@@ -23,21 +24,8 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     
-  
-
 }
 
-//--------------------------------------------------------------
-void ofApp::keyPressed(int key){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::keyReleased(int key){
-
-}
-
-    
 void ofApp::moveRoutine( int x, int y ) {
 	ofxOscMessage m;
 	m.setAddress("/pitch");
@@ -78,6 +66,16 @@ void ofApp::mouseReleased(int x, int y, int button){
 	m.setAddress("/gate");
 	m.addFloatArg(0.0f);
 	sender.sendMessage(m, false);
+
+}
+
+//--------------------------------------------------------------
+void ofApp::keyPressed(int key){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::keyReleased(int key){
 
 }
 

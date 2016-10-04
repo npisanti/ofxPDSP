@@ -5,8 +5,8 @@ void pdsp::LowCut::patch(){
  
     addModuleInput("0", hp0a);
     addModuleInput("1", hp1a);
-    addModuleOutput("0", hp0b.out_hpf());
-    addModuleOutput("1", hp1b.out_hpf());
+    addModuleOutput("0", out0);
+    addModuleOutput("1", out1);
     
     addModuleInput("freq", freq);
     
@@ -17,8 +17,8 @@ void pdsp::LowCut::patch(){
     freq >> hp1a.in_cutoff();
     freq >> hp1b.in_cutoff();
     
-    hp0a.out_hpf() >> hp0b;
-    hp1a.out_hpf() >> hp1b;
+    hp0a.out_hpf() >> hp0b.out_hpf() >> out0;
+    hp1a.out_hpf() >> hp1b.out_hpf() >> out1;
     
 }
 
@@ -33,7 +33,6 @@ pdsp::Patchable& pdsp::LowCut::in_1(){
 pdsp::Patchable& pdsp::LowCut::in_freq(){
     return in("freq");
 }
-
 
 pdsp::Patchable& pdsp::LowCut::out_0(){
     return out("0");

@@ -9,6 +9,8 @@
 #include "dynamics/Compressor1.h"
 #include "dynamics/Compressor2.h"
 
+#include "filters/VAFilter.h"
+
 #include "oscillators/VAOscillator.h"
 #include "oscillators/LFO.h"
 #include "oscillators/ClockedLFO.h"
@@ -33,6 +35,7 @@
 #include "equalizers/LowShelfEQ.h"
 #include "equalizers/PeakEQ.h"
 #include "equalizers/LowCut.h"
+#include "equalizers/HighCut.h"
 
 #include "reverbs/BasiVerb.h"
 #include "reverbs/IRVerb.h"

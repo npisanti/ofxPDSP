@@ -1,8 +1,8 @@
 
-#include "HalfWavePeakDetector.h"
+#include "PositiveSignal.h"
 
 
-float pdsp::HalfWavePeakDetector::formula(const float &x) noexcept {
+float pdsp::PositiveSignal::formula(const float &x) noexcept {
         if(x > 0.0f){
                 return x;
         }else{
@@ -11,7 +11,7 @@ float pdsp::HalfWavePeakDetector::formula(const float &x) noexcept {
 }
 
 
-void pdsp::HalfWavePeakDetector::formulaAudioRate(float* &output, const float* &input, const int &bufferSize) noexcept {
+void pdsp::PositiveSignal::formulaAudioRate(float* &output, const float* &input, const int &bufferSize) noexcept {
         
         int n = 0;
         int maxSimd = ROUND_DOWN(bufferSize, 16); 

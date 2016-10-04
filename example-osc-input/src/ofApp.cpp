@@ -1,5 +1,7 @@
 #include "ofApp.h"
 
+// use this example together with example-osc-input-sender
+
 #define PORT 12345
 
 //--------------------------------------------------------------

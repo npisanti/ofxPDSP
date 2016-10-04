@@ -1,10 +1,10 @@
 
-// LowCut.h
+// HighCut.h
 // ofxPDSP
 // Nicola Pisanti, MIT License, 2016
 
-#ifndef PDSP_MODULE_LOWCUT_H_INCLUDED
-#define PDSP_MODULE_LOWCUT_H_INCLUDED
+#ifndef PDSP_MODULE_HIGHCUT_H_INCLUDED
+#define PDSP_MODULE_HIGHCUT_H_INCLUDED
 
 #include "../../DSP/pdspCore.h"
 #include "../../DSP/filters/OnePole.h"
@@ -13,16 +13,16 @@
 namespace pdsp{
     
     /*!
-    @brief 12 dB Low Cut (aka High-Pass filter). Non-resonant.
+    @brief 12 dB High Cut (aka Low-Pass filter). Non-resonant.
     */  
        
-class LowCut : public Patchable {
+class HighCut : public Patchable {
     
 
 public:
-    LowCut(){ patch(); };
-    LowCut(const LowCut& other){ patch(); };
-    LowCut& operator=(const LowCut& other){ return *this; };
+    HighCut(){ patch(); };
+    HighCut(const HighCut& other){ patch(); };
+    HighCut& operator=(const HighCut& other){ return *this; };
 
     
     /*!
@@ -55,18 +55,15 @@ private:
     void patch ();
     
     PatchNode   freq;
-
-    PatchNode   out0;
-    PatchNode   out1;
     
-    OnePole hp0a;
-    OnePole hp0b;
-    OnePole hp1a;
-    OnePole hp1b;
+    OnePole lp0a;
+    OnePole lp0b;
+    OnePole lp1a;
+    OnePole lp1b;
     
 };
 
 } // pdsp namespace end
 
 
-#endif // PDSP_MODULE_LOWCUT_H_INCLUDED
+#endif // PDSP_MODULE_HIGHCUT_H_INCLUDED

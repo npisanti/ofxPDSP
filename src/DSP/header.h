@@ -32,8 +32,8 @@
 #include "control/TriggerControl.h"
 
 #include "dynamics/EnvelopeFollower.h"
-#include "dynamics/FullWavePeakDetector.h"
-#include "dynamics/HalfWavePeakDetector.h"
+#include "dynamics/PositiveSignal.h"
+#include "dynamics/AbsoluteSignal.h"
 #include "dynamics/GainComputer.h"
 #include "dynamics/RMSDetector.h"
 #include "dynamics/SquarePeakDetector.h"

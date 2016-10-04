@@ -24,6 +24,7 @@ struct SynthGlobal {
 
     ofxPDSPValue     cutoff_ctrl;
     ofxPDSPValue     reso_ctrl;
+    ofxPDSPValue     filter_mode_ctrl;
 
     ofxPDSPValue     env_attack_ctrl;
     ofxPDSPValue     env_decay_ctrl;
@@ -47,11 +48,10 @@ struct SynthGlobal {
     pdsp::Amp           lfoToFilter;
     pdsp::Switch        lfoSwitch;
 
-    // chorus
+    // chorus ------------------------
     pdsp::DimensionChorus   chorus;         
     
     ofParameterGroup     ui_chorus;
-
     ofxPDSPValue     chorus_speed_ctrl;
     ofxPDSPValue     chorus_depth_ctrl;
     
@@ -72,18 +72,14 @@ struct SynthVoice : public pdsp::Patchable {
     float meter_pitch() const;
 
 private:
-
-    pdsp::TableOscillator oscillator;
-
     pdsp::PatchNode     voiceTrigger;
-    pdsp::PatchNode     voicePitch;
-    pdsp::PitchToFreq   p2f;
     
-    
-    pdsp::MultiLadder4  filter;
-    pdsp::Amp           voiceAmp;
-    
+    pdsp::TableOscillator   oscillator;
+    pdsp::VAFilter          filter;
+    pdsp::Amp               voiceAmp;
+
+
     pdsp::ADSR          envelope;    
-    pdsp::Amp        envToTable;
-    pdsp::Amp        envToFilter;  
+    pdsp::Amp           envToTable;
+    pdsp::Amp           envToFilter;  
 };

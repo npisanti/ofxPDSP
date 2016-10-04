@@ -85,12 +85,13 @@ SynthGlobal::SynthGlobal(){
     
     // CONTROLS ------------------------------------------------------------------------------------
     ui_osc.setName("oscillator");
-    ui_osc.add(table_ctrl.set("table index", 6.0f, 0.0f, (float)(wavetable.size()-1) ) );
+    ui_osc.add(table_ctrl.set("table index", 0.0f, 0.0f, (float)(wavetable.size()-1) ) );
     table_ctrl.enableSmoothing(200.0f);
 
     ui_filter.setName("filter");
     ui_filter.add(cutoff_ctrl.set("cutoff", 82, 10, 120));
     ui_filter.add(reso_ctrl.set("resonance", 0.0f, 0.0f, 1.0f) );
+    ui_filter.add(filter_mode_ctrl.set("mode", 0, 0, 5) );
     cutoff_ctrl.enableSmoothing(200.0f);
     
     ui_mod_env.setName( "envelope");
@@ -129,7 +130,7 @@ void SynthGlobal::addToGUI( ofxPanel & gui ){
 void SynthVoice::setup( SynthGlobal & m ){
 
     addModuleInput("trig", voiceTrigger);
-    addModuleInput("pitch", voicePitch);
+    addModuleInput("pitch", oscillator.in_pitch());
     addModuleOutput("signal", voiceAmp);
 
     oscillator.setTable( m.wavetable );
@@ -142,14 +143,14 @@ void SynthVoice::setup( SynthGlobal & m ){
     envelope >> envToTable >> oscillator.in_table();
               m.lfoToTable >> oscillator.in_table();
               m.table_ctrl >> oscillator.in_table();
-                voicePitch >> oscillator.in_pitch();
 
     voiceTrigger >> envelope * 0.12f >> voiceAmp.in_mod();
-                    envelope >> envToFilter >> p2f;
-                              m.lfoToFilter >> p2f;
-                              m.cutoff_ctrl >> p2f;
-                                               p2f >> filter.in_cutoff(); 
-                                       m.reso_ctrl >> filter.in_reso();
+                    envelope >> envToFilter >> filter.in_pitch();
+                              m.lfoToFilter >> filter.in_pitch();
+                              m.cutoff_ctrl >> filter.in_pitch();
+                                m.reso_ctrl >> filter.in_reso();
+                         m.filter_mode_ctrl >> filter.in_mode();
+
 
         m.env_attack_ctrl  >> envelope.in_attack();
         m.env_decay_ctrl   >> envelope.in_decay();

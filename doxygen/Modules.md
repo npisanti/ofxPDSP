@@ -12,12 +12,10 @@ This is an overview of a selection of the available modules:
 - [pdsp::PRNoiseGen](classpdsp_1_1_p_r_noise_gen.html) : noise generator
 
 ## Filters
-- [pdsp::MultiLadder4](classpdsp_1_1_multi_ladder4.html) : resonant 4 pole classic ladder with 12db/24db lowpass, highpass and bandpass outputs
-- [pdsp::SVF2](classpdsp_1_1_s_v_f2.html)  : resonant 2 pole state variable filter with lowpass, highpass and bandpass output
-- [pdsp::OnePole](classpdsp_1_1_one_pole.html) : non-resonant one pole highpass / lowpass filter, you can also usit to slew control rate signals
-- [pdsp::APF1](classpdsp_1_1_a_p_f1.html) : one pole All Pass Filter
-- [pdsp::APF4](classpdsp_1_1_a_p_f4.html) : 4pole All Pass Filter (useful for phasers) with feedback control
-- [pdsp::CombFilter](classpdsp_1_1_comb_filter.html) : Comb Filter (this is basically a tuned delay)
+- [pdsp::VAFilter](classpdsp_1_1_v_a_filter.html) : resonant 4 pole classic ladder with switchable 12db/24db lowpass, highpass and bandpass outputs and frequency control in semitones
+- [pdsp::OnePole](classpdsp_1_1_one_pole.html) : non-resonant one pole highpass / lowpass filter, you can also usit to slew control rate signals, with control in hertz
+- [pdsp::APF4](classpdsp_1_1_a_p_f4.html) : 4pole All Pass Filter (Phaserw) with frequency control in hertz and feedback control
+- [pdsp::CombFilter](classpdsp_1_1_comb_filter.html) : Comb Filter with frequency control in pitch, feedback and damping control (this is basically a tuned delay)
 
 ## Delays
 - [pdsp::DampedDelay](classpdsp_1_1_damped_delay.html) : delay with feedback damping
@@ -49,6 +47,7 @@ This is an overview of a selection of the available modules:
 - [pdsp::LowShelfEQ](classpdsp_1_1_low_shelf_e_q.html) : low shelf equalizer
 - [pdsp::PeakEQ](classpdsp_1_1_peak_e_q.html) : peak equalizer
 - [pdsp::HighShelfEQ](classpdsp_1_1_high_shelf_e_q.html) : high shelf equalizer
+- [pdsp::HighCut](classpdsp_1_1_high_cut.html) : cuts high frequencies
 
 ## Reverbs  
 - [pdsp::BasiVerb](classpdsp_1_1_basi_verb.html) : dubby metallic reverb   
@@ -62,7 +61,7 @@ This is an overview of a selection of the available modules:
 ## Utility
 - [pdsp::BipolarToUnipolar](classpdsp_1_1_bipolar_to_unipolar.html) : convert a bipolar signal to an unipolar one
 - [pdsp::OneBarTimeMs](classpdsp_1_1_one_bar_time_ms.html) : outputs the time in ms for one musical bar
-- [pdsp::PitchToFreq](classpdsp_1_1_pitch_to_freq.html) : converts pitch values to frequency values
+- [pdsp::PitchToFreq](classpdsp_1_1_pitch_to_freq.html) : converts pitch values to frequency values, for musical control of oscillator and filters
 - [pdsp::FreqToMs](classpdsp_1_1_freq_to_ms.html) : convert frequency values to millisecond values 
-- [pdsp::Formula](classpdsp_1_1_formula.html) : base class for executing a matematical operation on an input
+- [pdsp::Formula](classpdsp_1_1_formula.html) : virtual class to extend for executing a matematical operation on an input
 
