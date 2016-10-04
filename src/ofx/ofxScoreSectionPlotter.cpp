@@ -44,8 +44,6 @@ void ofxScoreSectionPlotter::setup( int w, int graphH, int outputs, pdsp::ScoreS
 
     this->outputs = outputs;
 
-
-
     width = w;
     height = graphH + headerH;
     outH = (float)(graphH) / (float)outputs;
@@ -59,7 +57,6 @@ void ofxScoreSectionPlotter::setup( int w, int graphH, int outputs, pdsp::ScoreS
 void ofxScoreSectionPlotter::update() {
     
     int seqCurrent = section->meter_current();
-    //cout<<"seq current id = "<<seqCurrent<<"\n";
 
     if( seqCurrent != lastSeqNumber  ){
         
@@ -88,10 +85,7 @@ void ofxScoreSectionPlotter::updateGraphics( const pdsp::Sequence & seq ){
                 
         timeMult = 1.0 / seq.length();
         
-        for( int i=0; i<outputs; ++i ){
-            lastX[i]     = 0.0f;
-            lastY[i]     = outH;
-        }
+
 
         fbo.begin();
         ofNoFill();
@@ -118,34 +112,49 @@ void ofxScoreSectionPlotter::updateGraphics( const pdsp::Sequence & seq ){
         }
         
         ofTranslate(0, headerH);
-        ofSetColor(150);
+
         
         const vector<pdsp::ScoreMessage> score = seq.getScore(); 
 
-        ofFill();
-        for(const pdsp::ScoreMessage & message : score ){
-            if(message.lane < outputs ){
-                int out = message.lane;
-                float posX = message.time * timeMult * width;
-                float posY = ofMap( message.value, rangeMin[out], rangeMax[out], outH*static_cast<float>(out+1), outH*static_cast<float>(out) );
-                //ofDrawLine(lastX[out], lastY[out], posX, lastY[out]);
-                ofDrawRectangle(lastX[out], lastY[out], posX-lastX[out], outH*static_cast<float>(out+1) - lastY[out]);
+        for (int out=0; out<outputs; ++out){
+            ofPushStyle();
+            
+            lastX[out]     = 0.0f;
+            lastY[out]     = outH;
+            
+            float hlow = outH;
+            float hhigh = 0.0f;
 
-                lastX[out] = posX;
-                lastY[out] = posY;
+            ofFill();
+            ofSetColor(150);
+            
+            for(const pdsp::ScoreMessage & message : score ){
+                
+                if(message.lane == out ){
+                   
+                    float posX = message.time * timeMult * width;                    
+
+                    float posY = ofMap( message.value, rangeMin[out], rangeMax[out], hlow, hhigh, true );
+
+                    ofDrawRectangle(lastX[out], lastY[out], posX-lastX[out], hlow - lastY[out]);
+                    
+                    lastX[out] = posX;
+                    lastY[out] = posY;
+                }
             }
+            // draw last output
+            ofDrawRectangle(lastX[out], lastY[out], width-lastX[out], hlow - lastY[out]);
+        
+            // draws the border
+            ofNoFill();
+            ofSetColor(255);
+            ofDrawRectangle(0, 0, width, outH);
+
+            ofTranslate(0, outH);   
+            ofPopStyle();         
+        
         }
         
-        for(int out=0; out<outputs; ++out){ // draws the last values
-            //ofDrawLine(lastX[out], lastY[out], width, lastY[out])
-            ofDrawRectangle(lastX[out], lastY[out], width-lastX[out], outH*static_cast<float>(out+1) - lastY[out]);
-        }
-        
-        ofNoFill();
-        ofSetColor(255);
-        for(int out=0; out<outputs; ++out){ // draws the last values
-            ofDrawRectangle(0, outH*static_cast<float>(out), width, outH);
-        }
         ofPopMatrix();
         fbo.end();
 }
@@ -182,20 +191,20 @@ void ofxScoreSectionPlotter::clearGraphics (){
 }
 
 void ofxScoreSectionPlotter::draw() {
-    
+    ofPushStyle();
     ofSetColor(colorDim);
     float playhead = section->meter_playhead() * timeMult;
     float lineX = playhead * width;
     ofFill(); 
     ofDrawRectangle( headerX, 0, headerW*playhead, headerH);
-    
+    ofNoFill();
     ofSetColor(color);
     fbo.draw( 0, 0);
     if(outputs != 0){  
         ofNoFill();
-        ofDrawLine(lineX, headerH, lineX, height);
+        ofDrawLine(lineX+1, headerH, lineX, height);
     }
-
+    ofPopStyle();
 }
 
 

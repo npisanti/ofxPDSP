@@ -42,5 +42,5 @@ class ofApp : public ofBaseApp{
         ofxScoreSectionPlotter  bassPatternGraphics;
         ofxScoreSectionPlotter  bleepPatternGraphics;
 
-
+        float masterX;
 };

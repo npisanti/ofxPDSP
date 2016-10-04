@@ -16,7 +16,7 @@ void ofApp::setup(){
     
     //-------------------------SETTING UP SCORE--------------
  
-    float o = -1.0f; // we need at least two values for each dimension to avoid ambigous calls
+    float o = 0.0f; // we need at least two values for each dimension to avoid ambigous calls
     bleep1.set( { {1.0f, o}, {77.0f, o} }, 16.0, 0.25); // 1.0f goes to out 0, pitch goes to out 1
     bleep2.set( { {1.0f, o}, {80.0f, o} }, 16.0, 0.25); // 1/16th division, 0.25 bars length
     bleep3.set( { {1.0f, o}, {84.0f, o} }, 16.0, 0.25); 
@@ -68,12 +68,19 @@ void ofApp::setup(){
     bleep * (panL(0.5f) * dB(-6.0f)) >> engine.audio_out(0);
     bleep * (panR(0.5f) * dB(-6.0f)) >> engine.audio_out(1);
     
-    // graphics
-    // ofxScoreSectionPlotter is an utility class for displaying active cells and sequences values
-    bleepPatternGraphics.setup(400, 20, 0, engine.score.sections[0] ); // with 0 outputs we just draw the sequence visualizer
+    //------------SETUPS AND START AUDIO-------------
     
-    bassPatternGraphics.setup(400, 100, 2, engine.score.sections[1] ); // width, eight, outputs to monitor, section to monitor
-    bassPatternGraphics.setRange(1, 24.0f, 60.0f); // setting the range for the pitch output, otherwise the range is 0.0f<->1.0f
+    // our engine has a graphic object for monitoring sequences and launching them with pc keys
+    masterX = (ofGetWidth() - 400) * 0.5f;
+    engine.graphics.setup( 400, 600,  {  40,    40 }, 
+                                      {   1,     2 }  );
+    engine.graphics.setRange( 1, 1, 26.0f, 50.0f);
+    engine.graphics.setPosition( masterX, 25 );
+    engine.graphics.setColor (ofColor( 255 ) );
+    engine.graphics.keys( { { '1', '2', '3', '4'}, // inline array for keys to use
+                            { 'q', 'w', 'e', 'r'}}, 
+                            OF_KEY_RETURN, // key to start / stop the sequencer
+                            {0.0625, 1.0} ); // quantize time for sequence launch
 
     //------------SETUPS AND START AUDIO-------------
     engine.listDevices();
@@ -83,37 +90,27 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    // do not forget to update your plotters!
-    bleepPatternGraphics.update();
-    bassPatternGraphics.update();
+
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
-    float masterX = (ofGetWidth() - 400) * 0.5f;
-    
-    ofSetColor(255); // this will change the color of the plotted graphics
-    
-    ofDrawBitmapString("bleep patterns:", masterX, 25 );    
-    bleepPatternGraphics.draw(masterX, 30);
-    
-    ofDrawBitmapString("bass pattern:", masterX, 75 );
-    bassPatternGraphics.draw(masterX, 80);
 
+    // draw the sequencer monitor
+    engine.graphics.draw();
+
+
+    ofSetColor(255);  
 
     string info = "master playhead (bars): ";
     info += to_string( engine.score.meter_playhead() );
     info += " / 16.0. \n";
-    info += "1-4 : launch high bleeps.\n";
     info += "5 : change bleep launch mode. Mode = ";
     if(oneShot){
         info += "one shot. \n";
     }else{
         info += "loop. \n";
     }
-    info += "q : launch bass pattern.\n";
-    info += "w : launch empty bass pattern.\n";
     info += "e : stop bass pattern.\n";
     info += "space : pause/play.\n";
     info += "s : stop.\n";
@@ -126,19 +123,6 @@ void ofApp::draw(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     switch(key){
-       
-        case '1': // launch patterns 
-            engine.score.sections[0].launchCell(0, true, 0.0625);
-            break;
-        case '2':
-            engine.score.sections[0].launchCell(1, true, 0.0625);        
-            break;
-        case '3':
-            engine.score.sections[0].launchCell(2, true, 0.0625);
-            break;
-        case '4':
-            engine.score.sections[0].launchCell(4, true, 0.0625);
-            break;
         case '5': // select one shot / loop pattern behavior
             if(oneShot){
                 engine.score.sections[0].setChange(0, pdsp::Behavior::Next );
@@ -153,15 +137,6 @@ void ofApp::keyPressed(int key){
                 engine.score.sections[0].setChange(3, pdsp::Behavior::Nothing );
                 oneShot = true;
             }
-            break;
-        case 'q': // launch bass pattern
-            engine.score.sections[1].launchCell(0, true, 1.0 );
-            break;
-        case 'w': // launch empty bass pattern
-            engine.score.sections[1].launchCell(1, true, 1.0 );
-            break;            
-        case 'e': // stop bass pattern (by passing -1 as index)
-            engine.score.sections[1].launchCell(-1, true, 1.0 );
             break;
         case ' ': // pause / play
             if(engine.score.isPlaying()){

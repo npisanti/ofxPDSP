@@ -69,6 +69,14 @@ public:
     void keys( std::initializer_list<std::initializer_list<char>> initArray, int stopAndPlayKey, bool quantize = false, double quantizeTime = 1.0 );
     
     /*!
+    @brief set ups the keyboard control for the score, with indipendent quantize times for each section
+    @param initArray an inlined two dimensional array of chars
+    @param stopAndPlayKey key for starting and stopping the score
+    @param quantizeArray quantize time for each section
+    */             
+    void keys( std::initializer_list<std::initializer_list<char>> initArray, int stopAndPlayKey, std::initializer_list<double> quantizeArray);
+    
+    /*!
     @brief disables the key control
     */
     void disableKeys();
@@ -96,7 +104,7 @@ private:
     vector<vector<int>> assignedKeys;
     
     bool quantize;
-    double quantizeTime;
+    vector<double> quantizeTime;
     
     int blink;
     

@@ -27,6 +27,7 @@ void ofxPDSPEngineGraphics::setup( int w, int hFold, std::initializer_list<int> 
     s = 0;
     for ( const int & outs : sectionsOuts){
         if( s<(int)sectionsHeights.size() ){
+            sectionsHeights[s] *= outs;
             plotters[s].setup( w, sectionsHeights[s], outs, score->sections[s] );
         }
         s++;
@@ -85,11 +86,12 @@ void ofxPDSPEngineGraphics::drawGraphics() {
         
         plotters[i].update();
         
+
         ofPushMatrix();
             ofTranslate( offsetX, y );
             plotters[i].draw();
             // now draw lables
-            
+               
             ofSetColor( color );
             int numCells = plotters[i].getCellsNumber();
             float cellW = plotters[i].getCellWidth();
@@ -101,10 +103,10 @@ void ofxPDSPEngineGraphics::drawGraphics() {
                 if( score->sections[i].meter_current() == k || score->sections[i].meter_next() != k || blink > 4 ){
                     ofDrawBitmapString ( label, cellW*k + 5.0f, 14.0f );
                 } 
-            }
-            
-        ofPopMatrix();
         
+            }
+        ofPopMatrix();
+
         y += ( sectionsHeights[i] + 20 + spacing );
         
         if(y > hFold ){
@@ -153,9 +155,50 @@ void ofxPDSPEngineGraphics::keys( std::initializer_list<std::initializer_list<ch
         s++;
     }
     this->quantize = quantize;
-    this->quantizeTime = quantizeTime;
+    this->quantizeTime.resize(assignedKeys.size());
+    
+    for( auto & value : this->quantizeTime ) {
+        value = quantizeTime;
+    }
+    
     playStopKey = stopAndPlayKey;
     // now add keyPressed to listeners
+    
+    ofAddListener( ofEvents().keyPressed, this, &ofxPDSPEngineGraphics::keyPressed);  
+}
+
+void ofxPDSPEngineGraphics::keys( std::initializer_list<std::initializer_list<char>> initArray, int stopAndPlayKey, std::initializer_list<double> quantizeArray) {
+    
+    int s = 0;
+    for(const std::initializer_list<char> & list : initArray){
+        int k = 0;
+        for ( const char & key : list){
+            if( k < score->sections[s].getCellsNumber() ){
+                assignedKeys[s][k] = key;
+            }
+            k++;
+        }
+        s++;
+    }
+
+    this->quantize = true;
+
+    this->quantizeTime.resize(assignedKeys.size());
+
+    int q = 0;
+    for( const double & quant : quantizeArray ){
+        if( q < (int) quantizeTime.size() ){
+            quantizeTime[q] = quant;
+        }
+        q++;
+    }
+    for ( ; q < (int) quantizeTime.size(); ++q ){
+        quantizeTime[q] = 1.0;
+    }
+    
+    playStopKey = stopAndPlayKey;
+    // now add keyPressed to listeners
+    
     ofAddListener( ofEvents().keyPressed, this, &ofxPDSPEngineGraphics::keyPressed);  
 }
 
@@ -169,7 +212,7 @@ void ofxPDSPEngineGraphics::keyPressed ( ofKeyEventArgs& eventArgs ) {
     for(int s = 0; s < (int) assignedKeys.size(); ++s ){
         for (int k = 0; k< (int) assignedKeys[s].size(); ++k){
             if( eventArgs.key == assignedKeys[s][k] ){
-                score->sections[s].launchCell( k, quantize, quantizeTime );
+                score->sections[s].launchCell( k, quantize, quantizeTime[s] );
             }
         }
     }

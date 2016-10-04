@@ -15,6 +15,8 @@ class ofxPDSPFunctions{
     friend void ofxPDSPSetup(int bufferSize, double sampleRate);
     friend void ofxPDSPRelease();
     friend float p2f( float pitch);
+    friend float pratio( float pitch, float ratio);
+    friend float f2p( float fre);
     friend void setReferenceFrequency(float frequency);
     friend float panL ( float pan );
     friend float panR ( float pan );
