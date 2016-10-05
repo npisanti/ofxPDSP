@@ -28,7 +28,7 @@ public:
     Patchable& in_signal();
   
     /*!
-    @brief Sets "bits" as selected input and returns this Unit ready to be patched. Bits 
+    @brief Sets "bits" as selected input and returns this Unit ready to be patched. Default bits is 16.0f (16bits).
     */ 
     Patchable& in_bits();
 

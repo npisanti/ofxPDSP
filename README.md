@@ -4,16 +4,16 @@ ofxPDSP is an audio DSP addon/library for openFrameworks. It is based on those d
 - Native c++, made to be tightly integrated into c++ projects.
 - Class design mimics modular synthesizers, where inputs and outputs are patched with the >> operator.
 - Sample accurate timing.
-- Lazy evaluated DSPs. DSP units are recursively processed in chunks big as the audio buffer size, CPU cycles are spared by not processing Units if the actual state of the system make their results irrelevant and by switching between routines running at audio rate (process every sample) and control rate (once every buffer) on the fly. PDSP is coded optimizing the instruction for this kind of branching and shows a low I1 cache miss rate (e.g. less than 0.3% on a i7 processor with 128 samples of buffersize, measured with valgrind). DSPs are also coded using SIMD instructions when possible.
 - Thread-safe methods for metering and control.
+- Lazy evaluated DSPs. DSP units are recursively processed in chunks big as the audio buffer size, CPU cycles are spared by not processing Units if the actual state of the system make their results irrelevant and by switching between routines running at audio rate (process every sample) and control rate (once every buffer) on the fly. PDSP is coded optimizing the instruction for this kind of branching and shows a low I1 cache miss rate. DSPs are also coded using SIMD instructions when possible.
 - Cross-platform code: works on Linux, OSX, Windows, iOS, Android (only on ARM processors with NEON instructions).
 
 It includes a good selection of modules ready to be used, like antialiasied oscillators and VA filters, an FFT convolver, analog-sounding envelopes, delays, noise generators, a sampler and a graincloud module, biquad equalizers (normal and 2x oversampled), units for dynamic processing, units for oversampling/downsampling and a framework for writing and sequencing generative music.
-You can find an [overview of the modules here](http://npisanti.com/ofxPDSP/md__modules.html) and a [series of tutorials here](https://github.com/npisanti/ofxPDSP/wiki). It is requires with the latest stable release of openFrameworks (0.9.3).
+On top of that some other classes that uses openFrameworks for adding midi and OSC in/out, serial output, sequencer monitoring, waveform plotting and scopes, other audio addon wrapping and ofParameter-compatible control.
 
-On top of that some other classes that uses openFrameworks for adding midi and OSC in/out, serial output, sequencer monitoring, waveform plotting, other audio addon wrapping and ofParameter-compatible control.
+You can find an [overview of the modules here](http://npisanti.com/ofxPDSP/md__modules.html). Also be sure to check out all the included examples, starting from the basics. It is requires with the latest stable release of openFrameworks (0.9.3).
 
-Requires [ofxMidi](https://github.com/danomatika/ofxMidi) and [ofxSIMDFloats.](https://github.com/npisanti/ofxSIMDFloats)
+Requires [ofxMidi](https://github.com/danomatika/ofxMidi), [ofxSIMDFloats.](https://github.com/npisanti/ofxSIMDFloats) and ofxOsc.
 
 
 Check out the videos of some included examples:

@@ -86,7 +86,7 @@ void ofxPDSPScope::process (int bufferSize) noexcept {
     
 }
 
-void ofxPDSPScope::draw( int x, int y, int w, int h) {
+void ofxPDSPScope::draw( int x, int y, int w, int h) const {
     
 	ofPushStyle();
     ofPushMatrix();
@@ -111,5 +111,8 @@ void ofxPDSPScope::draw( int x, int y, int w, int h) {
     ofPopMatrix();
 	ofPopStyle(); 
     
-    
+}
+
+const vector<float> & ofxPDSPScope::getBuffer() const {
+    return buffer;
 }

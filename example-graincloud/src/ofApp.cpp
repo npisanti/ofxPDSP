@@ -23,7 +23,7 @@ void ofApp::setup(){
                                                  // so sometimes on you have to use an absolute path
     cloud.setWindowType(pdsp::Triangular); // select the shape of the grain envelope
             // available windows: Rectangular, Triangular, Hann, Hamming, Blackman, BlackmanHarris, SineWindow, Welch
-    cloud.setSample(&sampleData); // give to the pdsp::GrainCloud the reference to the sample
+    cloud.setSample(&sampleData); // give to the pdsp::GrainCloud the pointer to the sample
 
     0.00f >> posX >> cloud.in_position();
              jitY >> cloud.in_position_jitter();  

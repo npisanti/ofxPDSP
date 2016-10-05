@@ -2,9 +2,6 @@
 #include "LFO.h"
 
 
-//TODO: DIVISION TO FREQ FORMULA, actually noise is broken in Clocked mode
-
-
 pdsp::LFO::LFO() { patch(); }
 pdsp::LFO::LFO(const pdsp::LFO &Other){ patch(); }
 pdsp::LFO& pdsp::LFO::operator=(const pdsp::LFO &Other){ return *this; }

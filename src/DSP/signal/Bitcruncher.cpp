@@ -1,7 +1,5 @@
 
-
 #include "Bitcruncher.h"
-
 
 
 pdsp::Bitcruncher::Bitcruncher(){
@@ -11,8 +9,8 @@ pdsp::Bitcruncher::Bitcruncher(){
         addOutput("signal", output);
         updateOutputNodes();
         
+        input_bits.setDefaultValue(16.0f);
 }
-
 
 pdsp::Patchable& pdsp::Bitcruncher::in_bits(){
     return in("bits");

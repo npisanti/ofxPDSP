@@ -20,6 +20,8 @@
 #include "samplers/GrainCloud.h"
 #include "samplers/TriggeredGrain.h"
 
+#include "sources/BitNoise.h"
+
 #include "signal/LinearCrossfader.h"
 #include "signal/Panner.h"
 #include "signal/KneeClipper.h"

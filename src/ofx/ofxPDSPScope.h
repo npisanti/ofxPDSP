@@ -48,7 +48,12 @@ public:
     @param[in] w width
     @param[in] h height
     */     
-    void draw( int x, int y, int w, int h);
+    void draw( int x, int y, int w, int h) const;
+    
+    /*!
+    @brief returns a reference to the vector where the samples value are stored.
+    */  
+    const vector<float> & getBuffer() const;
     
 private:
 

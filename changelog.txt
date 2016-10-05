@@ -1,4 +1,16 @@
 
+v0.1.3.8
+    - adds BitNoise module class
+    - adds ofxPDSPScope module class
+    - adds VAFilter module class
+    - adds HighCut module class
+    - Modules section in doxy for an handy list of modules divided by type of processor 
+    - iOs fixes
+    - add OSC input and output
+    - adds ofxPDSPWrapper class for external code integration, example included
+    - other minor fixes and improvements
+
+
 v0.1.3.7
     - adds ofxPDSPEngineGraphics for easy monitoring of patterns, it is included by standard in the engine
     - ofxPDSPEngineGraphics has also a keys( { {...}, {...}, {...}, ... } ) method for easy sequence launch with pc keys
