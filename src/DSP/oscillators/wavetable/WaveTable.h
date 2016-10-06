@@ -21,7 +21,74 @@ public:
     ~WaveTable();
 
     /*!
-    @brief add an empty waveform to the buffer, 
+    @brief clears the table at the given index.
+    @param[in] index index of the wavetable
+    */    
+    void setEmpty( int index );
+    
+    /*!
+    @brief sets the table at the given index to a sine waveform a waveform from a sample file located at path
+    @param[in] index index of the wavetable
+    @param[in] path absolute or relative path to audio file
+    
+    */    
+    void setSample( int index, std::string path );
+
+    /*!
+    @brief generate a waveform from an inlined list of partials. This function is precise but not fast, use it before starting the DSP engine.
+    @param[in] index index of the wavetable
+    @param[in] partials inlined array of partials 
+    @param[in] harmonicScale if true each value is multiplied by a saw wave corresponding partial
+    
+    */    
+    void setAdditiveWave( int index,  std::initializer_list<double> partials, bool harmonicScale = false );
+
+
+    /*!
+    @brief sets the table at the given index to a waveform from a given vector of partials. This function is precise but not fast, use it before starting the DSP engine.
+    @param[in] index index of the wavetable
+    @param[in] partials inlined array of partials 
+    @param[in] harmonicScale if true each value is multiplied by a saw wave corresponding partial
+    
+    */    
+    void setAdditiveWave( int index, const std::vector<double> & partials, bool harmonicScale = false );
+
+    /*!
+    @brief sets the table at the given index to a sine waveform a sawtooth waveform with the given number of of partials. This function is precise but not fast, use it before starting the DSP engine.
+    @param[in] index index of the wavetable
+    @param[in] partials number of partials
+    
+    */    
+    void setSawWave( int index, int partials );
+
+
+    /*!
+    @brief sets the table at the given index to a sine waveform a square waveform with the given number of of partials. This function is precise but not fast, use it before starting the DSP engine.
+    @param[in] index index of the wavetable
+    @param[in] partials number of partials
+    
+    */    
+    void setSquareWave ( int index, int partials );
+    
+
+    /*!
+    @brief sets the table at the given index to a sine waveform a triangle waveform with the given number of of partials. This function is precise but not fast, use it before starting the DSP engine.
+    @param[in] index index of the wavetable
+    @param[in] partials number of partials
+    
+    */        
+    void setTriangleWave ( int index, int partials );
+
+
+    /*!
+    @brief sets the table at the given index to a sine waveform. This function is precise but not fast, use it before starting the DSP engine.
+    @param[in] index index of the wavetable
+    
+    */        
+    void setSineWave ( int index );
+
+    /*!
+    @brief sets the table at the given index to a sine waveform an empty waveform to the buffer, 
     */    
     void addEmpty();
     

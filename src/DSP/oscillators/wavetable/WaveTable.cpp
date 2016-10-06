@@ -85,7 +85,26 @@ void pdsp::WaveTable::addEmpty( ) {
     }
 }    
 
+void pdsp::WaveTable::setEmpty( int index ) {
+    
+    if(index<0 ) index = 0;
+    if(index >= tableSize ) index = tableSize-1;
+    
+    for(int i=0; i<length; ++i){
+        buffer[index][i] = 0.0f;
+    }
+}    
+
 void pdsp::WaveTable::addSample( std::string path ) {
+    addEmpty();
+    int index = tableSize-1;
+    setSample( index, path );
+}
+
+void pdsp::WaveTable::setSample(int index, std::string path ) {
+    
+    if(index<0 ) index = 0;
+    if(index >= tableSize ) index = tableSize-1;
     
     loader.load(path);
     
@@ -98,8 +117,7 @@ void pdsp::WaveTable::addSample( std::string path ) {
             std::cout<< "[pdsp] warning! loading wavetables of different sizes!\n";
             pdsp_trace();
         } else {
-            addEmpty();
-            int index = tableSize-1;
+
             for(int n=0; n<length; ++n){
                 buffer[index][n] = loader.buffer[0][n];
             }
@@ -110,58 +128,21 @@ void pdsp::WaveTable::addSample( std::string path ) {
 }
 
 
-void pdsp::WaveTable::addAdditiveWave( std::initializer_list<double> partials, bool harmonicScale ){
-   
-    addEmpty();
-
-    int index = tableSize-1;
-    
-    int partial_i = 1; 
-    double multiply = 1.0 / (double) length;
-    
-    for (const double & value : partials){
-        
-        double harmonic_amp = value;
-        double partial = (double) partial_i;
-
-        if(harmonicScale){
-            double harmonic = 1.0 / partial;
-            if(partial_i%2 == 0) harmonic = -harmonic;
-            harmonic_amp *= harmonic;  
-        }
-        
-        for(int n=0; n<length; ++n){
-            double theta = static_cast<double>(n) * multiply * M_TAU_DOUBLE * partial;
-            buffer[index][n] += sin ( theta ) * harmonic_amp;
-        }        
-        
-        partial_i++;
-    }
-
-    float normalize = -1.0f;
-    for(int n=0; n<length; ++n){
-        float value = std::abs ( buffer[index][n] );
-        if(value > normalize) normalize = value;
-    }  
-    
-    normalize = 1.0f / normalize;
-   
-    for(int n=0; n<length; ++n){
-        buffer[index][n] *= normalize;
-    }  
-    
-    buffer[index][length] = buffer[index][0];
-
-
-}
-
 
 void pdsp::WaveTable::addAdditiveWave( const std::vector<double> & partials, bool harmonicScale ){
    
     addEmpty();
 
     int index = tableSize-1;
-    
+    setAdditiveWave(index, partials, harmonicScale);
+
+}
+
+void pdsp::WaveTable::setAdditiveWave(int index, const std::vector<double> & partials, bool harmonicScale ){
+   
+    if(index<0 ) index = 0;
+    if(index >= tableSize ) index = tableSize-1;   
+
     int partial_i = 1; 
     double multiply = 1.0 / (double) length;
     
@@ -199,6 +180,63 @@ void pdsp::WaveTable::addAdditiveWave( const std::vector<double> & partials, boo
     buffer[index][length] = buffer[index][0];
 
 }
+
+
+
+void pdsp::WaveTable::addAdditiveWave( std::initializer_list<double> partials, bool harmonicScale ){
+   
+    addEmpty();
+
+    int index = tableSize-1;
+    setAdditiveWave(index, partials, harmonicScale);
+
+}
+
+void pdsp::WaveTable::setAdditiveWave(int index, std::initializer_list<double> partials, bool harmonicScale ){
+   
+    if(index<0 ) index = 0;
+    if(index >= tableSize ) index = tableSize-1;   
+
+    int partial_i = 1; 
+    double multiply = 1.0 / (double) length;
+    
+    for (const double & value : partials){
+        
+        double harmonic_amp = value;
+        double partial = (double) partial_i;
+
+        if(harmonicScale){
+            double harmonic = 1.0 / partial;
+            if(partial_i%2 == 0) harmonic = -harmonic;
+            harmonic_amp *= harmonic;  
+        }
+        
+        for(int n=0; n<length; ++n){
+            double theta = static_cast<double>(n) * multiply * M_TAU_DOUBLE * partial;
+            buffer[index][n] += sin ( theta ) * harmonic_amp;
+        }        
+        
+        partial_i++;
+    }
+
+    float normalize = -1.0f;
+    for(int n=0; n<length; ++n){
+        float value = std::abs ( buffer[index][n] );
+        if(value > normalize) normalize = value;
+    }  
+    
+    normalize = 1.0f / normalize;
+   
+    for(int n=0; n<length; ++n){
+        buffer[index][n] *= normalize;
+    }  
+    
+    buffer[index][length] = buffer[index][0];
+
+
+}
+
+
 
 
 void pdsp::WaveTable::addSawWave( int partials ) {
@@ -206,7 +244,16 @@ void pdsp::WaveTable::addSawWave( int partials ) {
     addEmpty();
 
     int index = tableSize-1;
+    setSawWave( index, partials );
     
+}
+
+
+void pdsp::WaveTable::setSawWave(int index, int partials ) {
+
+    if(index<0 ) index = 0;
+    if(index >= tableSize ) index = tableSize-1;
+
     int partial_i = 1; 
     double multiply = 1.0 / (double) length;
     
@@ -246,6 +293,15 @@ void pdsp::WaveTable::addSquareWave ( int partials ) {
     addEmpty();
 
     int index = tableSize-1;
+    setSquareWave( index, partials);
+        
+}
+
+  
+void pdsp::WaveTable::setSquareWave (int index, int partials ) {
+    
+    if(index<0 ) index = 0;
+    if(index >= tableSize ) index = tableSize-1;
     
     int partial_i = 1; 
     double multiply = 1.0 / (double) length;
@@ -286,7 +342,15 @@ void pdsp::WaveTable::addTriangleWave ( int partials ) {
     addEmpty();
 
     int index = tableSize-1;
-    
+    setTriangleWave( index, partials );
+            
+}
+      
+void pdsp::WaveTable::setTriangleWave (int index, int partials ) {
+
+    if(index<0 ) index = 0;
+    if(index >= tableSize ) index = tableSize-1;
+
     int partial_i = 1; 
     double multiply = 1.0 / (double) length;
     
@@ -327,6 +391,17 @@ void pdsp::WaveTable::addSineWave ( ) {
     addEmpty();
 
     int index = tableSize-1;
+    setSineWave( index );
+            
+}
+      
+void pdsp::WaveTable::setSineWave ( int index ) {
+
+    if(index<0 ) index = 0;
+    if(index >= tableSize ) index = tableSize-1;
+    
+    addEmpty();
+
     double multiply = 1.0 / (double) length;    
 
     for(int n=0; n<length; ++n) {
