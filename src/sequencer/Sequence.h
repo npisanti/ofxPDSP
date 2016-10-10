@@ -151,6 +151,17 @@ namespace pdsp{
         
 
         /*!
+        @brief call begin() before calling this function. This function will add all the values. This function will add values ranging from start to right before stop value, from the stepStart to the stepStop
+        @param[in] stepStart step of the first value
+        @param[in] valueStart start value, this is the value of the first step
+        @param[in] stepStopExclusive step of the last value, exclusive
+        @param[in] valueStopExclusive stop value, the destination value that is not reached
+        @param[in] output the output of the ScoreSection that will operate with the message, 0 if not given
+        @param[in] granularity the number of intermediate messages used from a step to another, 1 is the default value. An higher number will make smoother value transition, 1 is staircase-like and is good just for percussive rolls.
+        */
+        void line(double stepStart, float valueStart, double stepStopExclusive, float valueStopExclusive, int output = 0, int granularity=1 );
+
+        /*!
         @brief this lambda function is executed each time the Sequence starts from the begin. Assign your own functions to it.
         This lambda function is executed each time the Sequence starts from the begin. Usually is empty, but you can assign your own lambdas to generate new values each time the Sequence starts. Remember that the code executed can make a previosly called set() method ininfluent. Remember that this function will be executed into the audio-thread so the access to some variable used also into the main thread could cause race conditions.
         */

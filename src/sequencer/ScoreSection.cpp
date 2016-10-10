@@ -106,7 +106,7 @@ void pdsp::ScoreSection::launchCell( int index, bool quantizeLaunch, double quan
     }
     this->launchedPattern = index;
     
-    if(patterns[index].sequence != nullptr ){ patterns[index].sequence->resetCount(); }
+    //if(patterns[index].sequence != nullptr ){ patterns[index].sequence->resetCount(); }
     
     atomic_meter_next.store(index);
     this->launchingCell = true;
@@ -204,6 +204,7 @@ void pdsp::ScoreSection::processSection(const double &startPlayHead,
         if( launchSchedule <= scheduledTime ){
             scheduledTime = launchSchedule;
             scheduledPattern = launchedPattern2;
+            patterns[scheduledPattern].sequence->resetCount();
             launchSchedule = std::numeric_limits<double>::infinity();
         }
 

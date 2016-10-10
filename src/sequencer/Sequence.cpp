@@ -190,6 +190,25 @@ void pdsp::Sequence::trigVector( std::vector<float> vect, double gateLength, int
         
 }
 
+
+void pdsp::Sequence::line( double stepStart, float valueStart, double stepStopExclusive, float valueStopExclusive, int output, int granularity ){
+    
+    float value = valueStart;
+    
+    double steps = (stepStopExclusive - stepStart ) * granularity;
+   
+    double stepAdd = 1.0 / granularity;  
+    float  valueAdd = ( valueStopExclusive - valueStart ) / steps;
+
+    for( double s = stepStart; s< (double) stepStopExclusive; s += stepAdd ) {
+        message( s, value, output);
+        value += valueAdd;
+    }
+
+}
+
+
+
 const std::vector<pdsp::ScoreMessage> & pdsp::Sequence::getScore() const{
     return score;
 }
@@ -226,4 +245,3 @@ int pdsp::SeqChange::getNextPattern( int currentPattern, int size ) noexcept {
     self = currentPattern;
     return code();
 }
-
