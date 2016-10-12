@@ -7,7 +7,7 @@
 #define PDSP_MODULE_COMPRESSOR2_H_INCLUDED
 
 #include "../../DSP/pdspCore.h"
-#include "../../DSP/dynamics/AbsoluteSignal.h"
+#include "../../DSP/dynamics/AbsoluteValue.h"
 #include "../../DSP/dynamics/RMSDetector.h"
 #include "../../DSP/dynamics/EnvelopeFollower.h"
 #include "../../DSP/dynamics/GainComputer.h"

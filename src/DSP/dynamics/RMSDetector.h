@@ -13,7 +13,7 @@ namespace pdsp{
     /*!
     @brief An RMS signal detector.
     
-    This Unit makes for each samples the Root Mean Squared of the values inside a given time window. It is useful as first step for dynamic processing. If set(float window_ms) is not used the window is as large as the buffersize.
+    This Unit makes for each samples the Root Mean Squared of the values inside a given time window. It is useful as first step for dynamic processing. If set(float window_ms) is not used the window is to 50ms.
 
     */
     
@@ -73,7 +73,6 @@ private:
     
     std::atomic<float> meter;
     
-    bool autoSetWindow;
 };
 
 }//END NAMESPACE

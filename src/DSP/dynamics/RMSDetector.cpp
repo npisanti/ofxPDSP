@@ -8,9 +8,7 @@ pdsp::RMSDetector::RMSDetector(){
     addOutput("signal", output);
     updateOutputNodes();
 
-    autoSetWindow = true;
-    
-    //setWindowTime(window_ms);
+    window_ms = 50.0f;
 
     squaresDividedBuffer = nullptr;
     
@@ -43,13 +41,10 @@ pdsp::Patchable& pdsp::RMSDetector::set(float window_ms){
 }
 
 void pdsp::RMSDetector::prepareUnit( int expectedBufferSize, double sampleRate ) {
-    
-    if(autoSetWindow){ // sets window based on buffer size
-        this->window_ms = (double) expectedBufferSize * ( 1000.0 / sampleRate );
-        bufferLength = expectedBufferSize;
-    }
-    
-    sampleRateMultiplier = sampleRate * 0.001f;
+
+    sampleRateMultiplier = sampleRate * 0.001f;    
+    bufferLength = static_cast<int>(window_ms * sampleRateMultiplier);
+
     updateWindowBuffer();
 }
 
@@ -61,11 +56,10 @@ void pdsp::RMSDetector::releaseResources () {
 }
 
 void pdsp::RMSDetector::setWindowTime(float window_ms){
-    autoSetWindow = false;
     this->window_ms = window_ms;
-    bufferLength = static_cast<int>(window_ms * sampleRateMultiplier);    
-    
+     
     if(dynamicConstruction){
+        bufferLength = static_cast<int>(window_ms * sampleRateMultiplier);   
         updateWindowBuffer();
     }
 }
