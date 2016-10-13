@@ -98,6 +98,8 @@ void pdsp::RMSDetector::process (int bufferSize) noexcept {
                         actualSum += outputBuffer[n];
                         squaresDividedBuffer[readIndex] = outputBuffer[n];
                         
+                        actualSum = (actualSum > 0.0f) ? actualSum : 0.0f; // to avoid math quantization errors
+                        
                         outputBuffer[n] = actualSum;
                         
                         readIndex++;

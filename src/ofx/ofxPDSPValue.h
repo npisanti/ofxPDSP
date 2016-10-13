@@ -31,7 +31,6 @@ public:
     
     ~ofxPDSPValue();
     
-    
     /*!
     @brief sets the and returns the internal ofParameter<float>, useful to set up an UI. This parameter is summed to another ofParameter<int>, that you access passing all ints as parameters
     @param[in] name this will become the name of the ofParameter
@@ -69,7 +68,7 @@ public:
 
 
     /*!
-    @brief sets the value and returns this unit ready to be patched, without updating the ofParameters
+    @brief sets the value without updating the ofParameters
     @param[in] value new value
     
     This set method don't update the ofParameter, for faster computation when you're not using this class for UI
