@@ -73,12 +73,14 @@ void pdsp::OnePole::process(int bufferSize) noexcept {
                 switch ( switcher & 42 ) {
                 case 0 : //unchanged, unchanged, unchanged
                         process_audio<false, false>(inputBuffer, cutoffBuffer, bufferSize);
+                        setOutputToZero(output_hpf);
                         break;
                 case 2 : //changed, unchanged, unchanged
                         process_audio<true, false>(inputBuffer, cutoffBuffer, bufferSize);
                         break;
                 case 8 : //unchanged, changed, unchanged
                         process_audio<false, true>(inputBuffer, cutoffBuffer, bufferSize);
+                        setOutputToZero(output_hpf);
                         break;
                 case 10 : //changed, changed, unchanged
                         process_audio<true, true>(inputBuffer, cutoffBuffer, bufferSize);
