@@ -84,8 +84,9 @@ private:
     PatchNode       input;
  
     PannerFormula   panning_step1;
-    SinFormula      panning_step2L;
-    CosFormula      panning_step2R;
+    
+    CosFormula      panning_step2L;
+    SinFormula      panning_step2R;
         
     Amp             amp1;
     Amp             amp2;

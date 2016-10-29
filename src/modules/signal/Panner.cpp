@@ -73,9 +73,9 @@ pdsp::Patchable& pdsp::Panner::in_pan(){
 }
 
 pdsp::Patchable& pdsp::Panner::out_0(){
-    return out("1");
+    return out("0");
 }
 
 pdsp::Patchable& pdsp::Panner::out_1(){
-    return out("2");
+    return out("1");
 }

@@ -18,7 +18,8 @@ namespace pdsp{
 class WaveTableOsc : public OscillatorVariShape {
 public:
     WaveTableOsc();
-    
+    WaveTableOsc(const WaveTableOsc& other);
+    WaveTableOsc& operator=(const WaveTableOsc& other);
     /*!
     @brief sets the Wavetable. 
     @param[in] waveTable WaveTable class object

@@ -52,6 +52,11 @@ public:
     */      
     Patchable& in_pitch();
     
+    /*!
+    @brief Sets "pitch" as selected input and returns this module ready to be patched. This is the filter cutoff control in semitones.
+    */      
+    Patchable& in_cutoff();
+    
     
     /*!
     @brief Sets "reso" as selected input and returns this module ready to be patched. This is the filter resonance control.

@@ -79,7 +79,7 @@ void pdsp::WaveTable::addEmpty( ) {
         if(verbose) std::cout<< "[pdsp] wavetable size: "<< tableSize << " waveforms\n";
     }else{
     
-        std::cout<< "[pdsp] warning! adding table without setting table size first, routine not performed, use initTable() first\n";
+        std::cout<< "[pdsp] warning! adding table without setting table size first, routine not performed, use initLength() first\n";
         pdsp_trace();
     
     }
@@ -399,8 +399,6 @@ void pdsp::WaveTable::setSineWave ( int index ) {
 
     if(index<0 ) index = 0;
     if(index >= tableSize ) index = tableSize-1;
-    
-    addEmpty();
 
     double multiply = 1.0 / (double) length;    
 

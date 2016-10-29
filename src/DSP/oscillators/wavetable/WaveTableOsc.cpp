@@ -6,6 +6,17 @@ pdsp::WaveTableOsc::WaveTableOsc(){
     waveTable = nullptr;
 }
 
+pdsp::WaveTableOsc::WaveTableOsc(const pdsp::WaveTableOsc & other) : WaveTableOsc(){
+    std::cout<<"[pdsp] warning! WaveTableOsc copy constructed\n"; 
+    pdsp_trace();
+}
+ 
+pdsp::WaveTableOsc& pdsp::WaveTableOsc::operator=(const WaveTableOsc& other){
+    return *this;
+    std::cout<<"[pdsp] warning! WaveTableOsc moved constructed\n";
+    pdsp_trace();
+}
+
 
 void pdsp::WaveTableOsc::setTable(WaveTable& waveTable){
     this->waveTable = &waveTable;

@@ -70,6 +70,10 @@ pdsp::Patchable& pdsp::VAFilter::in_pitch(){
     return in("pitch");
 }
 
+pdsp::Patchable& pdsp::VAFilter::in_cutoff(){
+    return in("pitch");
+}
+
 pdsp::Patchable& pdsp::VAFilter::in_reso(){
     return in("reso");
 }

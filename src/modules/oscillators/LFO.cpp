@@ -30,7 +30,7 @@ void pdsp::LFO::patch(){
     phazorFree.out_trig() >> rnd >> randomSnHSlew;   
         
     speed >> phazorFree;
-    speed * 0.5f >> randomSlew.in_cutoff(); 
+    speed * 0.25f >> randomSlew.in_cutoff(); 
     
     sawSlew.set(200.0f); //200hz slew = 5ms
     squareSlew.set(200.0f); //200hz slew = 5ms
