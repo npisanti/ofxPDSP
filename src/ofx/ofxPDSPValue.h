@@ -66,6 +66,41 @@ public:
     */  
     ofParameter<int>& set(const char * name, int min, int max);
 
+    /*!
+    @brief sets the and returns the internal ofParameter<float>, useful to set up an UI. This parameter is summed to another ofParameter<int>, that you access passing all ints as parameters
+    @param[in] name this will become the name of the ofParameter
+    @param[in] value default value
+    @param[in] min minimum value 
+    @param[in] max maximum value
+    */    
+    ofParameter<float>& set( std::string name, float value, float min, float max);
+
+    /*!
+    @brief sets the and returns the internal ofParameter<int>, useful to set up an UI. This parameter is summed to another ofParameter<float>, that you access passing all ints as parameters
+    @param[in] name this will become the name of the ofParameter
+    @param[in] value default value
+    @param[in] min minimum value 
+    @param[in] max maximum value
+    */    
+    ofParameter<int>& set( std::string name, int value, int min, int max);
+
+
+    /*!
+    @brief sets the value min and max boundary when operated by the ofParameter<float> in the UI and returns the parameter ready to be added to the UI
+    @param[in] name this will become the name of the ofParameter
+    @param[in] min minimum value 
+    @param[in] max maximum value
+    */  
+    ofParameter<float>& set( std::string name, float min, float max);
+
+    /*!
+    @brief sets the value min and max boundary when operated by the ofParameter<int> in the UI and returns the parameter ready to be added to the UI
+    @param[in] name this will become the name of the ofParameter
+    @param[in] min minimum value 
+    @param[in] max maximum value
+    */  
+    ofParameter<int>& set( std::string name, int min, int max);
+
 
     /*!
     @brief sets the value without updating the ofParameters

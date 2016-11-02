@@ -52,7 +52,7 @@ public:
     Patchable& in_feedback();
     
     /*!
-    @brief Sets "damping" as selected output and returns this Unit ready to be patched. This input control how much the signal in the delay feedback path will be filtered and supports audio-rate modulation..
+    @brief Sets "damping" as selected output and returns this Unit ready to be patched. This input control how much the signal in the delay feedback path will be filtered and supports audio-rate modulation. Default value is 0.0f and the value are clipped in the 0.0f - 0.99f range.
     */          
     Patchable& in_damping();    
     

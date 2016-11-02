@@ -129,3 +129,20 @@ void ofxPDSPValue::process (int bufferSize) noexcept {
 float ofxPDSPValue::meter_output() const{
     return slewLastValue.load();
 }  
+
+
+ofParameter<float>& ofxPDSPValue::set( std::string name, float value, float min, float max) {
+    return set( name.c_str(), value, min, max);
+}
+
+ofParameter<int>& ofxPDSPValue::set( std::string name, int value, int min, int max) {
+    return set( name.c_str(), value, min, max);
+}
+
+ofParameter<float>& ofxPDSPValue::set( std::string name, float min, float max){
+    return set( name.c_str(), min, max);
+}
+
+ofParameter<int>& ofxPDSPValue::set( std::string name, int min, int max) {
+    return set( name.c_str(), min, max);
+}
