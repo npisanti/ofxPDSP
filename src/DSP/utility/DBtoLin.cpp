@@ -2,7 +2,7 @@
 
 #include "DBtoLin.h"
 
-float pdsp::DBtoLin::silenceThreshold = -60.0f;
+float pdsp::DBtoLin::silenceThreshold = -48.0f;
 
 void pdsp::DBtoLin::setSilenceThreshold( float silenceDB ){
     silenceThreshold = silenceDB;
