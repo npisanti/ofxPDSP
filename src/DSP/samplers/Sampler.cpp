@@ -1,8 +1,5 @@
 
-
 #include "Sampler.h"
-
-//TODO: start position with value sampled on trigger
 
 pdsp::Sampler::Sampler(){
 
@@ -11,6 +8,7 @@ pdsp::Sampler::Sampler(){
         addInput("select", input_select);
         addInput("start", input_start);
         addInput("direction", input_direction);
+        addInput("start_mod", input_start_mod);
         addOutput("signal", output);
         updateOutputNodes();  
         
@@ -25,9 +23,8 @@ pdsp::Sampler::Sampler(){
         input_pitch_mod.setDefaultValue(0.0f);
         input_select.setDefaultValue(0.0f);
         input_start.setDefaultValue(0.0f);
+        input_start_mod.setDefaultValue(0.0f);
         input_direction.setDefaultValue(1.0f);
-        //input_trigger_to_start.setDefaultValue(0.0f);
-
 
         interpolatorShell.changeInterpolator(Linear);
 
@@ -56,6 +53,10 @@ pdsp::Patchable& pdsp::Sampler::in_start(){
     return in("start");
 }
 
+pdsp::Patchable& pdsp::Sampler::in_start_mod(){
+    return in("start_mod");
+}
+
 pdsp::Patchable& pdsp::Sampler::in_direction(){
     return in("direction");
 }
@@ -65,19 +66,21 @@ pdsp::Patchable& pdsp::Sampler::out_signal(){
 }
 
 
-void pdsp::Sampler::addSample(SampleBuffer* newSample){
+void pdsp::Sampler::addSample(SampleBuffer* newSample, int channel){
         samples.push_back(newSample);
+        channels.push_back(channel);
         if(sample==nullptr){
                 sample = samples[samples.size()-1];
         }  
 }
 
-bool pdsp::Sampler::setSample(SampleBuffer* newSample, int index){
+bool pdsp::Sampler::setSample(SampleBuffer* newSample, int index, int channel){
         if(index<samples.size() && index>=0){
                 samples[index] = newSample;
+                channels[index] = channel;
                 return true;
         }if(index == samples.size() ){
-                addSample(newSample);
+                addSample(newSample, channel);
                 return true;
         }else{
                 return false;
@@ -96,17 +99,20 @@ void pdsp::Sampler::process(int bufferSize) noexcept {
         
         if(sample!=nullptr && sample->loaded()){
         
-                int selectState;
-                const float* selectBuffer = nullptr;
+                selectState = Unchanged;
+                selectBuffer = nullptr;
 
-                int startState;
-                const float* startBuffer = nullptr;
+                startState = Unchanged;
+                startBuffer = nullptr;
+                
+                startModState = Unchanged;
+                startModBuffer = nullptr;
 
                 int triggerState;
-                const float* triggerBuffer = processInput(input_trig, triggerState);
+                const float* triggerBuffer = processInput( input_trig, triggerState);
 
                 int pitchModState;
-                const float* pitchModBuffer = processInput(input_pitch_mod, pitchModState  );
+                const float* pitchModBuffer = processInput( input_pitch_mod, pitchModState  );
 
             
                 if(pitchModState==Changed){
@@ -117,17 +123,16 @@ void pdsp::Sampler::process(int bufferSize) noexcept {
                 int switcher = pitchModState + triggerState*4;
                 switch ( switcher & processAudioBitMask ) {
                 case audioFFFF : //false, false
-                        process_audio<false, false>(pitchModBuffer, triggerBuffer, selectBuffer, selectState, startBuffer, startState, bufferSize);
-                        //Logger::writeToLog("run");
+                        process_audio<false, false>(pitchModBuffer, triggerBuffer, bufferSize);
                         break;
                 case audioTFFF : //true, false
-                        process_audio<true, false>(pitchModBuffer, triggerBuffer, selectBuffer, selectState, startBuffer, startState, bufferSize);
+                        process_audio<true, false>(pitchModBuffer, triggerBuffer, bufferSize);
                         break;
                 case audioFTFF : //false, true
-                        process_audio<false, true>(pitchModBuffer, triggerBuffer, selectBuffer, selectState, startBuffer, startState, bufferSize);
+                        process_audio<false, true>(pitchModBuffer, triggerBuffer, bufferSize);
                         break;
                 case audioTTFF : //true, true
-                        process_audio<true, true>(pitchModBuffer, triggerBuffer, selectBuffer, selectState, startBuffer, startState, bufferSize);
+                        process_audio<true, true>(pitchModBuffer, triggerBuffer, bufferSize);
                         break;
                 default:
                         break;
@@ -149,7 +154,7 @@ void pdsp::Sampler::process_once( const float* pitchModBuffer)noexcept{
 }
 
 template<bool pitchModAR, bool triggerAR>
-void pdsp::Sampler::process_audio( const float* pitchModBuffer, const float* triggerBuffer, const float* &selectBuffer, int &selectState, const float* &startBuffer, int& startState, int bufferSize)noexcept{
+void pdsp::Sampler::process_audio( const float* pitchModBuffer, const float* triggerBuffer, int bufferSize)noexcept{
 
         float* outputBuffer = getOutputBufferToFill(output);
 
@@ -163,7 +168,7 @@ void pdsp::Sampler::process_audio( const float* pitchModBuffer, const float* tri
 
                 if(triggerAR){
                         if(checkTrigger(triggerBuffer[n])){
-                                selectSample(selectBuffer, selectState,  startBuffer, startState, n, bufferSize);
+                                selectSample( n, bufferSize, triggerBuffer[n] );
                         }
                 }
 
@@ -173,7 +178,7 @@ void pdsp::Sampler::process_audio( const float* pitchModBuffer, const float* tri
 
                 int readIndex_int = static_cast<int>(readIndex);
                 if(readIndex_int>=0 && readIndex_int < sample->length){
-                        outputBuffer[n] = interpolatorShell.interpolator->interpolate(sample->buffer[sample->mono], readIndex, sample->length);
+                        outputBuffer[n] = interpolatorShell.interpolator->interpolate(sample->buffer[channel], readIndex, sample->length);
                 }else{
                         outputBuffer[n] = 0.0f;
                 }
@@ -186,7 +191,7 @@ void pdsp::Sampler::process_audio( const float* pitchModBuffer, const float* tri
 }
 
 
-void pdsp::Sampler::selectSample(const float* &selectBuffer, int &selectState, const float* &startBuffer, int &startState, int n, int bufferSize)noexcept{
+void pdsp::Sampler::selectSample( int n, int bufferSize, float trigger )noexcept{
 
         if(selectBuffer==nullptr){
                 selectBuffer = processInput(input_select, selectState);
@@ -194,6 +199,10 @@ void pdsp::Sampler::selectSample(const float* &selectBuffer, int &selectState, c
 
         if(startBuffer==nullptr){
                 startBuffer = processInput(input_start, startState);
+        }
+        
+        if(startModBuffer==nullptr){
+                startModBuffer = processInput(input_start_mod, startModState);
         }
 
         //SELECT SAMPLE
@@ -212,12 +221,25 @@ void pdsp::Sampler::selectSample(const float* &selectBuffer, int &selectState, c
         
         //SET START POSITION
         sample = samples[sampleIndex];
+        channel = channels[sampleIndex];
+        
+        trigger = (trigger > 1.0f) ? 1.0f : trigger;
+        trigger = (trigger < 0.0f) ? 0.0f : trigger;
+        
+        float startAdd = (1.0f-trigger) * startModBuffer[0];
+        
         float start;
         if(startState==AudioRate){
                 start = startBuffer[n];
         }else{
                 start = startBuffer[0];
         }
+        
+        start += startAdd;
+        
+        start = (start > 1.0f) ? 1.0f : start;
+        start = (start < 0.0f) ? 0.0f : start;
+        
         float lenFloat = static_cast<float>(sample->length);
         readIndex = start * lenFloat;
         positionDivider = 1.0f / lenFloat;

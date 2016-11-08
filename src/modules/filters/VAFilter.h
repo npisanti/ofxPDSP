@@ -99,6 +99,9 @@ public:
     Patchable& out_R();
             
             
+    float meter_cutoff() const;        
+    
+            
     static const float LowPass24;;
     static const float LowPass12;
     static const float HighPass24;
@@ -106,6 +109,7 @@ public:
     static const float BandPass24;
     static const float BandPass12;
             
+    
 private:
     void patch ();
     

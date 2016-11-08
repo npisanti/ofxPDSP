@@ -98,3 +98,9 @@ pdsp::Patchable& pdsp::VAFilter::out_L(){
 pdsp::Patchable& pdsp::VAFilter::out_R(){
     return out("1");
 }
+
+float pdsp::VAFilter::meter_cutoff() const {
+    return p2f.meter_input();
+}      
+    
+    

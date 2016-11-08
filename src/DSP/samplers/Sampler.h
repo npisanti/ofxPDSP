@@ -44,6 +44,12 @@ public:
     @brief Sets "start" as selected input and returns this Unit ready to be patched. This input change the starting position of the sample playing, from 0.0f (plays from start) to 1.0f (plays from the last sample). 0.0f is the standard value. If you are not hearing any sound probably the start position is not correct. Remember to set it to 1.0f if you want to play the sample backwards (-1.0f >> in_direction() ).
     */  
     Patchable& in_start();
+    
+    /*!
+    @brief Sets "start_mod" as selected input and returns this Unit ready to be patched. This input change how much the dynamic of the trigger will change the start position, lower dynamics will offset the position away from the start (softening the sound). Default value is 0.0f (no trigger influence on start position).
+    */
+    Patchable& in_start_mod();
+
     /*!
     @brief Sets "direction" as selected input and returns this Unit ready to be patched. A positive value will set the sampler to play forward and a negative value will set it to play in reverse. Remember to patch a value greater than 0.0f to in_start() if you want to play in reverse.
     */  
@@ -57,15 +63,17 @@ public:
     /*!
     @brief adds a pointer to a SampleBuffer to an internal array of SampleBuffer pointers
     @param[in] newSample pointer to a SampleBuffer
+    @param[in] channel selelect channel, usually 0 is left and 1 right, if not given 0 is used
     */ 
-    void addSample(SampleBuffer* newSample);
+    void addSample(SampleBuffer* newSample, int channel=0);
     
     /*!
     @brief Sets the SampleBuffer pointer at the given index to a new pointer.
     @param[in] newSample pointer to a SampleBuffer
     @param[in] index sample index
+    @param[in] channel selelect channel, usually 0 is left and 1 right, if not given 0 is used
     */ 
-    bool setSample(SampleBuffer* newSample, int index);
+    bool setSample(SampleBuffer* newSample, int index, int channel=0);
     
     /*!
     @brief change the type of the Interpolator used by the Sampler. Some Interpolator sounds better, others are cheaper for the cpu.
@@ -87,20 +95,23 @@ private:
     void process_once( const float* pitchModBuffer)noexcept;
 
     template<bool pitchModAR, bool triggerAR>
-    void process_audio( const float* pitchModBuffer, const float* triggerBuffer, const float* &selectBuffer, int& selectState, const float* &startBuffer, int& startState, int bufferSize)noexcept;
+    void process_audio( const float* pitchModBuffer, const float* triggerBuffer, int bufferSize)noexcept;
 
-    void selectSample(const float* &selectBuffer, int &selectState, const float* &startBuffer, int &startState, int n, int bufferSize) noexcept;
+    void selectSample( int n, int bufferSize, float trigger) noexcept;
     
     InputNode input_trig;
     InputNode input_pitch_mod;
     InputNode input_select;
     InputNode input_start;
     InputNode input_direction;
+    InputNode input_start_mod;
     OutputNode output;
     
     float readIndex;
     float inc;
     SampleBuffer* sample;
+    int channel;
+    
     std::vector<SampleBuffer*> samples;
     InterpolatorShell interpolatorShell;
     
@@ -109,6 +120,18 @@ private:
     
     std::atomic<float> positionMeter;
     float positionDivider;
+    
+    std::vector<int> channels;
+    
+    const float* selectBuffer;
+    int selectState;
+    
+    const float* startBuffer;    
+    int startState;
+
+    const float* startModBuffer;    
+    int startModState;
+
 };
 
 
