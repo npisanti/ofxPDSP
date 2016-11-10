@@ -12,6 +12,7 @@ pdsp::Switch::Switch(){
         resize(4);
         channel = 0;
         input_select.setDefaultValue(0.0f);
+        meter.store(0.0f);
 };
 
 pdsp::Switch::Switch(const Switch& other) : Switch(){
@@ -85,6 +86,9 @@ void pdsp::Switch::process(int bufferSize) noexcept {
         inputs[channel].process();
         output.state = inputs[channel].state;
         output.buffer = inputs[channel].buffer;
+        meter.store( output.buffer[0] );
 }
 
-
+float pdsp::Switch::meter_output() const {
+    return meter.load();
+}
