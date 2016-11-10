@@ -69,7 +69,7 @@ public:
     /*!
     @brief returns a value between -1.0f and 1.0f that rapresent the LFO output signal. This method is thread-safe.
     */   
-    float meter_lfo();
+    float meter_lfo() const;
     
 private:
     void patch();

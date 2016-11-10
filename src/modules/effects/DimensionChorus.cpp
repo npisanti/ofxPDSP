@@ -76,7 +76,7 @@ pdsp::Patchable& pdsp::DimensionChorus::out_1(){
     return out("1");
 }
 
-float pdsp::DimensionChorus::meter_lfo(){
+float pdsp::DimensionChorus::meter_lfo() const{
     return LFO.meter_output();
 }
 

@@ -4,7 +4,7 @@
 #include "ofxMidi.h"
 #include "ofxPDSP.h"
 #include "ofxGui.h"
-#include "voice.h"
+#include "synth.h"
 
 class ofApp : public ofBaseApp{
 
@@ -30,8 +30,8 @@ class ofApp : public ofBaseApp{
         ofxPDSPEngine   engine;
 
         int                     voicesNum;
-        vector<SynthVoice>      voices;
-        SynthUI                 synthUI;
+
+        PolySynth               synth;
      
         pdsp::DimensionChorus   chorus;       
         
@@ -44,5 +44,11 @@ class ofApp : public ofBaseApp{
 
         ofxPDSPValue     chorusSpeed;
         ofxPDSPValue     chorusDepth;
+
+        
+        pdsp::Amp           gain0;
+        pdsp::Amp           gain1;
+        pdsp::DBtoLin       dBtoLin;
+        ofxPDSPValue        gainControl;  
     
 };

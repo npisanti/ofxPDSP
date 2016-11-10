@@ -4,6 +4,7 @@ This is an overview of a selection of the available modules. Some of the modules
 ## Thread-Safe Control
 - [ofxPDSPValue](classofx_p_d_s_p_value.html) : holds a value to control the modules (with optional smoothing), has ofParameter integration for GUIs
 - [pdsp::TriggerControl / ofxPDSPTrigger](classpdsp_1_1_trigger_control.html) : send triggers
+- [ofxPDSPValueMultiplier](classofx_p_d_s_p_value_multiplier.html) : a combination of pdsp::Amp and ofxPDSPValue for easy mod amount control
 
 ## Oscillators / Noise
 - [pdsp::VAOscillator](classpdsp_1_1_v_a_oscillator.html) : band limited oscillator with saw, pulse, triangle and sine outputs

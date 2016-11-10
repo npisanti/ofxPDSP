@@ -20,31 +20,28 @@ void ofApp::setup(){
     // voices is a vector of synth voices, we resize it to the midiKeys voice number     
     voicesNum = midiKeys.getVoicesNumber();
     
-    voices.resize(voicesNum);
+    synth.setup( voicesNum );
     
     // midiKeys has a vector for the pitch outputs and one for the trigger outputs
     // we patch them to the voices here
     for(int i=0; i<voicesNum; ++i){
-        
-        // setup voice
-        voices[i].setup( synthUI );
-        
         // connect each voice to a midi pitch and trigger output
-        midiKeys.outs_trig[i]  >> voices[i].in("trig");
-        midiKeys.outs_pitch[i] >> voices[i].in("pitch");
+        midiKeys.outs_trig[i]  >> synth.voices[i].in("trig");
+        midiKeys.outs_pitch[i] >> synth.voices[i].in("pitch");
         // connect each voice to chorus
-        voices[i] >> chorus.in_0();
-        voices[i] >> chorus.in_1();
-    
+        synth.voices[i] >> chorus.in_0();
+        synth.voices[i] >> chorus.in_1();
     }
     
     // set up chorus
-    chorus.out_0() >> engine.audio_out(0);
-    chorus.out_1() >> engine.audio_out(1);
+    chorus.out_0() >> gain0 >> engine.audio_out(0);
+    chorus.out_1() >> gain1 >> engine.audio_out(1);
 
     chorusSpeed >> chorus.in_speed();
     chorusDepth >> chorus.in_depth();
 
+    gainControl >> dBtoLin  >> gain0.in_mod();    
+                   dBtoLin  >> gain1.in_mod();  
   
     // graphic setup---------------------------
     ofSetVerticalSync(true);
@@ -67,16 +64,16 @@ void ofApp::setup(){
     chorusUI.add(chorusDepth.set("depth (ms)", 3.5f, 1.0f, 10.0f));
 
     gui.setup("panel");
-    gui.add( synthUI.controls );
+    gui.add( gainControl.set("gain", 0, -48, 12) ); 
+    gui.add( synth.ui );
     gui.add( chorusUI );
     gui.setPosition(400, 20);
-    
     
     // audio / midi setup----------------------------
     
     //get MIDI control
     midiIn.listPorts();
-    midiIn.openPort(2); //set the right port !!!
+    midiIn.openPort(1); //set the right port !!!
     // for our midi controllers to work we have to add them to the engine, so it know it has to process them
     engine.addMidiController( midiKeys, midiIn ); // add midi processing to the engine
     engine.listDevices();
@@ -97,14 +94,14 @@ void ofApp::draw(){
     int xBase = 20;
     ofDrawBitmapString("osc pitches", xBase, 26);
     for(int i=0; i<voicesNum; ++i){
-        drawMeter( voices[i].meter_pitch(), 36.f, 84.f, xBase, 30, 20, 200);
+        drawMeter( synth.voices[i].meter_pitch(), 36.f, 84.f, xBase, 30, 20, 200);
         xBase+=40;
     }
     // draw mod envelope meters
     xBase += 30;
     ofDrawBitmapString("mod envs", xBase, 26);
     for(int i=0; i<voicesNum; ++i){
-        drawMeter( voices[i].meter_mod_env(), 0.05f, 1.0f, xBase, 30, 20, 200);
+        drawMeter( synth.voices[i].meter_mod_env(), 0.05f, 1.0f, xBase, 30, 20, 200);
         xBase+=40;
     }
 

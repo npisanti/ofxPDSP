@@ -14,8 +14,9 @@
 //-------------------------------------------------------------------------------------------------
 
 /*!
-@brief a pdsp::Amp with the mod controlled by a ofxPDSPValue. This will save you lot of time when making monophonic synths.
+@brief A pdsp::Amp with the mod controlled by a ofxPDSPValue, packed together.
 
+This will save you lot of time when making monophonic synths. It has an input and output like a pdsp::Amp, but no in_mod() as the mod is controlled by an internal ofxPDSPValue you can access and set with the other methods.
 */
 class ofxPDSPValueMultiplier : public pdsp::Patchable {
     
