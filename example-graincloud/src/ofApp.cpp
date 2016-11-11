@@ -12,7 +12,7 @@
 void ofApp::setup(){
 
     //--------GRAINCLOUD-----------------------
-    float scaleAudio = 2.0f;
+
     grainVoices = cloud.getVoicesNum();
     
     // sampleData is an instance of pdsp::SampleBuffer
@@ -32,12 +32,12 @@ void ofApp::setup(){
     20.0f  >> cloud.in_distance_jitter();
       0.5f >> cloud.in_pitch_jitter();
     -12.0f >> cloud.in_pitch();  
-  
-    // ampSlew is a pdsp::CRSlew, it smooths the control signal
-            ampSlew.setSlewTime(50.0f);    
-    0.0f >> ampSlew; 
-            ampSlew * scaleAudio >> voiceAmpL.in_mod(); 
-            ampSlew * scaleAudio >> voiceAmpR.in_mod();
+
+
+    ampControl.enableSmoothing(50.0f);    
+    ampControl.setv(0.0f); 
+    ampControl * dB(12.0f) >> voiceAmpL.in_mod(); 
+    ampControl * dB(12.0f) >> voiceAmpR.in_mod();
 
     cloud.out_L() >> voiceAmpL >> engine.audio_out(0); 
     cloud.out_R() >> voiceAmpR >> engine.audio_out(1); 
@@ -103,11 +103,12 @@ void ofApp::draw(){
         }       
     }
 
+    ofDrawBitmapString ( "click to control: x=position y=jitter  |  press L to load a sample", uiX+5, uiHeigth+15);    
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    if( key=='l' || key=='L' ) loadRoutine();
 }
 
 //--------------------------------------------------------------
@@ -126,7 +127,7 @@ void ofApp::controlOn(int x, int y){
     ofMap(y, uiY, uiMaxY, 0.25f, 0.0f) >> jitY;
     
     if(x > uiX && x<uiMaxX && y>uiY && y<uiMaxY){
-        1.0f >> ampSlew;
+        ampControl.setv(1.0f);
         drawGrains = true;
         controlX = x;
         controlY = y;
@@ -143,10 +144,36 @@ void ofApp::mousePressed(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-    0.0f >> ampSlew;
+    ampControl.setv(0.0f);
     drawGrains = false;
 }
 
+//--------------------------------------------------------------        
+void ofApp::loadRoutine() {
+    
+    ampControl.setv( 0.0f );  
+    drawGrains = false;  
+    
+    //Open the Open File Dialog
+    ofFileDialogResult openFileResult= ofSystemLoadDialog("select an audio sample"); 
+    
+    //Check if the user opened a file
+    if (openFileResult.bSuccess){
+        
+        string path = openFileResult.getPath();
+        
+        sampleData.load ( path );
+        
+        waveformGraphics.setWaveform(sampleData, 0, ofColor(0, 100, 100, 255), uiWidth, uiHeigth);
+    
+        ofLogVerbose("file loaded");
+        
+    }else {
+        ofLogVerbose("User hit cancel");
+    }
+
+}
+        
 //--------------------------------------------------------------
 void ofApp::mouseEntered(int x, int y){
 

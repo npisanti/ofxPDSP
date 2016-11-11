@@ -12,6 +12,8 @@ class ofApp : public ofBaseApp{
         
         void controlOn(int x, int y);
         
+        void loadRoutine();
+        
 		void keyPressed(int key);
 		void keyReleased(int key);
 		void mouseMoved(int x, int y );
@@ -35,7 +37,7 @@ class ofApp : public ofBaseApp{
         pdsp::ADSR              ampEnv;
         pdsp::Amp               voiceAmpL;
         pdsp::Amp               voiceAmpR;
-        pdsp::CRSlew            ampSlew;
+        ofxPDSPValue            ampControl;
         pdsp::PatchNode         posX;
         pdsp::PatchNode         jitY;
         

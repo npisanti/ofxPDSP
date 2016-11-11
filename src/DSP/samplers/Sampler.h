@@ -111,6 +111,7 @@ private:
     float inc;
     SampleBuffer* sample;
     int channel;
+    int sampleIndex;
     
     std::vector<SampleBuffer*> samples;
     InterpolatorShell interpolatorShell;

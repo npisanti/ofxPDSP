@@ -96,10 +96,7 @@ void pdsp::TriggeredGrain::addSample(pdsp::SampleBuffer* newSample){
 }
 
 void pdsp::TriggeredGrain::setSample(SampleBuffer* samplePointer, int index){
-    //sample = samplePointer;
     grain.setSample(samplePointer, index);
-    //double samplesPerMillisecond = sampleRate * 0.001;
-    //posJitterAmt * static_cast<float>( samplesPerMillisecond / static_cast<double>(samplePointer->length)) >> grain.in_start();
 }
 
 void pdsp::TriggeredGrain::setWindowType(Window_t type, int window_length){

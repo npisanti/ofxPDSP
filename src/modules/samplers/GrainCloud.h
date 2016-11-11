@@ -154,8 +154,6 @@ private:
 
     void patch();
     
-    //PatchNode       grainLength;
-    
     PatchNode       ctrl_start;
     PatchNode       ctrl_grain_length;
     PatchNode       ctrl_pitch;

@@ -12,6 +12,7 @@ pdsp::Sampler::Sampler(){
         addOutput("signal", output);
         updateOutputNodes();  
         
+        sampleIndex = 0;
         incBase = 1.0f / 11050.0f;
         sample = nullptr;
         readIndex = 0.0f;
@@ -157,6 +158,9 @@ template<bool pitchModAR, bool triggerAR>
 void pdsp::Sampler::process_audio( const float* pitchModBuffer, const float* triggerBuffer, int bufferSize)noexcept{
 
         float* outputBuffer = getOutputBufferToFill(output);
+        
+        sample = samples[sampleIndex]; // this will make hot-swap of SampleBuffer files more robust
+        channel = channels[sampleIndex]; 
 
         if(pitchModAR){
                 //
@@ -206,7 +210,7 @@ void pdsp::Sampler::selectSample( int n, int bufferSize, float trigger )noexcept
         }
 
         //SELECT SAMPLE
-        int sampleIndex;
+
         if (selectState==AudioRate){
                 sampleIndex = static_cast<int>(selectBuffer[n]);
         }else{

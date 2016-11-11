@@ -121,8 +121,6 @@ private:
 
     void patch();
     
-    //PatchNode       grainLength;
-    
     PatchNode       trigger_in;
     
     Sampler         grain;
@@ -133,8 +131,6 @@ private:
     Amp             posJitterAmt;
     Amp             pitchJitterAmt;
   
-    //double          sampleRate;
-    //SampleBuffer*   sample;
 };
 
 } //END NAMESPACE
