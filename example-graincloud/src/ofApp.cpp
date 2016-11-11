@@ -22,7 +22,7 @@ void ofApp::setup(){
                                                  // when you run your app in debug mode
                                                  // so sometimes on you have to use an absolute path
     cloud.setWindowType(pdsp::Triangular); // select the shape of the grain envelope
-            // available windows: Rectangular, Triangular, Hann, Hamming, Blackman, BlackmanHarris, SineWindow, Welch
+            // available windows: Rectangular, Triangular, Hann, Hamming, Blackman, BlackmanHarris, SineWindow, Tukey, Welch
     cloud.setSample(&sampleData); // give to the pdsp::GrainCloud the pointer to the sample
 
     0.00f >> posX >> cloud.in_position();

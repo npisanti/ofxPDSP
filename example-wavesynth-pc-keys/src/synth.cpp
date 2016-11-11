@@ -6,11 +6,12 @@ SynthGlobal::SynthGlobal(){
     // WAVETABLE OPERATION EXAMPLE -----------------------------------------------------------------
     // wavetable.setVerbose( true ); // activate logs of waveform loadings and size increments
     
-    wavetable.initLength( 600 ); // 600 samples is AKWF sample length
+    wavetable.setup( 600, 256 ); // 600 samples is AKWF sample length, 256 max partials
 
     // methods for classic waveforms, you can give the number of partials of the waveform
     // more partial = fuller sound but with more aliasing, less partial = duller but with less aliasing
     // highestPartial( float pitch) gives you the max number of partial before aliasing at a given pitch
+
     wavetable.addSawWave( highestPartial(60.0f) ); // this saw wave won't alias before C3=60
     wavetable.addSquareWave( highestPartial(72.0f) ); // this saw wave won't alias before C4=72
     wavetable.addTriangleWave( 64 ); // Triangle wave with 64 partials
@@ -25,13 +26,13 @@ SynthGlobal::SynthGlobal(){
     
 
     // creating a wave from the values of each partial sine wave amplitude
-    wavetable.addAdditiveWave ( { 1.0, 1.0, 1.0, 1.0 } ); // first 4 partial at full amplitude, like an hammond set at 8888
+    wavetable.addAdditiveWave ( { 1.0f, 1.0f, 1.0f, 1.0f } ); // first 4 partial at full amplitude, like an hammond set at 8888
     
     
     // this waveform is harmonically scaled to the standard harmonic series, so just the first partial is at full amplitude
     // (unless you use values greater than 1.0f for the other partials )
     // true == harmonically scaling active, false by default 
-    wavetable.addAdditiveWave ({ 1.0, 0.0, -1.0, 0.5, 0.5, 1.0, -1.0, 0.5, 0.5, 1.0, -1.0, 0.5, 0.5, 1.0, -1.0, 0.5, }, true ); 
+    wavetable.addAdditiveWave ({ 1.0f, 0.0f, -1.0f, 0.5f, 0.5f, 1.0f, -1.0f, 0.5f, 0.5f, 1.0f, -1.0f, 0.5f, 0.5f, 1.0f, -1.0f, 0.5f }, true ); 
   
   
     // additive wave from a vector, we set a partial every three to 1
@@ -85,7 +86,7 @@ SynthGlobal::SynthGlobal(){
     
     // CONTROLS ------------------------------------------------------------------------------------
     ui_osc.setName("oscillator");
-    ui_osc.add(table_ctrl.set("table index", 0.0f, 0.0f, (float)(wavetable.size()-1) ) );
+    ui_osc.add(table_ctrl.set("table index", 8.0f, 0.0f, (float)(wavetable.size()-1) ) );
     table_ctrl.enableSmoothing(200.0f);
 
     ui_filter.setName("filter");
@@ -105,8 +106,8 @@ SynthGlobal::SynthGlobal(){
     ui_lfo.setName("LFO");
     ui_lfo.add(lfo_wave_ctrl.set("wave", 0, 0, 4));
     ui_lfo.add(lfo_speed_ctrl.set("speed (hz)", 0.5f, 0.005f, 4.0f));
-    ui_lfo.add(table_lfo_mod_ctrl.set("-> table", 1.0f, 0.0f, 2.0f) );
-    ui_lfo.add(filter_lfo_mod_ctrl.set("-> filter", 0, 0, 60) );
+    ui_lfo.add(table_lfo_mod_ctrl.set("lfo to table", 1.0f, 0.0f, 2.0f) );
+    ui_lfo.add(filter_lfo_mod_ctrl.set("lfo to filter", 0, 0, 60) );
     // ---------------------------------------------------------------------------------------------
    
     // Chorus --------------------------------------------------------------------------------------
@@ -144,7 +145,7 @@ void SynthVoice::setup( SynthGlobal & m ){
               m.lfoToTable >> oscillator.in_table();
               m.table_ctrl >> oscillator.in_table();
 
-    voiceTrigger >> envelope * 0.12f >> voiceAmp.in_mod();
+    voiceTrigger >> envelope >> voiceAmp.in_mod();
                     envelope >> envToFilter >> filter.in_pitch();
                               m.lfoToFilter >> filter.in_pitch();
                               m.cutoff_ctrl >> filter.in_pitch();

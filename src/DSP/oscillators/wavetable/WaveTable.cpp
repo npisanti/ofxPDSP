@@ -33,13 +33,35 @@ int pdsp::WaveTable::tableLength() const{
     return length;
 }
 
-void pdsp::WaveTable::initLength( int len ) {
+void pdsp::WaveTable::setup( int len, int maxPartials ) {
+    
     if(length==-1){
+        
         length = len;
+        this->maxPartials = maxPartials;
+        
+        // init partials table
+        double divider = 1.0 / (double) length;
+        
+        partialsTable = new float*[maxPartials];
+         
+        for( int i=0; i<maxPartials; ++i){
+            ofx_allocate_aligned(partialsTable[i], length+1);     // guard point   
+
+            for( int n=0; n<length; ++n){
+                double theta = static_cast<double>(n) * (double)(i+1) * M_TAU_DOUBLE * divider ;
+                partialsTable[i][n] = sin( theta );
+            }
+        }
+    
     }else{
-        std::cout<< "[pdsp] warning! table length already set automatically, initLength() failed\n";
+        std::cout<< "[pdsp] warning! table length already set automatically, setup() failed\n";
         pdsp_trace(); 
     }
+}
+
+void pdsp::WaveTable::initLength( int len ) {
+    setup( len );
 }
 
 int pdsp::WaveTable::size() const{
@@ -52,34 +74,38 @@ void pdsp::WaveTable::setVerbose( bool verbose ){
 }
 
 
-void pdsp::WaveTable::addEmpty( ) {
+void pdsp::WaveTable::addEmpty( int numberOfWavesToAdd ) {
+    
     if( length!= -1 ){
+        
         if(buffer == nullptr){
             
-            buffer = new float*[2]; // guard point
-            for( int i=0; i<2; ++i){
+            buffer = new float*[numberOfWavesToAdd+1]; // guard point
+            for( int i=0; i<numberOfWavesToAdd+1; ++i){
                 ofx_allocate_aligned(buffer[i], length+1);                
             }
-            tableSize = 1;
+            tableSize = numberOfWavesToAdd;
             
         }else{
             
-            float** newHandles = new float* [tableSize+2];
+            float** newHandles = new float* [tableSize+numberOfWavesToAdd+1];
             
             for(int i=0; i<tableSize+1; ++i){
                 newHandles[i] = buffer[i];
             }
+            for( int i=0; i<numberOfWavesToAdd; ++i){
+                tableSize++;            
+                ofx_allocate_aligned( newHandles[tableSize], length+1 );                                   
+            }
             
-            tableSize++;            
-            ofx_allocate_aligned( newHandles[tableSize], length+1 );   
             delete [] buffer;
             buffer = newHandles;
-
         }
         if(verbose) std::cout<< "[pdsp] wavetable size: "<< tableSize << " waveforms\n";
+  
     }else{
     
-        std::cout<< "[pdsp] warning! adding table without setting table size first, routine not performed, use initLength() first\n";
+        std::cout<< "[pdsp] warning! adding table without setting table size first, routine not performed, use setup() first\n";
         pdsp_trace();
     
     }
@@ -129,7 +155,7 @@ void pdsp::WaveTable::setSample(int index, std::string path ) {
 
 
 
-void pdsp::WaveTable::addAdditiveWave( const std::vector<double> & partials, bool harmonicScale ){
+void pdsp::WaveTable::addAdditiveWave( const std::vector<float> & partials, bool harmonicScale ){
    
     addEmpty();
 
@@ -138,15 +164,18 @@ void pdsp::WaveTable::addAdditiveWave( const std::vector<double> & partials, boo
 
 }
 
-void pdsp::WaveTable::setAdditiveWave(int index, const std::vector<double> & partials, bool harmonicScale ){
+void pdsp::WaveTable::setAdditiveWave(int index, const std::vector<float> & partials, bool harmonicScale ){
    
     if(index<0 ) index = 0;
     if(index >= tableSize ) index = tableSize-1;   
 
     int partial_i = 1; 
-    double multiply = 1.0 / (double) length;
     
-    for (const double & value : partials){
+    ofx_Aeq_Zero(buffer[index], length);
+    
+    double signalMax = 0.0;
+    
+    for (const float & value : partials){
         
         double harmonic_amp = value;
         double partial = (double) partial_i;
@@ -157,25 +186,16 @@ void pdsp::WaveTable::setAdditiveWave(int index, const std::vector<double> & par
             harmonic_amp *= harmonic;  
         }
         
-        for(int n=0; n<length; ++n){
-            double theta = static_cast<double>(n) * multiply * M_TAU_DOUBLE * partial;
-            buffer[index][n] += sin ( theta ) * harmonic_amp;
-        }        
+        ofx_Aeq_Badd_CmulS( buffer[index], buffer[index], partialsTable[partial_i-1], harmonic_amp, length );
+        signalMax += std::abs( harmonic_amp );
         
         partial_i++;
+        if(partial_i>maxPartials) break;
     }
 
-    float normalize = -1.0f;
-    for(int n=0; n<length; ++n){
-        float value = std::abs ( buffer[index][n] );
-        if(value > normalize) normalize = value;
-    }  
-    
-    normalize = 1.0f / normalize;
-   
-    for(int n=0; n<length; ++n){
-        buffer[index][n] *= normalize;
-    }  
+    float div = 1.0 / signalMax;
+
+    ofx_Aeq_BmulS( buffer[index], buffer[index], div, length );
     
     buffer[index][length] = buffer[index][0];
 
@@ -183,7 +203,7 @@ void pdsp::WaveTable::setAdditiveWave(int index, const std::vector<double> & par
 
 
 
-void pdsp::WaveTable::addAdditiveWave( std::initializer_list<double> partials, bool harmonicScale ){
+void pdsp::WaveTable::addAdditiveWave( std::initializer_list<float> partials, bool harmonicScale ){
    
     addEmpty();
 
@@ -192,51 +212,48 @@ void pdsp::WaveTable::addAdditiveWave( std::initializer_list<double> partials, b
 
 }
 
-void pdsp::WaveTable::setAdditiveWave(int index, std::initializer_list<double> partials, bool harmonicScale ){
+void pdsp::WaveTable::setAdditiveWave(int index, std::initializer_list<float> partials, bool harmonicScale ){
    
     if(index<0 ) index = 0;
     if(index >= tableSize ) index = tableSize-1;   
 
     int partial_i = 1; 
-    double multiply = 1.0 / (double) length;
     
-    for (const double & value : partials){
+    ofx_Aeq_Zero(buffer[index], length);
+    
+    double signalMax = 0.0;
+    
+    for (const float & value : partials){
         
         double harmonic_amp = value;
         double partial = (double) partial_i;
 
         if(harmonicScale){
             double harmonic = 1.0 / partial;
-            if(partial_i%2 == 0) harmonic = -harmonic;
+
             harmonic_amp *= harmonic;  
         }
+        if(partial_i%2 == 0) harmonic_amp = -harmonic_amp;
         
-        for(int n=0; n<length; ++n){
-            double theta = static_cast<double>(n) * multiply * M_TAU_DOUBLE * partial;
-            buffer[index][n] += sin ( theta ) * harmonic_amp;
-        }        
+        ofx_Aeq_Badd_CmulS( buffer[index], buffer[index], partialsTable[partial_i-1], harmonic_amp, length );
+        signalMax += std::abs( harmonic_amp );
         
         partial_i++;
+        if(partial_i>maxPartials) break;
     }
 
-    float normalize = -1.0f;
-    for(int n=0; n<length; ++n){
-        float value = std::abs ( buffer[index][n] );
-        if(value > normalize) normalize = value;
-    }  
-    
-    normalize = 1.0f / normalize;
-   
-    for(int n=0; n<length; ++n){
-        buffer[index][n] *= normalize;
-    }  
+    float div = 1.0 / signalMax;
+    //std::cout<<"signal max is "<< std::to_string(signalMax)<<"\n";
+
+    //for( int n=0; n<length; ++n){
+    //    buffer[index][n] *= div;
+    //}
+
+    ofx_Aeq_BmulS( buffer[index], buffer[index], div, length );
     
     buffer[index][length] = buffer[index][0];
 
-
 }
-
-
 
 
 void pdsp::WaveTable::addSawWave( int partials ) {
@@ -255,35 +272,28 @@ void pdsp::WaveTable::setSawWave(int index, int partials ) {
     if(index >= tableSize ) index = tableSize-1;
 
     int partial_i = 1; 
-    double multiply = 1.0 / (double) length;
     
-    for ( ; partial_i < (partials+1); partial_i++ ){
+    ofx_Aeq_Zero(buffer[index], length);
+    
+    double signalMax = 0.0;
+    
+    for ( ; (partial_i < (partials+1) && partial_i<=maxPartials ); partial_i+=1 ){
         
         double partial = (double) partial_i;
 
-        double harmonic = 1.0 / partial;
-        if(partial_i%2 == 0) harmonic = -harmonic;
+        double harmonic_amp = 1.0 / partial;
+        if(partial_i%2 == 0) harmonic_amp = -harmonic_amp;
         
-        for(int n=0; n<length; ++n){
-            double theta = static_cast<double>(n) * multiply * M_TAU_DOUBLE * partial;
-            buffer[index][n] += sin ( theta ) * harmonic;
-        }        
+        ofx_Aeq_Badd_CmulS( buffer[index], buffer[index], partialsTable[partial_i-1], harmonic_amp, length );
+        signalMax += std::abs( harmonic_amp );
         
     }
 
-    float normalize = -1.0f;
-    for(int n=0; n<length; ++n){
-        float value = std::abs ( buffer[index][n] );
-        if(value > normalize) normalize = value;
-    }  
+    float div = 1.0 / signalMax;
+
+    ofx_Aeq_BmulS( buffer[index], buffer[index], div, length );
     
-    normalize = 1.0f / normalize;
-   
-    for(int n=0; n<length; ++n){
-        buffer[index][n] *= normalize;
-    }  
-    
-    buffer[index][length] = buffer[index][0];  
+    buffer[index][length] = buffer[index][0];
     
 }
 
@@ -303,36 +313,28 @@ void pdsp::WaveTable::setSquareWave (int index, int partials ) {
     if(index<0 ) index = 0;
     if(index >= tableSize ) index = tableSize-1;
     
-    int partial_i = 1; 
-    double multiply = 1.0 / (double) length;
+    int partial_i = 1;     
     
-    for ( ; partial_i < (partials+1); partial_i+=2 ){
+    ofx_Aeq_Zero(buffer[index], length);
+    
+    double signalMax = 0.0;
+    
+    for ( ; (partial_i < (partials+1) && partial_i<=maxPartials ); partial_i+=2 ){
         
         double partial = (double) partial_i;
 
-        double harmonic = 1.0 / partial;
-        if(partial_i%2 == 0) harmonic = -harmonic;
+        double harmonic_amp = 1.0 / partial;
         
-        for(int n=0; n<length; ++n){
-            double theta = static_cast<double>(n) * multiply * M_TAU_DOUBLE * partial;
-            buffer[index][n] += sin ( theta ) * harmonic;
-        }        
+        ofx_Aeq_Badd_CmulS( buffer[index], buffer[index], partialsTable[partial_i-1], harmonic_amp, length );
+        signalMax += std::abs( harmonic_amp );
         
     }
 
-    float normalize = -1.0f;
-    for(int n=0; n<length; ++n){
-        float value = std::abs ( buffer[index][n] );
-        if(value > normalize) normalize = value;
-    }  
+    float div = 1.0 / signalMax;
+
+    ofx_Aeq_BmulS( buffer[index], buffer[index], div, length );
     
-    normalize = 1.0f / normalize;
-   
-    for(int n=0; n<length; ++n){
-        buffer[index][n] *= normalize;
-    }  
-    
-    buffer[index][length] = buffer[index][0];  
+    buffer[index][length] = buffer[index][0];    
         
 }
 
@@ -345,6 +347,7 @@ void pdsp::WaveTable::addTriangleWave ( int partials ) {
     setTriangleWave( index, partials );
             
 }
+
       
 void pdsp::WaveTable::setTriangleWave (int index, int partials ) {
 
@@ -352,37 +355,29 @@ void pdsp::WaveTable::setTriangleWave (int index, int partials ) {
     if(index >= tableSize ) index = tableSize-1;
 
     int partial_i = 1; 
-    double multiply = 1.0 / (double) length;
     
-    for ( ; partial_i < (partials+1); partial_i+=2 ){
+    ofx_Aeq_Zero(buffer[index], length);
+    
+    double signalMax = 0.0;
+    
+    for ( ; (partial_i < (partials+1) && partial_i<=maxPartials ); partial_i+=2 ){
         
         double partial = (double) partial_i;
 
-        double harmonic = 1.0 / partial;
-        harmonic *= harmonic;
+        double harmonic_amp = 1.0 / partial;
+        harmonic_amp *= harmonic_amp;
         
-        if(partial_i%2 == 0) harmonic = -harmonic;
-        
-        for(int n=0; n<length; ++n) {
-            double theta = static_cast<double>(n) * multiply * M_TAU_DOUBLE * partial;
-            buffer[index][n] += sin ( theta ) * harmonic;
-        }
-        
+        ofx_Aeq_Badd_CmulS( buffer[index], buffer[index], partialsTable[partial_i-1], harmonic_amp, length );
+        signalMax += std::abs( harmonic_amp );
+    
     }
 
-    float normalize = -1.0f;
-    for(int n=0; n<length; ++n){
-        float value = std::abs ( buffer[index][n] );
-        if(value > normalize) normalize = value;
-    }  
+    float div = 1.0 / signalMax;
+
+    ofx_Aeq_BmulS( buffer[index], buffer[index], div, length );
     
-    normalize = 1.0f / normalize;
-   
-    for(int n=0; n<length; ++n){
-        buffer[index][n] *= normalize;
-    }  
+    buffer[index][length] = buffer[index][0];      
     
-    buffer[index][length] = buffer[index][0];  
             
 }
       
@@ -400,12 +395,7 @@ void pdsp::WaveTable::setSineWave ( int index ) {
     if(index<0 ) index = 0;
     if(index >= tableSize ) index = tableSize-1;
 
-    double multiply = 1.0 / (double) length;    
-
-    for(int n=0; n<length; ++n) {
-        double theta = static_cast<double>(n) * multiply * M_TAU_DOUBLE;
-        buffer[index][n] += sin ( theta );
-    }
+    ofx_Aeq_B(buffer[index], partialsTable[0], length);
     
     buffer[index][length] = buffer[index][0];  
             

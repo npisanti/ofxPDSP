@@ -25,7 +25,11 @@ public:
     @param[in] waveTable WaveTable class object
     */
     void setTable(WaveTable& waveTable);
-    
+
+    /*!
+    @brief returns the actual index of the wavetable, updated at control rate. Thread-safe.
+    */    
+    float meter_index() const;
 private:
     
     void prepareOscillator(double sampleRate) override;
@@ -34,6 +38,7 @@ private:
     void oscillateShapeAR(float* outputBuffer, const float* phaseBuffer, const float* shapeBuffer, int bufferSize) noexcept override;
     
     WaveTable* waveTable;
+    std::atomic<float> meter;
 };
 
 } // end pdsp namespace

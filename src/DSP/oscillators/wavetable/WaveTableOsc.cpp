@@ -49,7 +49,7 @@ void pdsp::WaveTableOsc::oscillateShapeCR(float* outputBuffer, const float* phas
         outputBuffer[n] = interpolate_linear(waveA, waveB, shape_fract);
         
     }
-
+    meter.store( shape );
 }
 
 
@@ -75,4 +75,10 @@ void pdsp::WaveTableOsc::oscillateShapeAR(float* outputBuffer, const float* phas
         
     }
     
+    meter.store(shapeBuffer[0]);
+}
+
+    
+float pdsp::WaveTableOsc::meter_index() const {
+    return meter.load();
 }

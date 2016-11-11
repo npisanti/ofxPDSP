@@ -9,7 +9,6 @@
 // the code here in ofApp.cpp is similar to the midi_polysynth example, but with ofxPDSPComputerKeyboard
 // most of the work is done in synth.h and synth.cpp
 
-
 //--------------------------------------------------------------
 void ofApp::setup(){
     
@@ -58,8 +57,8 @@ void ofApp::setup(){
     }
     
     // set up chorus
-    synthGlobal.out_L() >> engine.audio_out(0);
-    synthGlobal.out_R() >> engine.audio_out(1);
+    synthGlobal.out_L() * dB(-12.0f) >> engine.audio_out(0);
+    synthGlobal.out_R() * dB(-12.0f) >> engine.audio_out(1);
 
   
     // graphic setup---------------------------
@@ -104,6 +103,7 @@ void ofApp::draw(){
     
     // draw some keyboard keys and infos
     keyboard.draw(14, 465, 200, 180);
+
 }
 
 
