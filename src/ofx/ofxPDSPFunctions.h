@@ -24,7 +24,8 @@ class ofxPDSPFunctions{
     friend bool pdspChance( float chance );
     friend float pdspURan( );
     friend float pdspBRan( );
-    friend int pdspDice( int sides );
+    friend int pdspDice( int sides );    
+    friend int pdspDice( int min, int maxExclusive );
     friend float pdspSpread(int index, int max, float spread, bool fromCenter);
 };
 
@@ -105,6 +106,15 @@ inline_f bool pdspChance( float value ){
 */
 inline_f int pdspDice( int sides ){
     return pdsp::dice(sides);
+};
+
+/*!
+@brief returns a random int value that ranges from min to maxExclusive-1
+@param[in] min number
+@param[in] maxExclusive
+*/
+inline_f int pdspDice(  int min, int maxExclusive  ){
+    return (pdsp::dice(maxExclusive-min) + min);
 };
 
 /*!
