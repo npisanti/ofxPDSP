@@ -94,19 +94,41 @@ void pdsp::Amp::process (int bufferSize) noexcept {
         int signalState;
         const float* signalBuffer = processInput(input_signal, signalState);
 
-        if (signalState == AudioRate){
-            float* outputBuffer = getOutputBufferToFill(output);
-            if (modState == AudioRate){
-                ofx_Aeq_BmulC(outputBuffer, signalBuffer, modBuffer, bufferSize);
-            }else{
-                ofx_Aeq_BmulS(outputBuffer, signalBuffer, modBuffer[0], bufferSize);
+        int switcher = signalState + modState*4;
+
+                //process audio rate
+        switch ( switcher & 42 ) {
+        case 0:  // signal control rate, mod control rate
+            {
+                float out = modBuffer[0]*signalBuffer[0];
+                setControlRateOutput(output, out); 
+                meterOut.store(out);  
             }
-            meterOut.store(outputBuffer[0]);       
-        }else {
-            float out = modBuffer[0]*signalBuffer[0];
-            setControlRateOutput(output, out);
-            meterOut.store(out);       
+                break;
+        case 2:  // signal audio rate, mod control rate
+            {
+                float* outputBuffer = getOutputBufferToFill(output);
+                ofx_Aeq_BmulS(outputBuffer, signalBuffer, modBuffer[0], bufferSize);
+                meterOut.store(outputBuffer[0]);  
+            }
+                break;
+        case 8:  // signal control rate, mod audio rate
+            {
+                float* outputBuffer = getOutputBufferToFill(output);
+                ofx_Aeq_BmulS(outputBuffer, modBuffer, signalBuffer[0], bufferSize);
+                meterOut.store(outputBuffer[0]);  
+            }
+                break;
+        case 10: // signal audio rate, mod audio rate   
+            {
+                float* outputBuffer = getOutputBufferToFill(output);
+                ofx_Aeq_BmulC(outputBuffer, signalBuffer, modBuffer, bufferSize);
+                meterOut.store(outputBuffer[0]);  
+            }
+        default: break;
         }
+
+        
         
     }
     

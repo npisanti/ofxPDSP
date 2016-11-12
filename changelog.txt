@@ -1,4 +1,19 @@
 
+
+v0.1.4
+    - ofxPDSPValueMultiplier class
+    - ofxPDSPMonoFader class
+    - ofxPDSPStereoFader class
+    - adds example-analysis
+    - adds example-scoring3-masterplan
+    - change and improve example-wolfram-beats to example-scoring4-wolfram-dub
+    - add line method to Sequence
+    - greatly improves WaveTable features
+    - improved examples
+    - improves Sampler
+    - improve doxy
+    - minor bugfixes
+
 v0.1.3.8
     - adds BitNoise module class
     - adds ofxPDSPScope module class

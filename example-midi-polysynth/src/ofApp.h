@@ -44,11 +44,7 @@ class ofApp : public ofBaseApp{
 
         ofxPDSPValue     chorusSpeed;
         ofxPDSPValue     chorusDepth;
-
         
-        pdsp::Amp           gain0;
-        pdsp::Amp           gain1;
-        pdsp::DBtoLin       dBtoLin;
-        ofxPDSPValue        gainControl;  
+        ofxPDSPStereoFader  gainControl;
     
 };

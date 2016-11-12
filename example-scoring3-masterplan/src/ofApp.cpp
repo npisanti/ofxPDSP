@@ -14,7 +14,7 @@ void ofApp::setup(){
     states.resize(16);
     
     // a good tecnique for arranging with pdsp is using the first sequence as "masterplan"
-    // as the sequence code is executed from the first to the last a sequence can launch the successive sequence
+    // as the sequence codes are executed from the first to the last a sequence can launch the successive sequence
     // remember to launch the other sequences with the same quantization of the first sequence's length
     // this example runs the first sequence each 8th, but you can also use slower masterplan
     // the masterplan has just to be as fast as the granularity of control you want to have on the sequencing
@@ -114,8 +114,8 @@ void ofApp::setup(){
     
     engine.score.sections[2].out_trig(0)  >> reese.in("trig");
     engine.score.sections[2].out_value(1) >> reese.in("pitch");
-    reese * dB(-6.0f) >> engine.audio_out(0);
-    reese * dB(-6.0f) >> engine.audio_out(1);
+    reese * dB(-8.0f) >> engine.audio_out(0);
+    reese * dB(-8.0f) >> engine.audio_out(1);
 
     reeseScope.set(4096); // this will make the scope buffersize longer    
     drums * dB(9.0f)  >> drumScope  >> engine.blackhole(); // scopes need to be patched to engine.blackhole()
@@ -125,8 +125,6 @@ void ofApp::setup(){
     ofBackground(0);
     ofSetFrameRate(60);
     ofDisableAntiAliasing();
-    
-
     
     engine.graphics.setup( 600, 600,  { 0,   0 }, 
                                       { 0,   0 }  );
@@ -159,7 +157,13 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    if( key == ' '){
+        if(engine.score.isPlaying()){
+            engine.score.stop();
+        }else{
+            engine.score.play();
+        }
+    }
 }
 
 //--------------------------------------------------------------

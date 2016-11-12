@@ -34,14 +34,13 @@ void ofApp::setup(){
     }
     
     // set up chorus
-    chorus.out_0() >> gain0 >> engine.audio_out(0);
-    chorus.out_1() >> gain1 >> engine.audio_out(1);
+    chorus.out_0() >> gainControl.in_L(); gainControl.out_L() >> engine.audio_out(0);
+    chorus.out_1() >> gainControl.in_R(); gainControl.out_R() >> engine.audio_out(1);
 
     chorusSpeed >> chorus.in_speed();
     chorusDepth >> chorus.in_depth();
 
-    gainControl >> dBtoLin  >> gain0.in_mod();    
-                   dBtoLin  >> gain1.in_mod();  
+
   
     // graphic setup---------------------------
     ofSetVerticalSync(true);
@@ -65,6 +64,7 @@ void ofApp::setup(){
 
     gui.setup("panel");
     gui.add( gainControl.set("gain", 0, -48, 12) ); 
+    gainControl.enableSmoothing(50.f);
     gui.add( synth.ui );
     gui.add( chorusUI );
     gui.setPosition(400, 20);
@@ -73,7 +73,7 @@ void ofApp::setup(){
     
     //get MIDI control
     midiIn.listPorts();
-    midiIn.openPort(1); //set the right port !!!
+    midiIn.openPort(0); //set the right port !!!
     // for our midi controllers to work we have to add them to the engine, so it know it has to process them
     engine.addMidiController( midiKeys, midiIn ); // add midi processing to the engine
     engine.listDevices();

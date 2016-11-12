@@ -1,0 +1,36 @@
+<WOLFRAM_DUB>
+    <masterplan_randomize>0</masterplan_randomize>
+	<num_bars>16</num_bars>
+	<WSEQ_n0>
+		<steps>16</steps>
+		<division>16</division>
+		<active_outs>4</active_outs>
+		<threshold>4</threshold>
+		<seeds_density>0.33</seeds_density>
+		<limiting>2</limiting>
+		<dB_range>18</dB_range>
+		<gate_len>0.5</gate_len>
+		<remake>0</remake>
+	<rule>60</rule>
+	</WSEQ_n0>
+	<zaps_UI>
+		<env_to_pitch>48</env_to_pitch>
+		<env_decay>50</env_decay>
+		<env_dyn_amt>0.5</env_dyn_amt>
+		<zap_1_pitch>46</zap_1_pitch>
+		<zap_2_pitch>53</zap_2_pitch>
+		<zap_3_pitch>60</zap_3_pitch>
+		<zap_4_pitch>67</zap_4_pitch>
+	<gain>-12</gain>
+	</zaps_UI>
+    <stereo_delay>
+		<input_gain>-15</input_gain>
+		<L_16th_time>5</L_16th_time>
+		<L_feedback>0.4</L_feedback>
+		<R_16th_time>3</R_16th_time>
+		<R_feedback>0.4</R_feedback>
+		<damping>0.5</damping>
+		<output_gain>0</output_gain>
+	</stereo_delay>
+<WOLFRAM_DUB/>
+</WOLFRAM_DUB>

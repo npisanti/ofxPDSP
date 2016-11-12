@@ -5,22 +5,51 @@
 #include "ofxPDSP.h"
 #include "ofxGui.h"
 
-// this class contains the ui controls
+// wavetable based polysynth
 
-struct SynthGlobal {
+class PolySynth {
 
-    SynthGlobal();
+public:
+    // class to rapresent each synth voice ------------
+    class Voice : public pdsp::Patchable {
+        friend class PolySynth;
+    
+    public:
+        Voice(){}
+        Voice(const Voice& other){}
+        
+        float meter_mod_env() const;
+        float meter_pitch() const;
 
-    void addToGUI( ofxPanel & gui );
+    private:
+        void setup(PolySynth & m);
+
+        pdsp::PatchNode     voiceTrigger;
+        
+        pdsp::TableOscillator   oscillator;
+        pdsp::VAFilter          filter;
+        pdsp::Amp               voiceAmp;
+
+
+        pdsp::ADSR          envelope;    
+        pdsp::Amp           envToTable;
+        pdsp::Amp           envToFilter;  
+    }; // end voice class -----------------------------
+
+
+    // synth public API --------------------------------------
+
+    void setup( int numVoice );
 
     pdsp::Patchable& out_L();
     pdsp::Patchable& out_R();
 
-    ofParameterGroup ui_osc;
-    ofParameterGroup ui_filter;
-    ofParameterGroup ui_lfo;
-    ofParameterGroup ui_mod_env;
-    ofParameterGroup ui_amp_env;
+    vector<Voice>       voices;
+    ofParameterGroup    ui;
+
+private: // --------------------------------------------------
+
+    ofxPDSPStereoFader gain;
 
     ofxPDSPValue     cutoff_ctrl;
     ofxPDSPValue     reso_ctrl;
@@ -59,27 +88,3 @@ struct SynthGlobal {
 
 };
 
-// this class rapresent each synth voice
-
-struct SynthVoice : public pdsp::Patchable {
-    
-    SynthVoice(){}
-    SynthVoice(const SynthVoice& other){}
-    
-    void setup(SynthGlobal & m);
-    
-    float meter_mod_env() const;
-    float meter_pitch() const;
-
-private:
-    pdsp::PatchNode     voiceTrigger;
-    
-    pdsp::TableOscillator   oscillator;
-    pdsp::VAFilter          filter;
-    pdsp::Amp               voiceAmp;
-
-
-    pdsp::ADSR          envelope;    
-    pdsp::Amp           envToTable;
-    pdsp::Amp           envToFilter;  
-};

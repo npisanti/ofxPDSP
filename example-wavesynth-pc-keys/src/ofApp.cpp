@@ -39,28 +39,23 @@ void ofApp::setup(){
     // activate portamento, in poly mode you can notice portamento only on note stealing
     //keyboard.setPortamento(On, 250.0f);
 
-    // voices is a vector of synth voices, we resize it to the midiKeys voice number     
-    voicesNum = keyboard.getVoicesNumber();
+    // we use the keyboard voice number to setup the synth
+    int voicesNum = keyboard.getVoicesNumber();
     
-    voices.resize(voicesNum);
+    synth.setup( voicesNum );
     
     // keyboard has a vector for the pitch outputs and one for the trigger outputs
     // we patch them to the voices here
     for(int i=0; i<voicesNum; ++i){
-        // setup voice
-        voices[i].setup( synthGlobal );
-
         // connect each voice to a pitch and trigger output
-        keyboard.outs_trig[i]  >> voices[i].in("trig");
-        keyboard.outs_pitch[i] >> voices[i].in("pitch");
-
+        keyboard.outs_trig[i]  >> synth.voices[i].in("trig");
+        keyboard.outs_pitch[i] >> synth.voices[i].in("pitch");
     }
     
-    // set up chorus
-    synthGlobal.out_L() * dB(-12.0f) >> engine.audio_out(0);
-    synthGlobal.out_R() * dB(-12.0f) >> engine.audio_out(1);
+    // patch synth to the engine
+    synth.out_L() >> engine.audio_out(0);
+    synth.out_R() >> engine.audio_out(1);
 
-  
     // graphic setup---------------------------
     ofSetVerticalSync(true);
     ofDisableAntiAliasing();
@@ -80,7 +75,7 @@ void ofApp::setup(){
     gui.setDefaultBackgroundColor(ofColor(0,0,0));
     
     gui.setup("wavetable synth");
-    synthGlobal.addToGUI( gui );
+    gui.add( synth.ui );
     gui.setPosition(15, 20);
     
     // audio / midi setup----------------------------

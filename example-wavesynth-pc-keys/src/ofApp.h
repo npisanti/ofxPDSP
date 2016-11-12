@@ -27,10 +27,7 @@ class ofApp : public ofBaseApp{
         
         ofxPDSPEngine   engine;
 
-        int                     voicesNum;
-        vector<SynthVoice>      voices;
-        SynthGlobal             synthGlobal;
-     
+        PolySynth                   synth;
         ofxPDSPComputerKeyboard     keyboard;
         ofxPanel                    gui;
       

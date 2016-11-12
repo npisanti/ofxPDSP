@@ -1,10 +1,10 @@
 
 #include "synth.h"
 
-SynthGlobal::SynthGlobal(){
+void PolySynth::setup(int numVoices){
     
     // WAVETABLE OPERATION EXAMPLE -----------------------------------------------------------------
-    // wavetable.setVerbose( true ); // activate logs of waveform loadings and size increments
+    wavetable.setVerbose( true ); // activate logs of waveform loadings and size increments
     
     wavetable.setup( 600, 256 ); // 600 samples is AKWF sample length, 256 max partials
 
@@ -67,6 +67,17 @@ SynthGlobal::SynthGlobal(){
     // and then switch the table index when you're done
     // ---------------------------------------------------------------------------------------------
 
+    // -------------------------- PATCHING ---------------------------------------------------------
+    voices.resize( numVoices );
+ 
+    for(int i=0; i<numVoices; ++i){
+        // setup voice
+        voices[i].setup( *this );
+    }
+    
+    chorus.out_0() >> gain.in_0();
+    chorus.out_1() >> gain.in_1();
+
     // pdsp::Switch EXAMPLE ------------------------------------------------------------------------
     lfoSwitch.resize(5);  // resize input channels
     lfo.out_triangle()          >> lfoSwitch.input(0); // you cannot use this input() method in a chain
@@ -85,50 +96,41 @@ SynthGlobal::SynthGlobal(){
     // ---------------------------------------------------------------------------------------------
     
     // CONTROLS ------------------------------------------------------------------------------------
-    ui_osc.setName("oscillator");
-    ui_osc.add(table_ctrl.set("table index", 8.0f, 0.0f, (float)(wavetable.size()-1) ) );
+    ui.setName("WAVESYNTH");
+    ui.add(table_ctrl.set("table index", 8.0f, 0.0f, (float)(wavetable.size()-1) ) );
     table_ctrl.enableSmoothing(200.0f);
 
-    ui_filter.setName("filter");
-    ui_filter.add(cutoff_ctrl.set("cutoff", 82, 10, 120));
-    ui_filter.add(reso_ctrl.set("resonance", 0.0f, 0.0f, 1.0f) );
-    ui_filter.add(filter_mode_ctrl.set("mode", 0, 0, 5) );
+    ui.add(filter_mode_ctrl.set("filter mode", 0, 0, 5) );
+    ui.add(cutoff_ctrl.set("filter cutoff", 82, 10, 120));
+    ui.add(reso_ctrl.set("filter reso", 0.0f, 0.0f, 1.0f) );
+ 
     cutoff_ctrl.enableSmoothing(200.0f);
     
-    ui_mod_env.setName( "envelope");
-    ui_mod_env.add(env_attack_ctrl.set( "attack", 400, 5, 1200) );
-    ui_mod_env.add(env_decay_ctrl.set(  "decay", 400, 5, 1200) );
-    ui_mod_env.add(env_sustain_ctrl.set("sustain", 1.0f, 0.0f, 1.0f) );
-    ui_mod_env.add(env_release_ctrl.set("release", 900, 5, 2000));    
-    ui_mod_env.add( env_table_ctrl.set( "-> table", 0.0f, 0.0f, 2.0f) );
-    ui_mod_env.add( env_filter_ctrl.set("-> filter", 30, 0, 60) );    
+    ui.add(env_attack_ctrl.set( "env attack", 400, 5, 1200) );
+    ui.add(env_decay_ctrl.set(  "env decay", 400, 5, 1200) );
+    ui.add(env_sustain_ctrl.set("env sustain", 1.0f, 0.0f, 1.0f) );
+    ui.add(env_release_ctrl.set("env release", 900, 5, 2000));    
+    ui.add( env_table_ctrl.set( "env to table", 0.0f, 0.0f, 2.0f) );
+    ui.add( env_filter_ctrl.set("env to filter", 30, 0, 60) );    
 
-    ui_lfo.setName("LFO");
-    ui_lfo.add(lfo_wave_ctrl.set("wave", 0, 0, 4));
-    ui_lfo.add(lfo_speed_ctrl.set("speed (hz)", 0.5f, 0.005f, 4.0f));
-    ui_lfo.add(table_lfo_mod_ctrl.set("lfo to table", 1.0f, 0.0f, 2.0f) );
-    ui_lfo.add(filter_lfo_mod_ctrl.set("lfo to filter", 0, 0, 60) );
+    ui.add(lfo_wave_ctrl.set("lfo wave", 0, 0, 4));
+    ui.add(lfo_speed_ctrl.set("lfo freq", 0.5f, 0.005f, 4.0f));
+    ui.add(table_lfo_mod_ctrl.set("lfo to table", 1.0f, 0.0f, 2.0f) );
+    ui.add(filter_lfo_mod_ctrl.set("lfo to filter", 0, 0, 60) );
     // ---------------------------------------------------------------------------------------------
    
     // Chorus --------------------------------------------------------------------------------------
     chorus_speed_ctrl >> chorus.in_speed();
     chorus_depth_ctrl >> chorus.in_depth();
-    ui_chorus.setName("chorus");
-    ui_chorus.add(chorus_speed_ctrl.set("speed (hz)", 0.5f, 0.25f, 1.0f));
-    ui_chorus.add(chorus_depth_ctrl.set("depth (ms)", 3.5f, 1.0f, 10.0f));
+    ui.add(chorus_speed_ctrl.set("chorus freq", 0.5f, 0.25f, 1.0f));
+    ui.add(chorus_depth_ctrl.set("chorus depth", 3.5f, 1.0f, 10.0f));
+    ui.add(gain.set("gain", -12, -48, 12));
+    gain.enableSmoothing(50.f);
     // ---------------------------------------------------------------------------------------------
 }
 
-void SynthGlobal::addToGUI( ofxPanel & gui ){
-    gui.add(ui_osc);
-    gui.add(ui_filter);
-    gui.add(ui_mod_env);
-    gui.add(ui_lfo);
-    gui.add(ui_chorus);
-}
 
-// as we need an external object we will not patch on construction but later with this setup()
-void SynthVoice::setup( SynthGlobal & m ){
+void PolySynth::Voice::setup( PolySynth & m ){
 
     addModuleInput("trig", voiceTrigger);
     addModuleInput("pitch", oscillator.in_pitch());
@@ -162,18 +164,18 @@ void SynthVoice::setup( SynthGlobal & m ){
         m.env_table_ctrl  >> envToTable.in_mod();
 }
 
-float SynthVoice::meter_mod_env() const{
+float PolySynth::Voice::meter_mod_env() const{
     return envelope.meter_output();
 }
 
-float SynthVoice::meter_pitch() const{
+float PolySynth::Voice::meter_pitch() const{
     return oscillator.meter_pitch();
 }
 
-pdsp::Patchable& SynthGlobal::out_L(){
-    return chorus.out_0();
+pdsp::Patchable& PolySynth::out_L(){
+    return gain.out_0();
 }
 
-pdsp::Patchable& SynthGlobal::out_R(){
-    return chorus.out_1();
+pdsp::Patchable& PolySynth::out_R(){
+    return gain.out_1();
 }

@@ -25,6 +25,8 @@
 #include "ofx/ofxPDSPParameters.h"
 #include "ofx/ofxPDSPValue.h"
 #include "ofx/ofxPDSPValueMultiplier.h"
+#include "ofx/ofxPDSPMonoFader.h"
+#include "ofx/ofxPDSPStereoFader.h"
 
 #include "ofx/ofxSampleBufferPlotter.h"
 #include "ofx/ofxScoreSectionPlotter.h"
