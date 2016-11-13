@@ -204,7 +204,9 @@ void pdsp::ScoreSection::processSection(const double &startPlayHead,
         if( launchSchedule <= scheduledTime ){
             scheduledTime = launchSchedule;
             scheduledPattern = launchedPattern2;
-            patterns[scheduledPattern].sequence->resetCount();
+            if(patterns[scheduledPattern].sequence!=nullptr) {
+                patterns[scheduledPattern].sequence->resetCount();
+            }
             launchSchedule = std::numeric_limits<double>::infinity();
         }
 
