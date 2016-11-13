@@ -38,7 +38,7 @@ private:
     */
     class SeqCell{
     public:
-        SeqCell() : sequence(nullptr), nextCell(nullptr), quantizeLaunch(false), quantizeGrid(0.0), label("") {};
+        SeqCell() : sequence(nullptr), nextCell(Behavior::Loop), quantizeLaunch(false), quantizeGrid(0.0), label("") {};
             
         Sequence*       sequence;
         SeqChange*      nextCell;
