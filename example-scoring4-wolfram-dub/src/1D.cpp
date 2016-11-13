@@ -1,6 +1,6 @@
 
 // 1D.cpp
-// Nicola Pisanti, GPLv3 License, 2016
+// Nicola Pisanti, MIT License, 2016
 
 #include "1D.h"
 

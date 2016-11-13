@@ -69,3 +69,9 @@ This is an overview of a selection of the available modules. Some of the modules
 - pdsp::FreqToMs : convert frequency values to millisecond values 
 - pdsp::Formula : virtual class to extend for executing a matematical operation on an input
 
+## Sequencing
+- pdsp::ScoreProcessor : engine.score is an instance of this class, manage all the sections
+- pdsp::ScoreSection : play one pdsp::Sequence at time and has multiple output to patch to the DSP modules
+- pdsp::Sequence : a fixed or generative sequence to send values to one or more outputs
+- pdsp::SeqChange : the behavior of a pdsp::Sequence after it ends
+- pdsp::Behavior : contains standard behaviors, you mostly use pdsp::Behavior::Loop or pdsp::Behavior::OneShot

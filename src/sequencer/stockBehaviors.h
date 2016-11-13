@@ -100,6 +100,16 @@ public:
     @brief used by ScoreSection, nothing will play next, nullptr is the same
     */        
     static SeqChange*              Nothing;
+
+    /*!
+    @brief used by ScoreSection, nothing will play next, nullptr is the same
+    */        
+    static SeqChange*              Stop;
+    
+    /*!
+    @brief used by ScoreSection, nothing will play next, nullptr is the same
+    */        
+    static SeqChange*              OneShot;
 };
 
 

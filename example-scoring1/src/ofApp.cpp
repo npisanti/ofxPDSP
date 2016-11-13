@@ -69,7 +69,12 @@ void ofApp::setup(){
     
     // this is the same as before, but we put the code into a lambda function
     // the lambda function code is executed each time the sequence is retriggered
+    // DO NOT USE VARIABLES LOCAL TO THE setup() INSIDE THIS FUNCTION
+    // the [&] means we take reference to the variables where the lambda function is defined 
+    // and the life of the variable local to the setup() fuction ends at the end of the setup
+    // use variables you have declared in the .h file or internally to the lambda
     lead_seqs[3].code = [&] () noexcept { // better to tag noexcept for code used by the DSP engine 
+        // declaring a variable inside the lambda is fine
         static float akebono[] = { 72.0f, 74.0f, 75.0f, 79.0f, 80.0f,  84.0f, 86.0f, 87.0f }; // akebono scale
         lead_seqs[3].begin( 8.0, 1.0 );
         for (int i=0; i<4; ++i){
@@ -80,7 +85,6 @@ void ofApp::setup(){
         }
         lead_seqs[3].end();
     };
- 
     // the sequence code is executed in the DSP thread, so please don't hold lock or allocate / deallocate memory
     // if you need some heavy computation make it in another thread and copy it to the sequence when it's time
     // as the code is executed into the DSP thread is better not to use ofRandom(), that is not thread safe
@@ -100,13 +104,13 @@ void ofApp::setup(){
     // assigning the sequences to the sections
     for(int i = 0; i<4; ++i){
         engine.score.sections[0].setCell(i, &bass_seqs[i], &alternate); // cell index, pointer to pdsp:Sequence, pointer to pdsp::SeqChange
-        engine.score.sections[1].setCell(i, &lead_seqs[i], pdsp::Behavior::Nothing); 
+        engine.score.sections[1].setCell(i, &lead_seqs[i], pdsp::Behavior::OneShot); 
     } 
 
     // pdsp::SeqChange is a class that choose another sequence when a sequence ends it's length
     // there are some standard SeqChange to use in pdsp::Behavior
     // you will mostly use pdsp::Behavior::Loop that will loop the sequence or
-    // pdsp::Behavior::Nothing that won't sequence anything after the sequence's end
+    // pdsp::Behavior::OneShot that won't sequence anything after the sequence's end
 
 
     // this is a custom pdsp::SeqChange for our bass patterns, it works the same as assigning code to pdsp::Sequence

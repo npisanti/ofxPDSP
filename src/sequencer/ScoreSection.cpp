@@ -136,6 +136,14 @@ void pdsp::ScoreSection::setChange( int index, SeqChange* behavior ){
     }
 }
 
+void pdsp::ScoreSection::setLooping( int index ) {
+    setChange(index, Behavior::Loop);
+}
+
+void pdsp::ScoreSection::setOneShot( int index ) {
+    setChange(index, Behavior::OneShot);    
+}
+
 void pdsp::ScoreSection::setLabel( int index, std::string label ){
     if(index < 0) index = 0;
     if(index >= (int) patterns.size()) index = patterns.size() -1;

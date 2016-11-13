@@ -74,4 +74,6 @@ pdsp::SeqChangeRandomWalk pdsp::Behavior::staticSeqChangeRandomWalk = pdsp::SeqC
 pdsp::SeqChangeRandomWalk* pdsp::Behavior::RandomWalk = &pdsp::Behavior::staticSeqChangeRandomWalk;
 
 pdsp::SeqChange* pdsp::Behavior::Nothing = nullptr;
+pdsp::SeqChange* pdsp::Behavior::Stop = nullptr;
+pdsp::SeqChange* pdsp::Behavior::OneShot = nullptr;
 

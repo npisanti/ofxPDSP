@@ -23,7 +23,7 @@ namespace pdsp{
     /*!
     @brief Plays a single Sequence at time, sequences Sequences
     
-    This class plays a single Sequence at time, sequences Sequences and has multiple outputs to connect to GateSequencer or ValueSequencer. ScoreProcessor owns a vector of ScoreSection. Remember that the ScoreSections inside a ScoreProcessor are processed from the first to the last so it could be possible for the data generated from the first ScoreSections in the vector to influence the others (in a thread-safe manner).
+    This class plays a single Sequence at time, sequences Sequences and has multiple outputs to connect to GateSequencer or ValueSequencer. ScoreProcessor owns a vector of ScoreSection. Remember that the ScoreSections inside a ScoreProcessor are processed from the first to the last so it could be possible for the data generated from the first ScoreSections in the vector to influence the others (in a thread-safe manner). In this doc, we refere to "Cell" as a combination of a pdsp::Sequence pointer and its associated pdsp::SeqChange behavior (for example pdsp::Behavior::Loop , pdsp::pdsp::Behavior::Random or pdsp::Behavior::Stop ),
     */
 
 class ScoreSection { 
@@ -82,6 +82,8 @@ public:
 
     /*!
     @brief Sets the SeqChange that determine what cell will be played after this, this is an alias for setChange()
+    
+    Mostly you'd like to use setLooping( int index ) or setOneShot( int index ) if you don't need more complex behaviors 
     */ 
     void behavior (int index, pdsp::SeqChange* newBehavior );
     
@@ -136,12 +138,12 @@ public:
     @brief Sets the Cell at the given index to the given one
     @param[in] index index of the Sequence (or Sequence) to set inside the ScoreSection. If the size is too little the ScoreSection is automatically resized.
     @param[in] sequence pointer to a Sequence, you can also set it to nullptr
-    @param[in] behavior pointer to a SeqChange, you can also set it to nullptr, nullptr if not given
+    @param[in] behavior pointer to a SeqChange, you can also set it to nullptr, pdsp::Behavior::Loop if not given
     @param[in] label an optional string to identify this cell
 
     Sets the score pattern at a given index. If Sequence is set to nullptr then nothing is played, If SeqChange is set to nullptr the sequencing is stopped after playing this Pattern. Sequence is a subclass of Sequence easiear to manage.
     */ 
-    void setCell( int index, Sequence* sequence, SeqChange* behavior = nullptr, std::string label = "" );
+    void setCell( int index, Sequence* sequence, SeqChange* behavior = Behavior::Loop, std::string label = "" );
     
     
     /*!
@@ -163,11 +165,26 @@ public:
     /*!
     @brief Sets the SeqChange that determine what cell will be played after this
     @param[in] index index of the patter to set inside the ScoreSection. If the size is too little the ScoreSection is automatically resized.
-    @param[in] behavior pointer to a SeqChange
 
     */ 
     void setChange( int index, SeqChange* behavior );
-    
+   
+   
+    /*!
+    @brief Sets this Cell to Loop on itself, it is the standard behavior
+    @param[in] index index of the patter to set inside the ScoreSection. If the size is too little the ScoreSection is automatically resized.
+    @param[in] behavior pointer to a SeqChange
+
+    */ 
+    void setLooping( int index );
+   
+    /*!
+    @brief Sets this Cell to stop after being launched.
+    @param[in] index index of the patter to set inside the ScoreSection. If the size is too little the ScoreSection is automatically resized.
+
+    */ 
+    void setOneShot( int index );
+
     
     /*!
     @brief Sets some values for the pattern quantized launch.

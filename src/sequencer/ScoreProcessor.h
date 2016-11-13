@@ -24,13 +24,6 @@ public:
     ScoreProcessor();
     
     /*!
-    @brief this method have to be called in the audio callback, before the Processor processAndCopy...() method
-    
-    Update the global transport, update all the ScoreSections and connected GateSequencer, ValueSequencer 
-    */ 
-    void process(int const &bufferSize) noexcept;
-
-    /*!
     @brief sets the global tempo
     @param tempo tempo to set
     */ 
@@ -40,6 +33,13 @@ public:
 /*!
     @cond HIDDEN_SYMBOLS
 */
+    /*!
+    @brief this method have to be called in the audio callback, before the Processor processAndCopy...() method
+    
+    Update the global transport, update all the ScoreSections and connected GateSequencer, ValueSequencer 
+    */ 
+    void process(int const &bufferSize) noexcept;
+
     [[deprecated("this method is deprecated, directly use sections.resize(int size) instead ")]]
     void setSections(int sectionsNumber);
 /*!

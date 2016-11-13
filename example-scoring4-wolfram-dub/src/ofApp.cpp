@@ -36,7 +36,7 @@ void ofApp::setup(){
     engine.score.setTempo(172.0f);
     engine.score.sections.resize(2);
     
-    engine.score.sections[0].setCell(0, &masterplan, pdsp::Behavior::Loop);
+    engine.score.sections[0].setCell( 0, &masterplan );
     
     // masterplan coding
     masterplan.setLength(1.0); // 1 bar loop
@@ -57,7 +57,7 @@ void ofApp::setup(){
             dub.lFeedbackControl.getOFParameterFloat() = 0.2f + pdspURan()*0.5f;
             dub.rFeedbackControl.getOFParameterFloat() = 0.2f + pdspURan()*0.5f;
             
-            switch( pdspDice(5) ){
+            switch( pdspDice(6) ){
                 case 0:
                     wolframSeq.rule = 90;
                     break;
@@ -73,13 +73,16 @@ void ofApp::setup(){
                 case 4:
                     wolframSeq.rule = 60;
                     break;
+                case 5:
+                    wolframSeq.rule = 110;
+                    break;
             }
         }
     }; // masterplan end
 
     // sets up wolfram sequence
     wolframSeq.setup( 16, ZAPS_NUMBER, 60, MAX_GENERATIONS, SIDE*ZAPS_NUMBER*16, caHeight );      
-    engine.score.sections[1].setCell(0, &wolframSeq, pdsp::Behavior::Loop);
+    engine.score.sections[1].setCell( 0, &wolframSeq );
     
     engine.score.launchMultipleCells(0); // launch the 0 sequences of all the sections
     
