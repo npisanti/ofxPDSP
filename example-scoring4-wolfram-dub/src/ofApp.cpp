@@ -109,9 +109,12 @@ void ofApp::setup(){
     zaps.fader.out_R() * dB(revGain) >> reverb.in_R();
     
     // patch the reverb to an high pass filter and then to the engine
+    // ( deactivated on rPi as the processor is too slow for IR convolution using FFT )
+#ifndef __ARM_ARCH
     reverb.out_L() >> revCut.in_0(); revCut.out_0() >> engine.audio_out(0);
     reverb.out_R() >> revCut.in_1(); revCut.out_1() >> engine.audio_out(1);
     100.0f >> revCut.in_freq(); // 100hz, we cut the reverb muddy low end 
+#endif
 
     // connect the zaps to the stereo delay
     zaps.fader.out_L() >> dub.in("0");

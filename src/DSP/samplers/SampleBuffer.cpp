@@ -287,3 +287,31 @@ void pdsp::SampleBuffer::init( int tableLen, int numTables ){
     info += " samples buffer\n";
     this->filePath = info;
 }
+
+
+void pdsp::SampleBuffer::normalize( ){
+    
+    if (buffer!=nullptr){
+        
+        double max = -1.0f;
+        for(int c=0; c<channels; ++c){
+            for(int n=0; n<length; ++n){
+                double absolute = std::abs(buffer[c][n]);
+                if( absolute > max){
+                    max = absolute;
+                }
+            }
+        }
+
+        float scale = 1.0 / max;
+        
+        for(int c=0; c<channels; ++c){
+            ofx_Aeq_BmulS( buffer[c], buffer[c], scale, length);
+        }
+        
+    }else{
+        std::cout <<"[pdsp] impossible to normalize, sample buffer empty\n";
+        pdsp_trace();
+    }
+    
+}

@@ -71,7 +71,7 @@ void pdsp::Sampler::addSample(SampleBuffer* newSample, int channel){
         samples.push_back(newSample);
         channels.push_back(channel);
         if(sample==nullptr){
-                sample = samples[samples.size()-1];
+                sample = newSample;
         }  
 }
 
@@ -85,6 +85,8 @@ bool pdsp::Sampler::setSample(SampleBuffer* newSample, int index, int channel){
                 return true;
         }else{
                 return false;
+                std::cout<< "[pdsp] warning! sample not set, wrong index given!\n";
+                pdsp_trace();
         }
 }
 

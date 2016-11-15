@@ -70,6 +70,12 @@ public:
     void    init( int tableLen, int numTables=1 );
     
     /*!
+    @brief scales all the sample values of all the channels so that the absolute maximum value is 1.0f
+
+    */
+    void    normalize( );
+    
+    /*!
     @brief some Units automatically select one channel if more than one are loaded. This set this default channel.
     @param[in] monoChannelIndex
     */ 
