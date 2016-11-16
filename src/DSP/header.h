@@ -20,6 +20,7 @@
 #include "core/ExternalInput.h"
 
 #include "signal/Saturator1.h"
+#include "signal/Saturator2.h"
 #include "signal/SampleAndHold.h"
 #include "signal/Bitcruncher.h"
 #include "signal/Decimator.h"

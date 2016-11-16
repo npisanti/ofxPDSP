@@ -246,6 +246,11 @@ public:
     */ 
     float meter_playhead() const; 
     
+    /*!
+    @brief returns the percentual of completion of the playing sequence. Thread-safe.
+    */ 
+    float meter_percent() const; 
+    
     
     /*!
     @brief returns the current sequence length in bars. Thread-safe.
@@ -347,6 +352,7 @@ private:
     std::atomic<int>            atomic_meter_next; 
     std::atomic<float>          atomic_meter_playhead;
     std::atomic<float>          atomic_meter_length;
+    std::atomic<float>          atomic_meter_percent;
 
     std::vector<pdsp::Sequence> seqs;
     

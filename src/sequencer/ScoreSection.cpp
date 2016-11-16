@@ -24,12 +24,12 @@ pdsp::ScoreSection::ScoreSection() {
     clear = true;
     quantizedLaunch = false;
     launchingCell = false;
-    //selectedMessageBuffer = nullptr;
     
     atomic_meter_current.store(-1);
     atomic_meter_next.store(-1);
     atomic_meter_playhead.store(0.0f);    
     atomic_meter_length.store(0.0f);    
+    atomic_meter_percent.store(0.0f);
 
     setOutputsNumber(0);    
     
@@ -97,7 +97,6 @@ void pdsp::ScoreSection::launchCell( int index, bool quantizeLaunch, double quan
     if     ( index < 0        ) { index = -1; }
     else if( index >= (int)patterns.size() ) { index = (int)patterns.size()-1; }
 
-    //patternMutex.lock();
     if(quantizeLaunch){
         this->quantizedLaunch = true;
         this->launchQuantization = quantizeGrid;
@@ -106,11 +105,8 @@ void pdsp::ScoreSection::launchCell( int index, bool quantizeLaunch, double quan
     }
     this->launchedPattern = index;
     
-    //if(patterns[index].sequence != nullptr ){ patterns[index].sequence->resetCount(); }
-    
     atomic_meter_next.store(index);
     this->launchingCell = true;
-    //patternMutex.unlock();
 }
 
 
@@ -120,19 +116,17 @@ void pdsp::ScoreSection::setCell( int index, Sequence* sequence, SeqChange* beha
             resizeCells(index+1);
             //all the new patterns are initialized with nullptr, nullptr, length=1.0, quantize = false and quantizeGrid=0.0
         }
-        //patternMutex.lock();
+
         patterns[index].sequence = sequence;
         patterns[index].nextCell  = behavior;
         patterns[index].label = label;
-        //patternMutex.unlock();
+
     }
 }
 
 void pdsp::ScoreSection::setChange( int index, SeqChange* behavior ){
     if(index>=0 && index < (int) patterns.size()){
-        //patternMutex.lock();
         patterns[index].nextCell  = behavior;
-        //patternMutex.unlock();
     }
 }
 
@@ -163,10 +157,9 @@ void pdsp::ScoreSection::setCellQuantization( int index, bool quantizeLaunch, do
             resizeCells(index+1);
             //all the new patterns are initialized with nullptr, nullptr, length=1.0, quantize = false and quantizeGrid=0.0
         }
-        //patternMutex.lock();
+
         patterns[index].quantizeLaunch     = quantizeLaunch;
         patterns[index].quantizeGrid       = quantizeGrid;   
-        //patternMutex.unlock();
     }   
 }
 
@@ -187,7 +180,6 @@ void pdsp::ScoreSection::processSection(const double &startPlayHead,
                                 const double &barsPerSample, 
                                 const int &bufferSize) noexcept {
     
-    //patternMutex.lock();
         if( scheduledTime >= maxBars+playHeadDifference ){ scheduledTime -= maxBars; } //wraps scheduled time around
         
         
@@ -227,21 +219,19 @@ void pdsp::ScoreSection::processSection(const double &startPlayHead,
                 if(patternIndex!=-1 && patterns[patternIndex].sequence!=nullptr) playScore(playHeadDifference, 0.0, oneSlashBarsPerSample);
                 
             }else if(scheduledTime == startPlayHead){ 
-                //std::cout<<"scheduled now, playhead start = "<<startPlayHead<<"--------------------\n";
+                
                 onSchedule();
                 if(clearOnChangeFlag) allNoteOff(0.0, oneSlashBarsPerSample); 
                 if(patternIndex!=-1 && patterns[patternIndex].sequence!=nullptr) playScore(playHeadDifference, 0.0, oneSlashBarsPerSample);
 
             }else if(scheduledTime > startPlayHead && scheduledTime < endPlayHead ){
                 double schedulePoint = scheduledTime - startPlayHead;
-                //std::cout<<"scheduled between, playhead start = "<<startPlayHead<<", schedule point = "<<schedulePoint<<"----------------\n";
+
                 if(patternIndex!=-1 && patterns[patternIndex].sequence!=nullptr) playScore(schedulePoint, 0.0, oneSlashBarsPerSample); //process old clip
                 onSchedule();
                 if(clearOnChangeFlag) allNoteOff(schedulePoint, oneSlashBarsPerSample);
-                //std::cout<<"playing remaining, playhead start = "<<startPlayHead<<"----------------\n";
-                if(patternIndex!=-1 && patterns[patternIndex].sequence!=nullptr) playScore(playHeadDifference, schedulePoint, oneSlashBarsPerSample);//process new clip
-                //std::cout<<"end processing, playhead start = "<<startPlayHead<<"----------------\n";
 
+                if(patternIndex!=-1 && patterns[patternIndex].sequence!=nullptr) playScore(playHeadDifference, schedulePoint, oneSlashBarsPerSample);//process new clip
             }
             
             processBuffersDestinations(bufferSize);
@@ -253,8 +243,13 @@ void pdsp::ScoreSection::processSection(const double &startPlayHead,
             clear = false;
         }
 
-        atomic_meter_playhead.store(scorePlayHead);   
-    //patternMutex.unlock();
+        atomic_meter_playhead.store(scorePlayHead);  
+         
+        if(atomic_meter_length > 0.0f){
+            atomic_meter_percent.store( scorePlayHead / atomic_meter_length );
+        } else{
+            atomic_meter_percent.store(0.0f);
+        }
     
 }
 
@@ -478,6 +473,10 @@ float pdsp::ScoreSection::meter_playhead() const {
     return atomic_meter_playhead.load(); 
 }
 
+float pdsp::ScoreSection::meter_percent() const {
+    return atomic_meter_percent.load(); 
+}
+
 float pdsp::ScoreSection::meter_length() const {
     return atomic_meter_length.load(); 
 }
@@ -486,13 +485,9 @@ void pdsp::ScoreSection::clearOnChange(bool active) {
     clearOnChangeFlag = active;
 }
 
-/*!
-@brief returns the sequence at the given index
-*/ 
 const pdsp::Sequence & pdsp::ScoreSection::getSequence( int i ) const{
     return *(patterns[i].sequence);
 }
-
 
 
 // DEPRECATED
@@ -510,11 +505,6 @@ void pdsp::ScoreSection::autoInitCells(){
     
     seqs.resize( patterns.size() );
     for( int i=0; i<(int)seqs.size(); ++i){
-        // ADD SEQ CLEAR METHOD <----------------------------------------------------
-        //seqs[i].setLength(1.0);
-        //seqs[i].setDivision(16.0);
-        //seqs[i].begin();
-        //seqs[i].end();
         setCell(i, &seqs[i], pdsp::Behavior::Loop); 
     }
     
