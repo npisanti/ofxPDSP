@@ -8,6 +8,7 @@
 
 #include "dynamics/Compressor1.h"
 #include "dynamics/Compressor2.h"
+#include "dynamics/Ducker.h"
 
 #include "filters/VAFilter.h"
 

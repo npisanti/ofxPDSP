@@ -30,10 +30,11 @@ pdsp::AHR::AHR(){
         }
 }
 
-pdsp::Patchable& pdsp::AHR::set(float attackTimeMs, float holdTimeMs, float releaseTimeMs){
+pdsp::Patchable& pdsp::AHR::set(float attackTimeMs, float holdTimeMs, float releaseTimeMs, float velocity ){
         input_attack.setDefaultValue(attackTimeMs);
         input_hold.setDefaultValue(holdTimeMs);
         input_release.setDefaultValue(releaseTimeMs);
+        input_velocity.setDefaultValue( velocity );
         return *this;
 }
 

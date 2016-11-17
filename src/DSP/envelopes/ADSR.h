@@ -41,8 +41,9 @@ public:
     @param[in] decayTimeMs decay time
     @param[in] sustainLevel sustain level
     @param[in] releaseTimeMs release time
+    @param[in] velocity sensitivity to trigger values
     */
-    Patchable& set(float attackTimeMs, float decayTimeMs, float sustainLevel, float releaseTimeMs);
+    Patchable& set(float attackTimeMs, float decayTimeMs, float sustainLevel, float releaseTimeMs, float velocity = 1.0f );
 
 
     /*!

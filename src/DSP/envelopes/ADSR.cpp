@@ -37,12 +37,13 @@ pdsp::ADSR::ADSR(){
         }
 }
 
-pdsp::Patchable& pdsp::ADSR::set(float attackTimeMs, float decayTimeMs, float sustainLevel, float releaseTimeMs){
+pdsp::Patchable& pdsp::ADSR::set(float attackTimeMs, float decayTimeMs, float sustainLevel, float releaseTimeMs, float velocity ){
         input_attack.setDefaultValue( attackTimeMs );
         input_decay.setDefaultValue(decayTimeMs);
         input_sustain.setDefaultValue(sustainLevel);
         input_release.setDefaultValue(releaseTimeMs);
-
+        input_velocity.setDefaultValue( velocity );
+        
         return *this;
 }
 

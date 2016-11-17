@@ -36,8 +36,9 @@ public:
     @param[in] attackTimeMs attack time
     @param[in] holdTimeMs hold time
     @param[in] releaseTimeMs release time
+    @param[in] velocity sensitivity to trigger values
     */
-    Patchable& set(float attackTimeMs, float holdTimeMs, float releaseTimeMs);
+    Patchable& set(float attackTimeMs, float holdTimeMs, float releaseTimeMs, float velocity = 1.0f );
     
   
     /*!
