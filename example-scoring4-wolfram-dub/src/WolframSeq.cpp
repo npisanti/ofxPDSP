@@ -6,18 +6,21 @@
 
 int WolframSeq::number = 0;
 
-void WolframSeq::setup( int maxSteps, int maxOutputs, int rule, int generations,int caw, int cah ) {
+void WolframSeq::setup( int maxSteps, int maxOutputs, int rule, int generations, int caSide, int totalHeight  ) {
     
-
+    this->caSide = caSide;
+    int caw = caSide * maxOutputs * maxSteps;
+    this->cah = caSide * generations;
     this->maxSteps = maxSteps;
     this->maxOutputs = maxOutputs;
     this->sequenceLength = ((double) maxSteps) / division;
+
+    barHeight = totalHeight - cah - 40;
     
     ca.setup( caw, cah, maxSteps * maxOutputs, generations, rule );
     
     values.resize(maxOutputs);
     bars.resize(maxOutputs*maxSteps);
-
 
     string name = "WSEQ n";
     name+= ofToString(number++); 
@@ -28,11 +31,11 @@ void WolframSeq::setup( int maxSteps, int maxOutputs, int rule, int generations,
     ui.add( this->activeOuts.set( "active outs", maxOutputs, 0, maxOutputs ));
     ui.add( this->threshold.set( "threshold", 4, 0, 8 ));
     ui.add( this->seedsDensity.set( "seeds density", 0.33f, 0.0f, 1.0f ));
+    ui.add( this->reverse.set( "reverse bars", false) );
     ui.add( this->limiting.set( "limiting", (float)maxOutputs, 0.0f, (float)maxOutputs ));
     ui.add( this->dbRange.set( "dB range", 18, 48, 6) );
     ui.add( this->gateLen.set( "gate len", 0.5f, 0.001f, 0.999f) );
     ui.add( this->remake.set( "remake", false) );
-
 
     this->storedRule = rule;
     actionCode = 3; // init
@@ -44,10 +47,19 @@ void WolframSeq::setup( int maxSteps, int maxOutputs, int rule, int generations,
     gate = 0.5f;
     gateOff = false;
     
+    barsFbo.allocate(caw+2, barHeight + 20 + 2);
+    barsFbo.begin();
+        ofClear(0, 0, 0, 0);
+    barsFbo.end();
+    
 }
 
 WolframSeq::WolframSeq(){
-
+    
+    // it is useful to have this inside the constructor
+    // otherwise it could happen that the lambda take references not to the internal members
+    // but to to arguments of the setup function, giving an UNDEFINED behavior
+    
     code = [&] () noexcept {
         
         int nextRule = rule;
@@ -104,6 +116,12 @@ WolframSeq::WolframSeq(){
         gate = gateLen;
 
         // wolfram to seqs ---------------------------------
+        int b;
+        if(reverse){
+            b = bars.size()-1;
+        }else{
+            b=0;
+        }
         for(int x=0; x < ca.cells(); ++x){
 
             int sum = -thresholdStored;
@@ -116,8 +134,13 @@ WolframSeq::WolframSeq(){
             intensity *= scaling;
             if(intensity > 1.0f) intensity = 1.0f;
 
-            bars[x] = intensity;
-
+            bars[b] = intensity;
+            
+            if(reverse){
+                b--;
+            }else{
+                b++;
+            }
         }
         
         sequenceLength = ((double) steps) / division;
@@ -161,4 +184,75 @@ WolframSeq::WolframSeq(){
         end();
     };    
     
+}
+
+
+
+void WolframSeq::draw(int x, int y) {
+    
+    // update bars graphics
+    barsFbo.begin();
+        ofClear(0, 0, 0, 0);
+        ofTranslate(1,1);
+
+        float playhead = meter_percent(); 
+        
+        int sequenceSteps = steps;
+        
+        for(int x =0; x<maxOutputs*maxSteps; ++x){
+            ofSetColor( 100 );
+            ofNoFill();
+            ofDrawRectangle(caSide*x, 0, caSide, barHeight); 
+            
+            if( (x < sequenceSteps*activeOutsStored ) &&
+                ((int) (playhead * sequenceSteps)) == x%sequenceSteps ){
+                ofSetColor( 255 ); 
+            }
+            ofFill();
+            
+            float height = bars[x] * barHeight;
+            float yy = barHeight - height;
+            ofDrawRectangle(caSide*x, yy, caSide, height); 
+       
+        }
+        
+        ofSetColor( 255 ); 
+        ofTranslate(0, barHeight);  
+        
+        // draw the playhead and envelope meters
+
+        ofNoFill();
+        float playheadW = caSide*sequenceSteps;
+        
+        for(int i=0; i<maxOutputs; ++i){
+            
+            if( i < activeOutsStored) {
+                ofSetColor( 255 ); 
+                
+                float x = playhead * playheadW;
+                ofDrawLine(x, 0, x, 20);                                 
+            }
+            
+            string label = "out ";
+            label+= to_string(i);
+            ofDrawBitmapString(label, 5, 15);
+
+            ofSetColor( 100 );
+            ofDrawRectangle( 0, 0, playheadW, 20 );
+            
+            ofTranslate(playheadW,0);
+        }
+    barsFbo.end();
+    
+    // draw everything
+    ofPushMatrix();
+        ofTranslate(x, y);
+        
+        ca.draw(0, 0);
+        
+        ofTranslate(0, cah+20);
+        
+        barsFbo.draw(0, 0);
+    
+    ofPopMatrix();
 }

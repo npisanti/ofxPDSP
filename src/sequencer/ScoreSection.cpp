@@ -246,7 +246,9 @@ void pdsp::ScoreSection::processSection(const double &startPlayHead,
         atomic_meter_playhead.store(scorePlayHead);  
          
         if(atomic_meter_length > 0.0f){
-            atomic_meter_percent.store( scorePlayHead / atomic_meter_length );
+            float percent = scorePlayHead / atomic_meter_length;
+            atomic_meter_percent.store( percent );
+            patterns[patternIndex].sequence->atomic_meter_percent.store( percent );
         } else{
             atomic_meter_percent.store(0.0f);
         }
@@ -318,7 +320,6 @@ void pdsp::ScoreSection::onSchedule() noexcept{
             
         }else{ //we don't have a behavior to get a next pattern --------> STOPPING ROW AFTER EXECUTION
             atomic_meter_next.store(-1);        
-            //atomic_meter_length.store(0.0f);
             scheduledTime = scheduledTime + patterns[patternIndex].sequence->length();
             scheduledPattern = -1;
         }   

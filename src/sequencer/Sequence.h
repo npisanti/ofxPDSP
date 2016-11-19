@@ -182,7 +182,15 @@ namespace pdsp{
         */
         void resetCount();
     
+        /*!
+        @brief returns the percentual of completion of this sequence. When the sequence is not playing it will return the last value. Thread-safe.
+        */ 
+        float meter_percent() const; 
+    
+        
     private:
+        std::atomic<float> atomic_meter_percent;
+        
         void executeGenerateScore() noexcept;
         
         std::vector<ScoreMessage> score;   

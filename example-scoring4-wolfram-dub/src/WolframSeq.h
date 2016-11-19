@@ -5,12 +5,15 @@
 #include "ofxPDSP.h"
 #include "1D.h"
 
+
 class WolframSeq : public pdsp::Sequence {
     
 public:
     WolframSeq();
 
-    void setup( int maxSteps, int maxOutputs, int rule, int generations, int caw, int cah );
+    void setup( int maxSteps, int maxOutputs, int rule, int generations, int caSide, int totalHeight );
+    
+    void draw(int x, int y);
     
     atomic<int>     actionCode; // 0 advance | 1 clear | 2 random | 3 random & fill
     
@@ -20,11 +23,12 @@ public:
     ofParameter<int>     rule;
     ofParameter<int>     division;
     ofParameter<float>   seedsDensity;
+    ofParameter<bool>    reverse;
     ofParameter<float>   limiting;
     ofParameter<int>     dbRange;
     ofParameter<float>   gateLen;
     ofParameter<bool>    remake;
-        
+
     bool    gateOff;
     float   gate;
     
@@ -34,6 +38,10 @@ public:
     ofParameterGroup ui;
 
 private:
+    ofFbo   barsFbo;
+    int     cah;
+    int     caSide;
+    int     barHeight;
 
     int     storedRule;
 

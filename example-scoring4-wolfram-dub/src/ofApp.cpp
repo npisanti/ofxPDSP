@@ -3,8 +3,6 @@
 #define ZAPS_NUMBER 4
 #define MAX_GENERATIONS 8
 #define SIDE 16
-#define BARH 120
-#define METERH 20
 
 // before looking at this check out the basics and scoring examples
 
@@ -60,28 +58,35 @@ void ofApp::setup(){
             switch( pdspDice(6) ){
                 case 0:
                     wolframSeq.rule = 90;
+                    wolframSeq.reverse = false;
+                    wolframSeq.threshold = pdspDice(0, 4);
                     break;
                 case 1:
                     wolframSeq.rule = 124;
+                    wolframSeq.reverse = pdspChance(0.5f);
                     break;
                 case 2:
                     wolframSeq.rule = 126;
+                    wolframSeq.reverse = pdspChance(0.5f);
                     break;
                 case 3:
                     wolframSeq.rule = 150;
+                    wolframSeq.reverse = pdspChance(0.5f);
                     break;
                 case 4:
                     wolframSeq.rule = 60;
+                    wolframSeq.reverse = false;
                     break;
                 case 5:
                     wolframSeq.rule = 110;
+                    wolframSeq.reverse = true;
                     break;
             }
         }
     }; // masterplan end
 
     // sets up wolfram sequence
-    wolframSeq.setup( 16, ZAPS_NUMBER, 60, MAX_GENERATIONS, SIDE*ZAPS_NUMBER*16, caHeight );      
+    wolframSeq.setup( 16, ZAPS_NUMBER, 60, MAX_GENERATIONS, SIDE, 300 );      
     engine.score.sections[1].setCell( 0, &wolframSeq );
     
     engine.score.launchMultipleCells(0); // launch the 0 sequences of all the sections
@@ -155,10 +160,9 @@ void ofApp::draw(){
     gui.draw();
 
     ofSetColor( brightColor ); 
-    wolframSeq.ca.draw( 20, 50 );
+    wolframSeq.draw( 20, 50 );
     
-    drawSequenceBars( 20, caHeight + 70 );
-
+    
     // draw the scopes
     ofPushMatrix();
         ofTranslate( 20, 420 );
@@ -187,65 +191,6 @@ void ofApp::draw(){
 
     ofDrawBitmapString("spacebar: stop/play", 20, ofGetHeight() - 20); 
     
-}
-
-
-void ofApp::drawSequenceBars( int x, int y) {
-    
-    ofPushMatrix();
-    
-        ofTranslate(x, y);
-
-        float playhead = engine.score.sections[1].meter_playhead() / engine.score.sections[1].sequence(0).length();
-        
-        int sequenceSteps = wolframSeq.steps;
-        
-        for(int x =0; x<64; ++x){
-            ofSetColor( darkColor );
-            ofNoFill();
-            ofDrawRectangle(SIDE*x, 0, SIDE, BARH); 
-            
-            if( (x < sequenceSteps*wolframSeq.activeOuts ) &&
-                ((int) (playhead * sequenceSteps)) == x%sequenceSteps ){
-                ofSetColor( brightColor ); 
-            }
-            ofFill();
-            
-            float height = wolframSeq.bars[x] * BARH;
-            float yy = BARH - height;
-            ofDrawRectangle(SIDE*x, yy, SIDE, height); 
-       
-        }
-        
-        ofSetColor( brightColor ); 
-        ofTranslate(0, BARH);  
-        
-        // draw the playhead and envelope meters
-
-        ofNoFill();
-        float playheadW = SIDE*sequenceSteps;
-        
-        for(int i=0; i<4; ++i){
-            
-            if( i < wolframSeq.activeOuts) {
-                ofSetColor( brightColor ); 
-                
-                float x = playhead * playheadW;
-                ofDrawLine(x, 0, x, METERH);                                 
-            }
-            
-            string label = "zap ";
-            label+= to_string(i);
-            ofDrawBitmapString(label, 5, METERH-5);
-
-            ofSetColor( darkColor );
-            ofDrawRectangle( 0, 0, playheadW, METERH );
-            
-            ofTranslate(playheadW,0);
-        }
-
-    ofPopMatrix();
-         
 }
 
 //--------------------------------------------------------------

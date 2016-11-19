@@ -15,8 +15,6 @@ class ofApp : public ofBaseApp{
 		void update();
 		void draw();
 
-        void drawSequenceBars( int x, int y);
-
 		void keyPressed(int key);
 		void keyReleased(int key);
 		void mouseMoved(int x, int y );
@@ -30,7 +28,6 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
         void switchRule();
-
 
         // pdsp modules
         ofxPDSPEngine   engine; 

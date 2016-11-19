@@ -9,6 +9,7 @@ pdsp::Sequence::Sequence( double stepDivision ){
     code = []() noexcept {};
     loopCounter = 0;
     id = 1;
+    atomic_meter_percent = 0.0f;
 }
 
 pdsp::Sequence::Sequence() : Sequence (16.0){}
@@ -235,6 +236,10 @@ int pdsp::Sequence::counter() const {
 
 void pdsp::Sequence::resetCount() {
     loopCounter = 0;
+}
+
+float pdsp::Sequence::meter_percent() const {
+    return atomic_meter_percent;
 }
 
 pdsp::SeqChange::SeqChange(){
