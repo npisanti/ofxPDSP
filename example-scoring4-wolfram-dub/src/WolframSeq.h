@@ -11,7 +11,7 @@ class WolframSeq : public pdsp::Sequence {
 public:
     WolframSeq();
 
-    void setup( int maxSteps, int maxOutputs, int rule, int generations, int caSide, int totalHeight );
+    void setup( int maxSteps, int maxOutputs, int rule, int generations, int caSide, int totalHeight, bool sendGateOff=false );
     
     void draw(int x, int y);
     
@@ -28,20 +28,23 @@ public:
     ofParameter<int>     dbRange;
     ofParameter<float>   gateLen;
     ofParameter<bool>    remake;
-
-    bool    gateOff;
-    float   gate;
     
+    bool                 gateOff;
+
     vector<float>   bars;    
     Automaton1D     ca;
 
     ofParameterGroup ui;
 
 private:
+
     ofFbo   barsFbo;
+
     int     cah;
     int     caSide;
     int     barHeight;
+    
+    float   gate;
 
     int     storedRule;
 

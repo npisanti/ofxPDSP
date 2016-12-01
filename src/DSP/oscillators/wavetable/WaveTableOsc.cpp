@@ -26,7 +26,7 @@ void pdsp::WaveTableOsc::setTable(WaveTable& waveTable){
 
 
 void pdsp::WaveTableOsc::prepareOscillator(double sampleRate) {
-    input_shape.enableBoundaries(0.0f, (float)(waveTable->tableSize -1) );    
+    if(waveTable!=nullptr) input_shape.enableBoundaries(0.0f, (float)(waveTable->tableSize -1) );    
 }
 
 void pdsp::WaveTableOsc::oscillateShapeCR(float* outputBuffer, const float* phaseBuffer, const float shape, int bufferSize) noexcept {

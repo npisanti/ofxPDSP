@@ -6,7 +6,7 @@
 
 int WolframSeq::number = 0;
 
-void WolframSeq::setup( int maxSteps, int maxOutputs, int rule, int generations, int caSide, int totalHeight  ) {
+void WolframSeq::setup( int maxSteps, int maxOutputs, int rule, int generations, int caSide, int totalHeight, bool sendGateOff ) {
     
     this->caSide = caSide;
     int caw = caSide * maxOutputs * maxSteps;
@@ -34,8 +34,16 @@ void WolframSeq::setup( int maxSteps, int maxOutputs, int rule, int generations,
     ui.add( this->reverse.set( "reverse bars", false) );
     ui.add( this->limiting.set( "limiting", (float)maxOutputs, 0.0f, (float)maxOutputs ));
     ui.add( this->dbRange.set( "dB range", 18, 48, 6) );
-    ui.add( this->gateLen.set( "gate len", 0.5f, 0.001f, 0.999f) );
+    
+    if(sendGateOff){
+        gateOff = true;
+        ui.add( this->gateLen.set( "gate len", 0.5f, 0.001f, 0.999f) );
+    }else{
+        gateOff = false;
+    }
+    
     ui.add( this->remake.set( "remake", false) );
+
 
     this->storedRule = rule;
     actionCode = 3; // init

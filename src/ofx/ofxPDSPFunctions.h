@@ -16,6 +16,7 @@ class ofxPDSPFunctions{
     friend void ofxPDSPRelease();
     friend float p2f( float pitch);
     friend float pratio( float pitch, float ratio);
+    friend int highestPartial( float pitch );
     friend float f2p( float fre);
     friend void setReferenceFrequency(float frequency);
     friend float panL ( float pan );
