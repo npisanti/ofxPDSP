@@ -121,6 +121,7 @@ void pdsp::ScoreProcessor::stop(){
         //sect.scheduledTime -= oldPlayhead;
         sect.atomic_meter_playhead.store(0.0f);
         sect.launchCell(sect.atomic_meter_next);
+        sect.resetCounterOnStop();
     } 
 }    
 

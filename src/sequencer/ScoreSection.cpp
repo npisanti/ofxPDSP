@@ -541,3 +541,8 @@ void pdsp::ScoreSection::label ( int index, std::string name ) {
     patterns[index].label = name;
 }
 
+void pdsp::ScoreSection::resetCounterOnStop() {
+    if(patternIndex!=-1 && patterns[patternIndex].sequence!=nullptr){
+        patterns[patternIndex].sequence->resetCount();
+    }
+}

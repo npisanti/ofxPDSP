@@ -2,9 +2,6 @@
 #include "ClockedLFO.h"
 
 
-//TODO: DIVISION TO FREQ FORMULA, actually noise is broken in Clocked mode
-
-
 pdsp::ClockedLFO::ClockedLFO() { patch(); }
 pdsp::ClockedLFO::ClockedLFO(const pdsp::ClockedLFO &Other){ patch(); }
 pdsp::ClockedLFO& pdsp::ClockedLFO::operator=(const pdsp::ClockedLFO &Other){ return *this; }
@@ -29,9 +26,9 @@ void pdsp::ClockedLFO::patch(){
     phazorClocked  >> triangle;
     phazorClocked.out_trig() >> rnd >> randomSnHSlew;   
         
-    sawSlew.set(200.0f); //200hz slew = 5ms
-    squareSlew.set(200.0f); //200hz slew = 5ms
-    randomSnHSlew.set(200.0f); //200hz slew = 5ms
+    sawSlew.set(200.0f);
+    squareSlew.set(200.0f);
+    randomSnHSlew.set(200.0f);
 
 }
 

@@ -314,6 +314,7 @@ private:
     void onSchedule() noexcept;
     void clearBuffers() noexcept;
     void processBuffersDestinations(const int &bufferSize) noexcept;
+    void resetCounterOnStop();
     
     std::vector<SeqCell>     patterns;
     
