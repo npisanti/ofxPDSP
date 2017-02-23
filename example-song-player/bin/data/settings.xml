@@ -1,0 +1,27 @@
+<group>
+	<sampler_>
+		<volume>0</volume>
+		<load>0</load>
+		<sample_>/home/nick/data/dreadlock_ride2.wav</sample_>
+		<attack_time>0</attack_time>
+		<hold_time>1764</hold_time>
+		<release_time>50</release_time>
+	<sample>/home/nick/data/dreadlock_ride2.wav</sample>
+	</sampler_>
+<group/>
+<sampler_1>
+		<volume>0</volume>
+		<load>0</load>
+		<sample>dreadlock_ride2.wav</sample>
+		<pitch>-24</pitch>
+		<drift>0.05</drift>
+		<attack_time>0</attack_time>
+		<hold_time>3528</hold_time>
+		<release_time>3528</release_time>
+	<path>/home/nick/data/dreadlock_ride2.wav</path>
+		<filter_cutoff>136</filter_cutoff>
+		<env_to_cutoff>0</env_to_cutoff>
+		<env_dynamics>1</env_dynamics>
+	<pitch_drift>0.05</pitch_drift>
+	</sampler_1>
+</group>
