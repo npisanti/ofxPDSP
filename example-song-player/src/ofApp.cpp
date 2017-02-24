@@ -12,13 +12,12 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 
-    trig >> player.in("trig");
-            player.out("0") >> engine.audio_out(0);
-            player.out("1") >> engine.audio_out(1);
+    player.out("0") >> engine.audio_out(0);
+    player.out("1") >> engine.audio_out(1);
 
-            // with this audio player you have to work with stereo samples
-            // otherwise change the last line to this
-            //player.out("0") >> engine.audio_out(1);
+    // with this audio player you have to work with stereo samples
+    // otherwise change the last line to this
+    //player.out("0") >> engine.audio_out(1);
 
     // ------------SETUPS AND START AUDIO-------------
     engine.listDevices();
@@ -48,7 +47,7 @@ void ofApp::exit(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    trig.trigger(1.0f);
+
 }
 
 //--------------------------------------------------------------

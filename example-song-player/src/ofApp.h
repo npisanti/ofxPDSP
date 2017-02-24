@@ -28,7 +28,6 @@ class ofApp : public ofBaseApp{
         
         ofxPDSPEngine   engine;
         AudioPlayer     player;
-        ofxPDSPTrigger  trig;
         
         ofxPanel        gui;
         
