@@ -163,7 +163,7 @@ WolframSeq::WolframSeq(){
             
             for(int out=0; out < activeOutsStored; ++out) {
 
-                float value = bars[ (out*maxSteps) + x ];
+                float value = bars[ (out*steps) + x ];
                 if( value > 0.0f ){
                     values[out] = dB( -db + db * value );
                 }else{
