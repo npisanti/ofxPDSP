@@ -37,6 +37,7 @@ class ofApp : public ofBaseApp{
         
         ofxPDSPMidiIn        midiIn;
         ofxPDSPMidiKeys      midiKeys;
+        ofxPDSPMidiControls  midiCCs;
 
         ofxPanel             gui;
         

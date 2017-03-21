@@ -9,6 +9,8 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     
+    ofSetWindowTitle( "midi polysynth example" );
+    
     //patching-------------------------------
 
     // set up control
@@ -16,6 +18,8 @@ void ofApp::setup(){
     midiKeys.setPolyMode(4, 1);
     // activate portamento, in poly mode you can notice portamento only on note stealing
     midiKeys.setPortamento(On, 250.0f, pdsp::Rate);
+
+    //midiCCs.setCCSlew( 100.0f ); // enable for changing the midi CCs slew time, default is 50.0f = 50ms
 
     // voices is a vector of synth voices, we resize it to the midiKeys voice number     
     voicesNum = midiKeys.getVoicesNumber();
@@ -28,9 +32,16 @@ void ofApp::setup(){
         // connect each voice to a midi pitch and trigger output
         midiKeys.outs_trig[i]  >> synth.voices[i].in("trig");
         midiKeys.outs_pitch[i] >> synth.voices[i].in("pitch");
+
+        // controls a bit the cutoff using the modulation wheel
+        // adds up to 36 semitones to the filter cutoff pitch
+        midiCCs.out(1) * 36.0f >> synth.voices[i].in("cutoff");
+
         // connect each voice to chorus
         synth.voices[i] >> chorus.in_0();
         synth.voices[i] >> chorus.in_1();
+        
+
     }
     
     // set up chorus
@@ -67,15 +78,16 @@ void ofApp::setup(){
     gainControl.enableSmoothing(50.f);
     gui.add( synth.ui );
     gui.add( chorusUI );
-    gui.setPosition(400, 20);
+    gui.setPosition(420, 20);
     
     // audio / midi setup----------------------------
     
     //get MIDI control
     midiIn.listPorts();
-    midiIn.openPort(0); //set the right port !!!
+    midiIn.openPort(1); //set the right port !!!
     // for our midi controllers to work we have to add them to the engine, so it know it has to process them
     engine.addMidiController( midiKeys, midiIn ); // add midi processing to the engine
+    engine.addMidiController( midiCCs, midiIn );  // add midi processing to the engine
     engine.listDevices();
     engine.setDeviceID(0); // REMEMBER TO SET THIS AT THE RIGHT INDEX!!!!
     engine.setup( 44100, 512, 3);     
@@ -91,20 +103,23 @@ void ofApp::update(){
 void ofApp::draw(){
     
     // draw pitch meters
-    int xBase = 20;
+    int xBase = 10;
     ofDrawBitmapString("osc pitches", xBase, 26);
     for(int i=0; i<voicesNum; ++i){
         drawMeter( synth.voices[i].meter_pitch(), 36.f, 84.f, xBase, 30, 20, 200);
         xBase+=40;
     }
     // draw mod envelope meters
-    xBase += 30;
+    xBase += 20;
     ofDrawBitmapString("mod envs", xBase, 26);
     for(int i=0; i<voicesNum; ++i){
         drawMeter( synth.voices[i].meter_mod_env(), 0.05f, 1.0f, xBase, 30, 20, 200);
         xBase+=40;
     }
-
+    
+    xBase+=20;
+    ofDrawBitmapString("MW", xBase, 26);
+    drawMeter( midiCCs.out(1).meter_output(), 0.05f, 1.0f, xBase, 30, 20, 200);
     // draw GUI
     gui.draw();
 }

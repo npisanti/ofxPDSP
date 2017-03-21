@@ -44,7 +44,9 @@ This is an overview of a selection of the available modules. Some of the modules
 - pdsp::Bitcruncher : reduces the bit for the signal amplitude
 - pdsp::Decimator : reduces the signal sampling frequency
 - pdsp::Saturator1 : overdrive 
+- pdsp::Saturator2 : warmer overdrive 
 - pdsp::DimensionChorus : lush stereo chorus
+- pdsp::Ducker : pushes down the signal when a trigger is received, useful for side-chaining
 
 ## Equalizers
 - pdsp::LowCut : cuts low frequencies

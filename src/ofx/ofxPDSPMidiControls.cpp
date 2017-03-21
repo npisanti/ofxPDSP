@@ -42,3 +42,14 @@ int ofxPDSPMidiControls::getMaxCCNum(){
     return midiCC.getCCSize();
 }
 
+
+pdsp::ValueSequencer & ofxPDSPMidiControls::out( int cc ) {
+    if( cc < 0 ){
+        cc = - cc;
+    }
+    if( cc > getMaxCCNum() ){
+        setMaxCCNum(cc);
+    }
+    return outs_cc[cc];
+}
+    

@@ -29,7 +29,6 @@
 
 #include "effects/CombFilter.h"
 #include "effects/DimensionChorus.h"
-#include "effects/StereoConvolver.h"
 
 #include "equalizers/AAHighShelfEQ.h"
 #include "equalizers/AALowShelfEQ.h"

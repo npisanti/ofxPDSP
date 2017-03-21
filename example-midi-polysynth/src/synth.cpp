@@ -26,6 +26,7 @@ void PolySynth::Voice::setup( PolySynth & ui ){
 
     addModuleInput("trig", voiceTrigger);
     addModuleInput("pitch", voicePitch);
+    addModuleInput("cutoff", p2f);
     addModuleOutput("signal", voiceAmp);
 
     // SIGNAL PATH

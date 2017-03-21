@@ -15,7 +15,7 @@
 #include "ofxPDSPMidiIn.h"
 
 /*!
-@brief utility class to parse control change data from a ofxPDSPMidiIn and convert it to a bank of patchable modules with optional slewed output
+@brief utility class to parse control change data from a ofxPDSPMidiIn and convert it to a bank of patchable modules with optional slewed output. By default outputs are slewed to 50ms. 
 */
 class ofxPDSPMidiControls : public ofxPDSPController {
     
@@ -40,14 +40,18 @@ public:
     @param[in] slewTimeMs new slew time in milliseconds
     */
     int  getMaxCCNum();
-    
+
     /*!
-    @brief this is the vector of values you can patch out to your modules. The index of the vector is the midi CC number.
-    */
-    vector<pdsp::ValueSequencer>    outs_cc;
+    @brief returns a control value corrisponding to the given cc number, the output is mapped to the 0.0f-1.0f range.
+    @param[in] cc the cc number for the output
+    */    
+    pdsp::ValueSequencer & out( int cc );
+    
 /*!
     @cond HIDDEN_SYMBOLS
 */
+    vector<pdsp::ValueSequencer>    outs_cc; // this has to become private in later versions
+    
     void processMidi(const ofxPDSPMidiIn &midiInProcessor, const int &bufferSize ) noexcept override;   
 /*!
     @endcond 
