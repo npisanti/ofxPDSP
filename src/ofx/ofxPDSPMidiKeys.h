@@ -82,13 +82,13 @@ public:
     
 
     /*!
-    @brief return the trigger output of the given voice
+    @brief returns the trigger output of the given voice
     @param[in] voice voice number. It won't be clamped, so use a valid voice number to avoid segfaults.
     */
     pdsp::PatchNode & out_trig( int voice );
 
     /*!
-    @brief vector for the pitch outputs
+    @brief returns the pitch output of the given voice
     @param[in] voice voice number. It won't be clamped, so use a valid voice number to avoid segfaults.
     */
     pdsp::PatchNode &  out_pitch( int voice );
