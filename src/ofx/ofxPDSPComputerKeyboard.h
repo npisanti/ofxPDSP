@@ -23,7 +23,6 @@ public:
         void keyPressed  ( int key );
         void keyReleased ( int key );
 
-
         /*!
         @brief set the mode to Poly, with the given max notes
         @param[in] maxNotes max note for the polyphony, 4 is the minimum
@@ -63,6 +62,26 @@ public:
         void draw(int x, int y, int w, int h);
 
         /*!
+        @brief this vector holds 12 int values that rapresents the keys that triggers the notes. By default it is initalized to the keys of a qwerty keyboard, but you can change that manually 
+        */   
+        vector<int> keys;
+
+        /*!
+        @brief return the trigger output of the given voice
+        @param[in] voice voice number. It won't be clamped, so use a valid voice number to avoid segfaults.
+        */
+        ofxPDSPTrigger & out_trig( int voice );
+
+        /*!
+        @brief vector for the pitch outputs
+        @param[in] voice voice number. It won't be clamped, so use a valid voice number to avoid segfaults.
+        */
+        ofxPDSPValue &  out_pitch( int voice );
+
+/*!
+    @cond HIDDEN_SYMBOLS
+*/ 
+        /*!
         @brief vector of trigger outputs
         */                
         vector<ofxPDSPTrigger>      outs_trig;
@@ -71,12 +90,9 @@ public:
         @brief vector for the pitch outputs
         */
         vector<ofxPDSPValue>        outs_pitch;
-
-        /*!
-        @brief this vector holds 12 int values that rapresents the keys that triggers the notes. By default it is initalized to the keys of a qwerty keyboard, but you can change that manually 
-        */   
-        vector<int> keys;
-
+/*!
+    @endcond
+*/ 
 
 private:
         void keysControl( int key );

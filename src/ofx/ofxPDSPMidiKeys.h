@@ -80,6 +80,38 @@ public:
     */
     int getVoicesNumber() const;
     
+
+    /*!
+    @brief return the trigger output of the given voice
+    @param[in] voice voice number. It won't be clamped, so use a valid voice number to avoid segfaults.
+    */
+    pdsp::PatchNode & out_trig( int voice );
+
+    /*!
+    @brief vector for the pitch outputs
+    @param[in] voice voice number. It won't be clamped, so use a valid voice number to avoid segfaults.
+    */
+    pdsp::PatchNode &  out_pitch( int voice );
+
+    /*!
+    @brief single trigger output for the Poly mode
+    */
+    pdsp::GateSequencer & out_single_trigger();
+
+    /*!
+    @brief pitchbend output. The pitchbend is also summed to the pitch outputs, so this is just for modulations
+    */    
+    pdsp::ValueSequencer & out_pitch_bend();
+
+    /*!
+    @brief channel pressure output
+    */    
+    pdsp::ValueSequencer  & out_aftertouch();
+
+
+/*!
+    @cond HIDDEN_SYMBOLS
+*/ 
     /*!
     @brief vector of trigger outputs
     */
@@ -104,10 +136,7 @@ public:
     @brief channel pressure output
     */    
     pdsp::ValueSequencer            out_pressure;
-
-/*!
-    @cond HIDDEN_SYMBOLS
-*/ 
+    
     void processMidi(const ofxPDSPMidiIn &midiInProcessor, const int &bufferSize ) noexcept override;
 /*!
     @endcond

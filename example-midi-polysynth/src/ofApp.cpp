@@ -30,8 +30,8 @@ void ofApp::setup(){
     // we patch them to the voices here
     for(int i=0; i<voicesNum; ++i){
         // connect each voice to a midi pitch and trigger output
-        midiKeys.outs_trig[i]  >> synth.voices[i].in("trig");
-        midiKeys.outs_pitch[i] >> synth.voices[i].in("pitch");
+        midiKeys.out_trig(i)  >> synth.voices[i].in("trig");
+        midiKeys.out_pitch(i) >> synth.voices[i].in("pitch");
 
         // controls a bit the cutoff using the modulation wheel
         // adds up to 36 semitones to the filter cutoff pitch
@@ -40,8 +40,6 @@ void ofApp::setup(){
         // connect each voice to chorus
         synth.voices[i] >> chorus.in_0();
         synth.voices[i] >> chorus.in_1();
-        
-
     }
     
     // set up chorus
@@ -84,7 +82,7 @@ void ofApp::setup(){
     
     //get MIDI control
     midiIn.listPorts();
-    midiIn.openPort(1); //set the right port !!!
+    midiIn.openPort(0); //set the right port !!!
     // for our midi controllers to work we have to add them to the engine, so it know it has to process them
     engine.addMidiController( midiKeys, midiIn ); // add midi processing to the engine
     engine.addMidiController( midiCCs, midiIn );  // add midi processing to the engine

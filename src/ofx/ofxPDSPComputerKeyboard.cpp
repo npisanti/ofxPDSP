@@ -505,3 +505,13 @@ void ofxPDSPComputerKeyboard::draw(int x, int y, int w, int h) {
     ofPopMatrix();
     
 }
+
+
+ofxPDSPTrigger & ofxPDSPComputerKeyboard::out_trig( int voice ) {
+    return outs_trig[voice];
+}
+
+ofxPDSPValue &  ofxPDSPComputerKeyboard::out_pitch( int voice ) {
+    return outs_pitch[voice]; 
+}
+

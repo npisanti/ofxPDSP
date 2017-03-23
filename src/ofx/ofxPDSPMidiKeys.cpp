@@ -216,5 +216,23 @@ void ofxPDSPMidiKeys::setPortamento(PortamentoMode portamentoMode, float timeMs,
         }
         midiConverter.setPortamento(portamentoMode);
 }
-        
 
+pdsp::PatchNode & ofxPDSPMidiKeys::out_trig( int voice ) {
+    return outs_trig[voice];
+}
+
+pdsp::PatchNode &  ofxPDSPMidiKeys::out_pitch( int voice ) {
+    return outs_pitch[voice]; 
+}
+
+pdsp::GateSequencer & ofxPDSPMidiKeys::out_single_trigger() {
+    return out_singletrigger;
+}
+
+pdsp::ValueSequencer & ofxPDSPMidiKeys::out_pitch_bend() {
+    return out_pitchbend;
+}
+  
+pdsp::ValueSequencer  & ofxPDSPMidiKeys::out_aftertouch() {
+    return out_pressure;
+}

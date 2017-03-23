@@ -51,9 +51,10 @@ public:
     void simpleInit(int lowNote, int numLayer, int layerSpan=1);
     
     /*!
-    @brief this is the vector of output triggers binded to the note layers.
-    */
-    vector<pdsp::GateSequencer>     outs_trig;
+    @brief return the trigger output of the given note layer.
+    @param[in] layerIndex layer index
+    */    
+    pdsp::GateSequencer &  out_trig( int layerIndex );
 
     /*!
     @brief returns the low note for the given layer
@@ -70,6 +71,12 @@ public:
 /*!
     @cond HIDDEN_SYMBOLS
 */
+
+    /*!
+    @brief this is the vector of output triggers binded to the note layers.
+    */
+    vector<pdsp::GateSequencer>     outs_trig;
+    
     void processMidi(const ofxPDSPMidiIn &midiInProcessor, const int &bufferSize ) noexcept override;
 /*!
     @endcond

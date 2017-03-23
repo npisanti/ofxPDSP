@@ -48,8 +48,8 @@ void ofApp::setup(){
     // we patch them to the voices here
     for(int i=0; i<voicesNum; ++i){
         // connect each voice to a pitch and trigger output
-        keyboard.outs_trig[i]  >> synth.voices[i].in("trig");
-        keyboard.outs_pitch[i] >> synth.voices[i].in("pitch");
+        keyboard.out_trig(i)  >> synth.voices[i].in("trig");
+        keyboard.out_pitch(i) >> synth.voices[i].in("pitch");
     }
     
     // patch synth to the engine

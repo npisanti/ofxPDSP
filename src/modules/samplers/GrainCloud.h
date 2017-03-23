@@ -14,7 +14,9 @@
 namespace pdsp{
 
     /*!
-    @brief A "cloud" of really short sampled segments
+    @brief A "cloud" of really short sampled segments. 
+    
+    By default it has 8 voices, but you can construct it with more voices if you use the non-default constructor. 
     */     
     
 class GrainCloud : public Patchable {

@@ -127,3 +127,7 @@ void ofxPDSPMidiPads::processMidi(const ofxPDSPMidiIn &midiInProcessor, const in
         trigBuffers[i].processDestination(bufferSize);
     }
 }
+
+pdsp::GateSequencer &  ofxPDSPMidiPads::out_trig( int layerIndex ) {
+    return outs_trig[layerIndex];
+}
