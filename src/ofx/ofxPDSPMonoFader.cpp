@@ -88,3 +88,6 @@ pdsp::Patchable& ofxPDSPMonoFader::out_signal() {
     return out("signal");
 }
 
+float ofxPDSPMonoFader::get() const {
+	return value.get();
+}

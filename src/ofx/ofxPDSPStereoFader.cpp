@@ -129,3 +129,6 @@ pdsp::Patchable& ofxPDSPStereoFader::out_R() {
     return out("1");
 }
 
+float ofxPDSPStereoFader::get() const{
+    return value.get();
+}
