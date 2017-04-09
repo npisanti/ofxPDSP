@@ -7,7 +7,7 @@ pdsp::FFTWorker::FFTWorker(){
     lastBufferSize = -1;
     complexSize = 0;
     blockSize = 0;
-    fftImplementation = new audiofft::OouraFFT();
+    fftImplementation = new audiofft::AudioFFT();
 }
 
 pdsp::FFTWorker::~FFTWorker(){

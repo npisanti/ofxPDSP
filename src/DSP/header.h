@@ -53,6 +53,7 @@
 #include "oscillators/antialiased/BLEPSaw.h"
 
 #include "oscillators/wavetable/WaveTableOsc.h"
+#include "oscillators/wavetable/DataOsc.h"
 
 #include "random/PRNoiseGen.h"
 #include "random/TriggeredRandom.h"
@@ -68,7 +69,6 @@
 #include "filters/biquads/BiquadLowShelf.h"
 #include "filters/biquads/BiquadHighShelf.h"
 #include "filters/biquads/BiquadPeakEQ.h"
-
 
 #include "samplers/SampleBuffer.h"
 #include "samplers/Sampler.h"

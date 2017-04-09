@@ -11,7 +11,7 @@ ofxPDSP is an audio DSP addon/library for openFrameworks. It is based on those d
 It includes a good selection of modules ready to be used, like antialiasied oscillators and VA filters, an FFT convolver, analog-sounding envelopes, delays, noise generators, a sampler and a graincloud module, biquad equalizers (normal and 2x oversampled), units for dynamic processing, units for oversampling/downsampling and a framework for writing and sequencing generative music.
 On top of that some other classes that uses openFrameworks for adding midi and OSC in/out, serial output, sequencer monitoring, waveform plotting and scopes, other audio addon wrapping and ofParameter-compatible control.
 
-You can find an [overview of the modules here](http://npisanti.com/ofxPDSP/md__modules.html). Also be sure to check out all the included examples, starting from the basics. It is requires with the latest stable release of openFrameworks (0.9.7).
+You can find an [overview of the modules here](http://npisanti.com/ofxPDSP/md__modules.html). Also be sure to check out all the included examples, starting from the basics. It is requires with the latest stable release of openFrameworks (0.9.8).
 
 Requires [ofxMidi](https://github.com/danomatika/ofxMidi), [ofxSIMDFloats.](https://github.com/npisanti/ofxSIMDFloats) and ofxOsc.
 
@@ -28,7 +28,8 @@ Check out the videos of some included examples:
 
 [![ofxPDSP example-serial-arduino](http://img.youtube.com/vi/MPi8LDFv7s8/0.jpg)](https://www.youtube.com/watch?v=MPi8LDFv7s8 "ofxPDSP example-serial-arduino")
 
+[![ofxPDSP example-data-to-wave](http://img.youtube.com/vi/oMH_W4b1z5A/0.jpg)](https://www.youtube.com/watch?v=oMH_W4b1z5A "ofxPDSP example-data-to-wave")
 
-Nicola Pisanti, MIT License 2016.  
+Nicola Pisanti, MIT License 2016-2017.  
 For FFT the AudioFFT wrapper is used, Copyright (c) 2013 [HiFi-LoFi](https://github.com/HiFi-LoFi).  
 For loading audio file on OSX [libaudiodecoder](https://github.com/asantoni/libaudiodecoder) is used, Copyright (c) 2010-2012 Albert Santoni, Bill Good, RJ Ryan.

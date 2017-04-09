@@ -17,6 +17,7 @@
 #include "oscillators/ClockedLFO.h"
 #include "oscillators/FMOperator.h"
 #include "oscillators/TableOscillator.h"
+#include "oscillators/DataOscillator.h"
 
 #include "samplers/GrainCloud.h"
 #include "samplers/TriggeredGrain.h"

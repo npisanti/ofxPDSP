@@ -179,7 +179,7 @@ pdsp::Patchable& pdsp::BasiVerb::out_R(){
     return out("1");
 }
 
-float pdsp::BasiVerb::meter_lfo(){
+float pdsp::BasiVerb::meter_lfo() const {
     return lfoOut.meter_output();
 }
 

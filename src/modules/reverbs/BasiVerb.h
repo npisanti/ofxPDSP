@@ -61,7 +61,7 @@ public:
     Patchable& in_signal();
 
     /*!
-    @brief Sets "tine" as selected input and returns this module ready to be patched. This is the rt60 value, the time the reverb takes to decay 60dB in volume.
+    @brief Sets "time" as selected input and returns this module ready to be patched. This is the rt60 value, the time the reverb takes to decay 60dB in volume.
     */  
     Patchable& in_time();
     
@@ -115,7 +115,7 @@ public:
     /*!
     @brief returns a value between 0.0f and 1.0f that rapresent the mod LFO signal. This method is thread-safe.
     */   
-    float meter_lfo();
+    float meter_lfo() const;
     
 private:
     void patch();

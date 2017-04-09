@@ -424,6 +424,14 @@ public:
     */
     OutputNode& setMultiplyOnConnection( float multiplier );
 
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
+    static const int getGlobalProcessingTurnId();
+/*!
+    @endcond
+*/
+
 protected:
 
     float* buffer;
@@ -452,7 +460,7 @@ private:
     static void setTurn( int newTurn ) ;
     
     static void nextTurn();
-    static const int getGlobalProcessingTurnId();
+
 
     Unit* getParent() const;
     void setParent( Unit* parent );
