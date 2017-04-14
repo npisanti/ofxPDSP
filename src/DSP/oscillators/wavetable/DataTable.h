@@ -72,16 +72,15 @@ public:
     
     /*!
     @brief end the data vector setting. Transform the values in the vector in a waveform. If the parameter is true the wave is set using additive synthesis, each data value is the amplitude of a partial, by default the partial are also scaled to the harmonic ratio. If the parameter is false the values is interpreted as raw waveform. Beware that if you are setting directly a waveform you could cause a DC offset.
-    @param[in]  additive if true the wave is set using additive synthesis, otherwive the data is interpreted as raw waveform
+    @param[in]  additive if true the wave is set using additive synthesis, otherwive the data is interpreted as raw waveform, false by default
     */  
-    void end( bool additive ); 
+    void end( bool additive=false ); 
     
 private:    
 	void update(); // accessible from DataOscillator
 								// use OutputNode::getGlobalProcessingTurnId() to check if it needs updating
 	
 	void additive();
-
 
     float * buffer;  // read by DataOscillator
     int length;

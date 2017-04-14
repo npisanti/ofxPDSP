@@ -193,9 +193,10 @@ void pdsp::WaveTable::setAdditiveWave(int index, const std::vector<float> & part
         if(partial_i>maxPartials) break;
     }
 
-    float div = 1.0 / signalMax;
-
-    ofx_Aeq_BmulS( buffer[index], buffer[index], div, length );
+	if(signalMax>0.0f){
+		float div = 1.0 / signalMax;
+		ofx_Aeq_BmulS( buffer[index], buffer[index], div, length );
+	}
     
     buffer[index][length] = buffer[index][0];
 

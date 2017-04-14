@@ -82,7 +82,7 @@ void ofApp::setup(){
     
     //get MIDI control
     midiIn.listPorts();
-    midiIn.openPort(0); //set the right port !!!
+    midiIn.openPort(1); //set the right port !!!
     // for our midi controllers to work we have to add them to the engine, so it know it has to process them
     engine.addMidiController( midiKeys, midiIn ); // add midi processing to the engine
     engine.addMidiController( midiCCs, midiIn );  // add midi processing to the engine

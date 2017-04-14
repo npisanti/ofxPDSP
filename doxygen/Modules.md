@@ -11,6 +11,7 @@ This is an overview of a selection of the available modules. Some of the modules
 ## Oscillators / Noise
 - pdsp::VAOscillator : band limited oscillator with saw, pulse, triangle and sine outputs
 - pdsp::TableOscillator : wavetable oscillator, check the code in the included examples
+- pdsp::DataOscillator : wavetable oscillator with thread-safe setting of waveform in realtime
 - pdsp::FMOperator : sine oscillator with pm input for FM synthesis
 - pdsp::PRNoiseGen : noise generator
 - pdsp::BitNoise : digital noise generator with lots of shaping control and stereo outputs

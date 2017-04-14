@@ -28,7 +28,7 @@ public:
 
     /*!
     @brief sets the Wavetable. 
-    @param[in] waveTable WaveTable class object
+    @param[in] dataTable DataTable for this oscillator
     */
     void setTable(DataTable& dataTable);
 

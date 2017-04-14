@@ -1,7 +1,6 @@
 
 #include "DataTable.h"
 
-
 pdsp::DataTable::DataTable() {
     length = -1;
     buffer = nullptr;
@@ -79,6 +78,7 @@ void pdsp::DataTable::begin() {
 		for (size_t i=0; i<vData.size(); ++i){
 			vData[i] = 0.0f;
 		}
+		lastIndex = 0;
 	}
 }
 
@@ -127,7 +127,7 @@ void pdsp::DataTable::additive() {
     
     double signalMax = 0.0;
     
-	for ( size_t i=0; i<lastIndex && i<maxPartials; ++i ){
+	for ( size_t i=0; i<(lastIndex+1) && i<maxPartials; ++i ){
 		
 		int partial_i = i+1;
 		double harmonic_amp = vData[i];
@@ -139,72 +139,13 @@ void pdsp::DataTable::additive() {
 		}
 		if(partial_i%2 == 0) harmonic_amp = -harmonic_amp;
 		
-		ofx_Aeq_Badd_CmulS( bufferNew, bufferNew, partialsTable[partial_i-1], harmonic_amp, length );
+		ofx_Aeq_Badd_CmulS( bufferNew, bufferNew, partialsTable[i], harmonic_amp, length );
 		signalMax += std::abs( harmonic_amp );
 	}
 
-	float div = 1.0 / signalMax;
-
-	ofx_Aeq_BmulS( bufferNew, bufferNew, div, length );
+	if(signalMax>0.0f){
+		float div = 1.0 / signalMax;
+		ofx_Aeq_BmulS( bufferNew, bufferNew, div, length );		
+	}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-void pdsp::DataTable::addEmpty( int numberOfWavesToAdd ) {
-    
-    if( length!= -1 ){
-        
-        if(buffer == nullptr){
-            
-            buffer = new float*[numberOfWavesToAdd+1]; // guard point
-            for( int i=0; i<numberOfWavesToAdd+1; ++i){
-                ofx_allocate_aligned(buffer[i], length+1);                
-            }
-            tableSize = numberOfWavesToAdd;
-            
-        }else{
-            
-            float** newHandles = new float* [tableSize+numberOfWavesToAdd+1];
-            
-            for(int i=0; i<tableSize+1; ++i){
-                newHandles[i] = buffer[i];
-            }
-            for( int i=0; i<numberOfWavesToAdd; ++i){
-                tableSize++;            
-                ofx_allocate_aligned( newHandles[tableSize], length+1 );                                   
-            }
-            
-            delete [] buffer;
-            buffer = newHandles;
-        }
-        if(verbose) std::cout<< "[pdsp] wavetable size: "<< tableSize << " waveforms\n";
-  
-    }else{
-    
-        std::cout<< "[pdsp] warning! adding table without setting table size first, routine not performed, use setup() first\n";
-        pdsp_trace();
-    
-    }
-}    
-
-void pdsp::DataTable::setEmpty( int index ) {
-    
-    if(index<0 ) index = 0;
-    if(index >= tableSize ) index = tableSize-1;
-    
-    for(int i=0; i<length; ++i){
-        buffer[index][i] = 0.0f;
-    }
-}    
-*/
