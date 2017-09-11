@@ -155,7 +155,17 @@ public:
     @param testingDB optional volume of testing tone, -12dB if not given
     */       
     void test( bool testingActive, float testingDB=-12.0f );
-    
+
+
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
+    void audioOut(ofSoundBuffer &outBuffer);
+    void audioIn (ofSoundBuffer &outBuffer);
+/*!
+    @endcond
+*/
+
     
 private:
     ofSoundStream inputStream;
@@ -190,8 +200,7 @@ private:
     static const int stoppedState = 1;
     static const int startedState = 2;
 
-    void audioOut(ofSoundBuffer &outBuffer);
-    void audioIn (ofSoundBuffer &outBuffer);
+
     void onExit( ofEventArgs &args);
     
     pdsp::FMOperator testOscillator;

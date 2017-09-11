@@ -91,11 +91,9 @@ void ofxPDSPOscInput::close(){
 
 
 pdsp::GateSequencer& ofxPDSPOscInput::out_trig( string oscAddress ) {
-    bool found = false;
     
     for ( OscChannel* & osc : oscChannels ){
         if( osc->key == oscAddress ) {
-            found = true;
             if( osc->gate_out != nullptr ){
                 return *(osc->gate_out);
             }else{
@@ -106,26 +104,24 @@ pdsp::GateSequencer& ofxPDSPOscInput::out_trig( string oscAddress ) {
         }
     }
     
-    if( !found ){
-        OscChannel* osc = new OscChannel();
-        osc->key = oscAddress;
-        //osc->mode = Gate;
-        osc->messageBuffer = new pdsp::MessageBuffer();
-        osc->gate_out = new pdsp::GateSequencer();
-        osc->gate_out->link( *(osc->messageBuffer) );
-        oscChannels.push_back(osc);
-    
-        return *(osc->gate_out);
-    }
+    // not found
+    OscChannel* osc = new OscChannel();
+    osc->key = oscAddress;
+    //osc->mode = Gate;
+    osc->messageBuffer = new pdsp::MessageBuffer();
+    osc->gate_out = new pdsp::GateSequencer();
+    osc->gate_out->link( *(osc->messageBuffer) );
+    oscChannels.push_back(osc);
+
+    return *(osc->gate_out);
+
 }
 
 
 pdsp::ValueSequencer& ofxPDSPOscInput::out_value( string oscAddress ) {
-    bool found = false;
    
     for ( OscChannel* & osc : oscChannels ){
         if( osc->key == oscAddress ) {
-            found = true;
             if( osc->value_out != nullptr ){
                 return *(osc->value_out);
             }else{
@@ -135,18 +131,18 @@ pdsp::ValueSequencer& ofxPDSPOscInput::out_value( string oscAddress ) {
             }
         }
     }
-    
-    if( !found ){
-        OscChannel* osc = new OscChannel();
-        osc->key = oscAddress;
-        //osc->mode = Value;
-        osc->messageBuffer = new pdsp::MessageBuffer();
-        osc->value_out = new pdsp::ValueSequencer();
-        osc->value_out->link( *(osc->messageBuffer) );
-        oscChannels.push_back(osc);
 
-        return *(osc->value_out);    
-    }
+    // not found
+    OscChannel* osc = new OscChannel();
+    osc->key = oscAddress;
+    //osc->mode = Value;
+    osc->messageBuffer = new pdsp::MessageBuffer();
+    osc->value_out = new pdsp::ValueSequencer();
+    osc->value_out->link( *(osc->messageBuffer) );
+    oscChannels.push_back(osc);
+
+    return *(osc->value_out);    
+
 }
 
 void ofxPDSPOscInput::clearAll(){

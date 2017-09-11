@@ -266,8 +266,8 @@ void ofxPDSPSerialOut::daemonFunction() noexcept{
             if( nextMessage.scheduledTime < chrono::high_resolution_clock::now() ){ //we have to process the scheduled midi
                 
                 // SEND MESSAGES HERE
-                serial.writeByte(nextMessage.channel);
-                serial.writeByte(nextMessage.message);
+                serial.writeByte( (char)nextMessage.channel );
+                serial.writeByte( (char)nextMessage.message );
                 
                 #ifndef NDEBUG
                     if(verbose) cout << "[pdsp] serial message: channel = "<< (- (int)nextMessage.channel)<< " | value = "<<(int)nextMessage.message<<"\n";

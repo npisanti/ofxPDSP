@@ -119,8 +119,10 @@ void ofxPDSPEngine::setup( int sampleRate, int bufferSize, int nBuffers){
     
     // prepare all the units / modules
     pdsp::prepareAllToPlay(bufferSize, static_cast<double>(sampleRate) );
-    
+
+
     // starts engine
+#if (OF_VERSION_MINOR <= 9)
     if(outputChannels > 0 && inputChannels == 0){
         outputStream.setOutput(*this);   
         outStreamActive = true; 
@@ -151,6 +153,33 @@ void ofxPDSPEngine::setup( int sampleRate, int bufferSize, int nBuffers){
             inputStream.setup(0, inputChannels, sampleRate, bufferSize, nBuffers);
         }     
     }
+    
+#else
+
+	ofSoundStreamSettings settings;
+	settings.sampleRate = sampleRate;
+	settings.bufferSize = bufferSize;
+    settings.numBuffers = nBuffers;
+	settings.numOutputChannels = outputChannels;
+	settings.numInputChannels = inputChannels;
+    
+    auto devices = outputStream.getDeviceList();
+    
+    if( outputChannels > 0 ){
+        settings.setOutListener(this);
+        settings.setOutDevice( devices[outputID] );
+        outStreamActive = true;     
+    }
+    
+    if(inputChannels > 0 ){
+        settings.setInListener(this);
+        settings.setInDevice( devices[outputID] );
+        inStreamActive = true;     
+    }
+
+    outputStream.setup( settings ); 
+       
+#endif
 
     if( outputChannels > 0 ){
         testOscillator >> testAmp >> processor.channels[0];
