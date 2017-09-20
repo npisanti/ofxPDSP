@@ -182,6 +182,7 @@ void ofxPDSPEngine::setup( int sampleRate, int bufferSize, int nBuffers){
 #endif
 
     if( outputChannels > 0 ){
+        84.0f >> testOscillator.in_pitch();
         testOscillator >> testAmp >> processor.channels[0];
     }
 
@@ -361,7 +362,7 @@ void ofxPDSPEngine::addOscInput( ofxPDSPOscInput & oscInput ) {
 }
 
 void ofxPDSPEngine::test( bool testingActive, float testingDB ){
-    if( true ){
+    if( testingActive ){
         dB(testingDB) >> testAmp.in_mod();
     }else{
         0.0f >> testAmp.in_mod();

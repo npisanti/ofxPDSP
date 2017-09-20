@@ -38,10 +38,7 @@ void pdsp::Bitcruncher::process (int bufferSize) noexcept  {
             const float* bitsBuffer = processInput(input_bits, bitsState);
          
             switch (bitsState){
-                case Unchanged:
-                    process_audio<false>(inputBuffer, bitsBuffer, bufferSize);
-                    break;
-                case Changed:
+                case Unchanged: case Changed:
                     multiply = powf(2.0f, bitsBuffer[0]);
                     scaleBack = 1.0f / multiply;
                     process_audio<false>(inputBuffer, bitsBuffer, bufferSize);
@@ -73,6 +70,8 @@ void pdsp::Bitcruncher::process_audio(const float* &inputBuffer, const float* &b
     }
     
     int n=0;
+
+
     for(; n<bufferSize; n+=8){
         
         if(bitsAR){
@@ -96,7 +95,7 @@ void pdsp::Bitcruncher::process_audio(const float* &inputBuffer, const float* &b
         ofx::m_store(outputBuffer + n,    x0);
         ofx::m_store(outputBuffer + n +4, x4);
     }
-    
+
     
     for (; n<bufferSize; ++n) {
         
@@ -110,6 +109,5 @@ void pdsp::Bitcruncher::process_audio(const float* &inputBuffer, const float* &b
         yn *= scaleBack;
         outputBuffer[n] = yn;
     }
-    
  
 }
