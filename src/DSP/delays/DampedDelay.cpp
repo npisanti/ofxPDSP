@@ -308,10 +308,14 @@ void pdsp::DampedDelay::process_audio(const float* inputBuffer, const float* tim
                 }else{
                         delayBuffer[writeIndex] = readValue * feedback;
                 }
-                
-                sanity_check( delayBuffer[writeIndex] );
-                
-                
+
+				uint32_t casted = *reinterpret_cast<uint32_t*> ( &(delayBuffer[writeIndex]) );
+				int exponent = casted & 0x7F800000;
+				int aNaN = exponent < 0x7F800000;
+				int aDen = exponent > 0;
+				int result = casted * (aNaN & aDen );
+				delayBuffer[writeIndex] = *reinterpret_cast<float*> ( &result );
+
                 if (++writeIndex > maxDelayTimeSamples){
                         writeIndex = 1;
                         delayBuffer[0] = delayBuffer[maxDelayTimeSamples]; //so we don't need another branch for linear interpolation
