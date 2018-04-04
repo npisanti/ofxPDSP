@@ -14,7 +14,7 @@ class ofxMidiCCBuffers {
 public:
     ofxMidiCCBuffers();
 
-    void processMidi (const vector<_ofxPositionedMidiMessage> & readVector, const int &bufferSize );
+    void processMidi (const std::vector<_ofxPositionedMidiMessage> & readVector, const int &bufferSize );
     
     void clearAll();
     
@@ -22,7 +22,7 @@ public:
     
     int getCCSize(){ return ccSize; }
 
-    vector<pdsp::MessageBuffer>     ccMessages;
+    std::vector<pdsp::MessageBuffer>     ccMessages;
 
 
 

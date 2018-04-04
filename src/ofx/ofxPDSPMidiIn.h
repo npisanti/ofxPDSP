@@ -51,7 +51,7 @@ public:
     
     void newMidiMessage(ofxMidiMessage& eventArgs) noexcept;
     	
- 	const vector<_ofxPositionedMidiMessage> & getMessageVector() const;
+ 	const std::vector<_ofxPositionedMidiMessage> & getMessageVector() const;
 /*!
     @endcond
 */
@@ -65,16 +65,16 @@ private:
     ofxMidiIn   midiIn;
     ofxMidiIn*  midiIn_p;
     
-    mutex       midiMutex;
+    std::mutex midiMutex;
     
-    vector<_ofxPositionedMidiMessage>*   readVector;       
-    vector<_ofxPositionedMidiMessage>    midiMessageVectorA;
-    vector<_ofxPositionedMidiMessage>    midiMessageVectorB;
+    std::vector<_ofxPositionedMidiMessage>*   readVector;       
+    std::vector<_ofxPositionedMidiMessage>    midiMessageVectorA;
+    std::vector<_ofxPositionedMidiMessage>    midiMessageVectorB;
 
-    vector<_ofxPositionedMidiMessage>*   writeVector;
+    std::vector<_ofxPositionedMidiMessage>*   writeVector;
 
-    double                                              oneSlashMicrosecForSample;
-    chrono::time_point<chrono::high_resolution_clock>   bufferChrono;
+    double                                                      oneSlashMicrosecForSample;
+    std::chrono::time_point<std::chrono::high_resolution_clock> bufferChrono;
     
     bool connected;
         

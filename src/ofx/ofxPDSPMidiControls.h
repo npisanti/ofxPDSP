@@ -50,7 +50,7 @@ public:
 /*!
     @cond HIDDEN_SYMBOLS
 */
-    vector<pdsp::ValueSequencer>    outs_cc; // this has to become private in later versions
+    std::vector<pdsp::ValueSequencer>    outs_cc; // this has to become private in later versions
     
     void processMidi(const ofxPDSPMidiIn &midiInProcessor, const int &bufferSize ) noexcept override;   
 /*!

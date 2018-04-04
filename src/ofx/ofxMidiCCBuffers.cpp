@@ -28,7 +28,7 @@ void ofxMidiCCBuffers::setMaxCCNum(int maxCC){
     }
 }
 
-void ofxMidiCCBuffers::processMidi (const vector<_ofxPositionedMidiMessage> & readVector, const int &bufferSize ){
+void ofxMidiCCBuffers::processMidi (const std::vector<_ofxPositionedMidiMessage> & readVector, const int &bufferSize ){
     //clear buffers
 
     for(int i=0; i<ccSize; ++i){

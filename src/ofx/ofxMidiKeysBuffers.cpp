@@ -53,7 +53,7 @@ void ofxMidiKeysBuffers::setNoteRange( int lowNote, int highNote ){
 }
 
 
-void ofxMidiKeysBuffers::processMidi (const vector<_ofxPositionedMidiMessage> & readVector, const int &bufferSize ) noexcept{
+void ofxMidiKeysBuffers::processMidi (const std::vector<_ofxPositionedMidiMessage> & readVector, const int &bufferSize ) noexcept{
 
         //clear buffers
         for(int i=0; i<gateMessages.size(); ++i){

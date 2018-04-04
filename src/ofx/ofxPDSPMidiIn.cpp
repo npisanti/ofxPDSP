@@ -43,7 +43,7 @@ void ofxPDSPMidiIn::openPort(int index){
         midiIn_p = &midiIn;
         midiIn_p->addListener(this); // add ofApp as a listener
         connected = true;
-        bufferChrono = chrono::high_resolution_clock::now();
+        bufferChrono = std::chrono::high_resolution_clock::now();
     }
 }
 
@@ -70,7 +70,7 @@ void ofxPDSPMidiIn::prepareToPlay( int expectedBufferSize, double sampleRate ){
 void ofxPDSPMidiIn::releaseResources(){}
 
 
-const vector<_ofxPositionedMidiMessage> & ofxPDSPMidiIn::getMessageVector() const{
+const std::vector<_ofxPositionedMidiMessage> & ofxPDSPMidiIn::getMessageVector() const{
     return *readVector;
 }
 
@@ -79,9 +79,9 @@ void ofxPDSPMidiIn::newMidiMessage(ofxMidiMessage& eventArgs) noexcept{
     	
     midiMutex.lock();
         // calculate the right offset inside the bufferSize
-        chrono::duration<double> offset = chrono::high_resolution_clock::now() - bufferChrono; 
+        std::chrono::duration<double> offset = std::chrono::high_resolution_clock::now() - bufferChrono; 
         int sampleOffset =  static_cast<int>(  
-            static_cast <double>( chrono::duration_cast<chrono::microseconds>(offset).count()) * oneSlashMicrosecForSample);
+            static_cast <double>( std::chrono::duration_cast<std::chrono::microseconds>(offset).count()) * oneSlashMicrosecForSample);
         writeVector->push_back(_ofxPositionedMidiMessage(eventArgs, sampleOffset));
     midiMutex.unlock();
     
@@ -91,11 +91,11 @@ void ofxPDSPMidiIn::processMidi( const int &bufferSize ) noexcept{
     if(connected){
         midiMutex.lock();
             //switch buffers
-            vector<_ofxPositionedMidiMessage>* temp = readVector;
+            std::vector<_ofxPositionedMidiMessage>* temp = readVector;
             readVector = writeVector;
             writeVector = temp;
             //update chrono
-            bufferChrono = chrono::high_resolution_clock::now();
+            bufferChrono = std::chrono::high_resolution_clock::now();
             //clear buffer to write
             writeVector->clear(); 
         midiMutex.unlock();

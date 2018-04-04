@@ -6,7 +6,7 @@
 
 ofxPDSPMidiOut::ofxScheduledMidiMessage::ofxScheduledMidiMessage(){  };
 
-ofxPDSPMidiOut::ofxScheduledMidiMessage::ofxScheduledMidiMessage(ofxMidiMessage message, chrono::high_resolution_clock::time_point schedule)
+ofxPDSPMidiOut::ofxScheduledMidiMessage::ofxScheduledMidiMessage(ofxMidiMessage message, std::chrono::high_resolution_clock::time_point schedule)
                 : midi(message), scheduledTime(schedule){};
 
 ofxPDSPMidiOut::ofxScheduledMidiMessage::ofxScheduledMidiMessage(const ofxPDSPMidiOut::ofxScheduledMidiMessage &other)
@@ -76,13 +76,13 @@ void ofxPDSPMidiOut::linkToMidiOut(ofxMidiOut &midiOut){
         }
 
         midiOut_p = &midiOut;
-        if(verbose) cout<<"[pdsp] linked to midi Out \n";
+        if(verbose) std::cout<<"[pdsp] linked to midi Out \n";
 
         startMidiDaemon();
         
         connected = true;
     }else{
-        if(verbose) cout<<"[pdsp] midi out not linked, open midi out before linking! \n";
+        if(verbose) std::cout<<"[pdsp] midi out not linked, open midi out before linking! \n";
     }
 }
 
@@ -98,7 +98,7 @@ void ofxPDSPMidiOut::openPort(int portIndex){
     midiOut.openPort( portIndex );
     
     if( midiOut.isOpen() ){
-        if(verbose) cout<<"[pdsp] midi out connected to midi port "<<portIndex<<"\n";
+        if(verbose) std::cout<<"[pdsp] midi out connected to midi port "<<portIndex<<"\n";
         
         midiOut_p = &midiOut;
         
@@ -110,7 +110,7 @@ void ofxPDSPMidiOut::openPort(int portIndex){
 
 void ofxPDSPMidiOut:: close(){
     if(connected){
-        if(verbose) cout<<"[pdsp] shutting down midi out\n";
+        if(verbose) std::cout<<"[pdsp] shutting down midi out\n";
         //stop the daemon before
         closeMidiDaemon();
         if(midiOut.isOpen()){
@@ -167,24 +167,24 @@ void ofxPDSPMidiOut::linkToMessageBuffer(pdsp::MessageBuffer &messageBuffer) {
 void ofxPDSPMidiOut::unlinkMessageBuffer(pdsp::MessageBuffer &messageBuffer) {
     
     int i=0;
-    for (vector<pdsp::MessageBuffer*>::iterator it = inputs[gateType].begin(); it != inputs[gateType].end(); ++it){
+    for (std::vector<pdsp::MessageBuffer*>::iterator it = inputs[gateType].begin(); it != inputs[gateType].end(); ++it){
         if (*it == &messageBuffer){
             inputs[gateType].erase(it);
-            vector<pdsp::MessageBuffer*>::iterator linkedNote = inputs[noteType].begin() + i;
+            std::vector<pdsp::MessageBuffer*>::iterator linkedNote = inputs[noteType].begin() + i;
             inputs[noteType].erase(linkedNote);
             return;
         }
         i++;
     }
     
-    for (vector<pdsp::MessageBuffer*>::iterator it = inputs[noteType].begin(); it != inputs[noteType].end(); ++it){
+    for (std::vector<pdsp::MessageBuffer*>::iterator it = inputs[noteType].begin(); it != inputs[noteType].end(); ++it){
         if (*it == &messageBuffer){
             *it = nullptr; //unlink note
             return;
         }
     }
     
-    for (vector<pdsp::MessageBuffer*>::iterator it = inputs[ccType].begin(); it != inputs[ccType].end(); ++it){
+    for (std::vector<pdsp::MessageBuffer*>::iterator it = inputs[ccType].begin(); it != inputs[ccType].end(); ++it){
         if (*it == &messageBuffer){
             inputs[ccType].erase(it);
             return;
@@ -206,10 +206,10 @@ void ofxPDSPMidiOut::process( int bufferSize ) noexcept{
     if(connected){
         
         if(chronoStarted){
-            chrono::nanoseconds bufferOffset = chrono::nanoseconds (static_cast<long> ( bufferSize * usecPerSample ));
+            std::chrono::nanoseconds bufferOffset = std::chrono::nanoseconds (static_cast<long> ( bufferSize * usecPerSample ));
             bufferChrono = bufferChrono + bufferOffset;
         }else{
-            bufferChrono = chrono::high_resolution_clock::now();
+            bufferChrono = std::chrono::high_resolution_clock::now();
             chronoStarted = true;
         }
         
@@ -230,7 +230,7 @@ void ofxPDSPMidiOut::process( int bufferSize ) noexcept{
             else{ noteMax = noteBufferI->size(); }
           
             /* // OLD WAY
-            bufferChrono = chrono::high_resolution_clock::now();
+            bufferChrono = std::chrono::high_resolution_clock::now();
             */
             for(int gateIndex=0; gateIndex<gateMax; ++gateIndex){
                 //check if we have to change the pitch
@@ -246,8 +246,8 @@ void ofxPDSPMidiOut::process( int bufferSize ) noexcept{
                 int sample = gateBufferI->messages[gateIndex].sample;
                 
 
-                chrono::nanoseconds offset = chrono::nanoseconds (static_cast<long> ( sample * usecPerSample ));
-                chrono::high_resolution_clock::time_point scheduleTime = bufferChrono + offset;
+                std::chrono::nanoseconds offset = std::chrono::nanoseconds (static_cast<long> ( sample * usecPerSample ));
+                std::chrono::high_resolution_clock::time_point scheduleTime = bufferChrono + offset;
                 
                 ofxMidiMessage midi;
                 if(gateValue == 0.0f){
@@ -282,8 +282,8 @@ void ofxPDSPMidiOut::process( int bufferSize ) noexcept{
                 
                 int sample = ccBufferI->messages[ccIndex].sample;
                 
-                chrono::nanoseconds offset = chrono::nanoseconds ( static_cast<long>(sample * usecPerSample) );
-                chrono::high_resolution_clock::time_point scheduleTime = bufferChrono + offset;
+                std::chrono::nanoseconds offset = std::chrono::nanoseconds ( static_cast<long>(sample * usecPerSample) );
+                std::chrono::high_resolution_clock::time_point scheduleTime = bufferChrono + offset;
                 
                 messagesToSend.push_back( ofxScheduledMidiMessage(midi, scheduleTime) );
             }   
@@ -302,13 +302,13 @@ void ofxPDSPMidiOut::process( int bufferSize ) noexcept{
 void ofxPDSPMidiOut::startMidiDaemon(){
     
     runMidiDaemon = true;
-    midiDaemonThread = thread( midiDaemonFunctionWrapper, this );   
+    midiDaemonThread = std::thread( midiDaemonFunctionWrapper, this );   
     
 }
 
 void ofxPDSPMidiOut::prepareForDaemonAndNotify(){
     
-    unique_lock<mutex> lck (midiOutMutex);  
+    std::unique_lock<std::mutex> lck (midiOutMutex);  
     //send messages in circular buffer
     for(ofxScheduledMidiMessage &msg : messagesToSend){
         circularBuffer[circularWrite] = msg;
@@ -333,14 +333,14 @@ void ofxPDSPMidiOut::midiDaemonFunction() noexcept{
     while (runMidiDaemon){
 
         //midiMutex.lock();
-        unique_lock<mutex> lck (midiOutMutex);
+        std::unique_lock<std::mutex> lck (midiOutMutex);
         while(!messagesReady) midiOutCondition.wait(lck);
         
         if(circularRead != circularWrite){
             
             ofxScheduledMidiMessage& nextMessage = circularBuffer[circularRead];
             
-            if( nextMessage.scheduledTime < chrono::high_resolution_clock::now() ){ //we have to process the scheduled midi
+            if( nextMessage.scheduledTime < std::chrono::high_resolution_clock::now() ){ //we have to process the scheduled midi
                 
                 switch(nextMessage.midi.status){
                 case MIDI_NOTE_ON:
@@ -365,11 +365,11 @@ void ofxPDSPMidiOut::midiDaemonFunction() noexcept{
             messagesReady = false;
         }
 
-        this_thread::yield();
+        std::this_thread::yield();
 
     }
    
-    if(verbose) cout<<"[pdsp] closing midi out daemon thread\n";
+    if(verbose) std::cout<<"[pdsp] closing midi out daemon thread\n";
 }
     
  
@@ -377,7 +377,7 @@ void ofxPDSPMidiOut::midiDaemonFunction() noexcept{
 void ofxPDSPMidiOut::closeMidiDaemon(){
     runMidiDaemon = false;
     
-    unique_lock<mutex> lck (midiOutMutex);  
+    std::unique_lock<std::mutex> lck (midiOutMutex);  
     //set messages in circular buffer
     messagesReady = true;
     midiOutCondition.notify_all();

@@ -27,13 +27,13 @@ private:
     class ofxScheduledMidiMessage{
     public:
         ofxScheduledMidiMessage();
-        ofxScheduledMidiMessage(ofxMidiMessage message, chrono::high_resolution_clock::time_point schedule);
+        ofxScheduledMidiMessage(ofxMidiMessage message, std::chrono::high_resolution_clock::time_point schedule);
         ofxScheduledMidiMessage(const ofxScheduledMidiMessage &other);
         ofxScheduledMidiMessage& operator= (const ofxScheduledMidiMessage &other);
         ~ofxScheduledMidiMessage();
         
         ofxMidiMessage                              midi;
-        chrono::high_resolution_clock::time_point   scheduledTime;
+        std::chrono::high_resolution_clock::time_point   scheduledTime;
     };
     
     
@@ -119,13 +119,13 @@ private:
     bool            connected;
     bool            verbose;
    
-    vector<ofxScheduledMidiMessage> messagesToSend;
+    std::vector<ofxScheduledMidiMessage> messagesToSend;
     
-    vector<pdsp::MessageBuffer*>    inputs [3];
-    vector<int>                     defaultNote;
-    vector<int>                     midiChannelsNote;
-    vector<int>                     ccNumbers;
-    vector<int>                     midiChannelsCC;
+    std::vector<pdsp::MessageBuffer*>    inputs [3];
+    std::vector<int>                     defaultNote;
+    std::vector<int>                     midiChannelsNote;
+    std::vector<int>                     ccNumbers;
+    std::vector<int>                     midiChannelsCC;
     
     int     selectedType;
     int     selectedMidiChannel;
@@ -144,20 +144,20 @@ private:
     void                                                midiDaemonFunction() noexcept;
     static void                                         midiDaemonFunctionWrapper(ofxPDSPMidiOut* parent);
     
-    thread                                              midiDaemonThread;
-    mutex                                               midiOutMutex;
-    condition_variable                                  midiOutCondition;
-    atomic<bool>                                        messagesReady;
-    atomic<bool>                                        runMidiDaemon;
+    std::thread                 midiDaemonThread;
+    std::mutex                  midiOutMutex;
+    std::condition_variable     midiOutCondition;
+    std::atomic<bool>           messagesReady;
+    std::atomic<bool>           runMidiDaemon;
     
     //midi output processing members
-    bool                                                chronoStarted;
-    chrono::time_point<chrono::high_resolution_clock>   bufferChrono;     
-    double                                              usecPerSample;
-    vector<ofxScheduledMidiMessage>                     circularBuffer;
-    int                                                 circularRead;
-    int                                                 circularWrite;
-    int                                                 circularMax;
+    bool                                                        chronoStarted;
+    std::chrono::time_point<std::chrono::high_resolution_clock> bufferChrono;     
+    double                                                  usecPerSample;
+    std::vector<ofxScheduledMidiMessage>                    circularBuffer;
+    int                                                     circularRead;
+    int                                                     circularWrite;
+    int                                                     circularMax;
 
     //TESTING
     int messageCount;

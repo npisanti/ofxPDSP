@@ -75,7 +75,7 @@ public:
     /*!
     @brief this is the vector of output triggers binded to the note layers.
     */
-    vector<pdsp::GateSequencer>     outs_trig;
+    std::vector<pdsp::GateSequencer>     outs_trig;
     
     void processMidi(const ofxPDSPMidiIn &midiInProcessor, const int &bufferSize ) noexcept override;
 /*!
@@ -83,9 +83,9 @@ public:
 */   
 
 private:
-    vector<pdsp::MessageBuffer>     trigBuffers;       
-    vector<int>                     lowThreshold;
-    vector<int>                     highThreshold;
+    std::vector<pdsp::MessageBuffer>     trigBuffers;       
+    std::vector<int>                     lowThreshold;
+    std::vector<int>                     highThreshold;
 
     int size;
 };

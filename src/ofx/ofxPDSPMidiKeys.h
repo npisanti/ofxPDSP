@@ -115,12 +115,12 @@ public:
     /*!
     @brief vector of trigger outputs
     */
-    vector<pdsp::PatchNode>         outs_trig;
+    std::vector<pdsp::PatchNode>         outs_trig;
 
     /*!
     @brief vector for the pitch outputs
     */
-    vector<pdsp::PatchNode>         outs_pitch;
+    std::vector<pdsp::PatchNode>         outs_pitch;
 
     /*!
     @brief single trigger output for the Poly mode
@@ -156,10 +156,10 @@ private:
    
     ofxMidiKeysBuffers      midiConverter;
     
-    vector<pdsp::GateSequencer>      gates;
-    vector<pdsp::ValueSequencer>     values;
-    vector<pdsp::Amp>                unisonPitchDetune;
-    vector<pdsp::ValueNode>          voiceUnisonMod;
+    std::vector<pdsp::GateSequencer>      gates;
+    std::vector<pdsp::ValueSequencer>     values;
+    std::vector<pdsp::Amp>                unisonPitchDetune;
+    std::vector<pdsp::ValueNode>          voiceUnisonMod;
     
         
 };

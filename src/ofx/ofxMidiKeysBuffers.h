@@ -29,7 +29,7 @@ class ofxMidiKeysBuffers {
 public:
         ofxMidiKeysBuffers();
            
-        void processMidi (const vector<_ofxPositionedMidiMessage> & readVector, const int &bufferSize ) noexcept;
+        void processMidi (const std::vector<_ofxPositionedMidiMessage> & readVector, const int &bufferSize ) noexcept;
         
         void setVoiceMode(VoiceMode mode);
         void setMonoPriority(MonoPriority mode);
@@ -39,10 +39,10 @@ public:
         void setNoteRange( int lowNote, int highNote );
         
         
-        vector<pdsp::MessageBuffer>      gateMessages;
-        vector<pdsp::MessageBuffer>      pitchMessages;
-        vector<pdsp::MessageBuffer>      portaMessages;
-        pdsp::MessageBuffer              singleGateMessages;
+        std::vector<pdsp::MessageBuffer>    gateMessages;
+        std::vector<pdsp::MessageBuffer>    pitchMessages;
+        std::vector<pdsp::MessageBuffer>    portaMessages;
+        pdsp::MessageBuffer                 singleGateMessages;
         
         pdsp::MessageBuffer             pitchBendMessages;
         pdsp::MessageBuffer             pressureMessages;
@@ -70,7 +70,7 @@ private:
         int lowNote; 
         int highNote;
         
-        vector<NoteState_t>             notes;
+        std::vector<NoteState_t>             notes;
         
         float   pitchBendUpAmount;
         float   pitchBendDownAmount;    
