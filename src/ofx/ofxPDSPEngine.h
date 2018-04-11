@@ -172,6 +172,7 @@ public:
 
     
 private:
+
     ofSoundStream inputStream;
     ofSoundStream outputStream;
 
