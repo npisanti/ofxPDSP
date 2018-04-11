@@ -6,6 +6,8 @@
 #ifndef OFXPDSPMIDI_PDSPMIDIOUT_H_INCLUDED
 #define OFXPDSPMIDI_PDSPMIDIOUT_H_INCLUDED
 
+#ifndef __ANDROID__
+
 #include "ofxMidi.h"
 #include <chrono>
 #include "ofxPositionedMidiMessage.h"
@@ -163,5 +165,6 @@ private:
     int messageCount;
 };
 
+#endif
 
 #endif //OFXPDSPMIDI_PDSPMIDIOUT_H_INCLUDED

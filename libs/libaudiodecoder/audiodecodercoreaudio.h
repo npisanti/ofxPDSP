@@ -43,6 +43,8 @@
  *        part of Core Audio on OS X (and iOS).
  */
 
+#ifndef __ANDROID__
+
 #ifndef AUDIODECODERCOREAUDIO_H 
 #define AUDIODECODERCOREAUDIO_H 
 
@@ -89,3 +91,5 @@ private:
 
 
 #endif // ifndef AUDIODECODERCOREAUDIO_H 
+
+#endif // END ANDROID FIX

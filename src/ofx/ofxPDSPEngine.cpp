@@ -13,17 +13,19 @@ ofxPDSPEngine::ofxPDSPEngine(){
     
     state = closedState;
 
+    externalOuts.reserve(10);
+    hasExternalOut = false;
+    hasOscIn = false;
+
+#ifndef __ANDROID__
     midiIns.reserve(10);
     controllers.reserve(20);
     controllerLinkedMidis.reserve(20);
-    
-    externalOuts.reserve(10);
-    
+
     midiIns.clear();
     controllers.clear();
     hasMidiIn = false;
-    hasExternalOut = false;
-    hasOscIn = false;
+#endif
 
     graphics.setParent( score );
 
@@ -216,13 +218,15 @@ void ofxPDSPEngine::close(){
     
     cout<<"[pdsp] engine: closing...\n";
     
-    stop();    
-    
+    stop();
+
+#ifndef __ANDROID__
     if(hasMidiIn){
         for( ofxPDSPMidiIn * &in : midiIns ){
             in->closePort();
         } 
     }
+#endif
 
     if(hasOscIn){
         for( ofxPDSPOscInput * &in : oscIns){
@@ -255,7 +259,8 @@ void ofxPDSPEngine::audioOut(ofSoundBuffer &outBuffer) {
     int bufferSize =  outBuffer.getNumFrames() ;
     // score and playhead processing
     score.process( bufferSize );
-    
+
+#ifndef __ANDROID__
     // midi input processing
     if(hasMidiIn){
         for( ofxPDSPMidiIn * &in : midiIns){
@@ -265,7 +270,8 @@ void ofxPDSPEngine::audioOut(ofSoundBuffer &outBuffer) {
             controllers[i]->processMidi( *(controllerLinkedMidis[i]), bufferSize );
         }
     }
-    
+#endif
+
     if(hasOscIn){
         for( ofxPDSPOscInput * &in : oscIns){
             in->processOsc( bufferSize );
@@ -287,7 +293,7 @@ void ofxPDSPEngine::audioIn (ofSoundBuffer &inBuffer) {
         inputs[i].copyInterleavedInput( inBuffer.getBuffer().data(), i,  inBuffer.getNumChannels(), inBuffer.getNumFrames());
     }
 }
-
+#ifndef __ANDROID__
 void ofxPDSPEngine::addMidiController( ofxPDSPController & controller, ofxPDSPMidiIn & midiIn ){
     
     bool midiInFound = false;
@@ -318,15 +324,17 @@ void ofxPDSPEngine::addMidiController( ofxPDSPController & controller, ofxPDSPMi
     
 }
 
-
 void  ofxPDSPEngine::addMidiOut( ofxPDSPMidiOut & midiOut ){
     addExternalOut( midiOut );
 }
+#endif
 
 #ifndef TARGET_OF_IOS
+#ifndef __ANDROID__
 void ofxPDSPEngine::addSerialOut( ofxPDSPSerialOut & serialOut ) {
     addExternalOut( serialOut ); 
 }
+#endif
 #endif
 
 void ofxPDSPEngine::addExternalOut( pdsp::ExtSequencer & externalOut ) {

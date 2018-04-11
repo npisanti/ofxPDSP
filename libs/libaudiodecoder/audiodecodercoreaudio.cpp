@@ -36,6 +36,8 @@
  * license above.
  */
 
+#ifndef __ANDROID__
+
 #include <string>
 #include <iostream>
 #include "audiodecodercoreaudio.h"
@@ -285,4 +287,4 @@ std::vector<std::string> AudioDecoderCoreAudio::supportedFileExtensions() {
     return list;
 }
 
-
+#endif // END ANDROID FIX

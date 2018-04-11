@@ -148,7 +148,7 @@ void pdsp::SampleBuffer::load( float* interleavedBuffer, double sampleRate, int 
 
 void pdsp::SampleBuffer::load( std::string filePath ){
     
-#if (defined(PDSP_USE_LIBSNDFILE) || defined(__linux))
+#if defined(PDSP_USE_LIBSNDFILE)
    
     const char * filePath_c = filePath.c_str();  
  
@@ -191,7 +191,7 @@ void pdsp::SampleBuffer::load( std::string filePath ){
         this->filePath = error;
     }
 
-#elif defined(__APPLE__) 
+#elif defined(PDSP_USE_LIBAUDIODECODER)
     
     AudioDecoder * fileHandle = new AudioDecoder(filePath);
     
@@ -239,7 +239,7 @@ void pdsp::SampleBuffer::load( std::string filePath ){
     
 #else 
 
-    std::cout<<"[pdsp] loading file unsuccessful, libsndfile.h not included when compiling\n";
+    std::cout<<"[pdsp] loading file unsuccessful, no library for loading audio files on this platform\n";
 	std::cout << "[pdsp] if you want direct load function, #define PDSP_USE_LIBSNDFILE in flags.h and then include and link libsndfile in your project\n";
     this->filePath = "impossible to load file";
     

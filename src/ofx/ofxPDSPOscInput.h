@@ -6,12 +6,8 @@
 #ifndef OFXPDSPMIDI_PDSPOSCINPUT_H_INCLUDED
 #define OFXPDSPMIDI_PDSPOSCINPUT_H_INCLUDED
 
-
-
-#include "ofxMidi.h"
 #include "ofMain.h"
 #include <chrono>
-#include "ofxPositionedMidiMessage.h"
 #include <algorithm>
 #include <thread>
 #include <mutex>
@@ -20,7 +16,6 @@
 #include "../DSP/pdspCore.h"
 #include "../sequencer/ScoreSection.h"
 #include "ofxOsc.h"
-
 
 /*!
 @brief utility class manage OSC input to the DSP

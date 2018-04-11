@@ -6,6 +6,8 @@
 #ifndef OFXPDSP_PDSPMIDIPADS_H_INCLUDED
 #define OFXPDSP_PDSPMIDIPADS_H_INCLUDED
 
+#ifndef __ANDROID__
+
 #include "ofxMidi.h"
 #include "../messages/header.h"
 #include "../DSP/control/GateSequencer.h"
@@ -90,5 +92,6 @@ private:
     int size;
 };
 
+#endif
 
 #endif // OFXPDSP_PDSPMIDIPADS_H_INCLUDED

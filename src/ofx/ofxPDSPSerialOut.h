@@ -9,10 +9,9 @@
 #include "ofMain.h"
 
 #ifndef TARGET_OF_IOS
+#ifndef __ANDROID__
 
-#include "ofxMidi.h"
 #include <chrono>
-#include "ofxPositionedMidiMessage.h"
 #include <algorithm>
 #include <thread>
 #include <mutex>
@@ -20,8 +19,6 @@
 #include <atomic>
 #include "../DSP/pdspCore.h"
 #include "../sequencer/ScoreSection.h"
-
-
 
 /*!
 @brief utility class manage serial output ports and send bytes from the internal generative music system
@@ -156,6 +153,7 @@ private:
 
 };
 
+#endif // __ANDROID__
 #endif // TARGET_OF_IOS
 
 #endif //OFXPDSPMIDI_PDSPSERIALOUT_H_INCLUDED

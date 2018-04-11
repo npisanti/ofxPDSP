@@ -6,10 +6,12 @@
 #ifndef OFXPDSPMIDI_MIDIKEYSBUFFERS_H_INCLUDED
 #define OFXPDSPMIDI_MIDIKEYSBUFFERS_H_INCLUDED
 
+#ifndef __ANDROID__
 #include "ofxMidi.h"
-#include "../messages/header.h"
 #include "ofxPositionedMidiMessage.h"
+#endif
 
+#include "../messages/header.h"
 
 enum VoiceMode {Poly, Mono};
 enum PortamentoMode {Off, On, Legato};
@@ -25,6 +27,7 @@ public:
 
 };
 
+#ifndef __ANDROID__
 class ofxMidiKeysBuffers {
 public:
         ofxMidiKeysBuffers();
@@ -81,6 +84,6 @@ private:
         PortamentoMode          portamentoMode;
 };       
     
-    
+#endif
 
 #endif // OFXPDSPMIDI_MIDIKEYSBUFFERS_H_INCLUDED

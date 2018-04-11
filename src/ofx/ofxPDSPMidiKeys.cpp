@@ -1,6 +1,8 @@
 
 #include "ofxPDSPMidiKeys.h"
 
+#ifndef __ANDROID__
+
 #define OFXPDSP_MIDIKEYSPROCESSOR_MESSAGERESERVE 128
 
 
@@ -236,3 +238,5 @@ pdsp::ValueSequencer & ofxPDSPMidiKeys::out_pitch_bend() {
 pdsp::ValueSequencer  & ofxPDSPMidiKeys::out_aftertouch() {
     return out_pressure;
 }
+
+#endif

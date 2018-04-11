@@ -6,10 +6,18 @@
 #ifndef PDSP_FLAGS_H_INCLUDED
 #define PDSP_FLAGS_H_INCLUDED
 
+#if defined(__linux)
+    #ifndef __ANDROID__
+        #define PDSP_USE_LIBSNDFILE
+    #endif
+#elif defined(__APPLE__)
+    #define PDSP_USE_LIBAUDIODECODER
+#endif
+
 // comment it if you don't want direct file loading feature
-// or maybe define it if you are able to include libsndfile in android in some way 
+// or maybe define it if you are able to include libsndfile in android in some way
 // in linux libsndfile is included anyway, so don't worry about this
-    // #define PDSP_USE_LIBSNDFILE
+// #define PDSP_USE_LIBSNDFILE
 
 
 //if you are on osx/ios, you can add the accelerate framework and decomment this for faster FFT

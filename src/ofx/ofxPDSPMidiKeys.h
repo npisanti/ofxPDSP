@@ -6,6 +6,8 @@
 #ifndef OFXPDSPMIDI_PDSPMIDIKEYS_H_INCLUDED
 #define OFXPDSPMIDI_PDSPMIDIKEYS_H_INCLUDED
 
+#ifndef __ANDROID__
+
 #include "ofxMidi.h"
 #include "../DSP/pdspCore.h"
 #include "../DSP/control/GateSequencer.h"
@@ -164,7 +166,6 @@ private:
         
 };
 
-
-
+#endif
 
 #endif //OFXPDSPMIDI_PDSPMIDIKEYS_H_INCLUDED

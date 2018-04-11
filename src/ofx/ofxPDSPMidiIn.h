@@ -6,6 +6,8 @@
 #ifndef OFXPDSPMIDI_PDSPMIDIIN_H_INCLUDED
 #define OFXPDSPMIDI_PDSPMIDIIN_H_INCLUDED
 
+#ifndef __ANDROID__
+
 #include "ofxMidi.h"
 #include <chrono>
 #include "ofxPositionedMidiMessage.h"
@@ -80,5 +82,6 @@ private:
         
 };
 
+#endif
 
 #endif // OFXPDSPMIDI_PDSPMIDIIN_H_INCLUDED

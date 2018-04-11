@@ -1,8 +1,9 @@
 
 #include "ofxPDSPMidiIn.h"
 
-#define OFXPDSP_MIDIKEYSPROCESSOR_MESSAGERESERVE 128
+#ifndef __ANDROID__
 
+#define OFXPDSP_MIDIKEYSPROCESSOR_MESSAGERESERVE 128
 
 ofxPDSPMidiIn::ofxPDSPMidiIn(){
     midiMessageVectorA.reserve(OFXPDSP_MIDIKEYSPROCESSOR_MESSAGERESERVE);
@@ -108,3 +109,4 @@ void ofxPDSPMidiIn::processMidi( const int &bufferSize ) noexcept{
     }
 }
 
+#endif

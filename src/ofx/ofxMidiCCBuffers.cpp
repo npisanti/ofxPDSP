@@ -1,6 +1,8 @@
 
 #include "ofxMidiCCBuffers.h"
 
+#ifndef __ANDROID__
+
 #define MIDICCBUFFERSMESSAGERESERVE 32
 
 ofxMidiCCBuffers::ofxMidiCCBuffers(){
@@ -57,3 +59,4 @@ void ofxMidiCCBuffers::processMidi (const std::vector<_ofxPositionedMidiMessage>
     
 }
 
+#endif

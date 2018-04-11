@@ -98,7 +98,7 @@ linuxarmv7l:
     ADDON_SOURCES_EXCLUDE = libs/libaudiodecoder/%
 
 android/armeabi:	
-	
+    ADDON_SOURCES_EXCLUDE = libs/libaudiodecoder/%	
 	
 android/armeabi-v7a:	
     # when parsing the file system looking for sources exclude this for all or

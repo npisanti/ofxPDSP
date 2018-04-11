@@ -6,6 +6,8 @@
 #ifndef OFXPDSPMIDI_POSITIONEDMIDIMESSAGE_H_INCLUDED
 #define OFXPDSPMIDI_POSITIONEDMIDIMESSAGE_H_INCLUDED
 
+#ifndef __ANDROID__
+
 #include "ofxMidi.h"
 
 class _ofxPositionedMidiMessage{
@@ -17,5 +19,6 @@ public:
     int sample;
 };
 
+#endif
 
 #endif// OFXPDSPMIDI_POSITIONEDMIDIMESSAGE_H_INCLUDED

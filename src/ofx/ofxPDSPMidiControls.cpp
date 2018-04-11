@@ -1,6 +1,7 @@
 
 #include "ofxPDSPMidiControls.h"
 
+#ifndef __ANDROID__
 
 ofxPDSPMidiControls::ofxPDSPMidiControls(){
     setMaxCCNum(midiCC.getCCSize());
@@ -53,3 +54,4 @@ pdsp::ValueSequencer & ofxPDSPMidiControls::out( int cc ) {
     return outs_cc[cc];
 }
     
+#endif

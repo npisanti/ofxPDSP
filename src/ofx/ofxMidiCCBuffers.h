@@ -6,6 +6,8 @@
 #ifndef OFXPDSPMIDI_MIDICCBUFFERS_H_INCLUDED
 #define OFXPDSPMIDI_MIDICCBUFFERS_H_INCLUDED
 
+#ifndef __ANDROID__
+
 #include "ofxMidi.h"
 #include "../messages/header.h"
 #include "ofxPositionedMidiMessage.h"
@@ -33,5 +35,6 @@ private:
     
 };
 
+#endif
 
 #endif // OFXPDSPMIDI_MIDICCBUFFERS_H_INCLUDED

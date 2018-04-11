@@ -1,6 +1,8 @@
 
 #include "ofxPDSPMidiOut.h"
 
+#ifndef __ANDROID__
+
 #define OFXPDSP_MIDIOUTPUTCIRCULARBUFFERSIZE 1024
 
 
@@ -385,5 +387,4 @@ void ofxPDSPMidiOut::closeMidiDaemon(){
 
 }
     
-    
-    
+#endif

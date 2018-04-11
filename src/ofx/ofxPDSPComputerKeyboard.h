@@ -6,12 +6,10 @@
 #ifndef OFXPDSP_COMPUTERKEYBOARD_H_INCLUDED
 #define OFXPDSP_COMPUTERKEYBOARD_H_INCLUDED
 
-#include "ofxMidi.h"
 #include "../messages/header.h"
 #include "ofxMidiKeysBuffers.h"
 #include "ofxPDSPValue.h"
 #include "../DSP/control/TriggerControl.h"
-
 
 /*!
 @brief utility class to use your computer keyboard as an 1-octave musical keyboard

@@ -1,6 +1,8 @@
 
 #include "ofxPDSPMidiPads.h"
 
+#ifndef __ANDROID__
+
 #define MIDIDRUMKITPROCESSORMESSAGERESERVE 16
 
 ofxPDSPMidiPads::ofxPDSPMidiPads(){
@@ -131,3 +133,5 @@ void ofxPDSPMidiPads::processMidi(const ofxPDSPMidiIn &midiInProcessor, const in
 pdsp::GateSequencer &  ofxPDSPMidiPads::out_trig( int layerIndex ) {
     return outs_trig[layerIndex];
 }
+
+#endif

@@ -6,6 +6,8 @@
 #ifndef OFXPDSPMIDI_PDSPMIDICONTROLS_H_INCLUDED
 #define OFXPDSPMIDI_PDSPMIDICONTROLS_H_INCLUDED
 
+#ifndef __ANDROID__
+
 #include "ofxMidi.h"
 #include "../DSP/control/ValueSequencer.h"
 #include <chrono>
@@ -62,5 +64,6 @@ private:
         
 };
 
+#endif
 
 #endif //OFXPDSPMIDI_PDSPMIDICONTROLS_H_INCLUDED

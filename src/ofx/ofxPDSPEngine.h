@@ -11,13 +11,16 @@
 #include "../sequencer/ScoreProcessor.h"
 #include "../DSP/utility/OneBarTimeMs.h"
 #include "../modules/oscillators/FMOperator.h"
-#include "ofxPDSPController.h"
-#include "ofxPDSPMidiIn.h"
-#include "ofxPDSPMidiOut.h"
 #include "ofxPDSPSerialOut.h"
 #include "ofxPDSPOscInput.h"
 #include "ofxPDSPEngineGraphics.h"
 #include "ofxPDSPFunctions.h"
+
+#ifndef __ANDROID__
+#include "ofxPDSPController.h"
+#include "ofxPDSPMidiIn.h"
+#include "ofxPDSPMidiOut.h"
+#endif
 
 /*!
 @brief utility class to manage input/output audio streams, acquire and release resources and process midi input/output. It also has an internal ScoreProcessor for sequencing.
@@ -82,19 +85,19 @@ public:
     void setOutputDeviceID(int deviceID);
 
     /*!
+    @brief adds an OSC input to the engine, making it active.
+    @param[in] oscInput osc input object to activate
+    */
+    void addOscInput( ofxPDSPOscInput & oscInput );
+
+#ifndef __ANDROID__
+    /*!
     @brief adds a midi controller and a relative midi input to the engine, making them active.
     @param[in] controller controller to add
     @param[in] midiIn midiIn for the controller.
     Adds a midi controller and a relative midi input to the engine, making them active. You can use the same ofxPDSPMidiIn for multiple controllers, that are parsing the midi data in different way, for example if you have a keyboard with some knob and faders you can use the same midiIn with a ofxPDSPMidiKeys for the key, pitch bend and pressure output and a ofxPDSPMidiControls for the knobs and faders.
     */
     void addMidiController( ofxPDSPController & controller, ofxPDSPMidiIn & midiIn );
-
-    /*!
-    @brief adds an OSC input to the engine, making it active.
-    @param[in] oscInput osc input object to activate
-    */
-    void addOscInput( ofxPDSPOscInput & oscInput );
-
 
     /*!
     @brief adds a midi output to the engine, making it active.
@@ -108,7 +111,8 @@ public:
     @param[in] serialOut serial out object to activate
     */
     void addSerialOut( ofxPDSPSerialOut & serialOut );
-#endif
+#endif // TARGET_OF_IOS
+#endif // __ANDROID__
     
     /*!
     @brief adds an external output to the engine, like an ofxPDSPSerialOut or an ofxPDSPMidiOut making it active.
@@ -117,13 +121,13 @@ public:
     void addExternalOut( pdsp::ExtSequencer & externalOut );
 
     /*!
-    @brief returns a Patchable object that rapresent the audio out of the system. Patch your module to this for connecting them to the selected device audio output.
+    @brief returns a Patchable object that represent the audio out of the system. Patch your module to this for connecting them to the selected device audio output.
     @param[in] channel channel to connect
     */
     pdsp::Patchable& audio_out( int channel );
     
     /*!
-    @brief returns a Patchable object that rapresent the audio input of the system. Patch this to your modules for processing the selected device audio input.
+    @brief returns a Patchable object that represent the audio input of the system. Patch this to your modules for processing the selected device audio input.
     @param[in] channel channel to connect
     */
     pdsp::Patchable& audio_in(  int channel );
@@ -182,11 +186,13 @@ private:
         
     pdsp::Processor processor;
     std::vector<pdsp::ExternalInput> inputs;
-    
+
+#ifndef __ANDROID__
     std::vector<ofxPDSPMidiIn*>         midiIns;
     std::vector<ofxPDSPController*>     controllers;
     std::vector<ofxPDSPMidiIn*>         controllerLinkedMidis;
     bool                                hasMidiIn;
+#endif
 
     std::vector<ofxPDSPOscInput*>       oscIns;
     bool                                hasOscIn;

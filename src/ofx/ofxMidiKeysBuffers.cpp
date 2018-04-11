@@ -1,6 +1,8 @@
 
 #include "ofxMidiKeysBuffers.h"
 
+#ifndef __ANDROID__
+
 #define MIDINOTEPROCESSORMESSAGERESERVE 32
 
 ofxMidiKeysBuffers::ofxMidiKeysBuffers(){
@@ -509,3 +511,4 @@ void ofxMidiKeysBuffers::processMonoMidiNoteOff(const _ofxPositionedMidiMessage&
         }        
 }
 
+#endif
