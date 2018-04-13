@@ -3,3 +3,4 @@ ofxPDSP
 ofxSIMDFloats
 ofxOsc
 ofxGui
+ofxAudioFile

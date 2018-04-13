@@ -6,25 +6,28 @@
 #ifndef PDSP_FLAGS_H_INCLUDED
 #define PDSP_FLAGS_H_INCLUDED
 
-#if defined(__linux)
-    #ifndef __ANDROID__
-        #define PDSP_USE_LIBSNDFILE
-    #endif
-#elif defined(__APPLE__)
-    #define PDSP_USE_LIBAUDIODECODER
-#endif
+//#define PDSP_LEGACY_SAMPLES
 
-// comment it if you don't want direct file loading feature
-// or maybe define it if you are able to include libsndfile in android in some way
-// in linux libsndfile is included anyway, so don't worry about this
-// #define PDSP_USE_LIBSNDFILE
+#ifdef PDSP_LEGACY_SAMPLES
+    #if defined(__linux)
+        #ifndef __ANDROID__
+            #define PDSP_USE_LIBSNDFILE
+        #endif
+    #elif defined(__APPLE__)
+        #define PDSP_USE_LIBAUDIODECODER
+    #else
+        #define PDSP_USE_OFXAUDIOFILE
+    #endif
+#else
+    #define PDSP_USE_OFXAUDIOFILE
+#endif
 
 
 //if you are on osx/ios, you can add the accelerate framework and decomment this for faster FFT
-    //#define AUDIOFFT_APPLE_ACCELERATE
+//#define AUDIOFFT_APPLE_ACCELERATE
 
 //if you can use FFTW for your project, link it and decomment this for faster FFT
-    //#define AUDIOFFT_FFTW3
+//#define AUDIOFFT_FFTW3
 
 
 // some internally used values

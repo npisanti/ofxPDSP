@@ -148,7 +148,28 @@ void pdsp::SampleBuffer::load( float* interleavedBuffer, double sampleRate, int 
 
 void pdsp::SampleBuffer::load( std::string filePath ){
     
-#if defined(PDSP_USE_LIBSNDFILE)
+#if defined(PDSP_USE_OFXAUDIOFILE)
+   
+    if(verbose) std::cout<< "[pdps] loading audio file: "<<filePath<<"\n";
+    
+    ofxAudioFile audiofile;
+    audiofile.load( filePath ); 
+    
+    if( audiofile.loaded() ){
+        double sampleRate = audiofile.samplerate();
+        int waveLength = audiofile.length();
+        int channels = audiofile.channels();
+        this->filePath = filePath;
+        this->load( audiofile.data(), sampleRate, waveLength, channels);
+    }else{
+        std::string error =  "error loading sample";
+        if(verbose) std::cout<<"[pdsp] "<<error<<"\n";
+        this->filePath = error;
+    }
+
+    audiofile.free();
+    
+#elif defined(PDSP_USE_LIBSNDFILE)
    
     const char * filePath_c = filePath.c_str();  
  
@@ -240,7 +261,6 @@ void pdsp::SampleBuffer::load( std::string filePath ){
 #else 
 
     std::cout<<"[pdsp] loading file unsuccessful, no library for loading audio files on this platform\n";
-	std::cout << "[pdsp] if you want direct load function, #define PDSP_USE_LIBSNDFILE in flags.h and then include and link libsndfile in your project\n";
     this->filePath = "impossible to load file";
     
 #endif

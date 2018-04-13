@@ -2,3 +2,4 @@ ofxSIMDFloats
 ofxMidi
 ofxPDSP
 ofxOsc
+ofxAudioFile
