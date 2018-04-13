@@ -159,29 +159,37 @@ void ofxPDSPEngine::setup( int sampleRate, int bufferSize, int nBuffers){
 #else
 
 	ofSoundStreamSettings settings;
-	settings.sampleRate = sampleRate;
-	settings.bufferSize = bufferSize;
-    settings.numBuffers = nBuffers;
-	settings.numOutputChannels = outputChannels;
-	settings.numInputChannels = inputChannels;
+	settings.sampleRate = (size_t)  sampleRate;
+	settings.bufferSize = (size_t)  bufferSize;
+    settings.numBuffers = (size_t)  nBuffers;
+	settings.numOutputChannels = (size_t) outputChannels;
+	settings.numInputChannels = (size_t)  inputChannels;
     
     auto devices = outputStream.getDeviceList();
     
     if( outputChannels > 0 ){
+        outStreamActive = true;
+#ifdef __ANDROID__
+        outputStream.setOutput(this);
+#else
         settings.setOutListener(this);
         settings.setOutDevice( devices[outputID] );
-        outStreamActive = true;     
+#endif
     }
     
     if(inputChannels > 0 ){
+        outStreamActive = true;
+#ifdef __ANDROID__
+        outputStream.setInput(this);
+#else
         settings.setInListener(this);
         settings.setInDevice( devices[outputID] );
-        inStreamActive = true;     
+#endif
     }
 
     outputStream.setup( settings ); 
        
-#endif
+#endif // END OF MASTER VERSION
 
     if( outputChannels > 0 ){
         84.0f >> testOscillator.in_pitch();
@@ -189,7 +197,7 @@ void ofxPDSPEngine::setup( int sampleRate, int bufferSize, int nBuffers){
     }
 
     state = startedState;
-    cout<<"[pdsp] engine: started | buffer size = "<<bufferSize<<" | sample rate = "<<sampleRate
+    ofLogNotice()<<"[pdsp] engine: started | buffer size = "<<bufferSize<<" | sample rate = "<<sampleRate
         <<" | "<<inputChannels<<" inputs | "<<outputChannels<<" outputs\n";
 }
 
@@ -239,7 +247,6 @@ void ofxPDSPEngine::close(){
             out->close();
         } 
     }
-    
     if( inStreamActive ){
         inputStream.close();
     }
@@ -293,6 +300,7 @@ void ofxPDSPEngine::audioIn (ofSoundBuffer &inBuffer) {
         inputs[i].copyInterleavedInput( inBuffer.getBuffer().data(), i,  inBuffer.getNumChannels(), inBuffer.getNumFrames());
     }
 }
+
 #ifndef __ANDROID__
 void ofxPDSPEngine::addMidiController( ofxPDSPController & controller, ofxPDSPMidiIn & midiIn ){
     
@@ -354,7 +362,6 @@ void ofxPDSPEngine::addExternalOut( pdsp::ExtSequencer & externalOut ) {
 }
 
 void ofxPDSPEngine::addOscInput( ofxPDSPOscInput & oscInput ) {
-   
     bool oscInputFound = false;
     for( ofxPDSPOscInput * &ptr : oscIns ){
         if( ptr == &oscInput ){
