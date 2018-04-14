@@ -13,7 +13,7 @@ On top of that some other classes that uses openFrameworks for adding midi and O
 
 You can find an [overview of the modules here](http://npisanti.com/ofxPDSP/md__modules.html). Also be sure to check out all the included examples, starting from the basics. It is requires with the latest stable release of openFrameworks (0.9.8) or the master release.
 
-Requires [ofxMidi](https://github.com/danomatika/ofxMidi), [ofxSIMDFloats.](https://github.com/npisanti/ofxSIMDFloats), [ofxAudioFile](https://github.com/npisanti/ofxAudioFile) and ofxOsc.
+Requires [ofxMidi](https://github.com/danomatika/ofxMidi), [ofxSIMDFloats](https://github.com/npisanti/ofxSIMDFloats), [ofxAudioFile](https://github.com/npisanti/ofxAudioFile) and ofxOsc.
 
 For using ofxPDSP with the `master` branch of openFrameworks you need [my fork of ofxMidi](https://github.com/npisanti/ofxMidi).
 

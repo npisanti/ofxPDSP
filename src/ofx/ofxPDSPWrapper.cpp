@@ -24,11 +24,11 @@ void ofxPDSPWrapper::setChannels ( int inputs, int outputs ) {
 
     addOutput( "silent", dummyOut);    
     for ( size_t i = 0; i < this->outputs.size(); ++i) {
-        addOutput( std::to_string(i).c_str(), this->outputs[i] );
+        addOutput( ofToString(i).c_str(), this->outputs[i] );
     }
             
     for ( size_t i = 0; i < this->inputs.size(); ++i) {
-        addInput( std::to_string(i).c_str(), this->inputs[i] );
+        addInput( ofToString(i).c_str(), this->inputs[i] );
     }
             
     updateOutputNodes();

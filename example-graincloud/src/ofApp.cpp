@@ -2,11 +2,7 @@
 
 // before looking at this check out the basics examples
 
-// Graincloud example. At the moment file loading is managed using libsndfile on Linux / Win
-// it will work on Linux out of the box 
-// but on Win you will have to find a way to install it and dynamically link it
-// and then you have to go into ofxPDSP flags.h file and decomment #define PDSP_USE_LIBSNDFILE
-// on OSX/iOS libaudiodecoder is used
+// Graincloud and sample loading example.
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -17,10 +13,9 @@ void ofApp::setup(){
     
     // sampleData is an instance of pdsp::SampleBuffer
     sampleData.setVerbose(true); 
-    sampleData.load("data/dreadlock_ride2.wav"); // at the moment this will work only on linux and osx
-                                                 // many debugger (included gdb and xcode) change the base path 
-                                                 // when you run your app in debug mode
-                                                 // so sometimes on you have to use an absolute path
+    sampleData.load( ofToDataPath( "dreadlock_ride2.wav" )); // many debugger (included gdb and xcode) change the base path 
+                                                         // when you run your app in debug mode
+                                                         // so the best is to use an absolute path
     cloud.setWindowType(pdsp::Triangular); // select the shape of the grain envelope
             // available windows: Rectangular, Triangular, Hann, Hamming, Blackman, BlackmanHarris, SineWindow, Tukey, Welch
     cloud.setSample(&sampleData); // give to the pdsp::GrainCloud the pointer to the sample

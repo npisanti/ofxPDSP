@@ -7,7 +7,7 @@
 #define OFXPDSP_ADDONWRAPPER_H_INCLUDED
 
 #include "../DSP/pdspCore.h"
-
+#include "ofMain.h"
 /*!
 @brief abstract class to extend for integrate openFrameworks addon into ofxPDSP
 */
