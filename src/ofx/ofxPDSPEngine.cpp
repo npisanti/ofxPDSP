@@ -158,15 +158,8 @@ void ofxPDSPEngine::setup( int sampleRate, int bufferSize, int nBuffers){
     }
 #else // END OF LEGACY 0.9.8
 
-
-#ifdef TARGET_OF_IOS // OF MASTER, IOS
-	
-    // enable later to background audio in ios
-	// ofxiOSSoundStream::setMixWithOtherApps(true);
-	ofSoundStreamSetup(outputChannels, inputChannels, this, sampleRate, bufferSize, nBuffers);
-
-#else // END IOS - START ANDROID/DESKTOP
-
+    // OF MASTER VERSION
+    
 	ofSoundStreamSettings settings;
 	settings.sampleRate = (size_t)  sampleRate;
 	settings.bufferSize = (size_t)  bufferSize;
@@ -174,33 +167,44 @@ void ofxPDSPEngine::setup( int sampleRate, int bufferSize, int nBuffers){
 	settings.numOutputChannels = (size_t) outputChannels;
 	settings.numInputChannels = (size_t)  inputChannels;
     
-#ifdef __ANDROID__
-    if( outputChannels > 0 ){
-        outStreamActive = true;
-        outputStream.setOutput(this);
-    }
-    if(inputChannels > 0 ){
-        outStreamActive = true;
-        outputStream.setInput(this);
-    }
-#else
-    auto devices = outputStream.getDeviceList();
-    
-    if( outputChannels > 0 ){
-        outStreamActive = true;
-        settings.setOutListener(this);
-        settings.setOutDevice( devices[outputID] );
-    }
-    if(inputChannels > 0 ){
-        outStreamActive = true;
-        settings.setInListener(this);
-        settings.setInDevice( devices[outputID] );
-    }
-#endif
+    #if defined(__ANDROID__)
+        if( outputChannels > 0 ){
+            outStreamActive = true;
+            outputStream.setOutput(this);
+        }
+        if(inputChannels > 0 ){
+            outStreamActive = true;
+            outputStream.setInput(this);
+        }
+        outputStream.setup( settings ); 
 
-    outputStream.setup( settings ); 
-  
-#endif // END ANDROID / DESKTOP
+    #elif defined(TARGET_OF_IOS)
+        if( outputChannels > 0 ){
+            settings.setOutListener(this);
+        }
+        if(inputChannels > 0 ){
+            settings.setInListener(this);
+        }
+        // enable later to background audio in ios
+        // ofxiOSSoundStream::setMixWithOtherApps(true);
+        ofSoundStreamSetup( settings );
+
+    #else
+        auto devices = outputStream.getDeviceList();
+        
+        if( outputChannels > 0 ){
+            outStreamActive = true;
+            settings.setOutListener(this);
+            settings.setOutDevice( devices[outputID] );
+        }
+        if(inputChannels > 0 ){
+            outStreamActive = true;
+            settings.setInListener(this);
+            settings.setInDevice( devices[outputID] );
+        }
+        outputStream.setup( settings );
+    #endif
+
 #endif // END OF MASTER VERSION
 
     if( outputChannels > 0 ){
