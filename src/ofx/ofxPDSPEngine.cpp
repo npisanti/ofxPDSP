@@ -124,7 +124,8 @@ void ofxPDSPEngine::setup( int sampleRate, int bufferSize, int nBuffers){
 
 
     // starts engine
-#if (OF_VERSION_MINOR <= 9)
+    
+#if (OF_VERSION_MINOR <= 9) // OF LEGACY for 0.9.8
     if(outputChannels > 0 && inputChannels == 0){
         outputStream.setOutput(*this);   
         outStreamActive = true; 
@@ -155,8 +156,16 @@ void ofxPDSPEngine::setup( int sampleRate, int bufferSize, int nBuffers){
             inputStream.setup(0, inputChannels, sampleRate, bufferSize, nBuffers);
         }     
     }
-    
-#else
+#else // END OF LEGACY 0.9.8
+
+
+#ifdef TARGET_OF_IOS // OF MASTER, IOS
+	
+    // enable later to background audio in ios
+	// ofxiOSSoundStream::setMixWithOtherApps(true);
+	ofSoundStreamSetup(outputChannels, inputChannels, this, sampleRate, bufferSize, nBuffers);
+
+#else // END IOS - START ANDROID/DESKTOP
 
 	ofSoundStreamSettings settings;
 	settings.sampleRate = (size_t)  sampleRate;
@@ -165,30 +174,33 @@ void ofxPDSPEngine::setup( int sampleRate, int bufferSize, int nBuffers){
 	settings.numOutputChannels = (size_t) outputChannels;
 	settings.numInputChannels = (size_t)  inputChannels;
     
+#ifdef __ANDROID__
+    if( outputChannels > 0 ){
+        outStreamActive = true;
+        outputStream.setOutput(this);
+    }
+    if(inputChannels > 0 ){
+        outStreamActive = true;
+        outputStream.setInput(this);
+    }
+#else
     auto devices = outputStream.getDeviceList();
     
     if( outputChannels > 0 ){
         outStreamActive = true;
-#ifdef __ANDROID__
-        outputStream.setOutput(this);
-#else
         settings.setOutListener(this);
         settings.setOutDevice( devices[outputID] );
-#endif
     }
-    
     if(inputChannels > 0 ){
         outStreamActive = true;
-#ifdef __ANDROID__
-        outputStream.setInput(this);
-#else
         settings.setInListener(this);
         settings.setInDevice( devices[outputID] );
-#endif
     }
+#endif
 
     outputStream.setup( settings ); 
-       
+  
+#endif // END ANDROID / DESKTOP
 #endif // END OF MASTER VERSION
 
     if( outputChannels > 0 ){
@@ -218,7 +230,10 @@ void ofxPDSPEngine::stop(){
         }
         if( outStreamActive ){
             outputStream.stop();
-        }
+        }        
+        #ifdef TARGET_IOS
+        ofSoundStreamStop();
+        #endif
     }
 }
 
@@ -254,6 +269,10 @@ void ofxPDSPEngine::close(){
         outputStream.close();
     }
     
+    #ifdef TARGET_OF_IOS
+    ofSoundStreamClose();
+    #endif
+
     pdsp::releaseAll();
     
     state = closedState;
