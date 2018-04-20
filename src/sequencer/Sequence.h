@@ -186,8 +186,12 @@ namespace pdsp{
         @brief returns the percentual of completion of this sequence. When the sequence is not playing it will return the last value. Thread-safe.
         */ 
         float meter_percent() const; 
-    
-        
+
+        /*!
+        @brief public access to read and set the sequence label.
+        */     
+        std::string label;
+
     private:
         std::atomic<float> atomic_meter_percent;
         

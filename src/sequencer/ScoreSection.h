@@ -38,13 +38,12 @@ private:
     */
     class SeqCell{
     public:
-        SeqCell() : sequence(nullptr), nextCell(Behavior::Loop), quantizeLaunch(false), quantizeGrid(0.0), label("") {};
+        SeqCell() : sequence(nullptr), nextCell(Behavior::Loop), quantizeLaunch(false), quantizeGrid(0.0) {};
             
         Sequence*       sequence;
         SeqChange*      nextCell;
         bool            quantizeLaunch;
         double          quantizeGrid;
-        std::string     label;
     };    
     /*!
         @endcond

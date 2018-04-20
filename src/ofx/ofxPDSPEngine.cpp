@@ -1,6 +1,11 @@
 
 #include "ofxPDSPEngine.h"
 
+pdsp::PatchNode ofxPDSPEngine::blackholeSingleton = pdsp::PatchNode();
+
+pdsp::PatchNode & pdsp::blackhole() {
+    return ofxPDSPEngine::blackholeSingleton;
+}
 
 ofxPDSPEngine::ofxPDSPEngine(){
     inputID = 0;
@@ -211,7 +216,8 @@ void ofxPDSPEngine::setup( int sampleRate, int bufferSize, int nBuffers){
         84.0f >> testOscillator.in_pitch();
         testOscillator >> testAmp >> processor.channels[0];
     }
-
+    
+    blackholeSingleton >> processor.blackhole;
     state = startedState;
     ofLogNotice()<<"[pdsp] engine: started | buffer size = "<<bufferSize<<" | sample rate = "<<sampleRate
         <<" | "<<inputChannels<<" inputs | "<<outputChannels<<" outputs\n";
