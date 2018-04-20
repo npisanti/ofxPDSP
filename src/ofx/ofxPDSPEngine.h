@@ -22,15 +22,10 @@
 #include "ofxPDSPMidiOut.h"
 #endif
 
-namespace pdsp{
-    pdsp::PatchNode & blackhole();    
-}
-
 /*!
 @brief utility class to manage input/output audio streams, acquire and release resources and process midi input/output. It also has an internal ScoreProcessor for sequencing.
 */
 class ofxPDSPEngine : public ofBaseSoundInput, public ofBaseSoundOutput{
-    friend pdsp::PatchNode & pdsp::blackhole();
     
 public:
     ofxPDSPEngine();
@@ -175,7 +170,6 @@ public:
     @endcond
 */
 
-    static pdsp::PatchNode blackholeSingleton;
 private:
 
     ofSoundStream inputStream;
