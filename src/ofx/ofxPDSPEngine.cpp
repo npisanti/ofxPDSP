@@ -27,6 +27,7 @@ ofxPDSPEngine::ofxPDSPEngine(){
     hasMidiIn = false;
 #endif
 
+    bMixWithOtherApps = false;
     graphics.setParent( score );
 
     ofAddListener( ofEvents().exit, this, &ofxPDSPEngine::onExit );
@@ -116,8 +117,10 @@ void ofxPDSPEngine::setChannels( int inputChannels, int outputChannels ){
 }
 
 void ofxPDSPEngine::setup( int sampleRate, int bufferSize, int nBuffers){
+ 
+    ofLogNotice()<<"[pdsp] engine: starting with parameters: buffer size = "<<bufferSize<<" | sample rate = "<<sampleRate<<" | "<<inputChannels<<" inputs | "<<outputChannels<<" outputs\n";
    
-    if ( nBuffers < 2 ) nBuffers = 2;
+    if ( nBuffers < 1 ) nBuffers = 1;
     
     // prepare all the units / modules
     pdsp::prepareAllToPlay(bufferSize, static_cast<double>(sampleRate) );
@@ -180,14 +183,16 @@ void ofxPDSPEngine::setup( int sampleRate, int bufferSize, int nBuffers){
 
     #elif defined(TARGET_OF_IOS)
         if( outputChannels > 0 ){
+            outStreamActive = true;
             settings.setOutListener(this);
         }
         if(inputChannels > 0 ){
+            outStreamActive = true;
             settings.setInListener(this);
         }
-        // enable later to background audio in ios
-        // ofxiOSSoundStream::setMixWithOtherApps(true);
-        ofSoundStreamSetup( settings );
+
+        if( bMixWithOtherApps ){ outputStream.setMixWithOtherApps(true); }
+        outputStream.setup( settings ); 
 
     #else
         auto devices = outputStream.getDeviceList();
@@ -202,7 +207,9 @@ void ofxPDSPEngine::setup( int sampleRate, int bufferSize, int nBuffers){
             settings.setInListener(this);
             settings.setInDevice( devices[outputID] );
         }
+        
         outputStream.setup( settings );
+
     #endif
 
 #endif // END OF MASTER VERSION
@@ -213,8 +220,7 @@ void ofxPDSPEngine::setup( int sampleRate, int bufferSize, int nBuffers){
     }
 
     state = startedState;
-    ofLogNotice()<<"[pdsp] engine: started | buffer size = "<<bufferSize<<" | sample rate = "<<sampleRate
-        <<" | "<<inputChannels<<" inputs | "<<outputChannels<<" outputs\n";
+    ofLogNotice()<<"[pdsp] engine: started | buffer size = "<<outputStream.getBufferSize()<<" | sample rate = "<<outputStream.getSampleRate()<<" | "<<outputStream.getNumInputChannels()<<" inputs | "<<outputStream.getNumOutputChannels()<<" outputs\n";
 }
 
 void ofxPDSPEngine::start(){
@@ -235,9 +241,6 @@ void ofxPDSPEngine::stop(){
         if( outStreamActive ){
             outputStream.stop();
         }        
-        #ifdef TARGET_IOS
-        ofSoundStreamStop();
-        #endif
     }
 }
 
@@ -273,10 +276,6 @@ void ofxPDSPEngine::close(){
         outputStream.close();
     }
     
-    #ifdef TARGET_OF_IOS
-    ofSoundStreamClose();
-    #endif
-
     pdsp::releaseAll();
     
     state = closedState;
@@ -409,4 +408,8 @@ void ofxPDSPEngine::test( bool testingActive, float testingDB ){
 
 pdsp::Patchable & ofxPDSPEngine::out_bar_ms(){
     return barTime.out_signal();
+}
+
+void ofxPDSPEngine::setBackgroundAudio( bool active ){
+    bMixWithOtherApps = active;
 }

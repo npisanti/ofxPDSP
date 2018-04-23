@@ -22,6 +22,10 @@
 #include "ofxPDSPMidiOut.h"
 #endif
 
+#ifdef OF_TARGET_IOS
+    #include "ofxiOS.h"
+#endif
+
 /*!
 @brief utility class to manage input/output audio streams, acquire and release resources and process midi input/output. It also has an internal ScoreProcessor for sequencing.
 */
@@ -160,6 +164,11 @@ public:
     */       
     void test( bool testingActive, float testingDB=-12.0f );
 
+    /*!
+    @brief activate/deactivate background audio on ios, this function has to be called before the setup.
+    @param mix true to activate background audio, false to deactivate, false is default
+    */   
+    void setBackgroundAudio( bool active );
 
 /*!
     @cond HIDDEN_SYMBOLS
@@ -173,7 +182,12 @@ public:
 private:
 
     ofSoundStream inputStream;
+
+#ifndef TARGET_OF_IOS
     ofSoundStream outputStream;
+#else
+    ofxiOSSoundStream outputStream;
+#endif
 
     bool inStreamActive;
     bool outStreamActive;    
@@ -212,6 +226,8 @@ private:
     pdsp::FMOperator testOscillator;
     pdsp::Amp        testAmp;
     pdsp::OneBarTimeMs barTime;
+    
+    bool bMixWithOtherApps;
         
 };
 
