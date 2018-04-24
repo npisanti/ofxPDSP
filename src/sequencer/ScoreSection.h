@@ -360,7 +360,7 @@ private:
     static ValueSequencer       invalidValue;
     
     static Sequence             dummySeq;
-
+    static std::string          emptyLabel;
     
 };// END ScoreSection
 

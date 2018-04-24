@@ -80,31 +80,34 @@ void ofxPDSPEngineGraphics::drawGraphics() {
     int spacing = 5;
     int offsetX = 0;
     
-
     
     for(int i=0; i<(int)plotters.size(); ++i){
         
         plotters[i].update();
         
-
         ofPushMatrix();
             ofTranslate( offsetX, y );
             plotters[i].draw();
             // now draw lables
-               
+            
             ofSetColor( color );
-            int numCells = plotters[i].getCellsNumber();
+            //int numCells = plotters[i].getCellsNumber();
+            int numCells = score->sections[i].getCellsNumber();
             float cellW = plotters[i].getCellWidth();
+            int textmax = cellW / 8.0f;
+            
             for (int k=0; k<numCells; ++k){
                 string label = "(";
                 label += (char) assignedKeys[i][k];
                 label += ") ";
                 label += score->sections[i].getLabel(k);
+                if(label.size() > textmax) label.resize(textmax);
+                
                 if( score->sections[i].meter_current() == k || score->sections[i].meter_next() != k || blink > 4 ){
                     ofDrawBitmapString ( label, cellW*k + 5.0f, 14.0f );
                 } 
-        
             }
+             
         ofPopMatrix();
 
         y += ( sectionsHeights[i] + 20 + spacing );

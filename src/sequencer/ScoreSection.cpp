@@ -8,6 +8,7 @@
 pdsp::GateSequencer pdsp::ScoreSection::invalidGate = pdsp::GateSequencer();
 pdsp::ValueSequencer pdsp::ScoreSection::invalidValue = pdsp::ValueSequencer();
 pdsp::Sequence pdsp::ScoreSection::dummySeq  = pdsp::Sequence();
+std::string pdsp::ScoreSection::emptyLabel = "";
 
 pdsp::ScoreSection::ScoreSection() {
     
@@ -144,14 +145,18 @@ void pdsp::ScoreSection::setLabel( int index, std::string label ){
     if( patterns[index].sequence!= nullptr ) patterns[index].sequence->label = label;
 }
 
-std::string pdsp::ScoreSection::getLabel( int index){
-    if(index < 0) index = 0;
-    if(index >= (int) patterns.size()) index = patterns.size() -1;
-    if( patterns[index].sequence!= nullptr ){
-        return patterns[index].sequence->label;
+std::string pdsp::ScoreSection::getLabel( int index ){
+    if( index >= 0 && index < (int) patterns.size() ){
+        if( patterns[index].sequence!= nullptr ){
+            return patterns[index].sequence->label;
+        }else{
+            return emptyLabel;
+        } 
     }else{
-        return std::string("");
-    } 
+        std::cout<<"[pdsp] wrong index for getting label\n";
+        pdsp_trace();
+        return emptyLabel;
+    }   
 }
 
 //remember to check for quantizeGrid to be no greater than pattern length

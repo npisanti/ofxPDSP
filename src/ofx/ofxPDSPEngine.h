@@ -22,10 +22,6 @@
 #include "ofxPDSPMidiOut.h"
 #endif
 
-#ifdef OF_TARGET_IOS
-    #include "ofxiOS.h"
-#endif
-
 /*!
 @brief utility class to manage input/output audio streams, acquire and release resources and process midi input/output. It also has an internal ScoreProcessor for sequencing.
 */
@@ -182,12 +178,7 @@ public:
 private:
 
     ofSoundStream inputStream;
-
-#ifndef TARGET_OF_IOS
     ofSoundStream outputStream;
-#else
-    ofxiOSSoundStream outputStream;
-#endif
 
     bool inStreamActive;
     bool outStreamActive;    
@@ -227,7 +218,7 @@ private:
     pdsp::Amp        testAmp;
     pdsp::OneBarTimeMs barTime;
     
-    bool bMixWithOtherApps;
+    bool bBackgroundAudio;
         
 };
 

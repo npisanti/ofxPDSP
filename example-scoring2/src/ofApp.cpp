@@ -111,7 +111,7 @@ void ofApp::draw(){
     }else{
         info += "loop. \n";
     }
-    info += "e : stop bass pattern.\n";
+    info += "w : stop bass pattern.\n";
     info += "space : pause/play.\n";
     info += "s : stop.\n";
     

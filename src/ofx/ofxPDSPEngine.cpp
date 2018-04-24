@@ -27,7 +27,7 @@ ofxPDSPEngine::ofxPDSPEngine(){
     hasMidiIn = false;
 #endif
 
-    bMixWithOtherApps = false;
+    bBackgroundAudio = false;
     graphics.setParent( score );
 
     ofAddListener( ofEvents().exit, this, &ofxPDSPEngine::onExit );
@@ -183,16 +183,14 @@ void ofxPDSPEngine::setup( int sampleRate, int bufferSize, int nBuffers){
 
     #elif defined(TARGET_OF_IOS)
         if( outputChannels > 0 ){
-            outStreamActive = true;
             settings.setOutListener(this);
         }
         if(inputChannels > 0 ){
-            outStreamActive = true;
             settings.setInListener(this);
         }
 
-        if( bMixWithOtherApps ){ outputStream.setMixWithOtherApps(true); }
-        outputStream.setup( settings ); 
+        if( bBackgroundAudio ){ ofxiOSSoundStream::setMixWithOtherApps(true); }
+        ofSoundStreamSetup( settings );
 
     #else
         auto devices = outputStream.getDeviceList();
@@ -220,7 +218,11 @@ void ofxPDSPEngine::setup( int sampleRate, int bufferSize, int nBuffers){
     }
 
     state = startedState;
+
+    #ifndef OF_TARGET_IOS
     ofLogNotice()<<"[pdsp] engine: started | buffer size = "<<outputStream.getBufferSize()<<" | sample rate = "<<outputStream.getSampleRate()<<" | "<<outputStream.getNumInputChannels()<<" inputs | "<<outputStream.getNumOutputChannels()<<" outputs\n";
+    #endif
+    
 }
 
 void ofxPDSPEngine::start(){
@@ -230,6 +232,9 @@ void ofxPDSPEngine::start(){
     if(outStreamActive && state < startedState){
         outputStream.start();
     }
+    #ifdef TARGET_IOS	
+    ofSoundStreamStart();
+    #endif    
     state = startedState;
 }
 
@@ -240,7 +245,10 @@ void ofxPDSPEngine::stop(){
         }
         if( outStreamActive ){
             outputStream.stop();
-        }        
+        }    
+        #ifdef TARGET_IOS	
+        ofSoundStreamStop();	
+        #endif    
     }
 }
 
@@ -276,6 +284,9 @@ void ofxPDSPEngine::close(){
         outputStream.close();
     }
     
+    #ifdef TARGET_IOS	
+    ofSoundStreamClose();
+    #endif  
     pdsp::releaseAll();
     
     state = closedState;
@@ -411,5 +422,5 @@ pdsp::Patchable & ofxPDSPEngine::out_bar_ms(){
 }
 
 void ofxPDSPEngine::setBackgroundAudio( bool active ){
-    bMixWithOtherApps = active;
+    bBackgroundAudio = active;
 }
