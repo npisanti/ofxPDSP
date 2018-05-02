@@ -31,6 +31,6 @@ Check out the videos of some included examples:
 
 [![ofxPDSP example-data-to-wave](http://img.youtube.com/vi/oMH_W4b1z5A/0.jpg)](https://www.youtube.com/watch?v=oMH_W4b1z5A "ofxPDSP example-data-to-wave")
 
-Nicola Pisanti, MIT License 2016-2017.   
+Nicola Pisanti, MIT License 2016-2018.   
 For FFT the AudioFFT wrapper is used, Copyright (c) 2013 [HiFi-LoFi](https://github.com/HiFi-LoFi).  
-For loading audio file on OSX [libaudiodecoder](https://github.com/asantoni/libaudiodecoder) is used, Copyright (c) 2010-2012 Albert Santoni, Bill Good, RJ Ryan.
+For loading audio file on OSX [libaudiodecoder](https://github.com/asantoni/libaudiodecoder) was used, it is still included for legacy purposes but it will be removed in one of the next versions. Copyright (c) 2010-2012 Albert Santoni, Bill Good, RJ Ryan.

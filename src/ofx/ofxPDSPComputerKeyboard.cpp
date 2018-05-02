@@ -120,43 +120,19 @@ void ofxPDSPComputerKeyboard::clearNotes(){
 void ofxPDSPComputerKeyboard::keysControl( int key ) {
     
     switch( key){
-        case '1':
-            dynamic = 0.125f;
+        case 'c':
+            if(dynamic>0.0f) dynamic -= 0.125f;
             break;
         
-        case '2':
-            dynamic = 0.25f;
+        case 'v':
+            if(dynamic<1.0f) dynamic += 0.125f;
             break;
         
-        case '3':
-            dynamic = 0.375f;
-            break;
-        
-        case '4':
-            dynamic = 0.5f;
-            break;
-        
-        case '5':
-            dynamic = 0.635;
-            break;
-        
-        case '6':
-            dynamic = 0.75f;
-            break;
-        
-        case '7':
-            dynamic = 0.825f;        
-            break;
-        
-        case '8':
-            dynamic = 1.0f;
-            break;
-    
-        case '9':
+        case 'z':
             basePitch  -= 12;
             break;
         
-        case '0':
+        case 'x':
             basePitch += 12;
             break;
     }
@@ -495,9 +471,9 @@ void ofxPDSPComputerKeyboard::draw(int x, int y, int w, int h) {
         ofDrawBitmapString( (char) keys[i], posX+4, posY+10);
     }
     
-    string info = "9/0: base pitch ( ";
+    std::string info = "z/x: base pitch ( ";
     info += to_string( basePitch );
-    info += " )\n1-8 dynamic ( ";
+    info += " )\nc-v dynamic ( ";
     info += to_string (dynamic);
     info += " )";
     ofDrawBitmapString( info, 0, keyH*2 + 20);

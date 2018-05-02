@@ -49,6 +49,7 @@ void AudioPlayer::patch (){
     bStop.addListener(this, &AudioPlayer::onStop );
     
     bSemaphore = true;
+    sample.setVerbose(true);
 }
 
 void AudioPlayer::onPlay( bool & value ) {

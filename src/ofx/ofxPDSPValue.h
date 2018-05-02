@@ -17,9 +17,9 @@ typedef pdsp::TriggerControl ofxPDSPTrigger;
 //-------------------------------------------------------------------------------------------------
 
 /*!
-@brief Utility class control the audio dsp parameter and bind them to an ofParameter
+@brief Utility class control the audio dsp parameter and bind them to one or more internal ofParameter
 
-ofxPDSPValue conteins an ofParameter<float> and an internal atomic float value, that is read and processed in a thread-safe manner. When the ofParameter is changed also the internal value is changed. The setv() methods sets only the internal value, for setting parameter faster when you don't need the ofParameter features. The output of this class can be patched to the audio DSP and can be optionally smoothed out.
+ofxPDSPValue contains some ofParameter and an internal atomic float value, that is read and processed in a thread-safe manner. When one of the ofParameters is changed also the internal value is changed. The setv() methods sets only the internal value, for setting parameter faster when you don't need the ofParameter features. The output of this class can be patched to the audio DSP and can be optionally smoothed out.
 
 */
 class ofxPDSPValue : public pdsp::Unit, public pdsp::UsesSlew {
@@ -101,6 +101,20 @@ public:
     */  
     ofParameter<int>& set( std::string name, int min, int max);
 
+    /*!
+    @brief sets the and returns the internal ofParameter<bool>, useful to set up an UI. This parameter set the value to 0.0f when false and to 1.0f when true.
+    @param[in] name this will become the name of the ofParameter
+    @param[in] value default value
+    */    
+    ofParameter<bool>& set( std::string name, bool value );
+    
+    /*!
+    @brief sets the and returns the internal ofParameter<bool>, useful to set up an UI. This parameter set the value to 0.0f when false and to 1.0f when true.
+    @param[in] name this will become the name of the ofParameter
+    @param[in] value default value
+    */    
+    ofParameter<bool>& set( const char * name, bool value );
+
 
     /*!
     @brief sets the value without updating the ofParameters
@@ -120,6 +134,11 @@ public:
     @brief returns the ofParameter ready to be added to the UI
     */  
     ofParameter<int>& getOFParameterInt();
+
+    /*!
+    @brief returns the ofParameter ready to be added to the UI
+    */  
+    ofParameter<bool>& getOFParameterBool();
 
 
     /*!
@@ -147,6 +166,7 @@ private:
 
     ofParameter<float>  parameter;
     ofParameter<int>    parameter_i;
+    ofParameter<bool>   parameter_b;
     
     pdsp::OutputNode output;
     
@@ -159,6 +179,7 @@ private:
     
     void onSet(float &newValue);
     void onSetI(int   &newValue);
+    void onSetB(bool   &newValue);
 
     
 };

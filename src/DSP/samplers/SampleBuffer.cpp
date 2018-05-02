@@ -150,17 +150,18 @@ void pdsp::SampleBuffer::load( std::string filePath ){
     
 #if defined(PDSP_USE_OFXAUDIOFILE)
    
-    if(verbose) std::cout<< "[pdps] loading audio file: "<<filePath<<"\n";
+    if(verbose) std::cout<< "[pdsp] loading audio file: "<<filePath<<"\n";
     
     ofxAudioFile audiofile;
+    audiofile.setVerbose( verbose );
     audiofile.load( filePath ); 
     
     if( audiofile.loaded() ){
         double sampleRate = audiofile.samplerate();
         int waveLength = audiofile.length();
         int channels = audiofile.channels();
-        this->filePath = filePath;
         this->load( audiofile.data(), sampleRate, waveLength, channels);
+        this->filePath = filePath;
     }else{
         std::string error =  "error loading sample";
         if(verbose) std::cout<<"[pdsp] "<<error<<"\n";
@@ -175,7 +176,7 @@ void pdsp::SampleBuffer::load( std::string filePath ){
  
     SndfileHandle fileHandle = SndfileHandle(filePath_c); 
     
-    if(verbose) std::cout<< "[pdps] loading audio file: "<<filePath<<"\n";
+    if(verbose) std::cout<< "[pdsp] loading audio file: "<<filePath<<"\n";
     
     if( strcmp(fileHandle.strError(), "No Error.") ==0 ){
         
