@@ -19,7 +19,7 @@ namespace pdsp{
 /*!
 @brief Dubby sounding reverb based on Moorer's reverb with added time modulations.
 
-Default values are: time=3.33s, density=0.85, damping=0.25, hi_cut=8000hz, mod_speed=0.5hz, mod_amount=0.0ms. Most of the control values are update once per audio buffer, no crazy control modulations to this reverb.
+Default values are: time=3.33s, density=0.5, damping=0.5, hi_cut=5000hz, mod_speed=0.2hz, mod_amount=0.8ms. Most of the control values are update once per audio buffer, no crazy control modulations to this reverb.
 */       
 
 class BasiVerb : public Patchable {
@@ -147,7 +147,7 @@ private:
     APF1              apf1L;
     APF1              apf1R;
 
-    
+    static const float damp_mult [6];    
 
 };
     

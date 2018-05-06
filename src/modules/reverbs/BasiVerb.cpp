@@ -6,10 +6,12 @@ pdsp::BasiVerb::BasiVerb(const BasiVerb& other){ patch(); }
 pdsp::BasiVerb& pdsp::BasiVerb::operator=(const BasiVerb& other){ return *this; }
 
 //const float pdsp::BasiVerb::RT60Calculator::delay_mult [] = { 1.0f, 1.10007f, 1.332f, 1.355f, 1.3999f, 1.455f };
-const float pdsp::BasiVerb::RT60Calculator::delay_mult [] = { 1.0f, 1.0689655f, 1.2105263157f, 1.307692307f, 1.34782608f, 1.4f };
+//const float pdsp::BasiVerb::RT60Calculator::delay_mult [] = { 1.0f, 1.0689655f, 1.2105263157f, 1.307692307f, 1.34782608f, 1.4f };
+const float pdsp::BasiVerb::RT60Calculator::delay_mult [] = { 1.0f, 1.12f, 1.22f, 1.36f, 1.44f, 1.56f };
+const float pdsp::BasiVerb::damp_mult [] = { 0.8964f, 0.8798f, 0.87f, 0.8632f, 0.8466f, 0.751f };
 
-const float pdsp::BasiVerb::RT60Calculator::delay_min = 5.0f;
-const float pdsp::BasiVerb::RT60Calculator::delay_range = 45.0f;
+const float pdsp::BasiVerb::RT60Calculator::delay_min = 25.0f;
+const float pdsp::BasiVerb::RT60Calculator::delay_range = 50.0f;
 
 
 pdsp::BasiVerb::RT60Calculator::RT60Calculator(){
@@ -66,6 +68,7 @@ void pdsp::BasiVerb::RT60Calculator::process (int bufferSize) noexcept {
         }
         
         float delay_time_one = delay_min + ( (1.0f - dens ) * delay_range );
+        //float delay_time_one = 50.0f; // 50 msec
         
         for(int i= 0; i< 6; ++i){
             
@@ -99,10 +102,10 @@ void pdsp::BasiVerb::patch(){
     addModuleOutput("0", output1);
     addModuleOutput("1", output2);
     
-    hi_cut_ctrl.set(8000.0f);
-    damping_ctrl.set(0.25f);  
-    modAmt.set(0.0f); 
-    phazor.set(0.5f); // standar freq = 0.1hz
+    hi_cut_ctrl.set(5000.0f);
+    damping_ctrl.set(0.5f);  
+    modAmt.set(0.8f); 
+    phazor.set(0.2f); // standar freq = 0.1hz
 
 
     phazor.in_freq() >> LFO >> lfoOut >> modAmt;
@@ -120,18 +123,30 @@ void pdsp::BasiVerb::patch(){
         modAmt                >> delays[i].in_time();
         
         coeffs.delay_g[i]     >> delays[i].in_feedback();
-        damping_ctrl          >> delays[i].in_damping();
+        damping_ctrl  * damp_mult[i] >> delays[i].in_damping();
 
     }
     
+    /*
     54.81f >> apf1L.in_freq();
     62.64f >> apf1R.in_freq();
     
-    -0.707f >> apf1L.in_feedback();
-    -0.707f >> apf1R.in_feedback();
+    0.707f >> apf1L.in_feedback();
+    0.707f >> apf1R.in_feedback();
     
     lpf1 >> apf1L * 0.05f >> output1;
     lpf2 >> apf1R * 0.05f >> output2;
+    */
+
+    6.0f >> APF_1.in_time();
+    6.0f >> APF_2.in_time();
+    
+    0.707f >> APF_1.in_feedback();
+    0.707f >> APF_1.in_feedback();
+    
+    
+    lpf1 >> APF_1 * 0.05f >> output1;
+    lpf2 >> APF_2 * 0.05f >> output2;
 
 }
 
