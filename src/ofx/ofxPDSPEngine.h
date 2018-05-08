@@ -22,6 +22,10 @@
 #include "ofxPDSPMidiOut.h"
 #endif
 
+#ifdef TARGET_OF_IOS
+    #include "ofxiOSSoundStream.h"
+#endif
+
 /*!
 @brief utility class to manage input/output audio streams, acquire and release resources and process midi input/output. It also has an internal ScoreProcessor for sequencing.
 */
