@@ -27,6 +27,10 @@ ofxPDSPMidiKeys::ofxPDSPMidiKeys(){
     setPolyMode(8, 1);
 }
 
+void ofxPDSPMidiKeys::setMidiChannel( int channel ){
+    midiConverter.setMidiChannel( channel );
+}
+
 void ofxPDSPMidiKeys::setUnisonDetune(float pitchDetune){
     pitchDetune >> unisonDetuneAmt;
 }

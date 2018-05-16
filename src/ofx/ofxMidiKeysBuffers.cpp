@@ -23,6 +23,8 @@ ofxMidiKeysBuffers::ofxMidiKeysBuffers(){
             
         setNoteRange(0, 127);    
         
+        channel = 0;
+        
         voiceMode = Poly;
         monoMode = Last;
         portamentoMode = On;
@@ -54,6 +56,13 @@ void ofxMidiKeysBuffers::setNoteRange( int lowNote, int highNote ){
     this->highNote = highNote;
 }
 
+void ofxMidiKeysBuffers::setMidiChannel( int channel ){
+    if( channel >0 && channel <= 16){
+        this->channel = channel;
+    }else{
+        this->channel = 0;
+    }
+}
 
 void ofxMidiKeysBuffers::processMidi (const std::vector<_ofxPositionedMidiMessage> & readVector, const int &bufferSize ) noexcept{
 
@@ -86,88 +95,94 @@ void ofxMidiKeysBuffers::processMidi (const std::vector<_ofxPositionedMidiMessag
         switch( voiceMode ){
             case Poly :
                 for(const _ofxPositionedMidiMessage &msg : readVector){
-                    switch(msg.message.status){
-                        case MIDI_NOTE_ON:
-                            if(msg.message.pitch >= lowNote && msg.message.pitch<= highNote){
-                                if(msg.message.velocity == 0){
-                                    processPolyMidiNoteOff( msg);
-                                }else{
-                                    processPolyMidiNoteOn( msg);
+                    if ( channel==0 || msg.message.channel == channel ){
+                        switch(msg.message.status){
+                            case MIDI_NOTE_ON:
+                                if(msg.message.pitch >= lowNote && msg.message.pitch<= highNote){
+                                    if(msg.message.velocity == 0){
+                                        processPolyMidiNoteOff( msg);
+                                    }else{
+                                        processPolyMidiNoteOn( msg);
+                                    }
                                 }
+                            break;
+                            
+                            case MIDI_NOTE_OFF:
+                                if(msg.message.pitch >= lowNote && msg.message.pitch<= highNote){
+                                    processPolyMidiNoteOff(msg);
+                                }
+                            break;
+                            
+                            case MIDI_PITCH_BEND:
+                            {
+                                float value = static_cast<float>((msg.message.value - 8192)) * 0.0001220703125f; // divide by 8192
+                                if(value>0) {
+                                    value *= pitchBendUpAmount;
+                                }else{
+                                    value *= pitchBendDownAmount;
+                                }
+                                pitchBendMessages.addMessage(value, msg.sample);
                             }
-                        break;
-                        
-                        case MIDI_NOTE_OFF:
-                            if(msg.message.pitch >= lowNote && msg.message.pitch<= highNote){
-                                processPolyMidiNoteOff(msg);
+                            break;
+                            
+                            case MIDI_AFTERTOUCH:
+                            {
+                                float value = static_cast<float>(msg.message.value +1)*0.0078125f; 
+                                pressureMessages.addMessage(value, msg.sample); 
                             }
-                        break;
-                        
-                        case MIDI_PITCH_BEND:
-                        {
-                            float value = static_cast<float>((msg.message.value - 8192)) * 0.0001220703125f; // divide by 8192
-                            if(value>0) {
-                                value *= pitchBendUpAmount;
-                            }else{
-                                value *= pitchBendDownAmount;
-                            }
-                            pitchBendMessages.addMessage(value, msg.sample);
-                        }
-                        break;
-                        
-                        case MIDI_AFTERTOUCH:
-                        {
-                            float value = static_cast<float>(msg.message.value +1)*0.0078125f; 
-                            pressureMessages.addMessage(value, msg.sample); 
-                        }
-                        break;
-                        
-                        default: break;
+                            break;
+                            
+                            default: break;
+                        }                        
                     }
                 } 
-                break;
+            break;
+            
             case Mono:
                 for(const _ofxPositionedMidiMessage &msg : readVector){
-                    switch(msg.message.status){
-                        case MIDI_NOTE_ON:
-                            if(msg.message.pitch >= lowNote && msg.message.pitch<= highNote) {
-                                if(msg.message.velocity == 0){
-                                    processMonoMidiNoteOff( msg);
-                                }else{
-                                    processMonoMidiNoteOn( msg);
+                    if ( channel==0 || msg.message.channel == channel ){
+                            
+                        switch(msg.message.status){
+                            case MIDI_NOTE_ON:
+                                if(msg.message.pitch >= lowNote && msg.message.pitch<= highNote) {
+                                    if(msg.message.velocity == 0){
+                                        processMonoMidiNoteOff( msg);
+                                    }else{
+                                        processMonoMidiNoteOn( msg);
+                                    }
                                 }
+                            break;
+                            
+                            case MIDI_NOTE_OFF:
+                                if(msg.message.pitch >= lowNote && msg.message.pitch<= highNote) {
+                                    processMonoMidiNoteOff(msg);
+                                }
+                            break;
+                            
+                            case MIDI_PITCH_BEND:
+                            {
+                                float value = static_cast<float>((msg.message.value - 8192)) * 0.0001220703125f; // divide by 8192
+                                if(value>0) {
+                                    value *= pitchBendUpAmount;
+                                }else{
+                                    value *= pitchBendDownAmount;
+                                }
+                                pitchBendMessages.addMessage(value, msg.sample);
                             }
-                        break;
-                        
-                        case MIDI_NOTE_OFF:
-                            if(msg.message.pitch >= lowNote && msg.message.pitch<= highNote) {
-                                processMonoMidiNoteOff(msg);
+                            break;
+                            
+                            case MIDI_AFTERTOUCH:
+                            {
+                                float value = static_cast<float>(msg.message.value +1)*0.0078125f; 
+                                pressureMessages.addMessage(value, msg.sample); 
                             }
-                        break;
-                        
-                        case MIDI_PITCH_BEND:
-                        {
-                            float value = static_cast<float>((msg.message.value - 8192)) * 0.0001220703125f; // divide by 8192
-                            if(value>0) {
-                                value *= pitchBendUpAmount;
-                            }else{
-                                value *= pitchBendDownAmount;
-                            }
-                            pitchBendMessages.addMessage(value, msg.sample);
+                            break;
+                            
+                            default: break;
                         }
-                        break;
-                        
-                        case MIDI_AFTERTOUCH:
-                        {
-                            float value = static_cast<float>(msg.message.value +1)*0.0078125f; 
-                            pressureMessages.addMessage(value, msg.sample); 
-                        }
-                        break;
-                        
-                        default: break;
                     }
                 }
-                break;
+            break;
                 
             default: break;
         }

@@ -78,6 +78,12 @@ public:
     void setSlew(float slewTimeMs);  
     
     /*!
+    @brief sets the midi channel, default is 0 = all channels
+    @param[in] channel new midi channel, if different than 1-16 all midi channels are selected
+    */
+    void setMidiChannel( int channel );  
+    
+    /*!
     @brief returns the actual voice number 
     */
     int getVoicesNumber() const;

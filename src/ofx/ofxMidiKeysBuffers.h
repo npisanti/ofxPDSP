@@ -40,6 +40,7 @@ public:
         void setMaxNotes(int notes);
         void setPitchBend( float down, float up);
         void setNoteRange( int lowNote, int highNote );
+        void setMidiChannel( int channel );
         
         
         std::vector<pdsp::MessageBuffer>    gateMessages;
@@ -69,6 +70,7 @@ private:
         int     activeNotes;
         int     maxNotes;
         int     monoNoteIndex;
+        int     channel;
         
         int lowNote; 
         int highNote;
