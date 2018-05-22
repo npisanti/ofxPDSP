@@ -203,7 +203,7 @@ void ofxPDSPEngine::setup( int sampleRate, int bufferSize, int nBuffers){
         if(inputChannels > 0 ){
             outStreamActive = true;
             settings.setInListener(this);
-            settings.setInDevice( devices[outputID] );
+            settings.setInDevice( devices[inputID] );
         }
         
         outputStream.setup( settings );
