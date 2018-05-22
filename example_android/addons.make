@@ -1,0 +1,4 @@
+ofxOsc
+ofxSIMDFloats
+ofxPDSP
+ofxAudioFile

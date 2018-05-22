@@ -4,6 +4,8 @@
 doxygen/doxygen_sqlite3.db
 doxygen/html
 
+example_android/.gradle
+example_android/.idea
 
 # Some general ignore patterns
 
