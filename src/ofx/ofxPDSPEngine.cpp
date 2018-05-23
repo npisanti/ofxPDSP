@@ -69,7 +69,7 @@ pdsp::Patchable& ofxPDSPEngine::audio_out( int channel ){
     int maxChannels = processor.channels.size();
   
     if(channel >= maxChannels){
-        cout<<"[pdsp] warning! requested audio output channel out of range, clamping to max\n";
+        std::cout<<"[pdsp] warning! requested audio output channel out of range, clamping to max\n";
         #ifdef NDEBUG
         std::cout<<"[pdsp] build in debug mode for triggering an assert\n";
         #endif 
@@ -87,7 +87,7 @@ pdsp::Patchable& ofxPDSPEngine::audio_in( int channel ){
     int maxChannels = inputs.size();
   
     if(channel >= maxChannels){
-        cout<<"[pdsp] warning! requested audio input channel out of range, clamping to max\n";
+        std::cout<<"[pdsp] warning! requested audio input channel out of range, clamping to max\n";
         #ifdef NDEBUG
         std::cout<<"[pdsp] build in debug mode for triggering an assert\n";
         #endif 
@@ -219,7 +219,7 @@ void ofxPDSPEngine::setup( int sampleRate, int bufferSize, int nBuffers){
 
     state = startedState;
 
-    #ifndef OF_TARGET_IOS
+    #ifndef TARGET_OF_IOS
     ofLogNotice()<<"[pdsp] engine: started | buffer size = "<<outputStream.getBufferSize()<<" | sample rate = "<<outputStream.getSampleRate()<<" | "<<outputStream.getNumInputChannels()<<" inputs | "<<outputStream.getNumOutputChannels()<<" outputs\n";
     #endif
     
@@ -232,7 +232,7 @@ void ofxPDSPEngine::start(){
     if(outStreamActive && state < startedState){
         outputStream.start();
     }
-    #ifdef TARGET_IOS	
+    #ifdef TARGET_OF_IOS
     ofSoundStreamStart();
     #endif    
     state = startedState;
@@ -246,7 +246,7 @@ void ofxPDSPEngine::stop(){
         if( outStreamActive ){
             outputStream.stop();
         }    
-        #ifdef TARGET_IOS	
+        #ifdef TARGET_OF_IOS
         ofSoundStreamStop();	
         #endif    
     }
@@ -254,7 +254,7 @@ void ofxPDSPEngine::stop(){
 
 void ofxPDSPEngine::close(){
     
-    cout<<"[pdsp] engine: closing...\n";
+    std::cout<<"[pdsp] engine: closing...\n";
     
     stop();
 
@@ -284,13 +284,13 @@ void ofxPDSPEngine::close(){
         outputStream.close();
     }
     
-    #ifdef TARGET_IOS	
+    #ifdef TARGET_OF_IOS
     ofSoundStreamClose();
     #endif  
     pdsp::releaseAll();
     
     state = closedState;
-    cout<<"[pdsp] engine: audio streams closed and resources released\n";    
+    std::cout<<"[pdsp] engine: audio streams closed and resources released\n";    
 
 }
 
@@ -352,7 +352,7 @@ void ofxPDSPEngine::addMidiController( ofxPDSPController & controller, ofxPDSPMi
     for( ofxPDSPController * &ptr : controllers ){
         if( ptr == &controller ){
             midiControllerFound = true;
-            cout<<"[pdsp] warning! you have already added this controller, you shouldn't add it twice\n";
+            std::cout<<"[pdsp] warning! you have already added this controller, you shouldn't add it twice\n";
             pdsp::pdsp_trace();
             assert(false);
         } 
@@ -384,7 +384,7 @@ void ofxPDSPEngine::addExternalOut( pdsp::ExtSequencer & externalOut ) {
     for( pdsp::ExtSequencer * &ptr : externalOuts ){
         if( ptr == &externalOut ){
             externalOutFound = true;
-            cout<<"[pdsp] warning! you have already added this external output to the engine, you shouldn't add it twice\n";
+            std::cout<<"[pdsp] warning! you have already added this external output to the engine, you shouldn't add it twice\n";
             pdsp::pdsp_trace();
         } 
     }
@@ -399,7 +399,7 @@ void ofxPDSPEngine::addOscInput( ofxPDSPOscInput & oscInput ) {
     for( ofxPDSPOscInput * &ptr : oscIns ){
         if( ptr == &oscInput ){
             oscInputFound = true;
-            cout<<"[pdsp] warning! you have already added this OSC input to the engine, you shouldn't add it twice\n";
+            std::cout<<"[pdsp] warning! you have already added this OSC input to the engine, you shouldn't add it twice\n";
             pdsp::pdsp_trace();
         } 
     }

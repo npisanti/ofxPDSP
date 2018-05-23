@@ -1,5 +1,5 @@
+ofxAudioFile
 ofxMidi
 ofxOsc
 ofxPDSP
 ofxSIMDFloats
-ofxAudioFile

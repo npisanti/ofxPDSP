@@ -18,12 +18,13 @@ void ofApp::setup(){
                       amp * 0.20f >> engine.audio_out(1); // connect to right right channel
    
     0.0f >> amp.in_mod();
-    cout<<"finished patching\n";
+    ofLogNotice()<<"finished patching\n";
     
     //for some reason on the iphone simulator 256 doesn't work - it comes in as 512!
     //so we do 512 - otherwise we crash
-
-    engine.setup( 44100, 512, 4 );
+    // also some phones force the engine to 48000hz, so it's better to use 48000 as sample rate
+    // the num buffers is ininfluent on ios, you can use any number
+    engine.setup( 48000, 512, 4 );
     
 }
 
@@ -34,7 +35,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    ofDrawBitmapString("touch the screen for testing!", 20, 20);
+    ofDrawBitmapString("touch the screen for testing!", 20, ofGetScreenHeight()*0.5f);
 }
 
 //--------------------------------------------------------------
