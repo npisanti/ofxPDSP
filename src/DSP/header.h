@@ -21,6 +21,7 @@
 
 #include "signal/Saturator1.h"
 #include "signal/Saturator2.h"
+#include "signal/SoftClip.h"
 #include "signal/SampleAndHold.h"
 #include "signal/Bitcruncher.h"
 #include "signal/Decimator.h"
@@ -90,7 +91,6 @@
 #include "utility/MaxValue.h"
 #include "utility/OneBarTimeMs.h"
 #include "utility/FreqToMs.h"
-#include "utility/SaturatorThreshold.h"
 #include "utility/SamplesDelay.h"
 
 #include "convolution/FDLConvolver.h"

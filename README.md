@@ -11,14 +11,12 @@ ofxPDSP is an audio DSP addon/library for openFrameworks. It is based on those d
 It includes a good selection of modules ready to be used, like antialiasied oscillators and VA filters, an FFT convolver, analog-sounding envelopes, delays, noise generators, a sampler and a graincloud module, biquad equalizers (normal and 2x oversampled), units for dynamic processing, units for oversampling/downsampling and a framework for writing and sequencing generative music.
 On top of that some other classes that uses openFrameworks for adding midi and OSC in/out, serial output, sequencer monitoring, waveform plotting and scopes, other audio addon wrapping and ofParameter-compatible control.
 
-You can find an [overview of the modules here](http://npisanti.com/ofxPDSP/md__modules.html). Also be sure to check out all the included examples, starting from the basics. It is requires with the latest stable release of openFrameworks (0.9.8) or the master release.
+There are many different modules and units, so be shure to look at the [overview of the modules here](http://npisanti.com/ofxPDSP/md__modules.html). Also be sure to check out all the included examples, starting from the basics. It is requires with the latest stable release of openFrameworks (0.10) or the master release.
 
-Requires [ofxMidi](https://github.com/danomatika/ofxMidi), [ofxSIMDFloats](https://github.com/npisanti/ofxSIMDFloats), [ofxAudioFile](https://github.com/npisanti/ofxAudioFile) and ofxOsc.
-
-For using ofxPDSP with the `master` branch of openFrameworks you need [my fork of ofxMidi](https://github.com/npisanti/ofxMidi).
-
-Check out the videos of some included examples:
-
+Requires [my fork of ofxMidi](https://github.com/npisanti/ofxMidi), [ofxSIMDFloats](https://github.com/npisanti/ofxSIMDFloats), [ofxAudioFile](https://github.com/npisanti/ofxAudioFile) and ofxOsc.
+    
+Check out the videos of some included examples:    
+    
 [![ofxPDSP example-scoring4-wolfram-dub](http://img.youtube.com/vi/0-NXEFEFiE4/0.jpg)](https://www.youtube.com/watch?v=0-NXEFEFiE4 "ofxPDSP example-scoring4-wolfram-dub")
 
 [![ofxPDSP example-graincloud](http://img.youtube.com/vi/t04So5y3hrI/0.jpg)](https://www.youtube.com/watch?v=t04So5y3hrI "ofxPDSP example-graincloud")

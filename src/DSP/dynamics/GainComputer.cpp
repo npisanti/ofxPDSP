@@ -87,7 +87,13 @@ void pdsp::GainComputer::process (int bufferSize) noexcept {
                         vect_calculateGainReductionDB(outputBuffer, inputBuffer, threshold, CS, bufferSize); 
                 }
                 
-                meter.store(outputBuffer[0]);
+                
+                float min = 0.0f; 
+                for(int n=0; n<bufferSize; ++n){
+                    min = (min<outputBuffer[n]) ? min : outputBuffer[n];
+                }
+                meter.store( min );
+                
         }else{
             setOutputToZero(output);
             meter.store(0.0f);

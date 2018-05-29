@@ -21,6 +21,13 @@ pdsp::EnvelopeFollower::EnvelopeFollower(){
     }
 }
 
+void pdsp::EnvelopeFollower::analog(){
+    TC = logf(0.368); //Analog
+}
+
+void pdsp::EnvelopeFollower::digital(){
+    TC = logf(0.01); //Digital
+}
 
 pdsp::Patchable& pdsp::EnvelopeFollower::set(float attack_ms, float release_ms){
     in_attack_ms.setDefaultValue(attack_ms);
@@ -87,7 +94,7 @@ void pdsp::EnvelopeFollower::process (int bufferSize) noexcept {
         meter.store(outputBuffer[0]);
         
     }else{
-        
+    
         setOutputToZero( output );
         meter.store( 0.0f );
         

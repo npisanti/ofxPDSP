@@ -55,8 +55,19 @@ public:
     @brief returns the first output value of the last processed buffer.
     */ 
     float meter_output() const;    
+
+
+    /*!
+    @brief sets the envelope behavior digital (more responsive, default behavior).
+    */     
+    void digital();
+
+    /*!
+    @brief sets the envelope behavior to analog (slower).
+    */     
+    void analog();
     
-    
+        
 private:
 
     void prepareUnit( int expectedBufferSize, double sampleRate ) override;

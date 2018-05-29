@@ -16,7 +16,7 @@ namespace pdsp{
     /*!
     @brief Digital Delay with an all pass filter in the feedback path, useful for building reverbs.
     
-    AllPassDelay is a delay with an all low pass filter inside the feedback path. controllable with the in_damping() input. The in_feedback() input controls both the allpass filter coefficient and the feedback (coefficient = -feedback). The values from in_feedback() are used just once per buffer, so it has really no sense to patch Units running at audio rate to them. in_time() instead supports audio-rate modulation.  The max time of AllPassDelay is settable with setMaxTime() or using the AllPassDelay( float timeMS ) constructor.
+    AllPassDelay is a delay with an all pass filter inside the feedback path. The in_feedback() input controls both the allpass filter coefficient and the feedback (coefficient = -feedback). The values from in_feedback() are used just once per buffer, so it has really no sense to patch Units running at audio rate to them. in_time() instead supports audio-rate modulation.  The max time of AllPassDelay is settable with setMaxTime() or using the AllPassDelay( float timeMS ) constructor.
     */
 class AllPassDelay : public Unit {
 public:
@@ -27,7 +27,7 @@ public:
 
 
     /*!
-    @brief sets the default delay time, optionally the default feedback and damping values and returns the unit ready to be patched.
+    @brief sets the default delay time, optionally the feedback and returns the unit ready to be patched.
     @param[in] timeMs delay time in milliseconds 
     @param[in] feedback feedback value, if not given 0.0f
     */     
@@ -47,7 +47,6 @@ public:
     @brief Sets "feedback" as selected output and returns this Unit ready to be patched. The result of the processing of this input is used at control rate, so it has no much sense to patch Units running at audio rate into this input. This input is the feedback amount of delay.
     */      
     Patchable& in_feedback();
-    
     
     /*!
     @brief Sets "signal" as selected output and returns this Unit ready to be patched. This is the default output. This is the delayed signal.
