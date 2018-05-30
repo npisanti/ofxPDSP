@@ -6,7 +6,6 @@
 #ifndef PDSP_RESAMPLERS_IIRDOWNSAMPLER2X_H_INCLUDED
 #define PDSP_RESAMPLERS_IIRDOWNSAMPLER2X_H_INCLUDED
 
-#include "BandLimit.h"
 #include "DownSampler.h"
 
 namespace pdsp{
@@ -16,11 +15,22 @@ namespace pdsp{
     This downsampler filters the signal and then downsample it, removing aliasing components. It operates only halving the oversample level, you need to chain more IIRUpSampler2x for downsample from higher oversample levels.
     */        
 class IIRDownSampler2x : public DownSampler {
+
+    struct APFValues{
+        double a;
         
+        double x0;
+        double x1;
+        double x2;
+
+        double y0;
+        double y1;
+        double y2;
+    };
+           
 public:
         IIRDownSampler2x(int outputOversampleLevel);
         IIRDownSampler2x();
-        ~IIRDownSampler2x();
 
 private: 
         void prepareUnit( int expectedBufferSize, double sampleRate ) override;
@@ -28,7 +38,8 @@ private:
         
         void downsample(float* output, const float* input, const int &factor, const int &outputBufferSize) noexcept  override;
 
-        CHalfBandFilter* AAFilter;
+        APFValues apf [4];
+        double oldout;
 };
 
 }//END NAMESPACE

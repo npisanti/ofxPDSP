@@ -6,7 +6,6 @@
 #ifndef PDSP_RESAMPLERS_IIRUPSAMPLER2X_H_INCLUDED
 #define PDSP_RESAMPLERS_IIRUPSAMPLER2X_H_INCLUDED
 
-#include "BandLimit.h"
 #include "UpSampler.h"
 
 namespace pdsp{
@@ -17,10 +16,22 @@ namespace pdsp{
     */        
 class IIRUpSampler2x : public UpSampler {
         
+struct APFValues{
+    double a;
+    
+    double x0;
+    double x1;
+    double x2;
+
+	double y0;
+	double y1;
+	double y2;
+};
+        
+        
 public:
         IIRUpSampler2x(int inputOversampleLevel);
         IIRUpSampler2x();
-        ~IIRUpSampler2x();
      
 private: 
 
@@ -29,7 +40,8 @@ private:
         
         void upsample(float* output, const float* input, const int &factor, const int &inputBufferSize) noexcept override;
 
-        CHalfBandFilter* AAFilter;
+        APFValues apf [4];
+        double oldout;
 };
 
 }// pdsp namespace end
