@@ -14,9 +14,11 @@ pdsp::ValueSequencer::ValueSequencer(){
     messageBuffer = nullptr;
     slewControl = nullptr;
 
+    firstMessage = true;
+    
     if(dynamicConstruction){
         prepareToPlay(globalBufferSize, globalSampleRate);
-    }
+    }    
 }
 
 pdsp::ValueSequencer::ValueSequencer(const ValueSequencer & other){
@@ -104,6 +106,12 @@ void pdsp::ValueSequencer::process (int bufferSize) noexcept {
                 for( int i=0; i<imax; ++i){
                         ControlMessage &msg = messageBuffer->messages[i];
 
+                        if(firstMessage){
+                            slewRun = false;
+                            slewLastValue = msg.value;
+                            firstMessage = false;
+                        }
+
                         if(slewRun){
                                  runSlewBlock(outputBuffer, n, msg.sample * getOversampleLevel());
                         }else{
@@ -139,4 +147,8 @@ void pdsp::ValueSequencer::process (int bufferSize) noexcept {
                 slewTimeMod = slewControl->messages[ slewControl->messages.size() - 1 ].value;
         }
 
+}
+
+void pdsp::ValueSequencer::resetSmoothing(){
+    firstMessage = true;
 }

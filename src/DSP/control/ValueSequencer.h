@@ -69,6 +69,11 @@ public:
         @brief disable the smoothing the outputted values. smoothing is disabled by default
         */  
         void disableSmoothing();
+        
+        /*!
+        @brief don't smooth the next value received, like it was the first message.
+        */  
+        void resetSmoothing();
 
 private:
         void prepareUnit( int expectedBufferSize, double sampleRate ) override;
@@ -81,6 +86,7 @@ private:
         //MessageBuffer* messageBuffer;
         MessageBuffer* slewControl;
         bool connectToSlewControl;
+        std::atomic<bool> firstMessage;
 };
 
 } // pdsp namespace end
