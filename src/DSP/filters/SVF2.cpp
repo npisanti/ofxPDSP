@@ -12,7 +12,7 @@ pdsp::SVF2::SVF2(){
         addOutput("notch", output_bsf);
         updateOutputNodes();
         
-        input_cutoff.enableBoundaries( 30.0f, 20000.0f);
+        input_cutoff.enableBoundaries( 20.0f, 20000.0f);
         input_cutoff.setDefaultValue(8000.0f);
         input_reso.setDefaultValue(0.0f);
         input_reso.enableBoundaries( 0.0f, 1.0f);

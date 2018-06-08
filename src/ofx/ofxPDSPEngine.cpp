@@ -122,6 +122,9 @@ void ofxPDSPEngine::setup( int sampleRate, int bufferSize, int nBuffers){
    
     if ( nBuffers < 1 ) nBuffers = 1;
     
+    // close if engine is already running with another settings
+    if(state!=closedState){ close(); }
+    
     // prepare all the units / modules
     pdsp::prepareAllToPlay(bufferSize, static_cast<double>(sampleRate) );
 
@@ -249,6 +252,7 @@ void ofxPDSPEngine::stop(){
         #ifdef TARGET_OF_IOS
         ofSoundStreamStop();	
         #endif    
+        state = stoppedState;
     }
 }
 
