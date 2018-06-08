@@ -73,7 +73,6 @@ void pdsp::ValueSequencer::unLink(){
 
 void pdsp::ValueSequencer::prepareUnit( int expectedBufferSize, double sampleRate ) {
         this->sampleRate = sampleRate;
-        slewLastValue = slewInitValue;
 }
 
 

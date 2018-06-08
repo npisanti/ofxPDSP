@@ -53,6 +53,7 @@ void pdsp::PMPhazor::prepareUnit( int expectedBufferSize, double sampleRate) {
         phase = 0.0f;
 
         incCalculationMultiplier = 1.0f / sampleRate;
+        
 }
 
 void pdsp::PMPhazor::releaseResources () {
@@ -68,14 +69,10 @@ void pdsp::PMPhazor::process (int bufferSize) noexcept {
         int phaseModState;
         const float* phaseModBuffer = processInput(input_phase_mod, phaseModState);
     
-        if(freqBufferState==Changed){
+        if(freqBufferState!=AudioRate){
                 inc = freqBuffer[0] * incCalculationMultiplier;
         }
-        
-        //if(phaseModState==Changed){
-        //        phaseOffset = phaseModBuffer[0];
-        //}
-        
+
         setControlRateOutput(output_inc, inc);
 
         int switcher = freqBufferState + syncBufferState*4 + phaseModState*16;
@@ -114,7 +111,6 @@ void pdsp::PMPhazor::process (int bufferSize) noexcept {
 template<bool pitchAR, bool syncAR, bool phaseAR>
 void pdsp::PMPhazor::process_audio(const float* freqBuffer, const float* syncBuffer, const float* pmBuffer, int bufferSize)noexcept{
     
-
         float* outputBuffer = getOutputBufferToFill(output_phase);
         float* incBuffer = nullptr;
 
@@ -156,11 +152,7 @@ void pdsp::PMPhazor::process_audio(const float* freqBuffer, const float* syncBuf
         if(phaseAR){
                 vect_phazorShiftB(outputBuffer, pmBuffer, bufferSize);
                 phaseOffset = pmBuffer[bufferSize-1];
-        }//else{
-        //    if(phaseOffset!=0.0f){
-        //        vect_phazorShiftS(outputBuffer, phaseOffset, bufferSize);
-        //    }
-        //}
+        }
     
 }
 

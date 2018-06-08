@@ -123,7 +123,27 @@ void ofxPDSPEngine::setup( int sampleRate, int bufferSize, int nBuffers){
     if ( nBuffers < 1 ) nBuffers = 1;
     
     // close if engine is already running with another settings
-    if(state!=closedState){ close(); }
+    if(state!=closedState){ 
+        ofLogNotice()<<"[pdsp] engine: changing setup, shutting down stream";
+        stop();
+        if( inStreamActive ){
+            inputStream.close();
+        }
+        if( outStreamActive ){
+            outputStream.close();
+        }
+        
+        #ifdef TARGET_OF_IOS
+        ofSoundStreamClose();
+        #endif  
+        
+        ofLogNotice()<<"[pdsp] engine: changing setup, releasing resources...";
+        pdsp::releaseAll();
+        
+        state = closedState;
+        ofSleepMillis( 20 );
+        ofLogNotice()<<"...done";
+    }
     
     // prepare all the units / modules
     pdsp::prepareAllToPlay(bufferSize, static_cast<double>(sampleRate) );

@@ -63,7 +63,7 @@ void pdsp::LFOPhazor::process (int bufferSize) noexcept {
         int trigBufferState;
         const float* trigBuffer = processInput(input_retrig, trigBufferState);
 
-        if(freqBufferState==Changed){
+        if(freqBufferState!=AudioRate){
                 inc = freqBuffer[0] * incCalculationMultiplier;
         }
         

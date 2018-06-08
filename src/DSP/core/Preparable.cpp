@@ -1,7 +1,5 @@
 
-
 #include "Preparable.h"
-
 
 
 namespace pdsp{
@@ -47,13 +45,14 @@ void prepareAllToPlay(int expectedBufferSize, double sampleRate)
 #endif
         Clockable::changeSampleRate(sampleRate);
 
-        Preparable::dynamicConstruction = true;
         Preparable::globalBufferSize = expectedBufferSize;
         Preparable::globalSampleRate = sampleRate;
 
         for (Preparable* &node : Preparable::constructionVector){
                 node->prepareToPlay(expectedBufferSize, sampleRate);
         }
+
+        Preparable::dynamicConstruction = true;
 }
     
 void releaseAll()
@@ -61,13 +60,12 @@ void releaseAll()
         for (Preparable* &node : Preparable::constructionVector){
                 node->releaseResources();
         }
+        Preparable::dynamicConstruction = false;
 }
 
 void setInitOversample(int initOversample){
         Preparable::initOversampleLevel = initOversample;
 }
- 
- 
  
 double Preparable::getGlobalSampleRate() {
     return globalSampleRate;
