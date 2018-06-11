@@ -182,17 +182,24 @@ void pdsp::AllPassDelay::process_audio(const float* inputBuffer, const float* ti
                         vn = readValue * g;
                 }
                 
-                delayBuffer[writeIndex] = vn;
-				uint32_t casted = *reinterpret_cast<uint32_t*> ( &(delayBuffer[writeIndex]) );
+                
+				uint32_t casted = *reinterpret_cast<uint32_t*> ( &(vn) );
 				int exponent = casted & 0x7F800000;
 				int aNaN = exponent < 0x7F800000;
 				int aDen = exponent > 0;
 				int result = casted * (aNaN & aDen );
-				delayBuffer[writeIndex] = *reinterpret_cast<float*> ( &result );
+				vn = *reinterpret_cast<float*> ( &result );
+                
+                delayBuffer[writeIndex] = vn;
                 
                 outputBuffer[n] = (outGcoeff * readValue) - (g * vn);
-
-
+                casted = *reinterpret_cast<uint32_t*> ( &(outputBuffer[n]) );
+				exponent = casted & 0x7F800000;
+				aNaN = exponent < 0x7F800000;
+				aDen = exponent > 0;
+				result = casted * (aNaN & aDen );
+				outputBuffer[n] = *reinterpret_cast<float*> ( &result );       
+                
                 if (++writeIndex > maxDelayTimeSamples){
                         writeIndex = 1;
                         delayBuffer[0] = delayBuffer[maxDelayTimeSamples]; //so we don't need another branch for linear interpolation
