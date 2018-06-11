@@ -9,6 +9,7 @@
 #include "../../DSP/pdspCore.h"
 #include "../../DSP/oscillators/antialiased/BLEPSaw.h"
 #include "../../DSP/oscillators/antialiased/DPWTri.h"
+#include "../../DSP/oscillators/cheap/CheapTri.h"
 #include "../../DSP/oscillators/fm/SineFB.h"
 #include "../../DSP/oscillators/phazors/PMPhazor.h"
 #include "../../DSP/utility/PitchToFreq.h"

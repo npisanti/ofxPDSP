@@ -2,8 +2,8 @@
 #include "VAOscillator.h"
 
 
-pdsp::VAOscillator::VAOscillator() :    saw(pdsp::Hann, true, 4096, true ), 
-                                        saw2(pdsp::Hann, true, 4096, true ) { patch(); }
+pdsp::VAOscillator::VAOscillator() :    saw( pdsp::Triangular, false, 1024, true ), 
+                                        saw2( pdsp::Triangular, false, 1024, true ) { patch(); }
                                         
 pdsp::VAOscillator::VAOscillator(const pdsp::VAOscillator &Other){ patch(); }
 pdsp::VAOscillator& pdsp::VAOscillator::operator=(const pdsp::VAOscillator &Other){ patch(); return *this; }
@@ -33,9 +33,6 @@ void pdsp::VAOscillator::patch(){
     phazor >> triangle;
     phazor >> sine;
     phazor.out("inc") >> saw.in("inc");
-    phazor.out("inc") >> triangle.in("inc");
-    
-    //inputShape * 4.0f >> sine.in_shape();
     
     // makes a pulse wave from two saws
     inputShape >> shift.in_shift();
