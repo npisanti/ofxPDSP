@@ -98,7 +98,10 @@ void pdsp::InputNode::prepareToPlay( int expectedBufferSize, double sampleRate )
         ofx_deallocate_aligned( sumBuffer );
     }
 
-    ofx_allocate_aligned( sumBuffer, ( expectedBufferSize * requiredOversampleLevel * PDSP_BUFFERS_EXTRA_DIM)/(PDSP_BUFFERS_EXTRA_DIM-1));
+    int size = ( expectedBufferSize * requiredOversampleLevel * PDSP_BUFFERS_EXTRA_DIM)/(PDSP_BUFFERS_EXTRA_DIM-1);
+    ofx_allocate_aligned( sumBuffer, size);
+    for(int i=0; i<size; ++i){ sumBuffer[i]=0.0f; }
+    
     buffer = sumBuffer;
 }
 
@@ -585,8 +588,10 @@ void pdsp::OutputNode::prepareToPlay( int expectedBufferSize, double sampleRate 
     if( buffer!=nullptr ) {
         ofx_deallocate_aligned( buffer );
     }
-    ofx_allocate_aligned( buffer, ( expectedBufferSize * oversampleLevel * PDSP_BUFFERS_EXTRA_DIM)/(PDSP_BUFFERS_EXTRA_DIM-1));
-
+    
+    int size = ( expectedBufferSize * oversampleLevel * PDSP_BUFFERS_EXTRA_DIM)/(PDSP_BUFFERS_EXTRA_DIM-1);
+    ofx_allocate_aligned( buffer, size );
+    for(int i=0; i<size; ++i){ buffer[i] = 0.0f; }
 }
 
 void pdsp::OutputNode::releaseResources() {

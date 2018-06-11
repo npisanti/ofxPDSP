@@ -33,7 +33,9 @@ void pdsp::BufferShell::setOversampleLevel(int overSample){
     
         if (buffer!=nullptr) {
                 ofx_deallocate_aligned(buffer);
-                ofx_allocate_aligned(buffer, (globalBufferSize*overSample*3)/2);
+                int size = (globalBufferSize*overSample*3)/2;
+                ofx_allocate_aligned(buffer, size);
+                for(int i=0; i<size; ++i){ buffer[i]=0.0f; }
         }
 }
 
@@ -42,7 +44,9 @@ void pdsp::BufferShell::prepareToPlay(int expectedBufferSize, double sampleRate)
         if(buffer!=nullptr){
                 ofx_deallocate_aligned(buffer);
         }
-        ofx_allocate_aligned(buffer, (expectedBufferSize*overSample*PDSP_BUFFERS_EXTRA_DIM)/(PDSP_BUFFERS_EXTRA_DIM-1));
+        int size = (expectedBufferSize*overSample*PDSP_BUFFERS_EXTRA_DIM)/(PDSP_BUFFERS_EXTRA_DIM-1);
+        ofx_allocate_aligned(buffer, size);
+        for(int i=0; i<size; ++i){ buffer[i]=0.0f; }
 }
 
 void pdsp::BufferShell::releaseResources(){
