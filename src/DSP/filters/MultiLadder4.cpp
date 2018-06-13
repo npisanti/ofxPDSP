@@ -4,7 +4,7 @@
 pdsp::MultiLadder4::MultiLadder4(){
     	    
         addInput("signal", input_signal);
-        addInput("cutoff", input_cutoff);
+        addInput("freq", input_cutoff);
         addInput("reso", input_reso);
         addOutput("lpf4", output_lpf4);
         addOutput("lpf2", output_lpf2);
@@ -27,8 +27,12 @@ pdsp::Patchable& pdsp::MultiLadder4::in_signal(){
     return in("signal");
 }
 
+pdsp::Patchable& pdsp::MultiLadder4::in_freq(){
+    return in("freq");
+}
+
 pdsp::Patchable& pdsp::MultiLadder4::in_cutoff(){
-    return in("cutoff");
+    return in("freq");
 }
 
 pdsp::Patchable& pdsp::MultiLadder4::in_reso(){

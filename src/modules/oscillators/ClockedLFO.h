@@ -11,8 +11,8 @@
 #include "../../DSP/oscillators/cheap/CheapSine.h"
 #include "../../DSP/oscillators/cheap/CheapTri.h"
 #include "../../DSP/oscillators/cheap/CheapPulse.h"
-#include "../../DSP/oscillators/phazors/LFOPhazor.h"
-#include "../../DSP/oscillators/phazors/ClockedPhazor.h"
+#include "../../DSP/oscillators/phasors/LFOPhasor.h"
+#include "../../DSP/oscillators/phasors/ClockedPhasor.h"
 #include "../../DSP/filters/OnePole.h"
 #include "../../DSP/random/TriggeredRandom.h"
 
@@ -45,12 +45,12 @@ public:
     Patchable& in_division();
     
     /*!
-    @brief Sets "retrig" as selected input and returns this module ready to be patched. Connect a "trig" output to this input to activate manual retriggering of the phazor, otherwise the phasor is synced to the transport
+    @brief Sets "retrig" as selected input and returns this module ready to be patched. Connect a "trig" output to this input to activate manual retriggering of the phasor, otherwise the phasor is synced to the transport
     */  
     Patchable& in_retrig();
     
     /*!
-    @brief Sets "phase_offset" as selected input and returns this module ready to be patched. This is the offset of the phazor at retrigger or in relation to the given division. It is updated only at control-rate.
+    @brief Sets "phase_offset" as selected input and returns this module ready to be patched. This is the offset of the phasor at retrigger or in relation to the given division. It is updated only at control-rate.
     */
     Patchable& in_phase_offset();    
     
@@ -83,7 +83,7 @@ public:
 private:
     void patch();
     
-    ClockedPhazor   phazorClocked;
+    ClockedPhasor   phasorClocked;
 
     CheapSaw            saw;
     CheapPulse          square;

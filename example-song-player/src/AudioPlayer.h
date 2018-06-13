@@ -34,10 +34,10 @@ private:
     pdsp::Amp           fader0;
     pdsp::Amp           fader1;
     pdsp::DBtoLin       dBtoLin;
-    ofxPDSPValue        faderControl;    
+    pdsp::Parameter     faderControl;    
 
-    ofxPDSPValue        pitchControl;
-    ofxPDSPValue        smoothControl;
+    pdsp::Parameter     pitchControl;
+    pdsp::Parameter     smoothControl;
 
     pdsp::SampleBuffer  sample;    
     ofParameter<bool>   loadButton;
@@ -48,8 +48,8 @@ private:
     ofParameter<bool>   bPause;
     ofParameter<bool>   bStop;
 
-    ofxPDSPTrigger      sampleTrig;
-    ofxPDSPTrigger      envGate;
+    pdsp::TriggerControl    sampleTrig;
+    pdsp::TriggerControl    envGate;
     
     static int number;
 

@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxPDSP.h"
+#include "ofxGui.h"
 
 class ofApp : public ofBaseApp{
 
@@ -23,6 +24,7 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
         // pdsp modules
-        ofxPDSPEngine   engine;
+        pdsp::Engine   engine;
 
+        ofxPanel gui; // probably you will need the gui too
 };

@@ -28,15 +28,15 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
         
-        ofxPDSPEngine   engine;
+        pdsp::Engine   engine;
 
         PolySynth                   synth;
         
 #ifdef USE_MIDI_KEYBOARD
-		ofxPDSPMidiKeys				keyboard;
-		ofxPDSPMidiIn  			    midiIn;
+		pdsp::midi::Keys        keyboard;
+		pdsp::midi::Input       midiIn;
 #else
-        ofxPDSPComputerKeyboard     keyboard;
+        pdsp::ComputerKeyboard  keyboard;
 #endif
 
         ofxPanel                    gui;

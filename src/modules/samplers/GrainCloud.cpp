@@ -209,12 +209,6 @@ void pdsp::GrainCloud::setWindowType(Window_t type, int window_length){
     }
 }
 
-void pdsp::GrainCloud::setInterpolatorType(Interpolator_t type){
-    for(int i=0; i<voices; ++i){
-        streams[i].setInterpolatorType(type);
-    }
-} 
-
 int pdsp::GrainCloud::getVoicesNum() const {
     return voices;
 }

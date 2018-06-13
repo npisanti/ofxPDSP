@@ -35,7 +35,7 @@ public:
 	void okPressed();
 	void cancelPressed();
 
-	ofxPDSPEngine   engine;
+	pdsp::Engine    engine;
 
 	pdsp::VAOscillator      osc;
 	pdsp::Amp               amp;

@@ -49,9 +49,9 @@ void AudioAnalyzerBand::setup( ofxPDSPEngine & engine, string name, int input ){
     ui.setName( name );
     ui.add( gainControl.set( "band input gain", 0, -48, 24 ));  
     ui.add( loPitchControl.set( "band low", 43.0f, 20.0f, 136.0f ));  
-    ui.add( loFreqValue.set(    "band lo hz", p2f(43.0f), 25000.0f, 26000.0f ));  
+    ui.add( loFreqValue.set(    "band lo hz", pdsp::p2f(43.0f), 25000.0f, 26000.0f ));  
     ui.add( hiPitchControl.set( "band hi", 100.0f, 20.0f, 136.0f ));  
-    ui.add( hiFreqValue.set(    "band hi hz", p2f(100.0f), 25000.0f, 26000.0f ));  
+    ui.add( hiFreqValue.set(    "band hi hz", pdsp::p2f(100.0f), 25000.0f, 26000.0f ));  
     ui.add( rmsAttackControl.set( "rms env attack ms", 50, 20, 250 ));  
     ui.add( rmsReleaseControl.set( "rms env release ms", 100, 20, 500 ));  
     ui.add( peakAttackControl.set( "peak env attack ms", 5, 1, 25 ));
@@ -64,9 +64,9 @@ void AudioAnalyzerBand::setup( ofxPDSPEngine & engine, string name, int input ){
 }
 
 void AudioAnalyzerBand::freqLoChanged(float & pitch) {
-    loFreqValue = p2f(pitch);
+    loFreqValue = pdsp::p2f(pitch);
 }
 
 void AudioAnalyzerBand::freqHiChanged(float & pitch) {
-    hiFreqValue = p2f(pitch);    
+    hiFreqValue = pdsp::p2f(pitch);    
 }

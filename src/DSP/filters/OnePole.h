@@ -19,7 +19,6 @@ class OnePole : public Unit {
 public:
     OnePole();
     
-    
     /*!
     @brief sets the default filter cutoff and returns the unit ready to be patched.
     @param[in] freq frequency at which the filter operates
@@ -32,9 +31,9 @@ public:
     Patchable& in_signal();
     
     /*!
-    @brief Sets "cutoff" as selected input and returns this Unit ready to be patched. This is the frequency at which the filter operates, broadly speaking.
+    @brief Sets "freq" as selected input and returns this Unit ready to be patched. This is the frequency at which the filter operates, broadly speaking.
     */  
-    Patchable& in_cutoff();
+    Patchable& in_freq();
     
     /*!
     @brief Sets "lpf" as selected output and returns this Unit ready to be patched. This is the default output. This is the  low pass output.
@@ -46,6 +45,9 @@ public:
     */ 
     Patchable& out_hpf();
     
+
+    [[deprecated("this unit has input in hertz, in_cutoff() deprecated, use in_freq() instead")]]
+    Patchable& in_cutoff();
 
 private:
     void process(int bufferSize) noexcept override ;

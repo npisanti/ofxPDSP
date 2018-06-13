@@ -24,17 +24,19 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
         // pdsp modules
-        ofxPDSPEngine           engine;
+        pdsp::Engine            engine;
         SineBleep               lead;
         BassSynth               bass;
-        vector<pdsp::Sequence>  lead_seqs;
-        vector<pdsp::Sequence>  bass_seqs;
+        
+        std::vector<pdsp::Sequence>  lead_seqs;
+        std::vector<pdsp::Sequence>  bass_seqs;
         
         pdsp::SeqChange         alternate;
         bool                    alternate_flag;
         
         int                     seq_mode;
-        bool                    quantize;
-        double                  quantime;
+        
+        std::atomic<bool>       quantize;
+        std::atomic<double>     quantime;
 
 };

@@ -30,7 +30,7 @@ class ofApp : public ofBaseApp{
         void switchRule();
 
         // pdsp modules
-        ofxPDSPEngine   engine; 
+        pdsp::Engine   engine; 
              
         WolframSeq wolframSeq;
         
@@ -38,7 +38,7 @@ class ofApp : public ofBaseApp{
 
         pdsp::IRVerb reverb;
         
-        ofxPDSPStereoFader dubSwitch;
+        pdsp::ParameterGain dubSwitch;
 
         StereoDelay dub;
 
@@ -55,7 +55,7 @@ class ofApp : public ofBaseApp{
         ofColor brightColor;
         ofColor darkColor;
         
-        vector<ofxPDSPScope> scopes;
+        std::vector<pdsp::Scope> scopes;
         
 };
 

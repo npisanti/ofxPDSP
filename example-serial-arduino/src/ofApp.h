@@ -23,8 +23,8 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
         
-        ofxPDSPEngine   engine;
-        ofxPDSPSerialOut  serialOut;
+        pdsp::Engine   engine;
+        pdsp::serial::Output  serialOut;
                         
         pdsp::Sequence  sequence;
         

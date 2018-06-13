@@ -13,25 +13,25 @@ public:
     
     ofParameterGroup ui;
 
-    ofxPDSPValueMultiplier lDelayTimeControl;
-    ofxPDSPValueMultiplier rDelayTimeControl;
+    pdsp::ParameterAmp lDelayTimeControl;
+    pdsp::ParameterAmp rDelayTimeControl;
     
-    ofxPDSPValue lFeedbackControl;
-    ofxPDSPValue rFeedbackControl;
+    pdsp::Parameter lFeedbackControl;
+    pdsp::Parameter rFeedbackControl;
     
 private:
     void patch();
 
 
-    pdsp::DampedDelay ldelay;
-    pdsp::DampedDelay rdelay;
+    pdsp::Delay ldelay;
+    pdsp::Delay rdelay;
     
     pdsp::OneBarTimeMs time;
 
-    ofxPDSPValue dampingControl;
+    pdsp::Parameter dampingControl;
     
-    ofxPDSPStereoFader input;
-    ofxPDSPStereoFader output;
+    pdsp::ParameterGain input;
+    pdsp::ParameterGain output;
     
 };
 

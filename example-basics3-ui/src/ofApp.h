@@ -24,7 +24,7 @@ public:
     void gotMessage(ofMessage msg);
     
     // pdsp modules
-    ofxPDSPEngine           engine;
+    pdsp::Engine    engine;
     
     pdsp::FMOperator        osc1;
     pdsp::FMOperator        osc2;
@@ -33,13 +33,12 @@ public:
     pdsp::Amp               amp2;
     pdsp::Amp               amp3;
 
-
-    ofxPDSPValue            osc1_pitch_ctrl;
-    ofxPDSPValue            osc2_pitch_ctrl;
-    ofxPDSPValue            osc3_pitch_ctrl;
-    ofxPDSPValue            osc1_amp_ctrl;
-    ofxPDSPValue            osc2_amp_ctrl;
-    ofxPDSPValue            osc3_amp_ctrl;
+    pdsp::Parameter     osc1_pitch_ctrl;
+    pdsp::Parameter     osc2_pitch_ctrl;
+    pdsp::Parameter     osc3_pitch_ctrl;
+    pdsp::Parameter     osc1_amp_ctrl;
+    pdsp::Parameter     osc2_amp_ctrl;
+    pdsp::Parameter     osc3_amp_ctrl;
     
     ofParameterGroup     osc1_group;
     ofParameterGroup     osc2_group;

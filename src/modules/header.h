@@ -10,6 +10,7 @@
 #include "dynamics/Ducker.h"
 
 #include "filters/VAFilter.h"
+#include "filters/CombFilter.h"
 
 #include "oscillators/VAOscillator.h"
 #include "oscillators/LFO.h"
@@ -26,7 +27,6 @@
 #include "signal/LinearCrossfader.h"
 #include "signal/Panner.h"
 
-#include "effects/CombFilter.h"
 #include "effects/DimensionChorus.h"
 
 #include "equalizers/AAHighShelfEQ.h"

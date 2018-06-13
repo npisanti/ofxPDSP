@@ -27,7 +27,7 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
         
-        ofxPDSPEngine   engine;
+        pdsp::Engine   engine;
 
         int                     voicesNum;
 
@@ -35,17 +35,17 @@ class ofApp : public ofBaseApp{
      
         pdsp::DimensionChorus   chorus;       
         
-        ofxPDSPMidiIn        midiIn;
-        ofxPDSPMidiKeys      midiKeys;
-        ofxPDSPMidiControls  midiCCs;
+        pdsp::midi::Input       midiIn;
+        pdsp::midi::Keys        midiKeys;
+        pdsp::midi::Controls    midiCCs;
 
         ofxPanel             gui;
         
         ofParameterGroup     chorusUI;
 
-        ofxPDSPValue     chorusSpeed;
-        ofxPDSPValue     chorusDepth;
+        pdsp::Parameter chorusSpeed;
+        pdsp::Parameter chorusDepth;
         
-        ofxPDSPStereoFader  gainControl;
+        pdsp::ParameterGain  gainControl;
     
 };

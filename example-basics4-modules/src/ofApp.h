@@ -24,10 +24,10 @@ public:
     void gotMessage(ofMessage msg);
     
     // pdsp modules
-    ofxPDSPEngine           engine;
+    pdsp::Engine    engine;
     
-    SlideSynth              synth;
-    ofxPDSPValue            amp_ctrl;
-    ofxPDSPValue            pitch_ctrl;
+    SlideSynth          synth;
+    pdsp::Parameter     amp_ctrl;
+    pdsp::Parameter     pitch_ctrl;
 
 };

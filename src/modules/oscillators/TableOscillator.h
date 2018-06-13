@@ -9,7 +9,7 @@
 #include "../../DSP/pdspCore.h"
 
 #include "../../DSP/oscillators/wavetable/WaveTableOsc.h"
-#include "../../DSP/oscillators/phazors/LFOPhazor.h"
+#include "../../DSP/oscillators/phasors/LFOPhasor.h"
 #include "../../DSP/utility/PitchToFreq.h"
 
 
@@ -62,7 +62,7 @@ private:
 
     WaveTableOsc    wto;
     PitchToFreq     p2f;
-    LFOPhazor       phazor;
+    LFOPhasor       phasor;
     
 };
 

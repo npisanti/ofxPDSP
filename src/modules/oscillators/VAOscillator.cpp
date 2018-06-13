@@ -13,13 +13,13 @@ void pdsp::VAOscillator::patch(){
     
     addModuleInput( "pitch",  p2f );
     addModuleInput( "pw",  inputShape );
-    addModuleInput( "sync",   phazor.in("sync") );
+    addModuleInput( "sync",   phasor.in("sync") );
     
     addModuleOutput( "saw",       saw );
     addModuleOutput( "pulse",     leakDC.out_hpf() );
     addModuleOutput( "triangle",  triangle );
     addModuleOutput( "sine",      sine );
-    addModuleOutput( "sync",      phazor.out("sync") );
+    addModuleOutput( "sync",      phasor.out("sync") );
     
     inputShape.enableBoundaries(0.0f, 1.0f);
     inputShape.set(0.5f);
@@ -27,17 +27,17 @@ void pdsp::VAOscillator::patch(){
     p2f.enableBoundaries(-30000.0f, 150.0f);
     p2f.set(69.0f); // standard freq is A4 = 440hz
     
-    p2f >> phazor.in_freq();
+    p2f >> phasor.in_freq();
     
-    phazor >> saw;
-    phazor >> triangle;
-    phazor >> sine;
-    phazor.out("inc") >> saw.in("inc");
+    phasor >> saw;
+    phasor >> triangle;
+    phasor >> sine;
+    phasor.out("inc") >> saw.in("inc");
     
     // makes a pulse wave from two saws
     inputShape >> shift.in_shift();
-    phazor >> shift >> saw2;
-    phazor.out("inc") >> saw2.in("inc");
+    phasor >> shift >> saw2;
+    phasor.out("inc") >> saw2.in("inc");
     saw  *  0.5f >> leakDC;
     saw2 * -0.5f >> leakDC;
     leakDC.set(20.0f);

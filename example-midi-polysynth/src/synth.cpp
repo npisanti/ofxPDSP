@@ -26,7 +26,7 @@ void PolySynth::Voice::setup( PolySynth & ui ){
 
     addModuleInput("trig", voiceTrigger);
     addModuleInput("pitch", voicePitch);
-    addModuleInput("cutoff", p2f);
+    addModuleInput("cutoff", filter.in_cutoff() );
     addModuleOutput("signal", voiceAmp);
 
     // SIGNAL PATH
@@ -38,9 +38,9 @@ void PolySynth::Voice::setup( PolySynth & ui ){
                            ui.pw >> oscillator.in_pw();
                       voicePitch >> oscillator.in_pitch();
                                                              
-                                                              ui.cutoff >> p2f;
-     voiceTrigger >> (modEnv.set(400.0f, 600.0f, 1.0f, 800.0f) * 48.0f) >> p2f >> filter.in_cutoff(); 
-                                                                       ui.reso >> filter.in_reso();
+                                                              ui.cutoff >> filter.in_cutoff(); 
+     voiceTrigger >> (modEnv.set(400.0f, 600.0f, 1.0f, 800.0f) * 48.0f) >> filter.in_cutoff(); 
+                                                                ui.reso >> filter.in_reso();
     
     (voiceTrigger >> (ampEnv.set(200.0f, 400.0f, 1.0f, 600.0f ) * 0.1f)) >> voiceAmp.in_mod();
 

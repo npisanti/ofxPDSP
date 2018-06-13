@@ -102,7 +102,3 @@ void pdsp::TriggeredGrain::setSample(SampleBuffer* samplePointer, int index){
 void pdsp::TriggeredGrain::setWindowType(Window_t type, int window_length){
     window.setWindowType(type, window_length);
 }
-
-void pdsp::TriggeredGrain::setInterpolatorType(Interpolator_t type){
-    grain.setInterpolatorType(type);
-} 

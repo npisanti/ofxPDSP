@@ -26,7 +26,6 @@
 #include "signal/Bitcruncher.h"
 #include "signal/Decimator.h"
 
-#include "control/CRSlew.h"
 #include "control/ToGateTrigger.h"
 #include "control/GateSequencer.h"
 #include "control/ValueSequencer.h"
@@ -40,10 +39,10 @@
 #include "dynamics/RMSDetector.h"
 #include "dynamics/SquarePeakDetector.h"
 
-#include "oscillators/phazors/PhazorShifter.h"
-#include "oscillators/phazors/ClockedPhazor.h"
-#include "oscillators/phazors/PMPhazor.h"
-#include "oscillators/phazors/LFOPhazor.h"
+#include "oscillators/phasors/PhasorShifter.h"
+#include "oscillators/phasors/ClockedPhasor.h"
+#include "oscillators/phasors/PMPhasor.h"
+#include "oscillators/phasors/LFOPhasor.h"
 
 #include "oscillators/cheap/CheapTri.h"
 #include "oscillators/cheap/CheapSaw.h"
@@ -56,7 +55,7 @@
 #include "oscillators/wavetable/WaveTableOsc.h"
 #include "oscillators/wavetable/DataOsc.h"
 
-#include "random/PRNoiseGen.h"
+#include "random/WhiteNoise.h"
 #include "random/TriggeredRandom.h"
 
 #include "filters/OnePole.h"
@@ -78,7 +77,7 @@
 #include "oscillators/fm/SineFB.h"
 
 #include "delays/MainDelay.h"
-#include "delays/DampedDelay.h"
+#include "delays/Delay.h"
 
 #include "envelopes/ADSR.h"
 #include "envelopes/AHR.h"

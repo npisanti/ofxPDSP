@@ -14,7 +14,7 @@ public:
 
     float meter_env() const;
 
-    ofxPDSPValue        pitchControl;
+    pdsp::Parameter     pitchControl;
 
 private:
     pdsp::PatchNode     triggers;
@@ -34,12 +34,12 @@ public:
     void setup( int numVoices );
     ofParameterGroup ui;
     
-    vector<Zap> voices;
-    ofxPDSPStereoFader fader;
+    std::vector<Zap> voices;
+    pdsp::ParameterGain fader;
 private:
-    ofxPDSPValue veloToEnv;
-    ofxPDSPValue envAmtControl;
-    ofxPDSPValue envDecayControl;
+    pdsp::Parameter veloToEnv;
+    pdsp::Parameter envAmtControl;
+    pdsp::Parameter envDecayControl;
 
 };
 

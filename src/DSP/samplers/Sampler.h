@@ -74,12 +74,6 @@ public:
     @param[in] channel selelect channel, usually 0 is left and 1 right, if not given 0 is used
     */ 
     bool setSample(SampleBuffer* newSample, int index, int channel=0);
-    
-    /*!
-    @brief change the type of the Interpolator used by the Sampler. Some Interpolator sounds better, others are cheaper for the cpu.
-    @param[in] type you can choose between different interpolators, check types.h
-    */
-    void setInterpolatorType(Interpolator_t type);
 
     /*!
     @brief returns a value from 0.0f to 1.0f that broadly rapresent the "playhead" of the current sample. This method is thread-safe.

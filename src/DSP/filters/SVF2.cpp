@@ -4,7 +4,7 @@
 pdsp::SVF2::SVF2(){
     
         addInput("signal", input_signal);
-        addInput("cutoff", input_cutoff);
+        addInput("freq", input_cutoff);
         addInput("reso", input_reso);
         addOutput("lpf", output_lpf);
         addOutput("hpf", output_hpf);
@@ -33,8 +33,12 @@ pdsp::Patchable& pdsp::SVF2::in_signal(){
     return in("signal");
 }
 
+pdsp::Patchable& pdsp::SVF2::in_freq(){
+    return in("freq");
+}
+
 pdsp::Patchable& pdsp::SVF2::in_cutoff(){
-    return in("cutoff");
+    return in("freq");
 }
 
 pdsp::Patchable& pdsp::SVF2::in_reso(){

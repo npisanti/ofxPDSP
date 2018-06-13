@@ -4,7 +4,7 @@
 #include "ofxPDSP.h"
 
 
-class AddonWrapper : public ofxPDSPWrapper {
+class AddonWrapper : public pdsp::Wrapper {
 
 public:
     void setup( int bufferSize );
@@ -41,12 +41,12 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
         // pdsp modules
-        ofxPDSPEngine   engine;
+        pdsp::Engine   engine;
         
         AddonWrapper wrapper;
         
         int 	drawCounter;
         
-        vector <float> volHistory;
+        std::vector <float> volHistory;
         float scaledVol;
 };

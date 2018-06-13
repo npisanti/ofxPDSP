@@ -9,7 +9,7 @@
 #include "../../DSP/pdspCore.h"
 
 #include "../../DSP/oscillators/fm/SineFB.h"
-#include "../../DSP/oscillators/phazors/PMPhazor.h"
+#include "../../DSP/oscillators/phasors/PMPhasor.h"
 #include "../../DSP/utility/PitchToFreq.h"
 
 
@@ -75,7 +75,7 @@ private:
     SineFB          sine;
     PitchToFreq     p2f;
     Amp             ratioMult;
-    PMPhazor        phazor;
+    PMPhasor        phasor;
     
 };
 

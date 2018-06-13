@@ -27,8 +27,6 @@ pdsp::Sampler::Sampler(){
         input_start_mod.setDefaultValue(0.0f);
         input_direction.setDefaultValue(1.0f);
 
-        interpolatorShell.changeInterpolator(Linear);
-
         if(dynamicConstruction){
                 prepareToPlay(globalBufferSize, globalSampleRate);
         }
@@ -93,7 +91,6 @@ bool pdsp::Sampler::setSample(SampleBuffer* newSample, int index, int channel){
 void pdsp::Sampler::prepareUnit( int expectedBufferSize, double sampleRate ) {
         readIndex = 0.0f;
         incBase = 1.0f / sampleRate;
-        interpolatorShell.interpolator->reset();
 }
 
 
@@ -184,7 +181,15 @@ void pdsp::Sampler::process_audio( const float* pitchModBuffer, const float* tri
 
                 int readIndex_int = static_cast<int>(readIndex);
                 if(readIndex_int>=0 && readIndex_int < sample->length){
-                        outputBuffer[n] = interpolatorShell.interpolator->interpolate(sample->buffer[channel], readIndex, sample->length);
+                    
+                        int index_int = static_cast<int> (readIndex);
+                        float mu = readIndex - index_int;
+                        float x1 = sample->buffer[channel][index_int];
+                        float x2 = sample->buffer[channel][index_int+1];
+
+                        //float mu2 = mu * mu * (3 - (2 * mu));
+                        //outputBuffer[n] = (x1 + (x2 - x1) * mu2);
+                        outputBuffer[n] = (x1 * (1.0f-mu)) + (x2 * mu);
                 }else{
                         outputBuffer[n] = 0.0f;
                 }
@@ -258,8 +263,4 @@ void pdsp::Sampler::selectSample( int n, int bufferSize, float trigger )noexcept
             direction = 1.0f;
         }
 
-}
-
-void pdsp::Sampler::setInterpolatorType(Interpolator_t type){   
-        interpolatorShell.changeInterpolator(type);
 }

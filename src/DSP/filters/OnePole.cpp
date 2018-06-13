@@ -6,7 +6,7 @@
 pdsp::OnePole::OnePole(){
 
         addInput("signal", input_signal);
-        addInput("cutoff", input_cutoff);
+        addInput("freq", input_cutoff);
         addOutput("lpf", output_lpf);
         addOutput("hpf", output_hpf);
         updateOutputNodes();
@@ -27,7 +27,11 @@ pdsp::Patchable& pdsp::OnePole::in_signal(){
 }
 
 pdsp::Patchable& pdsp::OnePole::in_cutoff(){
-    return in("cutoff");
+    return in("freq");
+}
+
+pdsp::Patchable& pdsp::OnePole::in_freq(){
+    return in("freq");
 }
 
 pdsp::Patchable& pdsp::OnePole::out_lpf(){

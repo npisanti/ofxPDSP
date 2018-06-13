@@ -23,8 +23,8 @@ public:
     void gotMessage(ofMessage msg);
     
     // pdsp modules
-    ofxPDSPEngine           engine;
-    ofxPDSPOscInput         oscInput;
+    pdsp::Engine           engine;
+    pdsp::osc::Input       oscInput;
     
     pdsp::VAOscillator      osc;
     pdsp::Amp               amp1;

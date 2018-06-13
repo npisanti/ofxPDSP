@@ -30,7 +30,6 @@ public:
         pdsp::VAFilter          filter;
         pdsp::Amp               voiceAmp;
 
-
         pdsp::ADSR          envelope;    
         pdsp::Amp           envToTable;
         pdsp::Amp           envToFilter;  
@@ -44,31 +43,31 @@ public:
     pdsp::Patchable& out_L();
     pdsp::Patchable& out_R();
 
-    vector<Voice>       voices;
+    std::vector<Voice>       voices;
     ofParameterGroup    ui;
 
 private: // --------------------------------------------------
 
-    ofxPDSPStereoFader gain;
+    pdsp::ParameterGain gain;
 
-    ofxPDSPValue     cutoff_ctrl;
-    ofxPDSPValue     reso_ctrl;
-    ofxPDSPValue     filter_mode_ctrl;
+    pdsp::Parameter     cutoff_ctrl;
+    pdsp::Parameter     reso_ctrl;
+    pdsp::Parameter     filter_mode_ctrl;
 
-    ofxPDSPValue     env_attack_ctrl;
-    ofxPDSPValue     env_decay_ctrl;
-    ofxPDSPValue     env_sustain_ctrl;
-    ofxPDSPValue     env_release_ctrl;
-    ofxPDSPValue     env_filter_ctrl;
-    ofxPDSPValue     env_table_ctrl;
+    pdsp::Parameter     env_attack_ctrl;
+    pdsp::Parameter     env_decay_ctrl;
+    pdsp::Parameter     env_sustain_ctrl;
+    pdsp::Parameter     env_release_ctrl;
+    pdsp::Parameter     env_filter_ctrl;
+    pdsp::Parameter     env_table_ctrl;
     
-    ofxPDSPValue     table_ctrl;
+    pdsp::Parameter     table_ctrl;
 
-    ofxPDSPValue     table_lfo_mod_ctrl;    
-    ofxPDSPValue     filter_lfo_mod_ctrl;    
+    pdsp::Parameter     table_lfo_mod_ctrl;    
+    pdsp::Parameter     filter_lfo_mod_ctrl;    
 
-    ofxPDSPValue     lfo_speed_ctrl;    
-    ofxPDSPValue     lfo_wave_ctrl;
+    pdsp::Parameter     lfo_speed_ctrl;    
+    pdsp::Parameter     lfo_wave_ctrl;
     
     pdsp::WaveTable  wavetable;
 
@@ -81,10 +80,10 @@ private: // --------------------------------------------------
     pdsp::DimensionChorus   chorus;         
     
     ofParameterGroup     ui_chorus;
-    ofxPDSPValue     chorus_speed_ctrl;
-    ofxPDSPValue     chorus_depth_ctrl;
+    pdsp::Parameter     chorus_speed_ctrl;
+    pdsp::Parameter     chorus_depth_ctrl;
     
-    vector<float> partials_vector;
+    std::vector<float> partials_vector;
 
 };
 

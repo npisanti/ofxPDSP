@@ -26,9 +26,9 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
         
-        ofxPDSPEngine           engine;
+        pdsp::Engine           engine;
        
-        ofxSampleBufferPlotter  waveformGraphics;
+        pdsp::SampleBufferPlotter  waveformGraphics;
        
         int                         grainVoices;
         pdsp::SampleBuffer          sampleData;
@@ -37,7 +37,7 @@ class ofApp : public ofBaseApp{
         pdsp::ADSR              ampEnv;
         pdsp::Amp               voiceAmpL;
         pdsp::Amp               voiceAmpR;
-        ofxPDSPValue            ampControl;
+        pdsp::Parameter         ampControl;
         pdsp::PatchNode         posX;
         pdsp::PatchNode         jitY;
         

@@ -23,7 +23,7 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
         
         // pdsp modules
-        ofxPDSPEngine           engine;
+        pdsp::Engine            engine;
         pdsp::VAOscillator      osc;
         pdsp::LFO               lfo;
 

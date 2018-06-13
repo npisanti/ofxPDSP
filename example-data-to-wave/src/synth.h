@@ -51,22 +51,22 @@ public:
 
 private: // --------------------------------------------------
 
-    ofxPDSPStereoFader gain;
+    pdsp::ParameterGain gain;
 
-    ofxPDSPValue     cutoff_ctrl;
-    ofxPDSPValue     reso_ctrl;
-    ofxPDSPValue     filter_mode_ctrl;
+    pdsp::Parameter     cutoff_ctrl;
+    pdsp::Parameter     reso_ctrl;
+    pdsp::Parameter     filter_mode_ctrl;
 
-    ofxPDSPValue     env_attack_ctrl;
-    ofxPDSPValue     env_decay_ctrl;
-    ofxPDSPValue     env_sustain_ctrl;
-    ofxPDSPValue     env_release_ctrl;
-    ofxPDSPValue     env_filter_ctrl;
+    pdsp::Parameter     env_attack_ctrl;
+    pdsp::Parameter     env_decay_ctrl;
+    pdsp::Parameter     env_sustain_ctrl;
+    pdsp::Parameter     env_release_ctrl;
+    pdsp::Parameter     env_filter_ctrl;
 
-    ofxPDSPValue     filter_lfo_mod_ctrl;    
+    pdsp::Parameter     filter_lfo_mod_ctrl;    
 
-    ofxPDSPValue     lfo_speed_ctrl;    
-    ofxPDSPValue     lfo_wave_ctrl;
+    pdsp::Parameter     lfo_speed_ctrl;    
+    pdsp::Parameter     lfo_wave_ctrl;
 
     pdsp::LFO           lfo;
     pdsp::Amp           lfoToFilter;
@@ -76,11 +76,11 @@ private: // --------------------------------------------------
     
     // chorus ------------------------
     pdsp::DimensionChorus   chorus;       
-    ofParameterGroup     ui_chorus;
-    ofxPDSPValue     chorus_speed_ctrl;
-    ofxPDSPValue     chorus_depth_ctrl;
+    ofParameterGroup    ui_chorus;
+    pdsp::Parameter     chorus_speed_ctrl;
+    pdsp::Parameter     chorus_depth_ctrl;
     
-    vector<float> partials_vector;
+    std::vector<float> partials_vector;
 
 };
 

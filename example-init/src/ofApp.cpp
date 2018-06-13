@@ -7,10 +7,16 @@ void ofApp::setup(){
     
     //-------------------GRAPHIC SETUP--------------
     ofBackground(0);
-    ofSetFrameRate(30);
+    
     
     //--------PATCHING-------
     
+    
+    // ------- GUI ------- 
+    gui.setup("gui", "settings.xml", 20, 20);
+    
+    
+    //gui.loadFromFile("settings.xml");
     
     //------------SETUPS AND START AUDIO-------------
     engine.listDevices();
@@ -26,7 +32,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
+    gui.draw();
 }
 
 //--------------------------------------------------------------

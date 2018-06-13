@@ -9,7 +9,7 @@
 #include "../../DSP/pdspCore.h"
 
 #include "../../DSP/oscillators/wavetable/DataOsc.h"
-#include "../../DSP/oscillators/phazors/LFOPhazor.h"
+#include "../../DSP/oscillators/phasors/LFOPhasor.h"
 #include "../../DSP/utility/PitchToFreq.h"
 
 namespace pdsp{
@@ -52,7 +52,7 @@ private:
 
     DataOsc         wto;
     PitchToFreq     p2f;
-    LFOPhazor       phazor;
+    LFOPhasor       phasor;
     
 };
 

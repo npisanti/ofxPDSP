@@ -23,13 +23,12 @@ public:
     void gotMessage(ofMessage msg);
     
     // pdsp modules
-    ofxPDSPEngine           engine;
+    pdsp::Engine            engine;
     
     pdsp::VAOscillator      osc;
     pdsp::Amp               amp;
     pdsp::ADSR              env;
-    ofxPDSPTrigger          gate_ctrl;
-    ofxPDSPValue            pitch_ctrl;
+    pdsp::TriggerControl    gate_ctrl;
+    pdsp::Parameter         pitch_ctrl;
     
-
 };

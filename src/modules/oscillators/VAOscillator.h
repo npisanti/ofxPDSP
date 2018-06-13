@@ -11,10 +11,10 @@
 #include "../../DSP/oscillators/antialiased/DPWTri.h"
 #include "../../DSP/oscillators/cheap/CheapTri.h"
 #include "../../DSP/oscillators/fm/SineFB.h"
-#include "../../DSP/oscillators/phazors/PMPhazor.h"
+#include "../../DSP/oscillators/phasors/PMPhasor.h"
 #include "../../DSP/utility/PitchToFreq.h"
 
-#include "../../DSP/oscillators/phazors/PhazorShifter.h"
+#include "../../DSP/oscillators/phasors/PhasorShifter.h"
 #include "../../DSP/filters/OnePole.h"
 
 
@@ -87,10 +87,10 @@ private:
     DPWTri          triangle;
     SineFB          sine;
     PitchToFreq     p2f;
-    PMPhazor        phazor;
+    PMPhasor        phasor;
     PatchNode       inputShape;
     
-    PhazorShifter   shift;
+    PhasorShifter   shift;
     OnePole         leakDC;
     
     

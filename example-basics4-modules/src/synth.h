@@ -28,11 +28,11 @@ public:
         y_ctrl.set(0.0f); // and you can set its input default value
         
         //patching
-        osc.out_saw() * 2.0f >> drive >> filter.out_lpf4() >> amp;
-                                                    y_ctrl >> amp.in_mod();        
-                                                    y_ctrl * 60.0f >> filter_cutoff;
-                                                             48.0f >> filter_cutoff >> filter.in_cutoff();
-                                                                              0.3f  >> filter.in_reso();
+        osc.out_saw() * 2.0f >> drive >> filter >> amp;
+                                         y_ctrl >> amp.in_mod();        
+                                         y_ctrl * 60.0f >> filter.in_cutoff();
+                                                  48.0f >> filter.in_cutoff();
+                                                  0.3f  >> filter.in_reso();
     }
     
     // those are optional
@@ -52,10 +52,9 @@ private:
 
     pdsp::PatchNode     y_ctrl;
     pdsp::PatchNode     pitch_ctrl;
-    pdsp::PitchToFreq   filter_cutoff; // converts pitch in semitones to frequency for the filters
     pdsp::Amp           amp;
     pdsp::VAOscillator  osc;
     pdsp::Saturator1    drive; // distort the signal
-    pdsp::MultiLadder4  filter; // 24dB multimode filter
+    pdsp::VAFilter      filter; // 24dB multimode filter
 
 };

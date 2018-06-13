@@ -21,12 +21,11 @@ public:
     private:
         pdsp::PatchNode     voiceTrigger;
         pdsp::PatchNode     voicePitch;
-        pdsp::PitchToFreq   p2f;
         
         pdsp::VAOscillator  oscillator;
 
         pdsp::Saturator1    saturator;
-        pdsp::MultiLadder4  filter;
+        pdsp::VAFilter      filter;
         pdsp::Amp           voiceAmp;
         
         pdsp::ADSR          ampEnv;
@@ -41,17 +40,17 @@ public:
     void setup( int numVoices );
 
     ofParameterGroup    ui;
-    vector<Voice>       voices;
+    std::vector<Voice>  voices;
     
 private: // --------------------------------------------------------------------
-    ofxPDSPValue     cutoff;
-    ofxPDSPValue     reso;
-    ofxPDSPValue     modAttack;
-    ofxPDSPValue     modRelease;
+    pdsp::Parameter     cutoff;
+    pdsp::Parameter     reso;
+    pdsp::Parameter     modAttack;
+    pdsp::Parameter     modRelease;
     
-    ofxPDSPValue     pw;
-    ofxPDSPValue     pwmSpeed;
-    ofxPDSPValue     pwm;    
+    pdsp::Parameter     pw;
+    pdsp::Parameter     pwmSpeed;
+    pdsp::Parameter     pwm;    
 
 };
 

@@ -7,9 +7,9 @@
 #define PDSP_MODULE_BASIVERB_H_INCLUDED
 
 #include "../../DSP/pdspCore.h"
-#include "../../DSP/oscillators/phazors/LFOPhazor.h"
+#include "../../DSP/oscillators/phasors/LFOPhasor.h"
 #include "../../DSP/oscillators/cheap/CheapTri.h"
-#include "../../DSP/delays/DampedDelay.h"
+#include "../../DSP/delays/Delay.h"
 #include "../../DSP/delays/AllPassDelay.h"
 #include "../../DSP/filters/OnePole.h"
 #include "../../DSP/filters/APF1.h"
@@ -122,10 +122,10 @@ private:
  
     RT60Calculator  coeffs;
  
-    LFOPhazor       phazor;
+    LFOPhasor       phasor;
     CheapTri        LFO;
  
-    DampedDelay     delays [6];
+    Delay     delays [6];
 
     AllPassDelay    APF_1;
     AllPassDelay    APF_2;

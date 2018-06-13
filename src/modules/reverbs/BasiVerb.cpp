@@ -96,7 +96,7 @@ void pdsp::BasiVerb::patch(){
     addModuleInput("damping", damping_ctrl );
     addModuleInput("hi_cut", hi_cut_ctrl );
    
-    addModuleInput("mod_freq", phazor.in_freq() );
+    addModuleInput("mod_freq", phasor.in_freq() );
     addModuleInput("mod_amount", modAmt.in_mod() );
  
     addModuleOutput("0", output1);
@@ -105,10 +105,10 @@ void pdsp::BasiVerb::patch(){
     hi_cut_ctrl.set(5000.0f);
     damping_ctrl.set(0.5f);  
     modAmt.set(0.8f); 
-    phazor.set(0.2f); // standar freq = 0.1hz
+    phasor.set(0.2f); // standar freq = 0.1hz
 
 
-    phazor.in_freq() >> LFO >> lfoOut >> modAmt;
+    phasor.in_freq() >> LFO >> lfoOut >> modAmt;
     
     for(int i=0; i<6; ++i){
 

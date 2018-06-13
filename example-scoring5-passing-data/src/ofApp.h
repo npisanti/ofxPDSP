@@ -25,9 +25,9 @@ class ofApp : public ofBaseApp{
         void circularWrite();
 
         // pdsp modules
-        ofxPDSPEngine           engine;
+        pdsp::Engine            engine;
         SineBleep               lead;
-        vector<pdsp::Sequence>  lead_seqs;
+        std::vector<pdsp::Sequence>  lead_seqs;
 
 
         std::atomic<int> index;

@@ -33,23 +33,22 @@ private:
     pdsp::HighCut           loCut;
     pdsp::LowCut            hiCut;
 
-
-    ofxPDSPValue     hiFreqControl;
-    ofxPDSPValue     rmsAttackControl;
-    ofxPDSPValue     rmsReleaseControl;
-    ofxPDSPValue     peakAttackControl;
-    ofxPDSPValue     peakReleaseControl;
+    pdsp::Parameter     hiFreqControl;
+    pdsp::Parameter     rmsAttackControl;
+    pdsp::Parameter     rmsReleaseControl;
+    pdsp::Parameter     peakAttackControl;
+    pdsp::Parameter     peakReleaseControl;
 
     pdsp::Amp        bandGain;
     pdsp::DBtoLin    bandFader;
-    ofxPDSPValue     gainControl;            
+    pdsp::Parameter  gainControl;            
     
     pdsp::PitchToFreq       p2fLo;
-    ofxPDSPValue            loPitchControl;
+    pdsp::Parameter         loPitchControl;
     ofParameter<float>      loFreqValue;
 
     pdsp::PitchToFreq       p2fHi;
-    ofxPDSPValue            hiPitchControl;
+    pdsp::Parameter         hiPitchControl;
     ofParameter<float>      hiFreqValue;
 
     ofParameter<float>      onsetThreshold;

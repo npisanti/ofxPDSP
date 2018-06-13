@@ -1,30 +1,27 @@
 
-This is an overview of a selection of the available modules. Some of the modules can work both in mono or stereo, usually when one of the outputs is not patched that channel is not processed and the module works in mono.
+This is an overview of a selection of the available modules. There are many classes in pdsp, but many are just for very advanced users as they are used to build higher level classes. This is a selection of the most higher level pdsp classes, probably you will never need more than this. Some of the modules can work both in mono or stereo, usually when one of the outputs is not patched that channel is not processed and the module works in mono.
 
 ## Thread-Safe Control / ofParameter compatible
-- ofxPDSPValue : holds a value to control the modules (with optional smoothing), has ofParameter integration for GUIs
-- pdsp::TriggerControl / ofxPDSPTrigger : send triggers
-- ofxPDSPValueMultiplier : a combination of pdsp::Amp and ofxPDSPValue for easy mod amount control
-- ofxPDSPMonoFader : a combination of pdsp::Amp and ofxPDSPValue for easy gain control
-- ofxPDSPStereoFader : stereo version of ofxPDSPMonoFader
+- pdsp::Parameter : holds a value to control the modules (with optional smoothing), has ofParameter integration for GUIs
+- pdsp::TriggerControl : send triggers
+- pdsp::ParameterAmp : a combination of pdsp::Amp and pdsp::Parameter for easy mod amount control
+- pdsp::ParameterGain : a combination of pdsp::Amp and pdsp::Parameter for easy gain control, with stereo in/out
 
 ## Oscillators / Noise
 - pdsp::VAOscillator : band limited oscillator with saw, pulse, triangle and sine outputs
 - pdsp::TableOscillator : wavetable oscillator, check the code in the included examples
 - pdsp::DataOscillator : wavetable oscillator with thread-safe setting of waveform in realtime
 - pdsp::FMOperator : sine oscillator with pm input for FM synthesis
-- pdsp::PRNoiseGen : noise generator
+- pdsp::WhiteNoise : noise generator
 - pdsp::BitNoise : digital noise generator with lots of shaping control and stereo outputs
 
 ## Filters
 - pdsp::VAFilter : stereo/mono resonant 4 pole filter with switchable 12db/24db LP, BP and HP outputs and pitched cutoff control
-- pdsp::OnePole : non-resonant one pole highpass / lowpass filter, you can also usit to slew control rate signals, with control in hertz
-- pdsp::APF4 : 4pole All Pass Filter (Phaser) with frequency control in hertz and feedback control
+- pdsp::Phaser : 4pole All Pass Filter (Phaser) with cutoff input and feedback control
 - pdsp::CombFilter : Comb Filter with frequency control in pitch, feedback and damping control (this is basically a tuned delay)
 
 ## Delays
-- pdsp::DampedDelay : delay with feedback damping
-- pdsp::AllPassDelay : delay with an allpass filter in the feedback path
+- pdsp::Delay : delay with feedback damping
 
 ## Envelopes / Amp
 - pdsp::ADSR : classic Attack-Decay-Sustain-Release envelope
@@ -61,16 +58,11 @@ This is an overview of a selection of the available modules. Some of the modules
 - pdsp::IRVerb : a impulse response based reverb, with mono/stereo inputs and outputs
 
 ## Routing
+- pdsp::PatchNode : just sums the inputs (or just pass it to output if there is only one)
 - pdsp::LinearCrossfader : crossfade between two signals
 - pdsp::Panner : pans the signal from the left to the right
 - pdsp::Switch : switches between different inputs
 
-## Utility
-- pdsp::BipolarToUnipolar : convert a bipolar signal to an unipolar one
-- pdsp::OneBarTimeMs : outputs the time in ms for one musical bar
-- pdsp::PitchToFreq : converts pitch values to frequency values, for musical control of oscillator and filters
-- pdsp::FreqToMs : convert frequency values to millisecond values 
-- pdsp::Formula : virtual class to extend for executing a matematical operation on an input
 
 ## Sequencing
 - pdsp::ScoreProcessor : engine.score is an instance of this class, manage all the sections
@@ -78,3 +70,19 @@ This is an overview of a selection of the available modules. Some of the modules
 - pdsp::Sequence : a fixed or generative sequence to send values to one or more outputs
 - pdsp::SeqChange : the behavior of a pdsp::Sequence after it ends
 - pdsp::Behavior : contains standard behaviors, you mostly use pdsp::Behavior::Loop or pdsp::Behavior::OneShot
+
+## Midi
+- pdsp::midi::Input : for using midi input
+- pdsp::midi::Output : sequencer to midi output
+- pdsp::midi::Keys : for using midi keyboards
+- pdsp::midi::Pads : for using midi notes as triggers 
+- pdsp::midi::Controls : midi control change input
+
+## OSC
+- pdsp::osc::Input : OSC input
+- pdsp::osc::Output : OSC output
+
+## Utlity
+- pdsp::Scope : show running buffers
+- pdsp::SampleBufferPlotter : draws pdsp::SampleBuffer waveforms 
+

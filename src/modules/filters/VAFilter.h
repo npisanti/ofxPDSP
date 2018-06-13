@@ -65,7 +65,7 @@ public:
     
     
     /*!
-    @brief Sets "mode" as selected input and returns this module ready to be patched. This control switches the filter type, there are some static constant in this class that rapresent different filter type values.
+    @brief Sets "mode" as selected input and returns this module ready to be patched. This control switches the filter type, there are some static constant in this class that rapresent different filter type values. Default is 0, a 24db/oct Low Pass Filter.
     
     Constants for filter types are:
         LowPass24 = 0.0f;

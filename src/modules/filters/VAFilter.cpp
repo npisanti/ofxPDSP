@@ -22,8 +22,8 @@ void pdsp::VAFilter::patch(){
     
     p2f.set(80.0f);
     
-    p2f >> filterA.in_cutoff();
-    p2f >> filterB.in_cutoff();
+    p2f >> filterA.in_freq();
+    p2f >> filterB.in_freq();
     reso >> filterA.in_reso();
     reso >> filterB.in_reso();
     

@@ -13,31 +13,29 @@
 #include "sequencer/header.h"
 #include "modules/header.h"
 
-#include "ofx/ofxPDSPMidi.h"
+#include "ofx/Midi.h"
 
-#include "ofx/ofxPDSPComputerKeyboard.h"
+#include "ofx/ComputerKeyboard.h"
 
-#include "ofx/ofxPDSPSerialOut.h"
 
-#include "ofx/ofxPDSPOscOutput.h"
-#include "ofx/ofxPDSPOscInput.h"
+#include "ofx/SerialOut.h"
 
-#include "ofx/ofxPDSPParameters.h"
-#include "ofx/ofxPDSPValue.h"
-#include "ofx/ofxPDSPValueMultiplier.h"
-#include "ofx/ofxPDSPMonoFader.h"
-#include "ofx/ofxPDSPStereoFader.h"
+#include "ofx/OscOutput.h"
+#include "ofx/OscInput.h"
 
-#include "ofx/ofxSampleBufferPlotter.h"
-#include "ofx/ofxScoreSectionPlotter.h"
-#include "ofx/ofxPDSPEngineGraphics.h"
-#include "ofx/ofxPDSPScope.h"
+#include "ofx/Parameter.h"
+#include "ofx/ParameterAmp.h"
+#include "ofx/ParameterGain.h"
 
-#include "ofx/ofxPDSPWrapper.h"
+#include "ofx/Scope.h"
+#include "ofx/SampleBufferPlotter.h"
+
+#include "ofx/Wrapper.h"
 
 #include "ofx/ofxPDSPFunctions.h"
 
-#include "ofx/ofxPDSPEngine.h"
+#include "ofx/Engine.h"
 
+#include "ofxPDSPLegacy.h"
 
 #endif

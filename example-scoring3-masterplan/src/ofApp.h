@@ -24,14 +24,14 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
         // pdsp modules
-        ofxPDSPEngine   engine;
+        pdsp::Engine   engine;
         
         MultiSampler    drums;
         Reese           reese;
 
-        vector<int>     states;
+        std::vector<int>     states;
         
-        ofxPDSPScope drumScope;
-        ofxPDSPScope reeseScope;
+        pdsp::Scope drumScope;
+        pdsp::Scope reeseScope;
 
 };

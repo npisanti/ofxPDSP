@@ -25,12 +25,12 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
         
         
-        ofxPDSPEngine               engine;
+        pdsp::Engine                engine;
 
         vector<AudioAnalyzerBand>   bands;
     
         ofxPanel                    gui;
 
-        ofxPDSPScope                scope;
+        pdsp::Scope                 scope;
         
 };

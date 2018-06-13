@@ -12,8 +12,8 @@ void PolySynth::setup(int numVoices){
     // more partial = fuller sound but with more aliasing, less partial = duller but with less aliasing
     // highestPartial( float pitch) gives you the max number of partial before aliasing at a given pitch
 
-    wavetable.addSawWave( highestPartial(60.0f) ); // this saw wave won't alias before C3=60
-    wavetable.addSquareWave( highestPartial(72.0f) ); // this saw wave won't alias before C4=72
+    wavetable.addSawWave( pdsp::highestPartial(60.0f) ); // this saw wave won't alias before C3=60
+    wavetable.addSquareWave( pdsp::highestPartial(72.0f) ); // this saw wave won't alias before C4=72
     wavetable.addTriangleWave( 64 ); // Triangle wave with 64 partials
     wavetable.addSineWave();
    

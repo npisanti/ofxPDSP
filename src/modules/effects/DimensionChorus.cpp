@@ -36,7 +36,7 @@ void pdsp::DimensionChorus::patch(){
     input1 * -1.0f >> filter1.out_hpf() >> output2;
                     
         
-    speed >> phazor.in_freq() >> LFO >> mod1  >> delay1.in_time();
+    speed >> phasor.in_freq() >> LFO >> mod1  >> delay1.in_time();
                                         delay >> delay1.in_time();
                                  LFO >> mod2  >> delay2.in_time();
                                         delay >> delay2.in_time();

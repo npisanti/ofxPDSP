@@ -104,13 +104,11 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    // sends key messages to ofxPDSPComputerKeyboard
     keyboard.keyPressed( key ); 
 }
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
-    // sends key messages to ofxPDSPComputerKeyboard
     keyboard.keyReleased( key );
 }
 

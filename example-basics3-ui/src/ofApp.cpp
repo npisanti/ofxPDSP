@@ -1,13 +1,13 @@
 #include "ofApp.h"
 
-// This example teach you the basics of using ofxPDSPValue inside ofParameter based UIs
+// This example teach you the basics of using pdsp::Parameter inside ofParameter based UIs
 
 //--------------------------------------------------------------
 void ofApp::setup(){
     
     //--------PATCHING-------
 
-    // we patch the ofxPDSPValues to control pitch and amp
+    // we patch the pdsp::Parameter to control pitch and amp
     // and then patch the oscillator to the engine outs
     osc1_pitch_ctrl >> osc1.in_pitch();
                        osc1 >> amp1          >> engine.audio_out(0);
@@ -23,9 +23,9 @@ void ofApp::setup(){
     // GUI setup -----------------------------------
     gui.setup("3-osc");
     
-    // you can use ofxPDSPValue as they were ofParameters, but with some difference
-    // inside ofxPDSPValues there is an ofParameter<float> and an ofParameter<int> both set to zero
-    // when they change the the ofxPDSPValue is set as the sum of both
+    // you can use pdsp::Parameter as they were ofParameters, but with some difference
+    // inside pdsp::Parameter there is an ofParameter<float> and an ofParameter<int> both set to zero
+    // when they change the the pdsp::Parameter is set as the sum of both
     
     osc1_group.setName("oscillator 1");
     // if you use float values in the set() method the ofParameter<float> is returned and used

@@ -7,10 +7,10 @@
 #define PDSP_SOURCES_BITNOISE_H_INCLUDED
 
 #include "../../DSP/pdspCore.h"
-#include "../../DSP/random/PRNoiseGen.h"
+#include "../../DSP/random/WhiteNoise.h"
 #include "../../DSP/signal/Bitcruncher.h"
 #include "../../DSP/signal/Decimator.h"
-#include "../../DSP/oscillators/phazors/LFOPhazor.h"
+#include "../../DSP/oscillators/phasors/LFOPhasor.h"
 #include "../../DSP/utility/PitchToFreq.h"
 
 
@@ -110,13 +110,13 @@ private:
     PitchToFreq     p2fPhazor;
     PitchToFreq     p2fDecimator;
     
-    LFOPhazor       phazor;
+    LFOPhasor       phasor;
 
-    PRNoiseGen      noiseA;
+    WhiteNoise      noiseA;
     Decimator       decimateA;
     Bitcruncher     bitcrunchA;
 
-    PRNoiseGen      noiseB;
+    WhiteNoise      noiseB;
     Decimator       decimateB;
     Bitcruncher     bitcrunchB;
 

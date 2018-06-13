@@ -58,7 +58,7 @@ private:
     double  sequenceLength; // division * steps
     float   scaling;
 
-    vector<float> values; // support structure for calculating linear max
+    std::vector<float> values; // support structure for calculating linear max
 
     static int number;
 };

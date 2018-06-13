@@ -111,12 +111,6 @@ public:
     */    
     void setWindowType(Window_t type, int window_length=1024 );
 
-    /*!
-    @brief change the type of the Interpolator used by the Sampler. Some Interpolator sounds better, others are cheaper for the cpu.
-    @param[in] type you can choose between different interpolators, check types.h
-    */
-    void setInterpolatorType(Interpolator_t type);    
-    
 private:
 
     void patch();

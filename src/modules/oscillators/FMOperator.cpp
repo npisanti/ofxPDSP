@@ -10,20 +10,20 @@ pdsp::FMOperator& pdsp::FMOperator::operator=(const pdsp::FMOperator &Other){ pa
 
 void pdsp::FMOperator::patch(){
 
-    addModuleInput( "fm",     phazor.in("pm") );    
+    addModuleInput( "fm",     phasor.in("pm") );    
     addModuleInput( "pitch",  p2f );    
     addModuleInput( "ratio",  ratioMult.in_mod() );    
     addModuleInput( "fb",     sine.in_shape() );
-    addModuleInput( "sync",    phazor.in("sync") );
+    addModuleInput( "sync",    phasor.in("sync") );
 
     addModuleOutput( "signal", sine );
-    addModuleOutput( "sync",   phazor.out("sync") );
+    addModuleOutput( "sync",   phasor.out("sync") );
     
     ratioMult.set(1.0f);
     p2f.enableBoundaries(-30000.0f, 150.0f);
     p2f.set(69.0f); // standard freq is A4 = 440hz
     
-    p2f >> ratioMult >> phazor.in_freq() >> sine;
+    p2f >> ratioMult >> phasor.in_freq() >> sine;
     
 }
 

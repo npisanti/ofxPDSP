@@ -9,9 +9,9 @@ pdsp::ClockedLFO& pdsp::ClockedLFO::operator=(const pdsp::ClockedLFO &Other){ re
 
 void pdsp::ClockedLFO::patch(){
     
-    addModuleInput( "division",   phazorClocked.in_division() );
-    addModuleInput( "retrig",  phazorClocked.in_retrig() );    
-    addModuleInput( "phase_offset",  phazorClocked.in_phase_offset() );  
+    addModuleInput( "division",   phasorClocked.in_division() );
+    addModuleInput( "retrig",  phasorClocked.in_retrig() );    
+    addModuleInput( "phase_offset",  phasorClocked.in_phase_offset() );  
 
     addModuleOutput( "triangle", triangle );
     addModuleOutput( "sine", sine );
@@ -20,11 +20,11 @@ void pdsp::ClockedLFO::patch(){
     addModuleOutput( "sample_and_hold", randomSnHSlew );
     
 
-    phazorClocked  >> saw      >> sawSlew;
-    phazorClocked  >> square   >> squareSlew;
-    phazorClocked  >> sine;
-    phazorClocked  >> triangle;
-    phazorClocked.out_trig() >> rnd >> randomSnHSlew;   
+    phasorClocked  >> saw      >> sawSlew;
+    phasorClocked  >> square   >> squareSlew;
+    phasorClocked  >> sine;
+    phasorClocked  >> triangle;
+    phasorClocked.out_trig() >> rnd >> randomSnHSlew;   
         
     sawSlew.set(200.0f);
     squareSlew.set(200.0f);
@@ -33,7 +33,7 @@ void pdsp::ClockedLFO::patch(){
 }
 
 pdsp::Patchable& pdsp::ClockedLFO::set(float division, float phaseOffset){
-    phazorClocked.set(division, phaseOffset);
+    phasorClocked.set(division, phaseOffset);
     return *this;
 }
 

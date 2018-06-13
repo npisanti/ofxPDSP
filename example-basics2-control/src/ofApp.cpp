@@ -26,9 +26,9 @@ void ofApp::setup(){
                   osc >> amp >> engine.audio_out(0);
                          amp >> engine.audio_out(1);
 
-    pitch_ctrl.setv(72.0f); // we control the value of an ofxPDSPValue directly with the setv function
+    pitch_ctrl.setv(72.0f); // we control the value of an pdsp::Parameter directly with the setv function
     
-    // you can smooth out an ofxPDSPValue changes, decomment this for less "grainy" pitch changes
+    // you can smooth out an pdsp::Parameter changes, decomment this for less "grainy" pitch changes
     // pitch_ctrl.enableSmoothing(50.0f); // 50ms smoothing
 
 

@@ -17,7 +17,7 @@ void ofApp::setup(){
     // you can use setPolyMode(int maxNotes, int unisonVoices) or setMonoMode(int unisonVoices, bool legato, MonoPriority priority)
     midiKeys.setPolyMode(4, 1);
     // activate portamento, in poly mode you can notice portamento only on note stealing
-    midiKeys.setPortamento(On, 250.0f, pdsp::Rate);
+    midiKeys.setPortamento( pdsp::On, 250.0f, pdsp::Rate );
 
     //midiCCs.setCCSlew( 100.0f ); // enable for changing the midi CCs slew time, default is 50.0f = 50ms
 

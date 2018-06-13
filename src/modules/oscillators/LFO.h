@@ -11,8 +11,8 @@
 #include "../../DSP/oscillators/cheap/CheapSine.h"
 #include "../../DSP/oscillators/cheap/CheapTri.h"
 #include "../../DSP/oscillators/cheap/CheapPulse.h"
-#include "../../DSP/oscillators/phazors/LFOPhazor.h"
-#include "../../DSP/oscillators/phazors/ClockedPhazor.h"
+#include "../../DSP/oscillators/phasors/LFOPhasor.h"
+#include "../../DSP/oscillators/phasors/ClockedPhasor.h"
 #include "../../DSP/filters/OnePole.h"
 #include "../../DSP/random/TriggeredRandom.h"
 
@@ -41,7 +41,7 @@ public:
     Patchable& in_retrig();
     
     /*!
-    @brief Sets "phase_start" as selected input and returns this module ready to be patched. This is the starting value of the phazor on retrigger. It is updated only at control-rate.
+    @brief Sets "phase_start" as selected input and returns this module ready to be patched. This is the starting value of the phasor on retrigger. It is updated only at control-rate.
     */
     Patchable& in_phase_start();
     
@@ -81,7 +81,7 @@ private:
     
     
     PatchNode       speed;
-    LFOPhazor       phazorFree;
+    LFOPhasor       phasorFree;
 
     
     CheapSaw            saw;

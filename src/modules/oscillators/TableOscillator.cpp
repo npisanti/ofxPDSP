@@ -15,7 +15,7 @@ void pdsp::TableOscillator::patch(){
     p2f.enableBoundaries(-30000.0f, 150.0f);
     p2f.set(69.0f); // standard freq is A4 = 440hz
     
-    p2f >> phazor.in_freq() >> wto;
+    p2f >> phasor.in_freq() >> wto;
     
 }
 

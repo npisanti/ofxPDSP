@@ -21,7 +21,7 @@ class ofApp : public ofxiOSApp {
         void gotMemoryWarning();
         void deviceOrientationChanged(int newOrientation);
     
-        ofxPDSPEngine           engine;
+        pdsp::Engine            engine;
     
         pdsp::VAOscillator      osc;
         pdsp::Amp               amp;

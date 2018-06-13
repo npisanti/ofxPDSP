@@ -24,14 +24,14 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
         
         // pdsp modules
-        ofxPDSPEngine   engine;
+        pdsp::Engine   engine;
         
         pdsp::Compressor1       compressor;
         
         pdsp::Amp               channelGain;
         pdsp::Amp               delaySend;
-        pdsp::DampedDelay       delayL;
-        pdsp::DampedDelay       delayR;
+        pdsp::Delay             delayL;
+        pdsp::Delay             delayR;
         pdsp::PatchNode         fb_node;
         pdsp::PatchNode         damp_node;
         pdsp::DBtoLin           channelFader;
@@ -41,16 +41,16 @@ class ofApp : public ofBaseApp{
         ofParameterGroup     comp_gui;
         ofParameterGroup     delay_gui;
 
-        ofxPDSPValue     d1_time_ctrl; 
-        ofxPDSPValue     d2_time_ctrl; 
-        ofxPDSPValue     d_fb_ctrl;         
-        ofxPDSPValue     d_damp_ctrl;     
-        ofxPDSPValue     gain_ctrl;         
-        ofxPDSPValue     send_ctrl;         
+        pdsp::Parameter     d1_time_ctrl; 
+        pdsp::Parameter     d2_time_ctrl; 
+        pdsp::Parameter     d_fb_ctrl;         
+        pdsp::Parameter     d_damp_ctrl;     
+        pdsp::Parameter     gain_ctrl;         
+        pdsp::Parameter     send_ctrl;         
 
-        ofxPDSPValue        comp_threshold_ctrl;
-        ofxPDSPValue        comp_attack_ctrl;
-        ofxPDSPValue        comp_release_ctrl;
+        pdsp::Parameter        comp_threshold_ctrl;
+        pdsp::Parameter        comp_attack_ctrl;
+        pdsp::Parameter        comp_release_ctrl;
         ofParameter<float>  comp_meter;
         
 

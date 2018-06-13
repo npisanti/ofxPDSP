@@ -25,7 +25,7 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
         
-        ofxPDSPEngine   engine;
+        pdsp::Engine    engine;
         
         SineBleep       bleep;
         BassSynth       bass;
@@ -39,8 +39,5 @@ class ofApp : public ofBaseApp{
         pdsp::Sequence    bleep3;
         pdsp::Sequence    bleep4;
             
-        ofxScoreSectionPlotter  bassPatternGraphics;
-        ofxScoreSectionPlotter  bleepPatternGraphics;
-
         float masterX;
 };

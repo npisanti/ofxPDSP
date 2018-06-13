@@ -25,10 +25,10 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
         
-        ofxPDSPEngine   engine;
+        pdsp::Engine   engine;
 
         PolySynth                   synth;
-        ofxPDSPComputerKeyboard     keyboard;
+        pdsp::ComputerKeyboard      keyboard;
         ofxPanel                    gui;
       
 };

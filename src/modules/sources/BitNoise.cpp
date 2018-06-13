@@ -21,13 +21,13 @@ void pdsp::BitNoise::patch(){
 
                                p2fDecimator  >> decimateA.in_freq();
                                       noiseA >> decimateA >> bitcrunchA;
-                 phazor.out_trig() >> noiseA.in_clock();
-    p2fPhazor >> phazor.in_freq();
+                 phasor.out_trig() >> noiseA.in_clock();
+    p2fPhazor >> phasor.in_freq();
 
                                p2fDecimator  >> decimateB.in_freq();
                                       noiseB >> decimateB >> bitcrunchB;
-                 phazor.out_trig() >> noiseB.in_clock();
-    p2fPhazor >> phazor.in_freq();
+                 phasor.out_trig() >> noiseB.in_clock();
+    p2fPhazor >> phasor.in_freq();
 
     p2fPhazor.set( - 100.0f );
     p2fDecimator.set(151.0f );
@@ -35,7 +35,7 @@ void pdsp::BitNoise::patch(){
 
     trigger >> noiseA.in_reseed();
     trigger >> noiseB.in_reseed();
-    trigger >> phazor.in_retrig();
+    trigger >> phasor.in_retrig();
     bits_ctrl >> bitcrunchA.in_bits();
     bits_ctrl >> bitcrunchB.in_bits();
 }
