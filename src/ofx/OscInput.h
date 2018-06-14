@@ -14,7 +14,7 @@
 #include <condition_variable>
 #include <atomic>
 #include "../DSP/pdspCore.h"
-#include "../sequencer/ScoreSection.h"
+#include "../sequencer/SequencerSection.h"
 #include "ofxOsc.h"
 
 /*!
@@ -38,8 +38,8 @@ private:
         string key;
         pdsp::MessageBuffer* messageBuffer;
         //OscChannelMode mode;
-        pdsp::GateSequencer* gate_out;
-        pdsp::ValueSequencer* value_out;
+        pdsp::SequencerGateOutput* gate_out;
+        pdsp::SequencerValueOutput* value_out;
         
     };
     
@@ -86,13 +86,13 @@ public:
     @brief get a trigger output for the given OSC address. Only the first value of those address will be taken, as float value. When you have used an address as trig output you can't use it as value
     @param[in] oscAddress address for OSC input
     */       
-    pdsp::GateSequencer& out_trig( string oscAddress );
+    pdsp::SequencerGateOutput& out_trig( string oscAddress );
 
     /*!
     @brief get a value output for the given OSC address. Only the first value of those address will be taken, as float value. When you have used an address as value output you can't use it as trigger
     @param[in] oscAddress address for OSC input
     */    
-    pdsp::ValueSequencer& out_value( string oscAddress );
+    pdsp::SequencerValueOutput& out_value( string oscAddress );
 
 
     /*!
@@ -137,8 +137,8 @@ private:
     chrono::time_point<chrono::high_resolution_clock>   bufferChrono;     
     //double                                              usecPerSample;
 
-    pdsp::GateSequencer invalidGate;
-    pdsp::ValueSequencer invalidValue;
+    pdsp::SequencerGateOutput invalidGate;
+    pdsp::SequencerValueOutput invalidValue;
 
 
     void                                                startDaemon();

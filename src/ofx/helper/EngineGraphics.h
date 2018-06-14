@@ -3,10 +3,10 @@
 #define OFXPDSP_ENGINEGRAPHICS_H_INCLUDED
 
 #include "ofMain.h"
-#include "../sequencer/ScoreSection.h"
-#include "../sequencer/ScoreProcessor.h"
+#include "../sequencer/SequencerSection.h"
+#include "../sequencer/SequencerProcessor.h"
 #include "../sequencer/Sequence.h"
-#include "ScoreSectionPlotter.h"
+#include "SequencerSectionPlotter.h"
 
 
 /*!
@@ -47,12 +47,12 @@ public:
     void setPosition( int x, int y );
 
     /*!
-    @brief displays the ofxScoreSectionPlotter
+    @brief displays the pdsp::SequencerSectionPlotter
     */
     void draw();
 
     /*!
-    @brief display the ofxScoreSectionPlotter at the given coordinates
+    @brief display the pdsp::SequencerSectionPlotter at the given coordinates
     @param[in] x x coordinate
     @param[in] y y coordinate
     */
@@ -95,24 +95,24 @@ private:
     void keyPressed ( ofKeyEventArgs& eventArgs );   
     void drawGraphics();
     
-    void setParent ( pdsp::ScoreProcessor & score );    
+    void setParent ( pdsp::SequencerProcessor & score );    
     void updateGraphics( const pdsp::Sequence & seq );
     void clearGraphics ();
 
-    vector<ScoreSectionPlotter> plotters;
-    vector<int> sectionsHeights;
+    std::vector<SequencerSectionPlotter> plotters;
+    std::vector<int> sectionsHeights;
 
     ofColor color;
     
     int hFold;
     int width;
     
-    pdsp::ScoreProcessor * score;
+    pdsp::SequencerProcessor * score;
     
-    vector<vector<int>> assignedKeys;
+    std::vector<std::vector<int>> assignedKeys;
     
     bool quantize;
-    vector<double> quantizeTime;
+    std::vector<double> quantizeTime;
     
     int blink;
     

@@ -1,19 +1,19 @@
 
-#include "ScoreSectionPlotter.h"
+#include "SequencerSectionPlotter.h"
 
 namespace pdsp { namespace helper {
 
-ScoreSectionPlotter::ScoreSectionPlotter() {
+SequencerSectionPlotter::SequencerSectionPlotter() {
     setColor( ofColor(255, 255, 255) );
 }
 
-void ScoreSectionPlotter::setColor( ofColor color ){
+void SequencerSectionPlotter::setColor( ofColor color ){
     this->color = color;
     this->colorDim = color.getLerped( ofColor::black, 0.6f);
 }
 
 
-void ScoreSectionPlotter::setup( int w, int graphH, int outputs, pdsp::ScoreSection &assignedSection) {
+void SequencerSectionPlotter::setup( int w, int graphH, int outputs, pdsp::SequencerSection &assignedSection) {
 
     section = &assignedSection;
 
@@ -56,7 +56,7 @@ void ScoreSectionPlotter::setup( int w, int graphH, int outputs, pdsp::ScoreSect
 
 }
 
-void ScoreSectionPlotter::update() {
+void SequencerSectionPlotter::update() {
     
     int seqCurrent = section->meter_current();
 
@@ -83,7 +83,7 @@ void ScoreSectionPlotter::update() {
     
 }
 
-void ScoreSectionPlotter::updateGraphics( const pdsp::Sequence & seq ){
+void SequencerSectionPlotter::updateGraphics( const pdsp::Sequence & seq ){
                 
         timeMult = 1.0 / seq.length();
         
@@ -116,7 +116,7 @@ void ScoreSectionPlotter::updateGraphics( const pdsp::Sequence & seq ){
         ofTranslate(0, headerH);
 
         
-        const vector<pdsp::ScoreMessage> score = seq.getScore(); 
+        const vector<pdsp::SequencerMessage> score = seq.getScore(); 
 
         for (int out=0; out<outputs; ++out){
             ofPushStyle();
@@ -130,7 +130,7 @@ void ScoreSectionPlotter::updateGraphics( const pdsp::Sequence & seq ){
             ofFill();
             ofSetColor(150);
             
-            for(const pdsp::ScoreMessage & message : score ){
+            for(const pdsp::SequencerMessage & message : score ){
                 
                 if(message.lane == out ){
                    
@@ -161,7 +161,7 @@ void ScoreSectionPlotter::updateGraphics( const pdsp::Sequence & seq ){
         fbo.end();
 }
 
-void ScoreSectionPlotter::clearGraphics (){
+void SequencerSectionPlotter::clearGraphics (){
     fbo.begin();
     ofNoFill();
     ofClear(255,255,255, 0);
@@ -192,7 +192,7 @@ void ScoreSectionPlotter::clearGraphics (){
     fbo.end();
 }
 
-void ScoreSectionPlotter::draw() {
+void SequencerSectionPlotter::draw() {
     ofPushStyle();
     ofSetColor(colorDim);
     float playhead = section->meter_playhead() * timeMult;
@@ -210,14 +210,14 @@ void ScoreSectionPlotter::draw() {
 }
 
 
-void ScoreSectionPlotter::draw( int x, int y ) {
+void SequencerSectionPlotter::draw( int x, int y ) {
     ofPushMatrix();
     ofTranslate(x, y);
     draw();
     ofPopMatrix();
 }
 
-void ScoreSectionPlotter::setRange( int index, float min, float max ){
+void SequencerSectionPlotter::setRange( int index, float min, float max ){
     if(index<0) index = 0;
     if(index>=outputs) index = outputs-1;
     
@@ -225,11 +225,11 @@ void ScoreSectionPlotter::setRange( int index, float min, float max ){
     rangeMax[index] = max;
 }
 
-float ScoreSectionPlotter::getCellWidth() const {
+float SequencerSectionPlotter::getCellWidth() const {
     return headerW;
 }
 
-int   ScoreSectionPlotter::getCellsNumber() const {
+int   SequencerSectionPlotter::getCellsNumber() const {
     return cells;
 }
 

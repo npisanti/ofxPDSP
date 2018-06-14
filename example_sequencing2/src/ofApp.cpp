@@ -22,41 +22,41 @@ void ofApp::setup(){
     bleep3.set( { {1.0f, o}, {84.0f, o} }, 16.0, 0.25); 
     bleep4.set( { {1.0f, o}, {89.0f, o} }, 16.0, 0.25); 
 
-    // ScoreProcessor setup
-    engine.score.setTempo(120.0);
-    engine.score.setMaxBars(16.0);    
-    engine.score.sections.resize(2);
+    // SequencerProcessor setup
+    engine.sequencer.setTempo(120.0);
+    engine.sequencer.setMaxBars(16.0);    
+    engine.sequencer.sections.resize(2);
 
     // adding the bleep patterns and settings their timings
-    engine.score.sections[0].setCell(0, &bleep1, pdsp::Behavior::Next );
-    engine.score.sections[0].setCell(1, &bleep2, pdsp::Behavior::Next );
-    engine.score.sections[0].setCell(2, &bleep3, pdsp::Behavior::Next );
-    engine.score.sections[0].setCell(3, &bleep4, pdsp::Behavior::Next );
+    engine.sequencer.sections[0].setCell(0, &bleep1, pdsp::Behavior::Next );
+    engine.sequencer.sections[0].setCell(1, &bleep2, pdsp::Behavior::Next );
+    engine.sequencer.sections[0].setCell(2, &bleep3, pdsp::Behavior::Next );
+    engine.sequencer.sections[0].setCell(3, &bleep4, pdsp::Behavior::Next );
     // SeqChange triggering quantized to 1/4th
-    engine.score.sections[0].enableQuantization(0, 0.25 );
-    engine.score.sections[0].enableQuantization(1, 0.25 );
-    engine.score.sections[0].enableQuantization(2, 0.25 );
-    engine.score.sections[0].enableQuantization(3, 0.25 );
+    engine.sequencer.sections[0].enableQuantization(0, 0.25 );
+    engine.sequencer.sections[0].enableQuantization(1, 0.25 );
+    engine.sequencer.sections[0].enableQuantization(2, 0.25 );
+    engine.sequencer.sections[0].enableQuantization(3, 0.25 );
 
     // set bass sequence
-    engine.score.sections[1].setCell(0, &bassPattern, pdsp::Behavior::Self); //pdsp::Behavior contains some ready-made SeqChange
-    engine.score.sections[1].enableQuantization( 0, 1.0 ); // nextCell quantized to the next bar
-    engine.score.sections[1].setCell(1, nullptr, nullptr); // a nullptr sequence will stop the bass everything
+    engine.sequencer.sections[1].setCell(0, &bassPattern, pdsp::Behavior::Self); //pdsp::Behavior contains some ready-made SeqChange
+    engine.sequencer.sections[1].enableQuantization( 0, 1.0 ); // nextCell quantized to the next bar
+    engine.sequencer.sections[1].setCell(1, nullptr, nullptr); // a nullptr sequence will stop the bass everything
     
     // we launch the sequences
-    engine.score.sections[0].launchCell(0);
-    engine.score.sections[1].launchCell(0); 
+    engine.sequencer.sections[0].launchCell(0);
+    engine.sequencer.sections[1].launchCell(0); 
 
     
     //-------------------------PATCHING--------------
-    engine.score.sections[0].out_trig(0)  >> bleep.in("trig"); 
-    engine.score.sections[0].out_value(1) >> bleep.in("pitch");
+    engine.sequencer.sections[0].out_trig(0)  >> bleep.in("trig"); 
+    engine.sequencer.sections[0].out_value(1) >> bleep.in("pitch");
     
     // connect section outputs to bass
-    engine.score.sections[1].out_trig(0)  >> bass.in("trig");
-    engine.score.sections[1].out_value(1) >> bass.in("pitch");
-    engine.score.sections[1].out_value(1).setSlewTime(80.0f); // 50ms slew
-    engine.score.sections[1].linkSlewControl(1, 2); // now the out 2 will control the slew time of the value output 1
+    engine.sequencer.sections[1].out_trig(0)  >> bass.in("trig");
+    engine.sequencer.sections[1].out_value(1) >> bass.in("pitch");
+    engine.sequencer.sections[1].out_value(1).setSlewTime(80.0f); // 50ms slew
+    engine.sequencer.sections[1].linkSlewControl(1, 2); // now the out 2 will control the slew time of the value output 1
                                                     // slew time is multiplied by the message value
                                                     // so for example 0.0f deativates slew and 2.0f doubles it
                                                     // (the effect is subtle in this example but it's there
@@ -103,7 +103,7 @@ void ofApp::draw(){
     ofSetColor(255);  
 
     string info = "master playhead (bars): ";
-    info += to_string( engine.score.meter_playhead() );
+    info += to_string( engine.sequencer.meter_playhead() );
     info += " / 16.0. \n";
     info += "5 : change bleep launch mode. Mode = ";
     if(oneShot){
@@ -125,28 +125,28 @@ void ofApp::keyPressed(int key){
     switch(key){
         case '5': // select one shot / loop pattern behavior
             if(oneShot){
-                engine.score.sections[0].setChange(0, pdsp::Behavior::Next );
-                engine.score.sections[0].setChange(1, pdsp::Behavior::Next );
-                engine.score.sections[0].setChange(2, pdsp::Behavior::Next );
-                engine.score.sections[0].setChange(3, pdsp::Behavior::Next );
+                engine.sequencer.sections[0].setChange(0, pdsp::Behavior::Next );
+                engine.sequencer.sections[0].setChange(1, pdsp::Behavior::Next );
+                engine.sequencer.sections[0].setChange(2, pdsp::Behavior::Next );
+                engine.sequencer.sections[0].setChange(3, pdsp::Behavior::Next );
                 oneShot = false;
             }else{
-                engine.score.sections[0].setChange(0, pdsp::Behavior::Nothing );
-                engine.score.sections[0].setChange(1, pdsp::Behavior::Nothing );
-                engine.score.sections[0].setChange(2, pdsp::Behavior::Nothing );
-                engine.score.sections[0].setChange(3, pdsp::Behavior::Nothing );
+                engine.sequencer.sections[0].setChange(0, pdsp::Behavior::Nothing );
+                engine.sequencer.sections[0].setChange(1, pdsp::Behavior::Nothing );
+                engine.sequencer.sections[0].setChange(2, pdsp::Behavior::Nothing );
+                engine.sequencer.sections[0].setChange(3, pdsp::Behavior::Nothing );
                 oneShot = true;
             }
             break;
         case ' ': // pause / play
-            if(engine.score.isPlaying()){
-                engine.score.pause();
+            if(engine.sequencer.isPlaying()){
+                engine.sequencer.pause();
             }else{
-                engine.score.play();
+                engine.sequencer.play();
             }
             break;
         case 's': // stop
-            engine.score.stop();
+            engine.sequencer.stop();
             break;
     }
 }

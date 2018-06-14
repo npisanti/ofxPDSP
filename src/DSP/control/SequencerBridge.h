@@ -1,5 +1,5 @@
 
-// Sequencer.h
+// SequencerBridge.h
 // ofxPDSP
 // Nicola Pisanti, MIT License, 2016
 
@@ -14,8 +14,8 @@ namespace pdsp{
 */ 
 class MessageBuffer;
         
-class Sequencer : public Unit{
-        friend Patchable& linkBufferToSequencer (MessageBuffer& output, Sequencer& input);
+class SequencerBridge : public Unit{
+        friend Patchable& linkBufferToSequencer (MessageBuffer& output, SequencerBridge& input);
         friend MessageBuffer;
 
 public:
@@ -29,8 +29,8 @@ protected:
         
 };
         
-Patchable& linkBufferToSequencer (MessageBuffer& output, Sequencer& input);
-Patchable& operator>> (MessageBuffer& output, Sequencer& input);
+Patchable& linkBufferToSequencer (MessageBuffer& output, SequencerBridge& input);
+Patchable& operator>> (MessageBuffer& output, SequencerBridge& input);
         
 /*!
     @endcond

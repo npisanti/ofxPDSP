@@ -1,14 +1,14 @@
 
-// ScoreProcessor.h
+// SequencerProcessor.h
 // ofxPDSP
-// Nicola Pisanti, MIT License, 2016
+// Nicola Pisanti, MIT License, 2016 - 2018
 
 #ifndef PDSP_SCORE_H_INCLUDED
 #define PDSP_SCORE_H_INCLUDED
 
 #include "../messages/header.h"
 #include "../DSP/pdspCore.h"
-#include "ScoreSection.h"
+#include "SequencerSection.h"
 #include <vector>
 
 
@@ -16,12 +16,12 @@ namespace pdsp{
     /*!
     @brief Contains all the needed framework for generating and sequencing messages for the DSPs
     
-    This class owns a vector of ScoreSection and it is also responsible of updating the global transport for the Clockable units. Remember that the ScoreSections inside a ScoreProcessor are processed from the first to the last so it could be possible for the data generated from the first ScoreSections in the vector to influence the others (in a thread-safe manner).
+    This class owns a vector of SequencerSection and it is also responsible of updating the global transport for the Clockable units. Remember that the SequencerSections inside a SequencerProcessor are processed from the first to the last so it could be possible for the data generated from the first SequencerSections in the vector to influence the others (in a thread-safe manner).
     */ 
     
-class ScoreProcessor : public Preparable {
+class SequencerProcessor : public Preparable {
 public:    
-    ScoreProcessor();
+    SequencerProcessor();
     
     /*!
     @brief sets the global tempo
@@ -36,7 +36,7 @@ public:
     /*!
     @brief this method have to be called in the audio callback, before the Processor processAndCopy...() method
     
-    Update the global transport, update all the ScoreSections and connected GateSequencer, ValueSequencer 
+    Update the global transport, update all the SequencerSections and connected GateSequencer, ValueSequencer 
     */ 
     void process(int const &bufferSize) noexcept;
 
@@ -63,7 +63,7 @@ public:
     void play();  
 
     /*!
-    @brief returns true if the ScoreProcessor is playing. Thread-safe.
+    @brief returns true if the SequencerProcessor is playing. Thread-safe.
     */     
     bool isPlaying();
     
@@ -90,9 +90,9 @@ public:
     float meter_playhead(); 
 
     /*!
-    @brief You directly access the ScoreSections with this vector.
+    @brief You directly access the SequencerSections with this vector.
     */     
-    std::vector<ScoreSection> sections;
+    std::vector<SequencerSection> sections;
 
 
     /*!
@@ -106,7 +106,7 @@ public:
     
     /*!
     @brief Immediately launch the cells at the selected index of each section, with the given launch timings options. Thread-safe. 
-    @param[in] index index of the patter to set inside the ScoreSection. This has to be a valid index. A negative index stops the playing of this section (you can perform quantized stopping if quantizeLaunch = true ).
+    @param[in] index index of the patter to set inside the SequencerSection. This has to be a valid index. A negative index stops the playing of this section (you can perform quantized stopping if quantizeLaunch = true ).
     @param[in] quantizeLaunch if true the next pattern launch is quantized to the bars, if false the pattern is lanched as soon as possible.  If not given as argument, it is assumed false.
     @param[in] quantizeGrid if the launch is quantized this is the grid division for quantizing, in bars.  If not given as argument, it is assumed 1.0 (one bar).
     

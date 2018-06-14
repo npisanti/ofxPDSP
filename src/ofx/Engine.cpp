@@ -2,7 +2,7 @@
 #include "Engine.h"
 
 
-pdsp::Engine::Engine(){
+pdsp::Engine::Engine() : score( sequencer ){
     inputID = 0;
     outputID = 0;
     inStreamActive = false;

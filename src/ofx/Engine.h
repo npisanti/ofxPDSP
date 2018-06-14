@@ -8,7 +8,7 @@
 
 #include "ofMain.h"
 #include "../DSP/pdspCore.h"
-#include "../sequencer/ScoreProcessor.h"
+#include "../sequencer/SequencerSection.h"
 #include "../DSP/utility/OneBarTimeMs.h"
 #include "../modules/oscillators/FMOperator.h"
 #include "../DSP/utility/DBtoLin.h"
@@ -29,7 +29,7 @@
 #endif
 
 /*!
-@brief utility class to manage input/output audio streams, acquire and release resources and process midi input/output. It also has an internal ScoreProcessor for sequencing.
+@brief utility class to manage input/output audio streams, acquire and release resources and process midi input/output. It also has an internal SequencerProcessor for sequencing.
 */
 
 namespace pdsp{
@@ -148,9 +148,9 @@ public:
     
 
     /*!
-    @brief a ScoreProcessor class to manage the playhead and for sequencing. Look ScoreProcessor page for knowing more.
+    @brief a SequencerProcessor class to manage the playhead and for sequencing. Look SequencerProcessor page for knowing more.
     */
-    pdsp::ScoreProcessor score;
+    pdsp::SequencerProcessor sequencer;
     
     /*!
     @brief manages a class to graphically monitor sequences
@@ -180,6 +180,9 @@ public:
 */
     void audioOut(ofSoundBuffer &outBuffer);
     void audioIn (ofSoundBuffer &outBuffer);
+    
+    pdsp::SequencerProcessor & score; // this is an alias for the sequencer, legacy reasons
+
 /*!
     @endcond
 */

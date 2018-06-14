@@ -27,8 +27,8 @@
 #include "signal/Decimator.h"
 
 #include "control/ToGateTrigger.h"
-#include "control/GateSequencer.h"
-#include "control/ValueSequencer.h"
+#include "control/SequencerGateOutput.h"
+#include "control/SequencerValueOutput.h"
 #include "control/TriggerGeiger.h"
 #include "control/TriggerControl.h"
 

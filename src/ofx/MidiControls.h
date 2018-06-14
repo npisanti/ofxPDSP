@@ -9,7 +9,7 @@
 #ifndef __ANDROID__
 
 #include "ofxMidi.h"
-#include "../DSP/control/ValueSequencer.h"
+#include "../DSP/control/SequencerValueOutput.h"
 #include <chrono>
 #include "helper/MidiCCBuffers.h"
 #include "helper/Controller.h"
@@ -49,12 +49,12 @@ public:
     @brief returns a control value corrisponding to the given cc number, the output is mapped to the 0.0f-1.0f range.
     @param[in] cc the cc number for the output
     */    
-    pdsp::ValueSequencer & out( int cc );
+    pdsp::SequencerValueOutput & out( int cc );
     
 /*!
     @cond HIDDEN_SYMBOLS
 */
-    std::vector<pdsp::ValueSequencer>    outs_cc; // this has to become private in later versions
+    std::vector<pdsp::SequencerValueOutput>    outs_cc; // this has to become private in later versions
     
     void processMidi(const pdsp::midi::Input &midiInProcessor, const int &bufferSize ) noexcept override;   
 /*!

@@ -15,20 +15,20 @@ void ofApp::setup(){
     quantize = true;
     quantime = 1.0/8.0; // 1/4th
     
-    engine.score.setTempo(120.0f); // sets the tempo of the music
+    engine.sequencer.setTempo(120.0f); // sets the tempo of the music
     
-    engine.score.sections.resize(2); 
+    engine.sequencer.sections.resize(2); 
     // this is very important, each section can contain and switch between one or more sequences
     // you have to resize it to a sufficient number before starting to assign sequences
  
     // each section can output the messages to one or more outputs, as values or triggers
-    engine.score.sections[0].out_trig(0)  >> bass.in("trig"); // assign the first sequence output to trig
-    engine.score.sections[0].out_value(1) >> bass.in("pitch"); // assign the second sequence output to values
-    engine.score.sections[1].out_trig(0)  >> lead.in("trig"); // assign the first sequence output to trig
-    engine.score.sections[1].out_value(1) >> lead.in("pitch"); // assign the second sequence output to values
+    engine.sequencer.sections[0].out_trig(0)  >> bass.in("trig"); // assign the first sequence output to trig
+    engine.sequencer.sections[0].out_value(1) >> bass.in("pitch"); // assign the second sequence output to values
+    engine.sequencer.sections[1].out_trig(0)  >> lead.in("trig"); // assign the first sequence output to trig
+    engine.sequencer.sections[1].out_value(1) >> lead.in("pitch"); // assign the second sequence output to values
     
     // decomment this to slew the lead value output signal
-    // engine.score.sections[1].out_value(1).enableSmoothing(100.0f);
+    // engine.sequencer.sections[1].out_value(1).enableSmoothing(100.0f);
     
     // patching
     bass * (dB(-6.0f) * pdsp::panL(-0.25f)) >> engine.audio_out(0);
@@ -103,8 +103,8 @@ void ofApp::setup(){
     
     // assigning the sequences to the sections
     for(int i = 0; i<4; ++i){
-        engine.score.sections[0].setCell(i, &bass_seqs[i], &alternate); // cell index, pointer to pdsp:Sequence, pointer to pdsp::SeqChange
-        engine.score.sections[1].setCell(i, &lead_seqs[i], pdsp::Behavior::OneShot); 
+        engine.sequencer.sections[0].setCell(i, &bass_seqs[i], &alternate); // cell index, pointer to pdsp:Sequence, pointer to pdsp::SeqChange
+        engine.sequencer.sections[1].setCell(i, &lead_seqs[i], pdsp::Behavior::OneShot); 
     } 
 
     // pdsp::SeqChange is a class that choose another sequence when a sequence ends it's length
@@ -155,17 +155,17 @@ void ofApp::draw(){
     ofFill();
     
     // we can query the active index, the sequence playhead and length in bars with those thread-safe methods
-    for(int i=0; i<(int)engine.score.sections.size(); ++i){
-        int active_seq = engine.score.sections[i].meter_current(); 
+    for(int i=0; i<(int)engine.sequencer.sections.size(); ++i){
+        int active_seq = engine.sequencer.sections[i].meter_current(); 
         if( active_seq < 4){
-            float playheadPercent = engine.score.sections[i].meter_playhead() / engine.score.sections[i].meter_length();
+            float playheadPercent = engine.sequencer.sections[i].meter_playhead() / engine.sequencer.sections[i].meter_length();
             ofDrawRectangle(50*active_seq, 50*i, 50.0f*playheadPercent, 50);
         }
     }
     
     // printing out the instructions
     string info = "master playhead (bars): ";
-    info += to_string( engine.score.meter_playhead() );
+    info += to_string( engine.sequencer.meter_playhead() );
     info += " \n";
     info += "1-4 : launch bass sequences\n";
     info += "q-w-e-r : launch lead sequences\n";
@@ -201,19 +201,19 @@ void ofApp::keyPressed(int key){
     // we can launch our sequences with the launchCell method, with optional quantization
     switch (key){
     case '1':
-        engine.score.sections[0].launchCell( 0, quantize, quantime);
+        engine.sequencer.sections[0].launchCell( 0, quantize, quantime);
         break;
     case '2':
-        engine.score.sections[0].launchCell( 1, quantize, quantime);
+        engine.sequencer.sections[0].launchCell( 1, quantize, quantime);
         break;
     case '3':
-        engine.score.sections[0].launchCell( 2, quantize, quantime);
+        engine.sequencer.sections[0].launchCell( 2, quantize, quantime);
         break;
     case '4':
-        engine.score.sections[0].launchCell( 3, quantize, quantime);
+        engine.sequencer.sections[0].launchCell( 3, quantize, quantime);
         break;
     case '5':
-        engine.score.sections[0].launchCell( -1, quantize, quantime);
+        engine.sequencer.sections[0].launchCell( -1, quantize, quantime);
         break;
     case '6':
         quantize = true;
@@ -235,19 +235,19 @@ void ofApp::keyPressed(int key){
         quantize = false;
         break;
     case 'q':
-        engine.score.sections[1].launchCell( 0, quantize, quantime);
+        engine.sequencer.sections[1].launchCell( 0, quantize, quantime);
         break;
     case 'w':
-        engine.score.sections[1].launchCell( 1, quantize, quantime);
+        engine.sequencer.sections[1].launchCell( 1, quantize, quantime);
         break;
     case 'e':
-        engine.score.sections[1].launchCell( 2, quantize, quantime);
+        engine.sequencer.sections[1].launchCell( 2, quantize, quantime);
         break;
     case 'r':
-        engine.score.sections[1].launchCell( 3, quantize, quantime);
+        engine.sequencer.sections[1].launchCell( 3, quantize, quantime);
         break;
     case 't':
-        engine.score.sections[1].launchCell( -1, quantize, quantime);
+        engine.sequencer.sections[1].launchCell( -1, quantize, quantime);
         break;
     case 'a':
         seq_mode++;
@@ -255,35 +255,35 @@ void ofApp::keyPressed(int key){
         switch(seq_mode){
             case 0:
                 for(int i = 0; i<4; ++i){
-                    engine.score.sections[1].setChange(i, pdsp::Behavior::Nothing);
+                    engine.sequencer.sections[1].setChange(i, pdsp::Behavior::Nothing);
                 } 
                 break;
             case 1:
                 for(int i = 0; i<4; ++i){
-                    engine.score.sections[1].setChange(i, pdsp::Behavior::Loop);
+                    engine.sequencer.sections[1].setChange(i, pdsp::Behavior::Loop);
                 } 
                 break;
             case 2:
                 for(int i = 0; i<4; ++i){
-                    engine.score.sections[1].setChange(i, pdsp::Behavior::Next);
+                    engine.sequencer.sections[1].setChange(i, pdsp::Behavior::Next);
                 } 
                 break;
             case 3:
                 for(int i = 0; i<4; ++i){
-                    engine.score.sections[1].setChange(i, pdsp::Behavior::RandomOther);
+                    engine.sequencer.sections[1].setChange(i, pdsp::Behavior::RandomOther);
                 } 
                 break;
         }
         break;
     case ' ': // pause / play
-        if(engine.score.isPlaying()){
-            engine.score.pause();
+        if(engine.sequencer.isPlaying()){
+            engine.sequencer.pause();
         }else{
-            engine.score.play();
+            engine.sequencer.play();
         }
         break;
     case 's': // stop
-        engine.score.stop();
+        engine.sequencer.stop();
         break;
     }
     

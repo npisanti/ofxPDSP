@@ -1,7 +1,7 @@
 
 #include "EngineGraphics.h"
 
-void pdsp::helper::EngineGraphics::setParent ( pdsp::ScoreProcessor & score ){
+void pdsp::helper::EngineGraphics::setParent ( pdsp::SequencerProcessor & score ){
     this->score = &score;
     posX = 0;
     posY = 0;

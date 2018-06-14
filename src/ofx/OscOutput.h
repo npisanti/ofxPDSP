@@ -14,7 +14,7 @@
 #include <condition_variable>
 #include <atomic>
 #include "../DSP/pdspCore.h"
-#include "../sequencer/ScoreSection.h"
+#include "../sequencer/SequencerSection.h"
 #include "ofxOsc.h"
 
 /*!

@@ -1,7 +1,7 @@
 
-// ScoreMessage.h
+// SequencerMessage.h
 // ofxPDSP
-// Nicola Pisanti, MIT License, 2016
+// Nicola Pisanti, MIT License, 2016 - 2018
 
 #ifndef PDSP_SCOREMESSAGE_H_INCLUDED
 #define PDSP_SCOREMESSAGE_H_INCLUDED
@@ -21,23 +21,23 @@ namespace pdsp{
     This class rapresent a message contained inside the vector of a ScoreCell, having a time of execution, a value that will be interpreted by GateSequencer or ValueSequencer and the index of the output lane choosen between the one available of the ScoreSection that contains the ScoreCell.
 
     */ 
-class ScoreMessage{
+class SequencerMessage{
 public:
 
     /*!
     @brief default values are time = 0.0, value = 0.0f, lane = 0
     */ 
-    ScoreMessage();
+    SequencerMessage();
     
     /*!
     @brief for this constructor lane = 0
     */ 
-    ScoreMessage(double time, float value );
+    SequencerMessage(double time, float value );
     
-    ScoreMessage(double time, float value, int lane);
-    ScoreMessage(const ScoreMessage &other);
-    ScoreMessage& operator= (const ScoreMessage &other);
-    ~ScoreMessage();
+    SequencerMessage(double time, float value, int lane);
+    SequencerMessage(const SequencerMessage &other);
+    SequencerMessage& operator= (const SequencerMessage &other);
+    ~SequencerMessage();
     /*!
     @brief time in bars of the execution, relative to the ScoreCell start
     */     
@@ -55,7 +55,7 @@ public:
 };
 
 
-bool messageSort(const ScoreMessage &lhs, const ScoreMessage &rhs );
+bool messageSort(const SequencerMessage &lhs, const SequencerMessage &rhs );
 
 
 

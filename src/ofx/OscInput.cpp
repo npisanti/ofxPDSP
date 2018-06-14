@@ -89,7 +89,7 @@ void pdsp::osc::Input::close(){
 
 
 
-pdsp::GateSequencer& pdsp::osc::Input::out_trig( string oscAddress ) {
+pdsp::SequencerGateOutput& pdsp::osc::Input::out_trig( string oscAddress ) {
     
     for ( OscChannel* & osc : oscChannels ){
         if( osc->key == oscAddress ) {
@@ -108,7 +108,7 @@ pdsp::GateSequencer& pdsp::osc::Input::out_trig( string oscAddress ) {
     osc->key = oscAddress;
     //osc->mode = Gate;
     osc->messageBuffer = new pdsp::MessageBuffer();
-    osc->gate_out = new pdsp::GateSequencer();
+    osc->gate_out = new pdsp::SequencerGateOutput();
     osc->gate_out->link( *(osc->messageBuffer) );
     oscChannels.push_back(osc);
 
@@ -117,7 +117,7 @@ pdsp::GateSequencer& pdsp::osc::Input::out_trig( string oscAddress ) {
 }
 
 
-pdsp::ValueSequencer& pdsp::osc::Input::out_value( string oscAddress ) {
+pdsp::SequencerValueOutput& pdsp::osc::Input::out_value( string oscAddress ) {
    
     for ( OscChannel* & osc : oscChannels ){
         if( osc->key == oscAddress ) {
@@ -136,7 +136,7 @@ pdsp::ValueSequencer& pdsp::osc::Input::out_value( string oscAddress ) {
     osc->key = oscAddress;
     //osc->mode = Value;
     osc->messageBuffer = new pdsp::MessageBuffer();
-    osc->value_out = new pdsp::ValueSequencer();
+    osc->value_out = new pdsp::SequencerValueOutput();
     osc->value_out->link( *(osc->messageBuffer) );
     oscChannels.push_back(osc);
 

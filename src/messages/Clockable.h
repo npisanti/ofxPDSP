@@ -15,7 +15,7 @@ namespace pdsp {
 */      
 
 class Clockable{
-    friend class ScoreProcessor;
+    friend class SequencerProcessor;
     friend void prepareAllToPlay(int expectedBufferSize, double sampleRate);
     
 public:

@@ -1,16 +1,16 @@
 
-#include "ScoreSection.h"
+#include "SequencerSection.h"
 #include <iostream>
 #include <float.h>
 #include <limits.h>
 
 
-pdsp::GateSequencer pdsp::ScoreSection::invalidGate = pdsp::GateSequencer();
-pdsp::ValueSequencer pdsp::ScoreSection::invalidValue = pdsp::ValueSequencer();
-pdsp::Sequence pdsp::ScoreSection::dummySeq  = pdsp::Sequence();
-std::string pdsp::ScoreSection::emptyLabel = "";
+pdsp::SequencerGateOutput pdsp::SequencerSection::invalidGate = pdsp::SequencerGateOutput();
+pdsp::SequencerValueOutput pdsp::SequencerSection::invalidValue = pdsp::SequencerValueOutput();
+pdsp::Sequence pdsp::SequencerSection::dummySeq  = pdsp::Sequence();
+std::string pdsp::SequencerSection::emptyLabel = "";
 
-pdsp::ScoreSection::ScoreSection() {
+pdsp::SequencerSection::SequencerSection() {
     
     patterns.clear();
     scheduledPattern = -1;
@@ -39,7 +39,7 @@ pdsp::ScoreSection::ScoreSection() {
     
 }
 
-pdsp::ScoreSection::ScoreSection(const pdsp::ScoreSection &other) {
+pdsp::SequencerSection::SequencerSection(const pdsp::SequencerSection &other) {
     std::cout<<"score section copy constructed\n";
     resizeCells( (int) other.patterns.size() );
     
@@ -53,7 +53,7 @@ pdsp::ScoreSection::ScoreSection(const pdsp::ScoreSection &other) {
     this->setOutputsNumber( (int)other.outputs.size() );
 }
 
-pdsp::ScoreSection::~ScoreSection(){
+pdsp::SequencerSection::~SequencerSection(){
 
     for( int i=0; i < (int)gates.size(); ++i ){
         if(gates[i]!=nullptr) delete gates[i];
@@ -70,11 +70,11 @@ pdsp::ScoreSection::~ScoreSection(){
 }
 
 
-void pdsp::ScoreSection::resizePatterns(int size){
+void pdsp::SequencerSection::resizePatterns(int size){
     resizeCells(size);
 }
 
-void pdsp::ScoreSection::resizeCells(int size){
+void pdsp::SequencerSection::resizeCells(int size){
     if(size>0){
         if(size<(int)patterns.size()){
             if(patternIndex>=size){
@@ -86,15 +86,15 @@ void pdsp::ScoreSection::resizeCells(int size){
     }
 }
 
-int pdsp::ScoreSection::getCellsNumber() const{
+int pdsp::SequencerSection::getCellsNumber() const{
     return patterns.size();
 }
 
-int pdsp::ScoreSection::getPatternsNumber() const{
+int pdsp::SequencerSection::getPatternsNumber() const{
     return getCellsNumber();
 }
 
-void pdsp::ScoreSection::launchCell( int index, bool quantizeLaunch, double quantizeGrid ){
+void pdsp::SequencerSection::launchCell( int index, bool quantizeLaunch, double quantizeGrid ){
     if     ( index < 0        ) { index = -1; }
     else if( index >= (int)patterns.size() ) { index = (int)patterns.size()-1; }
 
@@ -111,7 +111,7 @@ void pdsp::ScoreSection::launchCell( int index, bool quantizeLaunch, double quan
 }
 
 
-void pdsp::ScoreSection::setCell( int index, Sequence* sequence, SeqChange* behavior, std::string label ){
+void pdsp::SequencerSection::setCell( int index, Sequence* sequence, SeqChange* behavior, std::string label ){
     if(index>=0){
         if(index>=(int)patterns.size()){
             resizeCells(index+1);
@@ -125,27 +125,27 @@ void pdsp::ScoreSection::setCell( int index, Sequence* sequence, SeqChange* beha
     }
 }
 
-void pdsp::ScoreSection::setChange( int index, SeqChange* behavior ){
+void pdsp::SequencerSection::setChange( int index, SeqChange* behavior ){
     if(index>=0 && index < (int) patterns.size()){
         patterns[index].nextCell  = behavior;
     }
 }
 
-void pdsp::ScoreSection::setLooping( int index ) {
+void pdsp::SequencerSection::setLooping( int index ) {
     setChange(index, Behavior::Loop);
 }
 
-void pdsp::ScoreSection::setOneShot( int index ) {
+void pdsp::SequencerSection::setOneShot( int index ) {
     setChange(index, Behavior::OneShot);    
 }
 
-void pdsp::ScoreSection::setLabel( int index, std::string label ){
+void pdsp::SequencerSection::setLabel( int index, std::string label ){
     if(index < 0) index = 0;
     if(index >= (int) patterns.size()) index = patterns.size() -1;
     if( patterns[index].sequence!= nullptr ) patterns[index].sequence->label = label;
 }
 
-std::string pdsp::ScoreSection::getLabel( int index ){
+std::string pdsp::SequencerSection::getLabel( int index ){
     if( index >= 0 && index < (int) patterns.size() ){
         if( patterns[index].sequence!= nullptr ){
             return patterns[index].sequence->label;
@@ -160,7 +160,7 @@ std::string pdsp::ScoreSection::getLabel( int index ){
 }
 
 //remember to check for quantizeGrid to be no greater than pattern length
-void pdsp::ScoreSection::setCellQuantization( int index, bool quantizeLaunch, double quantizeGrid ){
+void pdsp::SequencerSection::setCellQuantization( int index, bool quantizeLaunch, double quantizeGrid ){
     if(index>=0){
         if(index>=(int) patterns.size()){
             resizeCells(index+1);
@@ -173,16 +173,16 @@ void pdsp::ScoreSection::setCellQuantization( int index, bool quantizeLaunch, do
 }
 
    
-void pdsp::ScoreSection::enableQuantization(int index, double quantizeGrid ){
+void pdsp::SequencerSection::enableQuantization(int index, double quantizeGrid ){
     setCellQuantization(index, true, quantizeGrid);
 }
    
-void pdsp::ScoreSection::disableQuantization(int index){
+void pdsp::SequencerSection::disableQuantization(int index){
     setCellQuantization(index, false);
 }
 
 
-void pdsp::ScoreSection::processSection(const double &startPlayHead, 
+void pdsp::SequencerSection::processSection(const double &startPlayHead, 
                                 const double &endPlayHead, 
                                 const double &playHeadDifference, 
                                 const double &maxBars,
@@ -267,7 +267,7 @@ void pdsp::ScoreSection::processSection(const double &startPlayHead,
 //-----------------------------------------------INTERNAL FUNCTIONS---------------------------------------------
 
 //range is the quantity in bars of score to be elaborated, offset displace the start of processing
-void pdsp::ScoreSection::playScore(double const &range, double const &offset, const double &oneSlashBarsPerSample) noexcept{
+void pdsp::SequencerSection::playScore(double const &range, double const &offset, const double &oneSlashBarsPerSample) noexcept{
 
     Sequence* patternToProcess = patterns[patternIndex].sequence;
         
@@ -288,7 +288,7 @@ void pdsp::ScoreSection::playScore(double const &range, double const &offset, co
     scorePlayHead = patternMax;
 }
 
-void pdsp::ScoreSection::onSchedule() noexcept{
+void pdsp::SequencerSection::onSchedule() noexcept{
     
     //clear score--------------------------------------------------------------------------
     //score.clear(); //clear score buffer
@@ -348,7 +348,7 @@ void pdsp::ScoreSection::onSchedule() noexcept{
 
 }
 
-void pdsp::ScoreSection::allNoteOff(double const &offset, const double &oneSlashBarsPerSample) noexcept{
+void pdsp::SequencerSection::allNoteOff(double const &offset, const double &oneSlashBarsPerSample) noexcept{
     
     int sample = static_cast<int>( offset * oneSlashBarsPerSample);
 
@@ -359,13 +359,13 @@ void pdsp::ScoreSection::allNoteOff(double const &offset, const double &oneSlash
     }
 }
 
-void pdsp::ScoreSection::clearBuffers() noexcept {
+void pdsp::SequencerSection::clearBuffers() noexcept {
     for(MessageBuffer* &buffer : outputs){
         buffer->clearMessages();
     }
 }
 
-void pdsp::ScoreSection::processBuffersDestinations(const int &bufferSize) noexcept {
+void pdsp::SequencerSection::processBuffersDestinations(const int &bufferSize) noexcept {
     for(MessageBuffer* &buffer : outputs){
         buffer->processDestination(bufferSize);
     }
@@ -374,7 +374,7 @@ void pdsp::ScoreSection::processBuffersDestinations(const int &bufferSize) noexc
 //---------------------------------------------PATCHING---------------------------------
 
 
-void pdsp::ScoreSection::setOutputsNumber(int size){
+void pdsp::SequencerSection::setOutputsNumber(int size){
     if( size > (int) outputs.size()){
         int oldSize = outputs.size();
         outputs.resize(size);        
@@ -385,19 +385,19 @@ void pdsp::ScoreSection::setOutputsNumber(int size){
 }
 
 
-pdsp::MessageBuffer& pdsp::ScoreSection::out_message( int index ){
+pdsp::MessageBuffer& pdsp::SequencerSection::out_message( int index ){
     if(index<0) index = 0;
 
     setOutputsNumber(index+1); // make the array larger if needed
     return *outputs[index];
 }
 
-pdsp::MessageBuffer& pdsp::ScoreSection::out( int index ){
+pdsp::MessageBuffer& pdsp::SequencerSection::out( int index ){
     return out_message(index);
 }
 
 
-pdsp::GateSequencer& pdsp::ScoreSection::out_trig( int index ){
+pdsp::SequencerGateOutput& pdsp::SequencerSection::out_trig( int index ){
     
     if(index<0){ index = 0; }
     
@@ -418,7 +418,7 @@ pdsp::GateSequencer& pdsp::ScoreSection::out_trig( int index ){
     }
     
     if(gates[index]==nullptr){
-        gates[index] = new GateSequencer();
+        gates[index] = new SequencerGateOutput();
         setOutputsNumber(index+1);
         *outputs[index] >> *gates[index];
     }
@@ -427,7 +427,7 @@ pdsp::GateSequencer& pdsp::ScoreSection::out_trig( int index ){
     
 }
 
-pdsp::ValueSequencer& pdsp::ScoreSection::out_value( int index ){
+pdsp::SequencerValueOutput& pdsp::SequencerSection::out_value( int index ){
     
     if(index<0){ index = 0; }
     
@@ -448,7 +448,7 @@ pdsp::ValueSequencer& pdsp::ScoreSection::out_value( int index ){
     }
     
     if(values[index]==nullptr){
-        values[index] = new ValueSequencer();
+        values[index] = new SequencerValueOutput();
         setOutputsNumber(index+1);
         *outputs[index] >> *values[index];
     }
@@ -457,7 +457,7 @@ pdsp::ValueSequencer& pdsp::ScoreSection::out_value( int index ){
     
 }
 
-void pdsp::ScoreSection::linkSlewControl( int valueOutIndex, int slewControlIndex ){
+void pdsp::SequencerSection::linkSlewControl( int valueOutIndex, int slewControlIndex ){
     
     if( valueOutIndex <= 0 ) valueOutIndex = 0;
     
@@ -471,47 +471,47 @@ void pdsp::ScoreSection::linkSlewControl( int valueOutIndex, int slewControlInde
     
 }
 
-int pdsp::ScoreSection::meter_current() const {
+int pdsp::SequencerSection::meter_current() const {
     return atomic_meter_current.load();
 }
 
-int pdsp::ScoreSection::meter_next() const {
+int pdsp::SequencerSection::meter_next() const {
     return atomic_meter_next.load();
 }
 
-float pdsp::ScoreSection::meter_playhead() const {
+float pdsp::SequencerSection::meter_playhead() const {
     return atomic_meter_playhead.load(); 
 }
 
-float pdsp::ScoreSection::meter_percent() const {
+float pdsp::SequencerSection::meter_percent() const {
     return atomic_meter_percent.load(); 
 }
 
-float pdsp::ScoreSection::meter_length() const {
+float pdsp::SequencerSection::meter_length() const {
     return atomic_meter_length.load(); 
 }
 
-void pdsp::ScoreSection::clearOnChange(bool active) {
+void pdsp::SequencerSection::clearOnChange(bool active) {
     clearOnChangeFlag = active;
 }
 
-const pdsp::Sequence & pdsp::ScoreSection::getSequence( int i ) const{
+const pdsp::Sequence & pdsp::SequencerSection::getSequence( int i ) const{
     return *(patterns[i].sequence);
 }
 
 
 // DEPRECATED
-void pdsp::ScoreSection::setPattern( int index, Sequence* sequence, SeqChange* behavior ){
+void pdsp::SequencerSection::setPattern( int index, Sequence* sequence, SeqChange* behavior ){
     setCell(index, sequence, behavior);
 }
 
 // DEPRECATED
-void pdsp::ScoreSection::setBehavior( int index, SeqChange* behavior ){
+void pdsp::SequencerSection::setBehavior( int index, SeqChange* behavior ){
     setChange(index, behavior);
 }
 
 
-void pdsp::ScoreSection::autoInitCells(){
+void pdsp::SequencerSection::autoInitCells(){
     
     seqs.resize( patterns.size() );
     for( int i=0; i<(int)seqs.size(); ++i){
@@ -520,7 +520,7 @@ void pdsp::ScoreSection::autoInitCells(){
     
 }
 
-pdsp::Sequence& pdsp::ScoreSection::sequence( int index ){
+pdsp::Sequence& pdsp::SequencerSection::sequence( int index ){
     if( index >= 0 && index < (int) patterns.size() ){
         if (patterns[index].sequence == nullptr){
             std::cout<<"[pdsp] warning, asking for sequence not set yet, returning dummy sequence for avoiding fatal error\n";
@@ -536,7 +536,7 @@ pdsp::Sequence& pdsp::ScoreSection::sequence( int index ){
     }
 }
 
-void pdsp::ScoreSection::behavior ( int index, pdsp::SeqChange* newBehavior ){
+void pdsp::SequencerSection::behavior ( int index, pdsp::SeqChange* newBehavior ){
     if( index >= 0 && index < (int) patterns.size() ){
         setChange( index, newBehavior );        
     }else{
@@ -545,7 +545,7 @@ void pdsp::ScoreSection::behavior ( int index, pdsp::SeqChange* newBehavior ){
     }
 }
 
-void pdsp::ScoreSection::quantize ( int index, double quantizeTime) {
+void pdsp::SequencerSection::quantize ( int index, double quantizeTime) {
     if( index >= 0 && index < (int) patterns.size() ){
         enableQuantization(index, quantizeTime );
     }else{
@@ -554,7 +554,7 @@ void pdsp::ScoreSection::quantize ( int index, double quantizeTime) {
     } 
 }
 
-void pdsp::ScoreSection::label ( int index, std::string name ) {
+void pdsp::SequencerSection::label ( int index, std::string name ) {
     if( index >= 0 && index < (int) patterns.size() && patterns[index].sequence!= nullptr ){
         patterns[index].sequence->label = name;
     }else{
@@ -563,7 +563,7 @@ void pdsp::ScoreSection::label ( int index, std::string name ) {
     } 
 }
 
-void pdsp::ScoreSection::resetCounterOnStop() {
+void pdsp::SequencerSection::resetCounterOnStop() {
     if(patternIndex!=-1 && patterns[patternIndex].sequence!=nullptr){
         patterns[patternIndex].sequence->resetCount();
     }

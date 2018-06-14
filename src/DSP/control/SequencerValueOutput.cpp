@@ -1,8 +1,8 @@
 
-#include "ValueSequencer.h"
+#include "SequencerValueOutput.h"
 
 
-pdsp::ValueSequencer::ValueSequencer(){
+pdsp::SequencerValueOutput::SequencerValueOutput(){
         
     addOutput("signal", output);
     resetOutputToDefault();
@@ -21,20 +21,20 @@ pdsp::ValueSequencer::ValueSequencer(){
     }    
 }
 
-pdsp::ValueSequencer::ValueSequencer(const ValueSequencer & other){
-    std::cout<<"[pdsp] do not copy construct ValueSequencers!\n";    
+pdsp::SequencerValueOutput::SequencerValueOutput(const SequencerValueOutput & other){
+    std::cout<<"[pdsp] do not copy construct SequencerValueOutputs!\n";    
     pdsp_trace();
 }
 
-pdsp::Patchable& pdsp::ValueSequencer::out_signal(){
+pdsp::Patchable& pdsp::SequencerValueOutput::out_signal(){
     return out("signal");   
 }
 
-float pdsp::ValueSequencer::meter_output() const{
+float pdsp::SequencerValueOutput::meter_output() const{
     return slewLastValue.load();
 }
 
-void pdsp::ValueSequencer::link(MessageBuffer &messageBuffer){
+void pdsp::SequencerValueOutput::link(MessageBuffer &messageBuffer){
     if(connectToSlewControl){
         this->slewControl = &messageBuffer;  
     }else{
@@ -43,47 +43,47 @@ void pdsp::ValueSequencer::link(MessageBuffer &messageBuffer){
     }
 }
 
-void pdsp::ValueSequencer::resetMessageBufferSelector() {
+void pdsp::SequencerValueOutput::resetMessageBufferSelector() {
         connectToSlewControl = false;
 }
 
-pdsp::Sequencer& pdsp::ValueSequencer::in_message(){
+pdsp::SequencerBridge& pdsp::SequencerValueOutput::in_message(){
         connectToSlewControl = false;
         return *this;
 }
 
-pdsp::Sequencer& pdsp::ValueSequencer::in_slew(){
+pdsp::SequencerBridge& pdsp::SequencerValueOutput::in_slew(){
         connectToSlewControl = true;
         return *this;
 }
 
-void pdsp::ValueSequencer::enableSmoothing(float timeMs){
+void pdsp::SequencerValueOutput::enableSmoothing(float timeMs){
     this->setSlewTime(timeMs);
     
 }
 
-void pdsp::ValueSequencer::disableSmoothing(){
+void pdsp::SequencerValueOutput::disableSmoothing(){
     this->deactivateSlew();
 }
 
-void pdsp::ValueSequencer::unLink(){
+void pdsp::SequencerValueOutput::unLink(){
     if(messageBuffer != nullptr){
         messageBuffer->destination = nullptr;
         messageBuffer = nullptr;
     }
 }
 
-void pdsp::ValueSequencer::prepareUnit( int expectedBufferSize, double sampleRate ) {
+void pdsp::SequencerValueOutput::prepareUnit( int expectedBufferSize, double sampleRate ) {
         this->sampleRate = sampleRate;
 }
 
 
-void pdsp::ValueSequencer::releaseResources (){ }
+void pdsp::SequencerValueOutput::releaseResources (){ }
 
 
 
 
-void pdsp::ValueSequencer::process (int bufferSize) noexcept {
+void pdsp::SequencerValueOutput::process (int bufferSize) noexcept {
         
         //if(messageBuffer!=nullptr){
                
@@ -149,6 +149,6 @@ void pdsp::ValueSequencer::process (int bufferSize) noexcept {
 
 }
 
-void pdsp::ValueSequencer::resetSmoothing(){
+void pdsp::SequencerValueOutput::resetSmoothing(){
     firstMessage = true;
 }

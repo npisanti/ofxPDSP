@@ -44,7 +44,7 @@ int pdsp::midi::Controls::getMaxCCNum(){
 }
 
 
-pdsp::ValueSequencer & pdsp::midi::Controls::out( int cc ) {
+pdsp::SequencerValueOutput & pdsp::midi::Controls::out( int cc ) {
     if( cc < 0 ){
         cc = - cc;
     }

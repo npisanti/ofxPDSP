@@ -1,8 +1,8 @@
 
-#include "GateSequencer.h"
+#include "SequencerGateOutput.h"
 
 
-pdsp::GateSequencer::GateSequencer(){
+pdsp::SequencerGateOutput::SequencerGateOutput(){
     addOutput("trig", output_trig);
     resetOutputToDefault();
 
@@ -14,26 +14,26 @@ pdsp::GateSequencer::GateSequencer(){
         
 }
 
-pdsp::GateSequencer::GateSequencer(const GateSequencer& other){
-    std::cout<<"[pdsp] do not copy construct GateSequencers!\n";
+pdsp::SequencerGateOutput::SequencerGateOutput(const SequencerGateOutput& other){
+    std::cout<<"[pdsp] do not copy construct SequencerGateOutputs!\n";
     pdsp_trace();
 }
 
-int pdsp::GateSequencer::meter_last_ticks() const{
+int pdsp::SequencerGateOutput::meter_last_ticks() const{
     return meter_ticks.load();
 }
 
-float pdsp::GateSequencer::meter_last_value() const{
+float pdsp::SequencerGateOutput::meter_last_value() const{
     return meter_value.load();    
 }
 
-void pdsp::GateSequencer::link(MessageBuffer &messageBuffer){
+void pdsp::SequencerGateOutput::link(MessageBuffer &messageBuffer){
     this->messageBuffer = &messageBuffer;
     messageBuffer.destination = this;
     messageBuffer.connectedToGate = true;
 }
 
-void pdsp::GateSequencer::unLink(){
+void pdsp::SequencerGateOutput::unLink(){
 
     if(messageBuffer!=nullptr){
         messageBuffer->connectedToGate = false;
@@ -44,19 +44,19 @@ void pdsp::GateSequencer::unLink(){
     //lastGateValue = pdspGateNull;
 }
 
-void pdsp::GateSequencer::setSingleTrigger(bool state){
+void pdsp::SequencerGateOutput::setSingleTrigger(bool state){
     singleTrigger = state;
 }
 
-pdsp::Patchable& pdsp::GateSequencer::out_trig(){
+pdsp::Patchable& pdsp::SequencerGateOutput::out_trig(){
     return out("trig");
 }
 
-void pdsp::GateSequencer::prepareUnit( int expectedBufferSize, double sampleRate ) {}
+void pdsp::SequencerGateOutput::prepareUnit( int expectedBufferSize, double sampleRate ) {}
 
-void pdsp::GateSequencer::releaseResources (){ }
+void pdsp::SequencerGateOutput::releaseResources (){ }
 
-void pdsp::GateSequencer::process (int bufferSize) noexcept {
+void pdsp::SequencerGateOutput::process (int bufferSize) noexcept {
         meter_ticks++;
         
         //if( messageBuffer!=nullptr ){         

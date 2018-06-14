@@ -14,12 +14,12 @@ void ofApp::setup(){
     chance = 1.0f;
     
     //--------PATCHING-------
-    engine.score.init( 1, 1, 200.0f); 
-    engine.score.sections[0].out_trig(0)  >> lead.in("trig"); 
-    engine.score.sections[0].out_value(1) >> lead.in("pitch"); 
+    engine.sequencer.init( 1, 1, 200.0f); 
+    engine.sequencer.sections[0].out_trig(0)  >> lead.in("trig"); 
+    engine.sequencer.sections[0].out_value(1) >> lead.in("pitch"); 
     lead * dB(-6.0f) >> engine.audio_out(0);
     lead * dB(-6.0f) >> engine.audio_out(1);
-    engine.score.sections[0].launchCell(0); // launch seq
+    engine.sequencer.sections[0].launchCell(0); // launch seq
 
     //-------- buffer init ----------
     buffer.resize( 12 ); // a number big enough for the number of changes before running the sequence code
@@ -29,8 +29,8 @@ void ofApp::setup(){
     circularWrite(); // no problem running this while the engine runs
 
     // -------------- this code runs in the audio thread ----------------------
-    engine.score.sections[0].sequence(0).code = [&] () noexcept { 
-        pdsp::Sequence & seq = engine.score.sections[0].sequence(0);
+    engine.sequencer.sections[0].sequence(0).code = [&] () noexcept { 
+        pdsp::Sequence & seq = engine.sequencer.sections[0].sequence(0);
         seq.begin( 8.0, 1.0 );
         
         // we save the index for reading, so there is no problem if it changes while this code is running

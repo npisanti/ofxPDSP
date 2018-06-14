@@ -3,7 +3,7 @@
 #define OFXPDSP_SCORESECTION_PLOTTER_H_INCLUDED
 
 #include "ofMain.h"
-#include "../sequencer/ScoreSection.h"
+#include "../sequencer/SequencerSection.h"
 #include "../sequencer/Sequence.h"
 
 /*!
@@ -14,11 +14,11 @@ namespace pdsp { namespace helper {
 
 class EngineGraphics;
 
-class ScoreSectionPlotter {
+class SequencerSectionPlotter {
     friend class pdsp::helper::EngineGraphics;
     
 public:
-    ScoreSectionPlotter();
+    SequencerSectionPlotter();
 
     /*!
     @brief set ups the class
@@ -27,7 +27,7 @@ public:
     @param[in] outputs number of outputs to monitor
     @param[in] assignedSection 
     */
-    void setup( int w, int graphH, int outputs, pdsp::ScoreSection &assignedSection);
+    void setup( int w, int graphH, int outputs, pdsp::SequencerSection &assignedSection);
 
     /*!
     @brief this is mandatory in your app update() for the plotters to work
@@ -35,12 +35,12 @@ public:
     void update();
 
     /*!
-    @brief display the ScoreSectionPlotter
+    @brief display the SequencerSectionPlotter
     */
     void draw();
 
     /*!
-    @brief display the ScoreSectionPlotter at the given coordinates
+    @brief display the SequencerSectionPlotter at the given coordinates
     @param[in] x x coordinate
     @param[in] y y coordinate
     */
@@ -93,7 +93,7 @@ private:
     
     int outputs;
     
-    pdsp::ScoreSection * section;
+    pdsp::SequencerSection * section;
     
     ofColor color;
     ofColor colorDim;

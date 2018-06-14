@@ -12,10 +12,10 @@ void pdsp::LowCut::patch(){
     
     freq.set(10000.0f);
     
-    freq >> hp0a.in_cutoff();
-    freq >> hp0b.in_cutoff();
-    freq >> hp1a.in_cutoff();
-    freq >> hp1b.in_cutoff();
+    freq >> hp0a.in_freq();
+    freq >> hp0b.in_freq();
+    freq >> hp1a.in_freq();
+    freq >> hp1b.in_freq();
     
     hp0a.out_hpf() >> hp0b.out_hpf() >> out0;
     hp1a.out_hpf() >> hp1b.out_hpf() >> out1;

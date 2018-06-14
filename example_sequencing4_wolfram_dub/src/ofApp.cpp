@@ -29,12 +29,12 @@ void ofApp::setup(){
     caHeight = SIDE*MAX_GENERATIONS;
 
     //----------------- SEQUENCING ---------------------
-    // Setting up score
-    //engine.score.stop();    // decomment if you want to start the app from stopped state
-    engine.score.setTempo(172.0f);
-    engine.score.sections.resize(2);
+    // Setting up sequencer
+    //engine.sequencer.stop();    // decomment if you want to start the app from stopped state
+    engine.sequencer.setTempo(172.0f);
+    engine.sequencer.sections.resize(2);
     
-    engine.score.sections[0].setCell( 0, &masterplan );
+    engine.sequencer.sections[0].setCell( 0, &masterplan );
     
     // masterplan coding
     masterplan.setLength(1.0); // 1 bar loop
@@ -87,9 +87,9 @@ void ofApp::setup(){
 
     // sets up wolfram sequence
     wolframSeq.setup( 16, ZAPS_NUMBER, 60, MAX_GENERATIONS, SIDE, 300 );      
-    engine.score.sections[1].setCell( 0, &wolframSeq );
+    engine.sequencer.sections[1].setCell( 0, &wolframSeq );
     
-    engine.score.launchMultipleCells(0); // launch the 0 sequences of all the sections
+    engine.sequencer.launchMultipleCells(0); // launch the 0 sequences of all the sections
     
     
     // ----------- PATCHING -----------
@@ -101,7 +101,7 @@ void ofApp::setup(){
     scopes.resize(ZAPS_NUMBER + 2);
     
     for ( int i=0; i<ZAPS_NUMBER; ++i ) {
-        engine.score.sections[1].out_trig(i) >> zaps.voices[i]; // patch the sequence outputs to the zaps
+        engine.sequencer.sections[1].out_trig(i) >> zaps.voices[i]; // patch the sequence outputs to the zaps
         zaps.voices[i] >> scopes[i] >> engine.blackhole();
     }
     
@@ -197,10 +197,10 @@ void ofApp::draw(){
 void ofApp::keyPressed(int key){
     
     if (key == ' '){
-        if(engine.score.isPlaying()){
-            engine.score.stop();
+        if(engine.sequencer.isPlaying()){
+            engine.sequencer.stop();
         }else{
-            engine.score.play();
+            engine.sequencer.play();
         }
     }
     

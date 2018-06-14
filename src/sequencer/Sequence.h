@@ -1,12 +1,12 @@
 
 // Sequence.h
 // ofxPDSP
-// Nicola Pisanti, MIT License, 2016
+// Nicola Pisanti, MIT License, 2016 - 2018
 
 #ifndef PDSP_SEQUENCE_H_INCLUDED
 #define PDSP_SEQUENCE_H_INCLUDED
 
-#include "ScoreMessage.h"
+#include "SequencerMessage.h"
 #include <functional>
 #include <atomic>
 #include <iostream>
@@ -19,7 +19,7 @@ namespace pdsp{
     Sequence is a class and container for values to be sequenced. You can set the value to sequence from an inline array or a std::vector. It also has an assignable lambda function that is executed each time the Sequence starts.
     */    
     class Sequence {
-        friend class ScoreSection;
+        friend class SequencerSection;
     public:
         Sequence( double stepDivision );
         Sequence();
@@ -83,7 +83,7 @@ namespace pdsp{
         @brief sets the sequence from an inlined array. Negative values produce no messages.
         @param[in] init an inline array, for example {1.0f, 0.0f, -1.0f, -1.0f, 0.25f, 0.5f, 0.0f, -1.0f }
         @param[in] division time division
-        @param[in] length time before the next Sequence/ScoreCell will be started
+        @param[in] length time before the next Sequence/SequencerCell will be started
         
         */
         void set( std::initializer_list<float> init, double division, double length  ) noexcept;
@@ -92,7 +92,7 @@ namespace pdsp{
         @brief sets the sequence from an inlined 2d array. Negative values produce no messages.
         @param[in] init an inline array 2d, for example { {1.0f, 0.0f, 1.0f, 0.0f}, {43.f, 24.f, 43.5f, 55.f } }
         @param[in] division time division
-        @param[in] length time before the next Sequence/ScoreCell will be started
+        @param[in] length time before the next Sequence/SequencerCell will be started
         
         */
         void set( std::initializer_list<std::initializer_list<float> >  init , double division, double length  ) noexcept;
@@ -106,7 +106,7 @@ namespace pdsp{
         /*!
         @brief you call begin() before calling message, this prepare the Sequence for the message() method, clearing the buffers. Also set division and length.
         @param[in] division time division
-        @param[in] length time before the next Sequence/ScoreCell will be started
+        @param[in] length time before the next Sequence/SequencerCell will be started
         */
         void begin( double division, double length ) noexcept;
 
@@ -115,7 +115,7 @@ namespace pdsp{
         @brief with this method you can manually add timed values to the sequence. You have to call begin() before adding messages and end() when you've done. Also note that the old Sequence values are not kept so you are adding values to an empty sequence.
         @param[in] step the step index 
         @param[in] value the value of the step
-        @param[in] outputIndex the output of the ScoreSection that will operate with the message, 0 if not given
+        @param[in] outputIndex the output of the SequencerSection that will operate with the message, 0 if not given
         */
         void message(double step, float value, int outputIndex=0) noexcept;
         
@@ -128,7 +128,7 @@ namespace pdsp{
         /*!
         @brief call begin() before calling this function. This function will add all the values of the array with the given division.
         @param[in] vect std::vector<float> of values to add to the sequence, negative values will be ignored
-        @param[in] outputIndex the output of the ScoreSection that will operate with the message, 0 if not given
+        @param[in] outputIndex the output of the SequencerSection that will operate with the message, 0 if not given
         */
         void messageVector( std::vector<float> vect, int outputIndex = 0);
 
@@ -136,7 +136,7 @@ namespace pdsp{
         @brief call begin() before calling this function. This function will add all the values of the array with the given division and will also add a 0.0f value after each value. The distange of the 0.0f value is given by gateLength. Only values greater than 0.0f are used.
         @param[in] vect std::vector<float> of values to add to the sequence, negative values will be ignored
         @param[in] gateLength length of gate = division * gateLength
-        @param[in] outputIndex the output of the ScoreSection that will operate with the message, 0 if not given
+        @param[in] outputIndex the output of the SequencerSection that will operate with the message, 0 if not given
         */
         void trigVector( std::vector<float> vect, double gateLength, int outputIndex = 0);
 
@@ -144,7 +144,7 @@ namespace pdsp{
         @brief call begin() before calling this function. This function will add all the values of the array with the given division and will also add a 0.0f value after each value. The distange of the 0.0f value is given by gateLength. Only values greater than 0.0f are used. All the values are multiplied for multiply.
         @param[in] vect std::vector<float> of values to add to the sequence, negative values will be ignored
         @param[in] gateLength length of gate = division * gateLength
-        @param[in] outputIndex the output of the ScoreSection that will operate with the message, 0 if not given
+        @param[in] outputIndex the output of the SequencerSection that will operate with the message, 0 if not given
         @param[in] multiply multiply all the messages for this value, useful for scaling for external sequencers
         */
         void trigVector( std::vector<float> vect, double gateLength, int outputIndex, float multiply );
@@ -156,7 +156,7 @@ namespace pdsp{
         @param[in] valueStart start value, this is the value of the first step
         @param[in] stepStopExclusive step of the last value, exclusive
         @param[in] valueStopExclusive stop value, the destination value that is not reached
-        @param[in] output the output of the ScoreSection that will operate with the message, 0 if not given
+        @param[in] output the output of the SequencerSection that will operate with the message, 0 if not given
         @param[in] granularity the number of intermediate messages used from a step to another, 1 is the default value. An higher number will make smoother value transition, 1 is staircase-like and is good just for percussive rolls.
         */
         void line(double stepStart, float valueStart, double stepStopExclusive, float valueStopExclusive, int output = 0, int granularity=1 );
@@ -187,12 +187,12 @@ namespace pdsp{
     @cond HIDDEN_SYMBOLS
 */
         /*!
-        @brief returns a read-only reference to the internal ScoreMessage vector
+        @brief returns a read-only reference to the internal SequencerMessage vector
         */        
-        const std::vector<ScoreMessage> & getScore() const;
+        const std::vector<SequencerMessage> & getScore() const;
         
         /*!
-        @brief if the returned number is different than the last one you've got, then a score change happened and now is safe to access the score
+        @brief if the returned number is different than the last one you've got, then a change happened in the sequence and now is safe to access the score
         */
         int getChangeID() const;
 /*!
@@ -204,8 +204,8 @@ namespace pdsp{
         
         void executeGenerateScore() noexcept;
         
-        std::vector<ScoreMessage> score;   
-        std::vector<ScoreMessage> nextScore;
+        std::vector<SequencerMessage> score;   
+        std::vector<SequencerMessage> nextScore;
         std::atomic<bool> modified;
 
         double len;
@@ -222,7 +222,7 @@ namespace pdsp{
     
     /*!
     @brief class for managing sequencing of Sequence
-    This class has a assignable lambda function code() that returns an integer for the next ScoreSection index to be started. By default it returns the last used index, looping the Sequence or ScoreCell
+    This class has a assignable lambda function code() that returns an integer for the next SequencerSection index to be started. By default it returns the last used index, looping the Sequence or SequencerCell
     */    
     class SeqChange {
     
@@ -230,7 +230,7 @@ namespace pdsp{
     
         SeqChange();
         /*!
-        @brief lambda function to assign for selecting the next Sequencer / ScoreCell to start
+        @brief lambda function to assign for selecting the next Sequencer / SeqCell to start
         Remember that this function will be executed into the audio-thread so the access to some variable used also into the main thread could cause race conditions.
         */
         std::function<int()> code;

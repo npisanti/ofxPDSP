@@ -17,7 +17,7 @@
 #include <condition_variable>
 #include <atomic>
 #include "../DSP/pdspCore.h"
-#include "../sequencer/ScoreSection.h"
+#include "../sequencer/SequencerSection.h"
 
 /*!
 @brief utility class manage midi output ports and send midi messages from the internal generative music system

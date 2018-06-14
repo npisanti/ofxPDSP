@@ -1,5 +1,5 @@
 
-// GateSequencer.h
+// SequencerGateOutput.h
 // ofxPDSP
 // Nicola Pisanti, MIT License, 2016
 
@@ -7,30 +7,30 @@
 #define PDSP_CONTROL_GATESEQUENCER_H_INCLUDED
 
 #include "../pdspCore.h"
-#include "Sequencer.h"
+#include "SequencerBridge.h"
 
 namespace pdsp{
         
 /*!
 @brief Takes messages from a MessageBuffer and convert them in a trigger output
 
-Generate trigger values from a MessageBuffer. It also has a switch to implement "Single Trigger Mode". In single trigger mode just the first positive message will generate a standard trigger message, the other will generate some "legato" trigger signals that often will not retrigger the envelope from starts; a normal trigger will be emitted only after a message with 0.0f value is received. GateSequencer has no inputs, but you can use the >> operator to connect a MessageBuffer to it.
+Generate trigger values from a MessageBuffer. It also has a switch to implement "Single Trigger Mode". In single trigger mode just the first positive message will generate a standard trigger message, the other will generate some "legato" trigger signals that often will not retrigger the envelope from starts; a normal trigger will be emitted only after a message with 0.0f value is received. SequencerGateOutput has no inputs, but you can use the >> operator to connect a MessageBuffer to it.
 */
 
-class GateSequencer :  public Sequencer{
+class SequencerGateOutput :  public SequencerBridge{
         
 public:
-        GateSequencer();
-        GateSequencer(const GateSequencer& other);
+        SequencerGateOutput();
+        SequencerGateOutput(const SequencerGateOutput& other);
         
         /*!
-        @brief connect the GateSequencer to a MessageBuffer. You can also use the >> operator with the same effect.
+        @brief connect the SequencerGateOutput to a MessageBuffer. You can also use the >> operator with the same effect.
         @param[in] messageBuffer MessageBuffer to connect
         */       
         void link(MessageBuffer &messageBuffer) override;
         
         /*!
-        @brief disconnect the GateSequencer from the connected MessageBuffer.
+        @brief disconnect the SequencerGateOutput from the connected MessageBuffer.
         */           
         void unLink() override;
         

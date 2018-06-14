@@ -10,8 +10,8 @@
 
 #include "ofxMidi.h"
 #include "../DSP/pdspCore.h"
-#include "../DSP/control/GateSequencer.h"
-#include "../DSP/control/ValueSequencer.h"
+#include "../DSP/control/SequencerGateOutput.h"
+#include "../DSP/control/SequencerValueOutput.h"
 #include "helper/PositionedMidiMessage.h"
 #include "helper/MidiKeysBuffers.h"
 #include "helper/Controller.h"
@@ -107,17 +107,17 @@ public:
     /*!
     @brief single trigger output for the Poly mode
     */
-    pdsp::GateSequencer & out_single_trigger();
+    pdsp::SequencerGateOutput & out_single_trigger();
 
     /*!
     @brief pitchbend output. The pitchbend is also summed to the pitch outputs, so this is just for modulations
     */    
-    pdsp::ValueSequencer & out_pitch_bend();
+    pdsp::SequencerValueOutput & out_pitch_bend();
 
     /*!
     @brief channel pressure output
     */    
-    pdsp::ValueSequencer  & out_aftertouch();
+    pdsp::SequencerValueOutput  & out_aftertouch();
 
 
 /*!
@@ -136,17 +136,17 @@ public:
     /*!
     @brief single trigger output for the Poly mode
     */
-    pdsp::GateSequencer             out_singletrigger;
+    pdsp::SequencerGateOutput             out_singletrigger;
 
     /*!
     @brief pitchbend output. The pitchbend is also summed to the pitch outputs, so this is just for modulations
     */    
-    pdsp::ValueSequencer            out_pitchbend;
+    pdsp::SequencerValueOutput            out_pitchbend;
 
     /*!
     @brief channel pressure output
     */    
-    pdsp::ValueSequencer            out_pressure;
+    pdsp::SequencerValueOutput            out_pressure;
     
     void processMidi(const pdsp::midi::Input &midiInProcessor, const int &bufferSize ) noexcept override;
 /*!
@@ -167,8 +167,8 @@ private:
    
     helper::MidiKeysBuffers      midiConverter;
     
-    std::vector<pdsp::GateSequencer>      gates;
-    std::vector<pdsp::ValueSequencer>     values;
+    std::vector<pdsp::SequencerGateOutput>      gates;
+    std::vector<pdsp::SequencerValueOutput>     values;
     std::vector<pdsp::Amp>                unisonPitchDetune;
     std::vector<pdsp::ValueNode>          voiceUnisonMod;
     

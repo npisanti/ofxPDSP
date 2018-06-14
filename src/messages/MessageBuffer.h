@@ -9,13 +9,13 @@
 
 #include "Message.h"
 #include <vector>
-#include "../DSP/control/Sequencer.h"
+#include "../DSP/control/SequencerBridge.h"
 #include "../flags.h"
 #include "ExtSequencer.h"
 
 namespace pdsp{
 
-    class Sequencer;
+    class SequencerBridge;
     
 /*!
     @cond HIDDEN_SYMBOLS
@@ -37,7 +37,7 @@ namespace pdsp{
         void reserve(int size); 
         bool empty();
 
-        Sequencer*                      destination;
+        SequencerBridge*                destination;
         std::vector<ControlMessage>     messages;
         bool                            connectedToGate;
             

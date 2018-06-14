@@ -6,9 +6,9 @@
 #ifndef PDSP_SEQUENCERHEADER_H_INCLUDE
 #define PDSP_SEQUENCERHEADER_H_INCLUDE
 
-#include "ScoreProcessor.h"
-#include "ScoreSection.h"
-#include "ScoreMessage.h"
+#include "SequencerProcessor.h"
+#include "SequencerSection.h"
+#include "SequencerMessage.h"
 #include "stockBehaviors.h"
 #include "Sequence.h"
 

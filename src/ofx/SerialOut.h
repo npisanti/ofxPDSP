@@ -18,7 +18,7 @@
 #include <condition_variable>
 #include <atomic>
 #include "../DSP/pdspCore.h"
-#include "../sequencer/ScoreSection.h"
+#include "../sequencer/SequencerSection.h"
 
 /*!
 @brief utility class manage serial output ports and send bytes from the internal generative music system

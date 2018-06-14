@@ -231,15 +231,15 @@ pdsp::PatchNode &  pdsp::midi::Keys::out_pitch( int voice ) {
     return outs_pitch[voice]; 
 }
 
-pdsp::GateSequencer & pdsp::midi::Keys::out_single_trigger() {
+pdsp::SequencerGateOutput & pdsp::midi::Keys::out_single_trigger() {
     return out_singletrigger;
 }
 
-pdsp::ValueSequencer & pdsp::midi::Keys::out_pitch_bend() {
+pdsp::SequencerValueOutput & pdsp::midi::Keys::out_pitch_bend() {
     return out_pitchbend;
 }
   
-pdsp::ValueSequencer  & pdsp::midi::Keys::out_aftertouch() {
+pdsp::SequencerValueOutput  & pdsp::midi::Keys::out_aftertouch() {
     return out_pressure;
 }
 

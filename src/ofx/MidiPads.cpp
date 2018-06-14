@@ -130,7 +130,7 @@ void pdsp::midi::Pads::processMidi(const pdsp::midi::Input &midiInProcessor, con
     }
 }
 
-pdsp::GateSequencer &  pdsp::midi::Pads::out_trig( int layerIndex ) {
+pdsp::SequencerGateOutput &  pdsp::midi::Pads::out_trig( int layerIndex ) {
     return outs_trig[layerIndex];
 }
 

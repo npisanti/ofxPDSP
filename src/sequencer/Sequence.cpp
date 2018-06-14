@@ -86,7 +86,7 @@ void pdsp::Sequence::set( std::initializer_list<float> init ) noexcept {
     double time=0.0;
     for (const float & value : init){
         if( value >= 0.0f){
-            nextScore.push_back(  pdsp::ScoreMessage( time , value, 0) );            
+            nextScore.push_back(  pdsp::SequencerMessage( time , value, 0) );            
         }
         time += divMult;
     }
@@ -108,7 +108,7 @@ void pdsp::Sequence::set( std::initializer_list<std::initializer_list<float> >  
         double time = 0.0;
         for ( const float & value : list){
             if( value >= 0.0f){
-                nextScore.push_back(  pdsp::ScoreMessage( time , value, out) );            
+                nextScore.push_back(  pdsp::SequencerMessage( time , value, out) );            
             }
            time += divMult;     
         }
@@ -142,7 +142,7 @@ void pdsp::Sequence::begin( double division, double length ) noexcept{
 }
 
 void pdsp::Sequence::message(double step, float value, int outputIndex) noexcept {
-    nextScore.push_back( pdsp::ScoreMessage( step * divMult, value, outputIndex) );
+    nextScore.push_back( pdsp::SequencerMessage( step * divMult, value, outputIndex) );
 }
 
 void pdsp::Sequence::end() noexcept{
@@ -154,7 +154,7 @@ void pdsp::Sequence::messageVector( std::vector<float> vect, int outputIndex) {
     double time=0.0;
     for (const float & value : vect){
         if( value >= 0.0f){
-            nextScore.push_back(  pdsp::ScoreMessage( time , value, outputIndex) );            
+            nextScore.push_back(  pdsp::SequencerMessage( time , value, outputIndex) );            
         }
         time += divMult;
     }
@@ -167,8 +167,8 @@ void pdsp::Sequence::trigVector( std::vector<float> vect, double gateLength, int
     double offTime = gateLength * divMult;
     for (const float & value : vect){
         if( value > 0.0f){
-            nextScore.push_back(  pdsp::ScoreMessage( time,    value, outputIndex) );            
-            nextScore.push_back(  pdsp::ScoreMessage( offTime , 0.0f, outputIndex) );            
+            nextScore.push_back(  pdsp::SequencerMessage( time,    value, outputIndex) );            
+            nextScore.push_back(  pdsp::SequencerMessage( offTime , 0.0f, outputIndex) );            
         }
         time    += divMult;
         offTime += divMult;
@@ -182,8 +182,8 @@ void pdsp::Sequence::trigVector( std::vector<float> vect, double gateLength, int
     double offTime = gateLength * divMult;
     for (const float & value : vect){
         if( value > 0.0f){
-            nextScore.push_back(  pdsp::ScoreMessage( time,    value*multiply, outputIndex) );            
-            nextScore.push_back(  pdsp::ScoreMessage( offTime , 0.0f,          outputIndex) );            
+            nextScore.push_back(  pdsp::SequencerMessage( time,    value*multiply, outputIndex) );            
+            nextScore.push_back(  pdsp::SequencerMessage( offTime , 0.0f,          outputIndex) );            
         }
         time    += divMult;
         offTime += divMult;
@@ -210,7 +210,7 @@ void pdsp::Sequence::line( double stepStart, float valueStart, double stepStopEx
 
 
 
-const std::vector<pdsp::ScoreMessage> & pdsp::Sequence::getScore() const{
+const std::vector<pdsp::SequencerMessage> & pdsp::Sequence::getScore() const{
     return score;
 }
 
