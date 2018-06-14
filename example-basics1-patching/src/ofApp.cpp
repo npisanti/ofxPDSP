@@ -22,9 +22,10 @@ void ofApp::setup(){
     
     // an oscillator with nothing connected to in_pitch() will play A4 = 440hz
     // (every unit or module has some default values that are used when nothing is patched)
-    // the * operator when used before patching scales the output signal
-    osc.out_sine() * 0.25f >> engine.audio_out(0); // connect to left output channel
-    osc.out_sine() * 0.25f >> engine.audio_out(1); // connect to right right channel
+    // the * operator scales the output signal
+    // the dB() function returns a float for the linear equivalent of the dB value, use it set volume
+    osc.out_sine() * dB(-12.0f) >> engine.audio_out(0); // connect to left output channel
+    osc.out_sine() * dB(-12.0f) >> engine.audio_out(1); // connect to right right channel
     // ( a pdsp::VAOscillator produces a cyclic waveform in the audio range, with a control in semitones )
 
     // you can patch a float value to an input, only the last one patched is used
@@ -48,11 +49,16 @@ void ofApp::setup(){
 
 /*
     // you can also scale the audio by dB values using the dB() function, multiplying again will override the last value
+    osc.out_sine() * dB(-12.0f) >> engine.audio_out(0); // connect to left output channel
+    osc.out_sine() * dB(-12.0f) >> engine.audio_out(1); // connect to right right channel  
+*/
+
+/*
     // and you can pan with the panL() and panR() functions, you have to pass the same value to both, from -1.0f to 1.0f
-    // combine those function together by multiplying their results before patching
+    // you can combine pdsp::pan with dB those function together by multiplying their results before patching
     float pan = 0.5f;
-    osc.out_sine() * (dB(-12.0f) * panL(pan)) >> engine.audio_out(0); // connect to left output channel
-    osc.out_sine() * (dB(-12.0f) * panR(pan)) >> engine.audio_out(1); // connect to right right channel  
+    osc.out_sine() * (dB(-12.0f) * pdsp::panL(pan)) >> engine.audio_out(0); // connect to left output channel
+    osc.out_sine() * (dB(-12.0f) * pdsp::panR(pan)) >> engine.audio_out(1); // connect to right right channel  
 */
 
     cout<<"[example] finished patching\n";

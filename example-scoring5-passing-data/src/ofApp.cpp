@@ -37,7 +37,7 @@ void ofApp::setup(){
         int read = index; 
         
         for (size_t i=0; i<buffer[read].size(); ++i){
-            if(pdspChance( chance) ){ // chance could also be changed while this code runs, no problem
+            if(pdsp::chance( chance) ){ // chance could also be changed while this code runs, no problem
                 seq.message( double(i), 1.0f,  0 );
                 seq.message( double(i), buffer[read][i], 1 );
             }

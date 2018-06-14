@@ -19,8 +19,8 @@ void pdsp::Sequence::setDivision( double value ){
     divMult = 1.0 / div;
 }
 
-void pdsp::Sequence::setLength( double value ){
-    this->len = value;
+void pdsp::Sequence::setLength( double bars ){
+    this->len = bars;
 }
 
 double pdsp::Sequence::length() const{
@@ -31,9 +31,9 @@ double pdsp::Sequence::division() const{
     return div;
 }
 
-void pdsp::Sequence::setTiming( double division, double length ){
+void pdsp::Sequence::setTiming( double division, double bars ){
     setDivision(division);
-    setLength(length);
+    setLength(bars);
 }
 
 pdsp::Sequence::Sequence(const Sequence & other) {

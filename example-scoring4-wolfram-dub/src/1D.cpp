@@ -130,9 +130,9 @@ void Automaton1D::initRandom( float density ) noexcept{
     }        
     
     for( int x=0; x < (int)(CA[caGenerationIndex].size()); ++x ){
-        // pdspChange(float value) controls the chance of having an alive cell
+        // pdsp::chance(float value) controls the chance of having an alive cell
         if(x%2==0){
-            CA[caGenerationIndex][x] = pdspChance(density) ? 1 : 0;                     
+            CA[caGenerationIndex][x] = pdsp::chance(density) ? 1 : 0;                     
         }else{
             CA[caGenerationIndex][x] = 0;          
         }
@@ -162,9 +162,9 @@ void Automaton1D::initCanonical() noexcept{
     }        
 
     for( int x=0; x < (int)(CA[caGenerationIndex].size()); ++x ){
-        // pdspChange(float value) controls the chance of having an alive cell
+        // pdsp::chance(float value) controls the chance of having an alive cell
         if(x%2==0){
-            CA[caGenerationIndex][x] = pdspChance(0.25f) ? 1 : 0;                     
+            CA[caGenerationIndex][x] = pdsp::chance(0.25f) ? 1 : 0;                     
         }else{
             CA[caGenerationIndex][x] = 0;          
         }

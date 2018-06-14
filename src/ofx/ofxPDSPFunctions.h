@@ -7,17 +7,6 @@
 #include "../DSP/utility/DBtoLin.h"
 #include "../math/random/random.h"
 
-/*!
-@brief returns a float value you can use to multiply your signal for panning when patching to a left channel
-@param[in] pan pan value
-*/
-float panL ( float pan );
-
-/*!
-@brief returns a float value you can use to multiply your signal for panning when patching to a right channel
-@param[in] pan pan value
-*/
-float panR ( float pan );
 
 
 /*!
@@ -29,6 +18,17 @@ float dB ( float dBvalue );
 
 namespace pdsp{
 
+/*!
+@brief returns a float value you can use to multiply your signal for panning when patching to a left channel
+@param[in] pan pan value
+*/
+float panL ( float pan );
+
+/*!
+@brief returns a float value you can use to multiply your signal for panning when patching to a right channel
+@param[in] pan pan value
+*/
+float panR ( float pan );
 
 /*!
 @brief take a frequency value as input an returns a pitch value. Standard reference tuning is 440hz, you can set it with setReferencyFrequency() (remember to set it before using this function!).
@@ -54,7 +54,7 @@ int highestPartial( float pitch );
 /*!
 @brief returns a random float value ranging from 0.0f, to the 1.0f. Use this instead of ofRandom() in the code that should run in the audio thread.
 */
-inline_f float uran( ){
+inline_f float urand( ){
     return randomUnipolarInclusive();
 };
 
@@ -62,7 +62,7 @@ inline_f float uran( ){
 @brief returns a random float value ranging from -1.0f to 1.0f. Use this instead of ofRandom() in the code that should run in the audio thread.
 
 */
-inline_f float bran(){
+inline_f float brand(){
     return randomBipolar();
 };
 
@@ -110,8 +110,8 @@ class ofxPDSPFunctions{
     friend float panR ( float pan );
     friend float dB ( float dBvalue );
     friend bool pdsp::chance( float chance );
-    friend float pdsp::uran( );
-    friend float pdsp::bran( );
+    friend float pdsp::urand( );
+    friend float pdsp::brand( );
     friend int pdsp::dice( int sides );    
     friend int pdsp::dice( int min, int maxExclusive );
     friend float pdsp::spread(int index, int max, float spread, bool fromCenter);
@@ -124,26 +124,33 @@ class ofxPDSPFunctions{
     @cond HIDDEN_SYMBOLS
 */
 
+
+[[deprecated("pdspSpread deprecated, use pdsp::spread instead")]]
 inline float pdspSpread(int index, int max, float spread, bool fromCenter = false){ 
     return pdsp::spread( index, max, spread, fromCenter );
 }
 
+[[deprecated("pdspChance deprecated, use pdsp::chance instead")]]
 inline_f bool pdspChance( float value ){
     return pdsp::chance(value);
 };
 
+[[deprecated("pdspDice deprecated, use pdsp::dice instead")]]
 inline_f int pdspDice( int sides ){
     return pdsp::dice(sides);
 };
 
+[[deprecated("pdspDice deprecated, use pdsp::dice instead")]]
 inline_f int pdspDice(  int min, int maxExclusive  ){
     return (pdsp::dice(maxExclusive-min) + min);
 };
 
+[[deprecated("pdspURan deprecated, use pdsp::urand instead")]]
 inline_f float pdspURan( ){
     return pdsp::randomUnipolarInclusive();
 };
 
+[[deprecated("pdspBRan deprecated, use pdsp::brand instead")]]
 inline_f float pdspBRan(){
     return pdsp::randomBipolar();
 };

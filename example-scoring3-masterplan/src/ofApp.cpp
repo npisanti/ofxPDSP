@@ -40,7 +40,7 @@ void ofApp::setup(){
         if(seq.counter()==0){  // here we generate some random numbers to select the drums cells
             states[0] = 0; // the first state is always a kick
             for(size_t i=1; i<states.size();++i){
-                states[i] = pdspDice(5);
+                states[i] = pdsp::dice(5);
             }
         }
         
@@ -52,7 +52,7 @@ void ofApp::setup(){
         // on the first six bars the main riff will run
         if(seq.counter()==0)   engine.score.sections[2].launchCell( 0, true, seq.length());
         // on the last two bars we will use a fill choosen at random
-        if(seq.counter()==48)  engine.score.sections[2].launchCell( pdspDice(1, 5), true, seq.length()); 
+        if(seq.counter()==48)  engine.score.sections[2].launchCell( pdsp::dice(1, 5), true, seq.length()); 
     };
     
     // P.S. obviously we could have done all the beatslicing by coding a  single sequence,

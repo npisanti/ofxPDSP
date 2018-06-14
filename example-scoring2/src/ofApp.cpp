@@ -62,11 +62,11 @@ void ofApp::setup(){
                                                     // (the effect is subtle in this example but it's there
 
     // connect synths to stereo output
-    bass * (panL(-0.5f) * dB(-6.0f)) >> engine.audio_out(0);
-    bass * (panR(-0.5f) * dB(-6.0f)) >> engine.audio_out(1);
+    bass * (pdsp::panL(-0.5f) * dB(-6.0f)) >> engine.audio_out(0);
+    bass * (pdsp::panR(-0.5f) * dB(-6.0f)) >> engine.audio_out(1);
     
-    bleep * (panL(0.5f) * dB(-6.0f)) >> engine.audio_out(0);
-    bleep * (panR(0.5f) * dB(-6.0f)) >> engine.audio_out(1);
+    bleep * (pdsp::panL(0.5f) * dB(-6.0f)) >> engine.audio_out(0);
+    bleep * (pdsp::panR(0.5f) * dB(-6.0f)) >> engine.audio_out(1);
     
     //------------SETUPS AND START AUDIO-------------
     

@@ -39,7 +39,7 @@ namespace pdsp{
         @brief sets the time in bars before the next Sequence will be launched. Messages with a time greater than this won't be played.
         @param[in] value new length
         */
-        void setLength( double value );
+        void setLength( double bars );
         
         /*!
         @brief returns the time in bars before the next Sequence will be launched. 
@@ -58,10 +58,10 @@ namespace pdsp{
 
         /*!
         @brief sets the time division and length of the sequence.
-        @param[in] value time division
-        @param[in] value new length
+        @param[in] division time division
+        @param[in] bars new length
         */
-        void setTiming( double division, double length );
+        void setTiming( double division, double bars );
         
         /*!
         @brief sets the sequence from an inlined array. Negative values produce no messages.
@@ -168,16 +168,6 @@ namespace pdsp{
         std::function<void()> code;
 
         /*!
-        @brief returns a read-only reference to the internal ScoreMessage vector
-        */
-        const std::vector<ScoreMessage> & getScore() const;
-  
-        /*!
-        @brief if the returned number is different than the last one you've got, then a score change happened and now is safe to access the score
-        */
-        int getChangeID() const;
-        
-        /*!
         @brief resets the internal counter you can get with counter(). This counter is resetted automatically when there is a change from a sequence to another or when a Sequence is launched manually.
         */
         void resetCount();
@@ -191,6 +181,23 @@ namespace pdsp{
         @brief public access to read and set the sequence label.
         */     
         std::string label;
+
+
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
+        /*!
+        @brief returns a read-only reference to the internal ScoreMessage vector
+        */        
+        const std::vector<ScoreMessage> & getScore() const;
+        
+        /*!
+        @brief if the returned number is different than the last one you've got, then a score change happened and now is safe to access the score
+        */
+        int getChangeID() const;
+/*!
+    @endcond 
+*/
 
     private:
         std::atomic<float> atomic_meter_percent;

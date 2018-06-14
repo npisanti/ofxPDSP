@@ -51,9 +51,9 @@ void Zaps::setup( int numVoices ) {
         label += " pitch";
         ui.add( voices[i].pitchControl.set(label, 46+i*7, 24, 84 ));
 
-        float pan = pdspSpread( i, voices.size(), panWidth ); 
-        voices[i] * panL(pan) >> fader.in_L();
-        voices[i] * panR(pan) >> fader.in_R();
+        float pan = pdsp::spread( i, voices.size(), panWidth ); 
+        voices[i] * pdsp::panL(pan) >> fader.in_L();
+        voices[i] * pdsp::panR(pan) >> fader.in_R();
     }
 
 }

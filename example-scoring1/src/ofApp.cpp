@@ -31,11 +31,11 @@ void ofApp::setup(){
     // engine.score.sections[1].out_value(1).enableSmoothing(100.0f);
     
     // patching
-    bass * (dB(-6.0f) * panL(-0.25f)) >> engine.audio_out(0);
-    bass * (dB(-6.0f) * panR(-0.25f)) >> engine.audio_out(1);
+    bass * (dB(-6.0f) * pdsp::panL(-0.25f)) >> engine.audio_out(0);
+    bass * (dB(-6.0f) * pdsp::panR(-0.25f)) >> engine.audio_out(1);
     
-    lead * (dB(-6.0f) * panL(0.25f)) >> engine.audio_out(0);
-    lead * (dB(-6.0f) * panR(0.25f)) >> engine.audio_out(1);
+    lead * (dB(-6.0f) * pdsp::panL(0.25f)) >> engine.audio_out(0);
+    lead * (dB(-6.0f) * pdsp::panR(0.25f)) >> engine.audio_out(1);
 
 
     // writing our sequences
@@ -60,7 +60,7 @@ void ofApp::setup(){
     lead_seqs[2].begin( 8.0, 1.0 ); // division, sequence length
     for (int i=0; i<4; ++i){
         float trig = (i%2==0) ? 1.0f : 0.75f;
-        float pitch = minor_penta[pdspDice(8)]; // random pitch from the array, pdspDice give you an int
+        float pitch = minor_penta[pdsp::dice(8)]; // random pitch from the array, pdsp::dice give you an int
         lead_seqs[2].message( double(i), trig,  0 ); // step, value, output (we set 0 as trig out)
         lead_seqs[2].message( double(i), pitch, 1 ); // step, value, output (we set 1 as value out)
     }
@@ -79,7 +79,7 @@ void ofApp::setup(){
         lead_seqs[3].begin( 8.0, 1.0 );
         for (int i=0; i<4; ++i){
             float trig = (i%2==0) ? 1.0f : 0.75f;
-            float pitch = akebono[pdspDice(8)]; 
+            float pitch = akebono[pdsp::dice(8)]; 
             lead_seqs[3].message( double(i), trig,  0 );
             lead_seqs[3].message( double(i), pitch, 1 );
         }
@@ -88,7 +88,7 @@ void ofApp::setup(){
     // the sequence code is executed in the DSP thread, so please don't hold lock or allocate / deallocate memory
     // if you need some heavy computation make it in another thread and copy it to the sequence when it's time
     // as the code is executed into the DSP thread is better not to use ofRandom(), that is not thread safe
-    // use pdspDice(), pdspChance(), pdspURan() and pdspBRan() istead 
+    // use pdsp::dice(), pdsp::chance(), pdsp::uran() and pdsp::bran() istead 
     // they also aren't thread safe if you use them in more than one thread, but as long you use
     // ofRandom() in oF and those functions in pdsp you're fine
     // more info on those functions:
@@ -122,7 +122,7 @@ void ofApp::setup(){
             return 0;
         }else{
             alternate_flag = true;
-            return (1+pdspDice(3));
+            return (1+pdsp::dice(3));
         }
     };
 

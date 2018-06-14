@@ -29,8 +29,8 @@ int randomInt(){
         return globalRandom();
 }
 
-int dice(int dice){
-    std::uniform_int_distribution<int> unipolarInt (0, dice-1);
+int dice(int size){
+    std::uniform_int_distribution<int> unipolarInt (0, size-1);
     return unipolarInt(globalRandom);
 }
 

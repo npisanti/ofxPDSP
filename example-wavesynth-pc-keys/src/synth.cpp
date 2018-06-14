@@ -58,7 +58,7 @@ void PolySynth::setup(int numVoices){
     for(int n=0; n<wavetable.tableLength(); n++){
         if(n<half){
             // wavetable.table(int index) gives you access to a waveform buffer
-            wavetable.table(index)[n] = pdspBRan(); // random value in the -1.0f <--> 1.0f range
+            wavetable.table(index)[n] = pdsp::brand(); // random value in the -1.0f <--> 1.0f range
         }else{
             wavetable.table(index)[n] = 0.0f;
         }

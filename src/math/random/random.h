@@ -17,7 +17,7 @@ namespace pdsp{
         float randomBipolar();
     
         int randomInt();
-        int dice(int sides);
+        int dice(int size);
         int randomBipolarInt(int min, int maxExclusive);        
     
         void seedGlobalRandom(int seed);

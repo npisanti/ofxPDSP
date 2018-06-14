@@ -20,8 +20,8 @@ struct BassPattern : public pdsp::Sequence{
     // this routine shuffles the pitches inside of the sequence vector
     void shuffleSequence(){
         int seqLen = static_cast<int> (sequence.size());
-        int index1 = pdspDice(seqLen);
-        int index2 = index1 + pdspDice(seqLen-1);
+        int index1 = pdsp::dice(seqLen);
+        int index2 = index1 + pdsp::dice(seqLen-1);
         while(index2 >= seqLen){ index2 -= seqLen; }
         float temp = sequence[index1];
         sequence[index1] = sequence[index2];
@@ -35,7 +35,7 @@ struct BassPattern : public pdsp::Sequence{
     // counter() returns the value of an internal counter that measure how many time the sequence has been looped
     float pfun(int index){
         if(index>4 && counter() == 3){
-            float nextPitch = static_cast<float> (pdspDice(12) + 41.0f); 
+            float nextPitch = static_cast<float> (pdsp::dice(12) + 41.0f); 
             return nextPitch;            
         }else{
             return sequence[index];

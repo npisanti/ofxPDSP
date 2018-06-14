@@ -26,7 +26,9 @@ int pdsp::highestPartial( float pitch ) {
     return partial;
 }
 
-float panL ( float pan ){
+
+
+float pdsp::panL ( float pan ){
     float theta;
     if(pan>=1.0f){
         theta = M_PI_2;
@@ -39,7 +41,7 @@ float panL ( float pan ){
 }
 
 
-float panR ( float pan ){
+float pdsp::panR ( float pan ){
     float theta;
     if(pan>=1.0f){
         theta = M_PI_2;
