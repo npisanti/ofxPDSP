@@ -14,7 +14,7 @@
 namespace pdsp{
     
     /*!
-    @brief Multi-mode virtual analog filter, with mono or stereo channels
+    @brief Multi-mode virtual analog ladder filter, with mono or stereo channels
     */  
        
 class VAFilter : public Patchable {
@@ -74,7 +74,8 @@ public:
         HighPass12 = 3.0f;
         BandPass24 = 4.0f;
         BandPass12 = 5.0f;
-    you can access them in the scope, and patch it like this pdsp::VAFilter::LowPass12 >> filter.in_mode()
+        Notch = 6.0f;
+    you can access them in the pdsp::VAFilter scope, and patch it like this pdsp::VAFilter::LowPass12 >> filter.in_mode()
     */      
     Patchable& in_mode();
     
@@ -113,12 +114,10 @@ public:
 private:
     void patch ();
     
-
     PatchNode reso;
     PatchNode mode;
     
     PitchToFreq p2f;
-    
     
     MultiLadder4 filterA;
     MultiLadder4 filterB;

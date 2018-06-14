@@ -9,7 +9,6 @@
 
 #include "../pdspCore.h"
 #include "SampleBuffer.h"
-#include "../interpolators/interpolators.h"
 
 namespace pdsp {
     /*!
@@ -108,7 +107,6 @@ private:
     int sampleIndex;
     
     std::vector<SampleBuffer*> samples;
-    InterpolatorShell interpolatorShell;
     
     float incBase;
     float direction;

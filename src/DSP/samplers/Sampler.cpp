@@ -187,9 +187,7 @@ void pdsp::Sampler::process_audio( const float* pitchModBuffer, const float* tri
                         float x1 = sample->buffer[channel][index_int];
                         float x2 = sample->buffer[channel][index_int+1];
 
-                        //float mu2 = mu * mu * (3 - (2 * mu));
-                        //outputBuffer[n] = (x1 + (x2 - x1) * mu2);
-                        outputBuffer[n] = (x1 * (1.0f-mu)) + (x2 * mu);
+                        outputBuffer[n] = interpolate_smooth( x1, x2, mu );
                 }else{
                         outputBuffer[n] = 0.0f;
                 }

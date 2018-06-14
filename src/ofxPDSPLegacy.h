@@ -1,6 +1,11 @@
 
 #pragma once
 
+// comment to deactivate legacy defines
+#define OFXPDSP_LEGACY
+
+#ifdef OFXPDSP_LEGACY
+
 typedef pdsp::TriggerControl ofxPDSPTrigger;
 
 typedef pdsp::Engine ofxPDSPEngine;
@@ -29,14 +34,12 @@ typedef pdsp::Scope ofxPDSPScope;
 typedef pdsp::serial::Output ofxPDSPSerialOut;
 
 namespace pdsp{
-
     typedef Delay DampedDelay;
-    
     typedef ClockedPhasor ClockedPhazor;
     typedef LFOPhasor LFOPhazor;
     typedef PhasorShifter PhazorShifter;
     typedef PMPhasor PMPhazor;
-    
     typedef WhiteNoise PRNoiseGen;
-
 }
+
+#endif

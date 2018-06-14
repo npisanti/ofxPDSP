@@ -1,14 +1,14 @@
 
 
-#include "MainDelay.h"
+#include "SRDelay.h"
 
 
 
 
-pdsp::MainDelay::MainDelay() : MainDelay(1000.0f){}
+pdsp::SRDelay::SRDelay() : SRDelay(1000.0f){}
 
                 
-pdsp::MainDelay::MainDelay( float timeMs){
+pdsp::SRDelay::SRDelay( float timeMs){
 
         addInput("signal", input);
         addInput("time", in_time_ms);
@@ -28,41 +28,28 @@ pdsp::MainDelay::MainDelay( float timeMs){
                 prepareToPlay(globalBufferSize, globalSampleRate);
         }
 }
-float pdsp::MainDelay::meter_time() const{
+float pdsp::SRDelay::meter_time() const{
     return timeMeter.load();
 }
 
-pdsp::Patchable& pdsp::MainDelay::set( float timeMs){
+pdsp::Patchable& pdsp::SRDelay::set( float timeMs){
     in_time_ms.setDefaultValue(timeMs);
     return *this;
 }
 
-pdsp::Patchable& pdsp::MainDelay::in_signal(){
+pdsp::Patchable& pdsp::SRDelay::in_signal(){
     return in("signal");
 }
 
-pdsp::Patchable& pdsp::MainDelay::in_time(){
+pdsp::Patchable& pdsp::SRDelay::in_time(){
     return in("time");
 }
         
-pdsp::Patchable& pdsp::MainDelay::out_signal(){
+pdsp::Patchable& pdsp::SRDelay::out_signal(){
     return out("signal");
 }
 
-void pdsp::MainDelay::changeInterpolator(Interpolator_t interpolatorMode){
-        interShell.changeInterpolator(interpolatorMode);
-}
-
-/*
-void pdsp::MainDelay::timeBoundaryEnabled(bool enable){
-        this->boundaries = enable;
-                
-        updateBoundaries();
-}
-*/
-
-
-void pdsp::MainDelay::updateBoundaries(){
+void pdsp::SRDelay::updateBoundaries(){
         
         if(boundaries){
                 float low = (1200.0f * globalBufferSize ) / this->sampleRate; //1.2 times the expected buffer size
@@ -75,7 +62,7 @@ void pdsp::MainDelay::updateBoundaries(){
 }
 
 
-void pdsp::MainDelay::setMaxTime(float timeMs){
+void pdsp::SRDelay::setMaxTime(float timeMs){
         maxDelayTimeMs = timeMs;
         
         if(dynamicConstruction){
@@ -83,7 +70,7 @@ void pdsp::MainDelay::setMaxTime(float timeMs){
         }	
 }
 
-void pdsp::MainDelay::prepareUnit( int expectedBufferSize, double sampleRate){
+void pdsp::SRDelay::prepareUnit( int expectedBufferSize, double sampleRate){
         
         this->sampleRate = sampleRate;
         //index = 0.0;
@@ -97,14 +84,14 @@ void pdsp::MainDelay::prepareUnit( int expectedBufferSize, double sampleRate){
 
 }
 
-void pdsp::MainDelay::releaseResources(){
+void pdsp::SRDelay::releaseResources(){
         if (delayBuffer != nullptr){
                 delete[] delayBuffer;
                 delayBuffer = nullptr;
         }
 }
 
-void pdsp::MainDelay::initDelayBuffer(){
+void pdsp::SRDelay::initDelayBuffer(){
         if (delayBuffer != nullptr){
                 ofx_deallocate_aligned(delayBuffer);
         }
@@ -115,7 +102,7 @@ void pdsp::MainDelay::initDelayBuffer(){
 }
 
 
-void pdsp::MainDelay::process(int bufferSize) noexcept{
+void pdsp::SRDelay::process(int bufferSize) noexcept{
         
         
         float* outputBuffer = getOutputBufferToFill(output);
@@ -143,16 +130,14 @@ void pdsp::MainDelay::process(int bufferSize) noexcept{
 
 
 
-void pdsp::MainDelay::process_once(const float* timeBuffer){
+void pdsp::SRDelay::process_once(const float* timeBuffer){
         readIndex = static_cast<float>(writeIndex) - timeBuffer[0]*msToSamplesMultiplier;
         if (readIndex < 0) readIndex = maxDelayTimeSamples + readIndex;
-        //readIndex_i = static_cast<int>(readIndex);
-        //mu = readIndex - readIndex_i;	//as we increment by 1 fract is always the same
 }
 
 
 template<bool timeAR>
-void pdsp::MainDelay::read_audio(float* &outputBuffer, const float* &timeBuffer, const int &bufferSize){
+void pdsp::SRDelay::read_audio(float* &outputBuffer, const float* &timeBuffer, const int &bufferSize){
         
         for(int n=0; n<bufferSize; ++n){
                 
@@ -160,12 +145,14 @@ void pdsp::MainDelay::read_audio(float* &outputBuffer, const float* &timeBuffer,
                         readIndex = static_cast<float>(writeIndex+n) - timeBuffer[n]*msToSamplesMultiplier;
                         if (readIndex < 0) readIndex = maxDelayTimeSamples + readIndex;
                         else if(readIndex>=maxDelayTimeSamples){ readIndex = readIndex - maxDelayTimeSamples; }
-                        //readIndex_i = static_cast<int>(readIndex);
-                        //mu = readIndex - readIndex_i;	//as we increment by 1 fract is always the same	
                 }
                 
-                //outputBuffer[n] = interpolate_linear(delayBuffer[readIndex_i], delayBuffer[readIndex_i + 1], mu);
-                outputBuffer[n] = interShell.interpolate(delayBuffer, readIndex, maxDelayTimeSamples);
+                int index_int = static_cast<int> (readIndex);
+                float mu = readIndex - index_int;
+                float x1 = delayBuffer[index_int];
+                float x2 = delayBuffer[index_int+1];
+
+                outputBuffer[n] = interpolate_linear( x1, x2, mu );
                 
                 if(!timeAR){
                         //readIndex_i++;
@@ -180,7 +167,7 @@ void pdsp::MainDelay::read_audio(float* &outputBuffer, const float* &timeBuffer,
 }
 
 
-void pdsp::MainDelay::write_audio(float* &outputBuffer, const int& bufferSize){
+void pdsp::SRDelay::write_audio(float* &outputBuffer, const int& bufferSize){
         
         int inputBufferState;
         const float* inputBuffer = processInput(input, inputBufferState);

@@ -282,8 +282,11 @@ bool pdsp::FDLConvolver::loadImpulseResponseSegments(const float &inc, const int
                         for(int n=0; n<processingSize; ++n){
                                 
                                 if(index < static_cast<float>(convertedLen)){ //check if we are after the IR length
-                                        tempBuffer[n] = SmoothInterpolator::smoothInterpolator.interpolate(
-                                                impulseResponse->buffer[IRChannel], index, impulseResponse->length );   
+                                        int index_int = static_cast<int> (index);
+                                        float mu = index - index_int;
+                                        float x1 = impulseResponse->buffer[IRChannel][index_int];
+                                        float x2 = impulseResponse->buffer[IRChannel][index_int+1];
+                                        tempBuffer[n] = interpolate_smooth( x1, x2, mu );
                                 }else{
                                         tempBuffer[n] = 0.0f;
                                 }

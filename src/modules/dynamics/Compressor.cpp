@@ -39,8 +39,8 @@ void pdsp::Compressor::patch(bool linkChannels){
     knee >> gr1.in_knee();
     knee >> gr2.in_knee();
 
-    20.0f >> leakDC1.in_cutoff();
-    20.0f >> leakDC2.in_cutoff();    
+    20.0f >> leakDC1.in_freq();
+    20.0f >> leakDC2.in_freq();    
     input1 >> leakDC1.out_hpf() >> rms1;
     input2 >> leakDC2.out_hpf() >> rms2;
               leakDC1.out_hpf() >> peak1;

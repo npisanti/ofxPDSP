@@ -59,10 +59,6 @@ pdsp::Patchable& pdsp::AllPassDelay::in_feedback(){
     return in("feedback");
 }
 
-void pdsp::AllPassDelay::changeInterpolator(Interpolator_t interpolatorMode){
-        interShell.changeInterpolator(interpolatorMode);
-}
-
 void pdsp::AllPassDelay::updateBoundaries(){
         
         if(boundaries){
@@ -172,9 +168,14 @@ void pdsp::AllPassDelay::process_audio(const float* inputBuffer, const float* ti
                         readIndex = static_cast<float>(writeIndex) - timeBuffer[n]*msToSamplesMultiplier;
                         if (readIndex < 0) readIndex = maxDelayTimeSamples + readIndex;
                 }
-                
-                float readValue = interShell.interpolate(delayBuffer, readIndex, maxDelayTimeSamples);
 
+                int index_int = static_cast<int> (readIndex);
+                float mu = readIndex - index_int;
+                float x1 = delayBuffer[index_int];
+                float x2 = delayBuffer[index_int+1];
+                
+                float readValue = interpolate_linear( x1, x2, mu );
+                
                 float vn;
                 if(inputAR){
                         vn = inputBuffer[n] + readValue * g;

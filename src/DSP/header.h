@@ -76,8 +76,9 @@
 
 #include "oscillators/fm/SineFB.h"
 
-#include "delays/MainDelay.h"
+#include "delays/SRDelay.h"
 #include "delays/Delay.h"
+#include "delays/AllPassDelay.h"
 
 #include "envelopes/ADSR.h"
 #include "envelopes/AHR.h"

@@ -11,7 +11,6 @@
 #include "SampleBuffer.h"
 #include "grain/GrainTable.h"
 #include "grain/GrainBased.h"
-#include "../interpolators/interpolators.h"
 
 namespace pdsp{
 
@@ -100,7 +99,6 @@ private:
     float phase;
 
     GrainTable* grainShape;
-    //InterpolatorShell interpolatorShell;
     int grainLength;
     float sampleRate;
 

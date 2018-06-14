@@ -7,7 +7,6 @@
 #define PDSP_UTILITY_SAMPLESDELAY_H_INCLUDED
 
 #include "../pdspCore.h"
-#include "../interpolators/interpolators.h"
 
 namespace pdsp{
 

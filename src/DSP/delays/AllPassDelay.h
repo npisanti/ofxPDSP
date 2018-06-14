@@ -7,9 +7,7 @@
 #ifndef PDSP_DELAYS_ALLPASSDELAY_H_INCLUDED
 #define PDSP_DELAYS_ALLPASSDELAY_H_INCLUDED
 
-
 #include "../pdspCore.h"
-#include "../interpolators/interpolators.h"
 
 namespace pdsp{
 
@@ -59,14 +57,6 @@ public:
     */ 
     void setMaxTime(float timeMs);
     
-    //void timeBoundaryEnabled(bool boundaries);
-    
-    /*!
-    @brief changes the interpolator used for getting values between samples. Using a better interpolator make the delay sound better but it is also more cpu expensive.
-    @param[in] interpolatorMode the interpolator type to set
-    */ 
-    void changeInterpolator(Interpolator_t interpolatorMode);
-    
     /*!
     @brief returns the time value at the start of the last processed buffer. This method is thread-safe.
     */ 
@@ -105,9 +95,7 @@ private:
     float readIndex;
 
     bool boundaries;
-    
-    InterpolatorShell interShell;
-    
+
     float g;
     float outGcoeff;
 

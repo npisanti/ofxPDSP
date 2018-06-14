@@ -3,14 +3,13 @@
 // ofxPDSP
 // Nicola Pisanti, MIT License, 2016
 
-#ifndef SFDLCONVOLVER_H_INCLUDED
-#define SFDLCONVOLVER_H_INCLUDED
+#ifndef PDSP_SFDLCONVOLVER_H_INCLUDED
+#define PDSP_SFDLCONVOLVER_H_INCLUDED
 
 
 #include "../pdspCore.h"
 #include "../helpers/FFTWorker.h"
 #include "../samplers/SampleBuffer.h"
-#include "../interpolators/interpolators.h"
 
 namespace pdsp{
 /*!
@@ -98,4 +97,4 @@ private:
 
 
 
-#endif  // SFDLCONVOLVER_H_INCLUDED
+#endif  // PDSP_SFDLCONVOLVER_H_INCLUDED

@@ -1,29 +1,29 @@
 
-// MainDelay.h
+// SRDelay.h
 // ofxPDSP
-// Nicola Pisanti, MIT License, 2016
+// Nicola Pisanti, MIT License, 2016 - 2018
 
 
-#ifndef PDSP_DELAYS_MAINDELAY_H_INCLUDED
-#define PDSP_DELAYS_MAINDELAY_H_INCLUDED
+#ifndef PDSP_DELAYS_SRDELAY_H_INCLUDED
+#define PDSP_DELAYS_SRDELAY_H_INCLUDED
 
 
 #include "../pdspCore.h"
-#include "../interpolators/interpolators.h"
+
 
 namespace pdsp{
 
     /*!
-    @brief Digital Delay with patchable feedback.
+    @brief Send/Return Delay. Digital Delay with patchable feedback path.
     
-    MainDelay is a digital delay, the minumim delay time for this delay is dependent on the audio buffer size, keeping this limitation it is possible to send the output of MainDelay into other Unit and then patch it back to the input, creating external processing chains for the feedback path. It is also adviced to use a OnePole high pass filter before the input set at 10-20hz to leak any DC offset. The max time of MainDelay is settable with setMaxTime() or using the MainDelay( float timeMS ) constructor.
+    SRDelay is a digital delay, the minumim delay time for this delay is dependent on the audio buffer size, keeping this limitation it is possible to send the output of SRDelay into other Unit and then patch it back to the input, creating external processing chains for the feedback path. It is also adviced to use a OnePole high pass filter before the input set at 10-20hz to leak any DC offset. The max time of SRDelay is settable with setMaxTime() or using the SRDelay( float timeMS ) constructor.
     */
     
-class MainDelay : public Unit {
+class SRDelay : public Unit {
 public:
 
-    MainDelay();
-    MainDelay( float timeMs);
+    SRDelay();
+    SRDelay( float timeMs);
 
     /*!
     @brief sets the default delay time value and returns the unit ready to be patched.
@@ -51,12 +51,6 @@ public:
     @param[in] timeMs new maximum delay time.
     */ 
     void setMaxTime(float timeMs);
-    
-    /*!
-    @brief changes the interpolator used for getting values between samples. Using a better interpolator make the delay sound better but it is also more cpu expensive.
-    @param[in] interpolatorMode the interpolator type to set
-    */     
-    void changeInterpolator(Interpolator_t interpolatorMode);
     
     /*!
     @brief returns the time value at the start of the last processed buffer. This method is thread-safe.
@@ -88,8 +82,6 @@ private:
     InputNode   input;
     OutputNode  output;
     
-    InterpolatorShell interShell;
-    
     float   msToSamplesMultiplier;
     float*  delayBuffer;
     float   maxDelayTimeMs;
@@ -108,4 +100,4 @@ private:
 
 
 
-#endif  // PDSP_DELAYS_MAINDELAY_H_INCLUDED
+#endif  // PDSP_DELAYS_SRDELAY_H_INCLUDED

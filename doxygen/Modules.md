@@ -82,7 +82,7 @@ This is an overview of a selection of the available modules. There are many clas
 - pdsp::osc::Input : OSC input
 - pdsp::osc::Output : OSC output
 
-## Utlity
+## Utility
 - pdsp::Scope : show running buffers
 - pdsp::SampleBufferPlotter : draws pdsp::SampleBuffer waveforms 
 

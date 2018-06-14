@@ -68,17 +68,6 @@ pdsp::Patchable& pdsp::Delay::in_damping(){
     return in("damping");
 }
 
-void pdsp::Delay::changeInterpolator(Interpolator_t interpolatorMode){
-        interShell.changeInterpolator(interpolatorMode);
-}
-/*
-void pdsp::Delay::timeBoundaryEnabled(bool enable){
-        this->boundaries = enable;
-                
-        updateBoundaries();
-}
-*/
-
 void pdsp::Delay::updateBoundaries(){
         
         if(boundaries){
@@ -291,7 +280,7 @@ void pdsp::Delay::process_audio(const float* inputBuffer, const float* timeBuffe
                 float x1 = delayBuffer[index_int];
                 float x2 = delayBuffer[index_int+1];
 
-                outputBuffer[n] = (x1 * (1.0f-mu)) + (x2 * mu);
+                outputBuffer[n] = interpolate_linear( x1, x2, mu );
                 
                 if(fbAR){
                     feedback = fbBuffer[n];

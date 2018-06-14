@@ -12,7 +12,6 @@ pdsp::GrainWindow::GrainWindow(){
         
         updateOutputNodes();
 
-        //interpolatorShell.changeInterpolator(Linear);
         setWindowType(Triangular);
         
         input_length_ms.setDefaultValue(200.0f);
@@ -46,11 +45,7 @@ pdsp::Patchable& pdsp::GrainWindow::in_trig(){
 pdsp::Patchable& pdsp::GrainWindow::in_length(){
     return in("length");
 }
-/*
-void pdsp::GrainWindow::setInterpolatorType(Interpolator_t type){
-        interpolatorShell.changeInterpolator(type);
-}
-*/
+
 void pdsp::GrainWindow::setWindowType(Window_t type, int window_length){
         grainShape = getTable(type, window_length);
 }
@@ -61,7 +56,6 @@ float pdsp::GrainWindow::meter_window() const{
 
 void pdsp::GrainWindow::prepareUnit( int expectedBufferSize, double sampleRate ) {
         this->sampleRate = sampleRate;
-        //interpolatorShell.interpolator->reset();
         phase = 0.0f;
         run = false;
 }
@@ -125,7 +119,6 @@ void pdsp::GrainWindow::process_audio( const float* inputBuffer,  const float* t
 
     for(int n=0; n<bufferSize; ++n){
         
-        
         if(run){
             
             float index = phase*grainShape->length_f;
@@ -135,7 +128,6 @@ void pdsp::GrainWindow::process_audio( const float* inputBuffer,  const float* t
             float x2 = grainShape->buffer[index_int+1];
             float winAmp = interpolate_linear(x1, x2, mu);
            
-            //float winAmp = interpolatorShell.interpolate(grainShape->buffer, phase*grainShape->length_f, grainShape->length);
             windowMeter.store(winAmp);
            
             if(signalAR){
