@@ -1,21 +1,19 @@
 ofxPDSP
 ==============
-ofxPDSP is an audio DSP addon/library for openFrameworks. It is based on those design principles:
+ofxPDSP is an [openFrameworks](https://openframeworks.cc/) addon for audio synthesis and generative music. It is based on those design principles:
 - Native c++, made to be tightly integrated into c++ projects.
 - Class design mimics modular synthesizers, where inputs and outputs are patched with the >> operator.
-- Sample accurate timing.
+- Sample accurate timing for the included sequencer.
 - Thread-safe methods for metering and control.
-- Lazy evaluated DSPs. DSP units are recursively processed in chunks big as the audio buffer size, CPU cycles are spared by not processing Units if the actual state of the system make their results irrelevant and by switching between routines running at audio rate (process every sample) and control rate (once every buffer) on the fly. PDSP is coded optimizing the instruction for this kind of branching and shows a low I1 cache miss rate. DSPs are also coded using SIMD instructions when possible.
+- Lazy evaluated DSPs. DSP units are recursively processed in chunks big as the audio buffer size, DSPs switch between routines running at audio rate (process every sample) and control rate (once every buffer) on the fly when the result is the same. DSPs are also coded using SIMD instructions when possible.
 - Cross-platform code: works on Linux (x86/ARM), OSX, Windows, iOS, Android (only on ARM processors with NEON instructions).
 
-It includes a good selection of modules ready to be used, like antialiasied oscillators and VA filters, an FFT convolver, analog-sounding envelopes, delays, noise generators, a sampler and a graincloud module, biquad equalizers (normal and 2x oversampled), units for dynamic processing, units for oversampling/downsampling and a framework for writing and sequencing generative music.
+It includes a good selection of modules ready to be used, like antialiasied oscillators and VA filters, an FFT convolver, analog-sounding envelopes, a delay, a noise generator, a sampler and a graincloud module, biquad equalizers (normal and 2x oversampled), modules for dynamic processing, units for oversampling/downsampling and a framework for writing and sequencing generative music.
 On top of that some other classes that uses openFrameworks for adding midi and OSC in/out, serial output, sequencer monitoring, waveform plotting and scopes, other audio addon wrapping and ofParameter-compatible control.
 
-There are many different modules and units, so be sure to look at the [overview of the modules here](http://npisanti.com/ofxPDSP/md__modules.html). 
+To learn how to use ofxPDSP be sure to check out all the included examples, starting from the basics. Please also read [this reference page](http://npisanti.com/ofxPDSP/md__modules.html) for a selection of the most high level classes and function (probably you won't ever need more than that).
 
-Also be sure to check out all the included examples, starting from the basics. It is requires the latest stable release of openFrameworks (0.10) or the master release.
-
-Requires [my fork of ofxMidi](https://github.com/npisanti/ofxMidi), [ofxSIMDFloats](https://github.com/npisanti/ofxSIMDFloats), [ofxAudioFile](https://github.com/npisanti/ofxAudioFile) and ofxOsc.
+It is requires the latest stable release of openFrameworks (0.10) or the master release, [my fork of ofxMidi](https://github.com/npisanti/ofxMidi), [ofxSIMDFloats](https://github.com/npisanti/ofxSIMDFloats), [ofxAudioFile](https://github.com/npisanti/ofxAudioFile) and ofxOsc.
     
 Check out the videos of some included examples:    
     

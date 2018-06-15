@@ -19,7 +19,7 @@ void ofApp::setup(){
     engine.sequencer.sections[0].out_value(1) >> lead.in("pitch"); 
     lead * dB(-6.0f) >> engine.audio_out(0);
     lead * dB(-6.0f) >> engine.audio_out(1);
-    engine.sequencer.sections[0].launchCell(0); // launch seq
+    engine.sequencer.sections[0].launch(0); // launch seq
 
     //-------- buffer init ----------
     buffer.resize( 12 ); // a number big enough for the number of changes before running the sequence code

@@ -89,7 +89,7 @@ void ofApp::setup(){
     wolframSeq.setup( 16, ZAPS_NUMBER, 60, MAX_GENERATIONS, SIDE, 300 );      
     engine.sequencer.sections[1].setCell( 0, &wolframSeq );
     
-    engine.sequencer.launchMultipleCells(0); // launch the 0 sequences of all the sections
+    engine.sequencer.launchMultipleCells(0); // launch the sequences with index 0 of all the sections
     
     
     // ----------- PATCHING -----------

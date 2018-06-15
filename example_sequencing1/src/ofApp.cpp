@@ -198,22 +198,22 @@ void ofApp::draw(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     
-    // we can launch our sequences with the launchCell method, with optional quantization
+    // we can launch our sequences with the launch method, with optional quantization
     switch (key){
     case '1':
-        engine.sequencer.sections[0].launchCell( 0, quantize, quantime);
+        engine.sequencer.sections[0].launch( 0, quantize, quantime);
         break;
     case '2':
-        engine.sequencer.sections[0].launchCell( 1, quantize, quantime);
+        engine.sequencer.sections[0].launch( 1, quantize, quantime);
         break;
     case '3':
-        engine.sequencer.sections[0].launchCell( 2, quantize, quantime);
+        engine.sequencer.sections[0].launch( 2, quantize, quantime);
         break;
     case '4':
-        engine.sequencer.sections[0].launchCell( 3, quantize, quantime);
+        engine.sequencer.sections[0].launch( 3, quantize, quantime);
         break;
     case '5':
-        engine.sequencer.sections[0].launchCell( -1, quantize, quantime);
+        engine.sequencer.sections[0].launch( -1, quantize, quantime);
         break;
     case '6':
         quantize = true;
@@ -235,19 +235,19 @@ void ofApp::keyPressed(int key){
         quantize = false;
         break;
     case 'q':
-        engine.sequencer.sections[1].launchCell( 0, quantize, quantime);
+        engine.sequencer.sections[1].launch( 0, quantize, quantime);
         break;
     case 'w':
-        engine.sequencer.sections[1].launchCell( 1, quantize, quantime);
+        engine.sequencer.sections[1].launch( 1, quantize, quantime);
         break;
     case 'e':
-        engine.sequencer.sections[1].launchCell( 2, quantize, quantime);
+        engine.sequencer.sections[1].launch( 2, quantize, quantime);
         break;
     case 'r':
-        engine.sequencer.sections[1].launchCell( 3, quantize, quantime);
+        engine.sequencer.sections[1].launch( 3, quantize, quantime);
         break;
     case 't':
-        engine.sequencer.sections[1].launchCell( -1, quantize, quantime);
+        engine.sequencer.sections[1].launch( -1, quantize, quantime);
         break;
     case 'a':
         seq_mode++;

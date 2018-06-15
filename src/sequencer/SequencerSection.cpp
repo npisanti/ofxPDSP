@@ -94,7 +94,7 @@ int pdsp::SequencerSection::getPatternsNumber() const{
     return getCellsNumber();
 }
 
-void pdsp::SequencerSection::launchCell( int index, bool quantizeLaunch, double quantizeGrid ){
+void pdsp::SequencerSection::launch( int index, bool quantizeLaunch, double quantizeGrid ){
     if     ( index < 0        ) { index = -1; }
     else if( index >= (int)patterns.size() ) { index = (int)patterns.size()-1; }
 

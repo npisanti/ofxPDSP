@@ -44,8 +44,8 @@ void ofApp::setup(){
     engine.sequencer.sections[1].setCell(1, nullptr, nullptr); // a nullptr sequence will stop the bass everything
     
     // we launch the sequences
-    engine.sequencer.sections[0].launchCell(0);
-    engine.sequencer.sections[1].launchCell(0); 
+    engine.sequencer.sections[0].launch(0);
+    engine.sequencer.sections[1].launch(0); 
 
     
     //-------------------------PATCHING--------------

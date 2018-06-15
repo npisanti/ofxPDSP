@@ -220,7 +220,7 @@ public:
     @param[in] quantizeGrid if the launch is quantized this is the grid division for quantizing, in bars.  If not given as argument, it is assumed 1.0 (one bar).
     
     */         
-    void launchCell(int index, bool quantizeLaunch=false, double quantizeGrid=1.0);
+    void launch(int index, bool quantizeLaunch=false, double quantizeGrid=1.0);
     
     
     /*!
@@ -270,7 +270,6 @@ public:
 /*!
     @cond HIDDEN_SYMBOLS
 */
-
     [[deprecated("deprecated function, replaced by resizeCells(int size)")]]
     void resizePatterns(int size);
 
@@ -285,6 +284,10 @@ public:
     
     [[deprecated("Replaced by setChange() for a less ambigous nomenclature")]]
     void setBehavior( int index, SeqChange* behavior );
+
+    inline void launchCell(int index, bool quantizeLaunch=false, double quantizeGrid=1.0){
+        launch(index, quantizeLaunch, quantizeGrid );
+    }    
 /*!
     @endcond
 */

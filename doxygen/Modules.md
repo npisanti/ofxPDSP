@@ -111,4 +111,4 @@ other useful functions are:
         float pdsp::f2p( float freq ); // frequency to pitch
         float pdsp::p2f( float pitch ); // pitch to frequency
         float pdsp::pratio( float pitch, float ratio ); // pitch/ratio, multiply the frequency of the given pitch for ration, and then converts it back to pitch value again (useful for FM synths)
-        pdsp::highestPartial( float pitch ); // take a pitch value as input an returns the highest partial before 20000hz of a waweform with that base pitch, useful for wavetables
+        float pdsp::highestPartial( float pitch ); // take a pitch value as input an returns the highest partial before 20000hz of a waweform with that base pitch, useful for wavetables
