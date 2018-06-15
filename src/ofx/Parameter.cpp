@@ -15,6 +15,9 @@ pdsp::Parameter::Parameter(){
     parameter.set( 0.0f );
     parameter_i.set( 0 );
     
+    boolmin = 0.0f;
+    boolmax = 1.0f;
+    
     if(dynamicConstruction){
             prepareToPlay(globalBufferSize, globalSampleRate);
     }
@@ -70,7 +73,9 @@ ofParameter<int>& pdsp::Parameter::set(const char * name, int min, int max){
     return parameter_i;
 }
 
-ofParameter<bool>& pdsp::Parameter::set(const char * name, bool value ){
+ofParameter<bool>& pdsp::Parameter::set(const char * name, bool value, float min, float max ){
+    boolmin = min;
+    boolmax = max;
     parameter_b.set( name, value );
     return parameter_b;
 }
@@ -101,9 +106,9 @@ void pdsp::Parameter::onSetI(int  &newValue){
 
 void pdsp::Parameter::onSetB(bool  &newValue){
     if( newValue ){
-        value = 1.0f;
+        value = boolmax;
     }else{
-        value = 0.0f;
+        value = boolmin;
     }
 }
 
@@ -166,6 +171,6 @@ ofParameter<int>& pdsp::Parameter::set( std::string name, int min, int max) {
     return set( name.c_str(), min, max);
 }
 
-ofParameter<bool>& pdsp::Parameter::set( std::string name, bool value ) {
-    return set( name.c_str(), value );
+ofParameter<bool>& pdsp::Parameter::set( std::string name, bool value, float min, float max  ) {
+    return set( name.c_str(), value, min, max );
 }

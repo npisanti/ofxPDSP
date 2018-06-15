@@ -103,18 +103,22 @@ public:
     ofParameter<int>& set( std::string name, int min, int max);
 
     /*!
-    @brief sets the and returns the internal ofParameter<bool>, useful to set up an UI. This parameter set the value to 0.0f when false and to 1.0f when true.
+    @brief sets the and returns the internal ofParameter<bool>, useful to set up an UI. This parameter set the value to min when false and to max when true, 0.0f and 1.0f if not given.
     @param[in] name this will become the name of the ofParameter
     @param[in] value default value
+    @param[in] min value when false, 0,0f if not given
+    @param[in] max value when true, 1.0f if not given
     */    
-    ofParameter<bool>& set( std::string name, bool value );
+    ofParameter<bool>& set( std::string name, bool value, float min=0.0f, float max=1.0f );
     
     /*!
-    @brief sets the and returns the internal ofParameter<bool>, useful to set up an UI. This parameter set the value to 0.0f when false and to 1.0f when true.
+    @brief sets the and returns the internal ofParameter<bool>, useful to set up an UI. This parameter set the value to min when false and to max when true, 0.0f and 1.0f if not given.
     @param[in] name this will become the name of the ofParameter
     @param[in] value default value
+    @param[in] min value when false, 0,0f if not given
+    @param[in] max value when true, 1.0f if not given
     */    
-    ofParameter<bool>& set( const char * name, bool value );
+    ofParameter<bool>& set( const char * name, bool value, float min=0.0f, float max=1.0f  );
 
 
     /*!
@@ -182,6 +186,8 @@ private:
     void onSetI(int   &newValue);
     void onSetB(bool   &newValue);
 
+    float boolmin;
+    float boolmax;
     
 };
 

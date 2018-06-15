@@ -23,9 +23,10 @@ public:
     CombFilter();
     CombFilter(const CombFilter& other);
     CombFilter& operator=(const CombFilter& other);
+    ~CombFilter();
 
     /*!
-    @brief Sets "signal" as selected input and returns this module ready to be patched. This is the default input. This is the filter input.
+    @brief Sets "0" as selected input and returns this module ready to be patched. This is the default input. This is the filter input.
     */      
     Patchable& in_signal();
     
@@ -44,11 +45,29 @@ public:
     Patchable& in_damping();
     
     /*!
-    @brief Sets "signal" as selected output and returns this module ready to be patched. This is the default output. This is filter signal output.
+    @brief Sets "0" as selected output and returns this module ready to be patched. This is the default output. This is filter signal output.
     */  
     Patchable& out_signal();
 
+    /*!
+    @brief sets the number of different inputs this module can process. Be sure to set the channels before doing any patching. You can access channels with in/out methods, using a string with their number as input, for example in("1") or out("4"), or by using ini(int ch) or outi(int ch) methods.
+    @param[in] size number of channels
+    */        
+    void channels( int size );    
+    
+    /*!
+    @brief Returns the input of the given channels.
+    @param[in] ch channel index
+    */      
+    Patchable& ini( int ch );
 
+    /*!
+    @brief Returns the output of the given channel.
+    @param[in] ch channel index
+    */  
+    Patchable& outi( int ch );
+    
+    
     /*!
     @brief returns the actual pitch value.This method is thread-safe.
     */  
@@ -59,9 +78,12 @@ private:
     void patch();
 
 
-    Delay delay;
+    std::vector<Delay*> delays;
     PitchToFreq p2f;
     FreqToMs    f2ms;
+    
+    PatchNode   fbcontrol;
+    PatchNode   dampcontrol;
 
 
 };

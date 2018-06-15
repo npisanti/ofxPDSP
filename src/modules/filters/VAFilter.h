@@ -24,29 +24,8 @@ public:
     VAFilter(){ patch(); };
     VAFilter(const VAFilter& other){ patch(); };
     VAFilter& operator=(const VAFilter& other){ return *this; };
-
-    
-    /*!
-    @brief Sets "0" as selected input and returns this module ready to be patched. This is the default input. This is the left input channel.
-    */      
-    Patchable& in_0();
-
-    /*!
-    @brief Sets "1" as selected input and returns this module ready to be patched. This is the right input channel.
-    */     
-    Patchable& in_1();
-    
-    
-    /*!
-    @brief Sets "0" as selected input and returns this module ready to be patched. This is the default input. This is the left input channel.
-    */      
-    Patchable& in_L();
-
-    /*!
-    @brief Sets "1" as selected input and returns this module ready to be patched. This is the right input channel.
-    */     
-    Patchable& in_R();
-    
+    ~VAFilter();
+   
     /*!
     @brief Sets "pitch" as selected input and returns this module ready to be patched. This is the filter cutoff control in semitones.
     */      
@@ -62,7 +41,6 @@ public:
     @brief Sets "reso" as selected input and returns this module ready to be patched. This is the filter resonance control.
     */      
     Patchable& in_reso();
-    
     
     /*!
     @brief Sets "mode" as selected input and returns this module ready to be patched. This control switches the filter type, there are some static constant in this class that rapresent different filter type values. Default is 0, a 24db/oct Low Pass Filter.
@@ -80,26 +58,68 @@ public:
     Patchable& in_mode();
     
     /*!
-    @brief Sets "0" as selected output and returns this module ready to be patched. This is the default output. This is the left output channel.
+    @brief sets the number of different inputs this module can process. Be sure to set the channels before doing any patching. You can access channels with in/out methods, using a string with their number as input, for example in("1") or out("4"), or by using ini(int ch) or outi(int ch) methods.
+    @param[in] size number of channels
+    */        
+    void channels( int size );    
+    
+    /*!
+    @brief Returns the input of the given channels.
+    @param[in] ch channel index
+    */      
+    Patchable& ini( int ch );
+
+    /*!
+    @brief Returns the output of the given channel.
+    @param[in] ch channel index
+    */  
+    Patchable& outi( int ch );
+    
+    /*!
+    @brief Sets "0" as selected input and returns this module ready to be patched. This is the default input. If channel is less than 2, sets channels() to 2.
+    */      
+    Patchable& in_0();
+
+    /*!
+    @brief Sets "1" as selected input and returns this module ready to be patched. If channel is less than 2, sets channels() to 2.
+    */     
+    Patchable& in_1();
+    
+    
+    /*!
+    @brief Sets "0" as selected input and returns this module ready to be patched. This is the default input. If channel is less than 2, sets channels() to 2.
+    */      
+    Patchable& in_L();
+
+    /*!
+    @brief Sets "1" as selected input and returns this module ready to be patched. If channel is less than 2, sets channels() to 2.
+    */     
+    Patchable& in_R();
+    
+
+    /*!
+    @brief Sets "0" as selected output and returns this module ready to be patched. This is the default output. If channel is less than 2, sets channels() to 2.
     */  
     Patchable& out_0();
     
     /*!
-    @brief Sets "1" as selected output and returns this module ready to be patched. This is the right output channel. If you don't patch this output the effect will behave as a mono EQ.
+    @brief Sets "1" as selected output and returns this module ready to be patched. If channel is less than 2, sets channels() to 2.
     */  
     Patchable& out_1();
             
     /*!
-    @brief Sets "0" as selected output and returns this module ready to be patched. This is the default output. This is the left output channel.
+    @brief Sets "0" as selected output and returns this module ready to be patched. If channel is less than 2, sets channels() to 2.
     */  
     Patchable& out_L();
     
     /*!
-    @brief Sets "1" as selected output and returns this module ready to be patched. This is the right output channel. If you don't patch this output the effect will behave as a mono EQ.
+    @brief Sets "1" as selected output and returns this module ready to be patched. If channel is less than 2, sets channels() to 2.
     */  
     Patchable& out_R();
             
-            
+    /*!
+    @brief Returns the cutoff pitch value.
+    */      
     float meter_cutoff() const;        
     
             
@@ -114,16 +134,12 @@ public:
 private:
     void patch ();
     
-    PatchNode reso;
-    PatchNode mode;
-    
+    PatchNode   reso;
+    PatchNode   mode;
     PitchToFreq p2f;
     
-    MultiLadder4 filterA;
-    MultiLadder4 filterB;
-
-    Switch  switchA;
-    Switch  switchB;
+    std::vector<MultiLadder4*> filters;
+    std::vector<Switch*> switches;
 
 };
 
