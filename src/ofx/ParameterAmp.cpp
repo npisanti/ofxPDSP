@@ -40,12 +40,8 @@ void pdsp::ParameterAmp::channels( int size ){
     }
 }
 
-pdsp::Patchable& pdsp::ParameterAmp::ini( int ch ){
-    return in( std::to_string(ch).c_str() );
-}
-
-pdsp::Patchable& pdsp::ParameterAmp::outi( int ch ){
-    return out( std::to_string(ch).c_str() );
+pdsp::Patchable& pdsp::ParameterAmp::operator[]( const int & ch ){
+    return *(amps[ch]);
 }
 
 ofParameter<float>& pdsp::ParameterAmp::set(const char * name, float value, float min, float max) {

@@ -10,7 +10,9 @@
 #include "dynamics/Ducker.h"
 
 #include "filters/VAFilter.h"
+#include "filters/SVFilter.h"
 #include "filters/CombFilter.h"
+#include "filters/PhaserFilter.h"
 
 #include "oscillators/VAOscillator.h"
 #include "oscillators/LFO.h"

@@ -1,23 +1,23 @@
 
-// VAFilter.h
+// SVFilter.h
 // ofxPDSP
-// Nicola Pisanti, MIT License, 2016
+// Nicola Pisanti, MIT License, 2018
 
-#ifndef PDSP_MODULE_VAFILTER_H_INCLUDED
-#define PDSP_MODULE_VAFILTER_H_INCLUDED
+#ifndef PDSP_MODULE_SVFILTER_H_INCLUDED
+#define PDSP_MODULE_SVFILTER_H_INCLUDED
 
 #include "../../DSP/pdspCore.h"
-#include "../../DSP/filters/MultiLadder4.h"
+#include "../../DSP/filters/SVF2.h"
 #include "../../DSP/utility/PitchToFreq.h"
 
 
 namespace pdsp{
     
     /*!
-    @brief Multi-mode virtual analog ladder filter, multichannel.
+    @brief Multi-mode virtual analog state variable filter, multichannel.
     */  
     
-class VAFilter : public Patchable {
+class SVFilter : public Patchable {
 
 
 
@@ -28,7 +28,7 @@ class Submodule : public Patchable{
 public:
     Submodule();
 private:
-    MultiLadder4 filter;
+    SVF2 filter;
     Switch fswitch;
 };
 /*!
@@ -37,10 +37,10 @@ private:
 
 
 public:
-    VAFilter(){ patch(); };
-    VAFilter(const VAFilter& other){ patch(); };
-    VAFilter& operator=(const VAFilter& other){ return *this; };
-    ~VAFilter();
+    SVFilter(){ patch(); };
+    SVFilter(const SVFilter& other){ patch(); };
+    SVFilter& operator=(const SVFilter& other){ return *this; };
+    ~SVFilter();
    
     /*!
     @brief Sets "pitch" as selected input and returns this module ready to be patched. This is the filter cutoff control in semitones.
@@ -59,17 +59,14 @@ public:
     Patchable& in_reso();
     
     /*!
-    @brief Sets "mode" as selected input and returns this module ready to be patched. This control switches the filter type, there are some static constant in this class that rapresent different filter type values. Default is 0, a 24db/oct Low Pass Filter.
+    @brief Sets "mode" as selected input and returns this module ready to be patched. This control switches the filter type, there are some static constant in this class that rapresent different filter type values. Default is 0, a 12db/oct Low Pass Filter.
     
     Constants for filter types are:
-        LowPass24 = 0.0f;
-        LowPass12 = 1.0f;
-        HighPass24 = 2.0f;
-        HighPass12 = 3.0f;
-        BandPass24 = 4.0f;
-        BandPass12 = 5.0f;
-        Notch = 6.0f;
-    you can access them in the pdsp::VAFilter scope, and patch it like this pdsp::VAFilter::LowPass12 >> filter.in_mode()
+        LowPass = 0.0f;
+        BandPass = 1.0f;
+        HighPass = 2.0f;
+        Notch = 3.0f;
+    you can access them in the pdsp::SVFilter scope, and patch it like this pdsp::SVFilter::LowPass12 >> filter.in_mode()
     */      
     Patchable& in_mode();
     
@@ -134,12 +131,10 @@ public:
     float meter_cutoff() const;        
     
             
-    static const float LowPass24;;
-    static const float LowPass12;
-    static const float HighPass24;
-    static const float HighPass12;
-    static const float BandPass24;
-    static const float BandPass12;
+    static const float LowPass;;
+    static const float BandPass;
+    static const float HighPass;
+    static const float Notch;
             
     
 private:
@@ -156,4 +151,4 @@ private:
 } // pdsp namespace end
 
 
-#endif // PDSP_MODULE_VAFILTER_H_INCLUDED
+#endif // PDSP_MODULE_SVFILTER_H_INCLUDED

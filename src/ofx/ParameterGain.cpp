@@ -41,14 +41,9 @@ void pdsp::ParameterGain::channels( int size ){
     }
 }
 
-pdsp::Patchable& pdsp::ParameterGain::ini( int ch ){
-    return in( std::to_string(ch).c_str() );
+pdsp::Patchable& pdsp::ParameterGain::operator[]( const int & ch ){
+    return *(amps[ch]);
 }
-
-pdsp::Patchable& pdsp::ParameterGain::outi( int ch ){
-    return out( std::to_string(ch).c_str() );
-}
-
 
 ofParameter<float>& pdsp::ParameterGain::set(const char * name, float value, float min, float max) {
     return this->value.set( name, value, min, max );    

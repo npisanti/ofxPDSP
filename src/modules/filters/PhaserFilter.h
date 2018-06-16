@@ -1,29 +1,28 @@
-// CombFilter.h
+// PhaserFilter.h
 // ofxPDSP
-// Nicola Pisanti, MIT License, 2016
+// Nicola Pisanti, MIT License, 2018
 
-#ifndef PDSP_MODULE_COMBFILTER_H_INCLUDED
-#define PDSP_MODULE_COMBFILTER_H_INCLUDED
+#ifndef PDSP_MODULE_PHASERFILTER_H_INCLUDED
+#define PDSP_MODULE_PHASERFILTER_H_INCLUDED
 
 #include "../../DSP/pdspCore.h"
-#include "../../DSP/delays/Delay.h"
+#include "../../DSP/filters/APF4.h"
 #include "../../DSP/utility/PitchToFreq.h"
-#include "../../DSP/utility/FreqToMs.h"
 
 
 namespace pdsp{
 /*!
-@brief A comb filter is a delay tuned to a specific pitch frequency (mix it with the dry signal). 
+@brief A 4pole Phaser, multichannel.
 * 
 */       
 
-class CombFilter : public Patchable {
+class PhaserFilter : public Patchable {
 
 public:
-    CombFilter();
-    CombFilter(const CombFilter& other);
-    CombFilter& operator=(const CombFilter& other);
-    ~CombFilter();
+    PhaserFilter();
+    PhaserFilter(const PhaserFilter& other);
+    PhaserFilter& operator=(const PhaserFilter& other);
+    ~PhaserFilter();
 
     /*!
     @brief Sets "0" as selected input and returns this module ready to be patched. This is the default input. This is the filter input.
@@ -31,24 +30,25 @@ public:
     Patchable& in_signal();
     
     /*!
-    @brief Sets "pitch" as selected input and returns this module ready to be patched. This is the tuning of the delay in semitones.
+    @brief Sets "pitch" as selected input and returns this module ready to be patched. This is the tuning of the phaser in semitones.
     */  
     Patchable& in_pitch();
     
     /*!
-    @brief Sets "feedback" as selected input and returns this module ready to be patched. This is the delay feedback value, mostly it behaves like a resonance parameter.
-    */     
-    Patchable& in_fb();
-    
-    /*!
-    @brief Sets "feedback" as selected input and returns this module ready to be patched. This is the delay feedback value, mostly it behaves like a resonance parameter.
-    */     
-    Patchable& in_feedback();
+    @brief Sets "pitch" as selected input and returns this module ready to be patched. This is the tuning of the phaser in semitones.
+    */  
+    Patchable& in_cutoff();
 
     /*!
-    @brief Sets "damping" as selected input and returns this module ready to be patched. This is the damping of the delay feedback.
-    */  
-    Patchable& in_damping();
+    @brief Sets "feedback" as selected input and returns this Unit ready to be patched. This is the phaser feedback amount, also try negative numbers.
+    */
+    Patchable& in_feedback();
+    
+    /*
+    @brief Sets "spread" as selected input and returns this module ready to be patched. The value of the frequency of each pole is equal to the frequency of the pole before it plus spread multiplied by the base frequency. So at 0.0f all the pole have the same frequency, at 1.0f the poles form an harmonic series, etc etc
+    */    
+    Patchable& in_spread();
+
     
     /*!
     @brief Sets "0" as selected output and returns this module ready to be patched. This is the default output. This is filter signal output.
@@ -78,12 +78,11 @@ private:
     void patch();
 
 
-    std::vector<Delay*> delays;
-    PitchToFreq p2f;
-    FreqToMs    f2ms;
+    std::vector<APF4*> phasers;
     
+    PitchToFreq p2f;
     PatchNode   fbcontrol;
-    PatchNode   dampcontrol;
+    PatchNode   spreadcontrol;
 
 
 };
@@ -91,4 +90,4 @@ private:
 
 }
 
-#endif //PDSP_MODULE_COMBFILTER_H_INCLUDED
+#endif //PDSP_MODULE_PHASERFILTER_H_INCLUDED

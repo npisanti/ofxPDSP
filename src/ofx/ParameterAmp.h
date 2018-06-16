@@ -178,18 +178,12 @@ public:
     @param[in] size number of channels
     */        
     void channels( int size );    
-    
-    /*!
-    @brief Returns the input of the given channels.
-    @param[in] ch channel index
-    */      
-    Patchable& ini( int ch );
 
     /*!
-    @brief Returns the output of the given channel.
+    @brief To use the selected channel as input/output for the operation.
     @param[in] ch channel index
     */  
-    Patchable& outi( int ch );
+    Patchable& operator[]( const int & ch );
 
 
 private:
