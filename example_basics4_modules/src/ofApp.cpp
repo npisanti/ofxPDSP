@@ -7,8 +7,6 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 
-    ofSetWindowShape(640, 360); // we don't need fancy graphics at the moment
-    
     //--------PATCHING-------
 
     pitch_ctrl >> synth.in("pitch"); // patching with in("tag")

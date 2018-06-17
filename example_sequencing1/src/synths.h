@@ -26,32 +26,28 @@ private:
 };
 
 
-class BassSynth : public pdsp::Patchable{
+class KickSynth : public pdsp::Patchable{
 public:
-    BassSynth() { patch(); }
-    BassSynth( const BassSynth & other ) { patch(); }
+    KickSynth() { patch(); }
+    KickSynth( const KickSynth & other ) { patch(); }
     
     void patch (){
         //set inputs/outputs
         addModuleInput("trig", trigger_in);
-        addModuleInput("pitch", osc.in_pitch());
         addModuleOutput("signal", amp );
         
         //patching
-        osc.out_saw() * 2.5f >> drive >> filter >> amp;
-        
-        trigger_in >> ampEnv.set(0.0f, 50.0f, 1.0f, 200.0f) * 0.7f >> amp.in_mod();        
-        trigger_in >> filterEnv.set(0.0f, 80.0f, 0.0f, 200.0f) * 48.0f >> filter.in_cutoff();
-                                                                 50.0f >> filter.in_cutoff();
-                                                                 0.5f  >> filter.in_reso();
+                                                  osc >> amp;
+        trigger_in >> ampEnv.set(0.0f, 50.0f, 100.0f) >> amp.in_mod();        
+        trigger_in >> modEnv.set(0.0f, 0.0f, 50.0f) * 48.0f >> osc.in_pitch();
+                                                      48.0f >> osc.in_pitch();
+        ampEnv.enableDBTriggering( -24.0f );
     }
 private:
     pdsp::Amp           amp;
-    pdsp::VAOscillator  osc;
-    pdsp::VAFilter      filter;
-    pdsp::ADSR          ampEnv;
-    pdsp::ADSR          filterEnv;
-    pdsp::Saturator1    drive;
+    pdsp::FMOperator    osc;
+    pdsp::AHR           ampEnv;
+    pdsp::AHR           modEnv;
     pdsp::PatchNode     trigger_in;
 };
 

@@ -38,9 +38,14 @@ public:
     Patchable& in_freq();
     
     /*!
-    @brief Sets "retrig" as selected input and returns this Unit ready to be patched. Connect a "trig" output to this input to activate retriggering of the phazor on trigger on values.
+    @brief Sets "trig" as selected input and returns this Unit ready to be patched. Connect a "trig" output to this input to activate retriggering of the phazor on trigger on values.
     */  
     Patchable& in_retrig();
+  
+    /*!
+    @brief Sets "trig" as selected input and returns this Unit ready to be patched. Connect a "trig" output to this input to activate retriggering of the phazor on trigger on values.
+    */  
+    Patchable& in_trig();
     
     /*!
     @brief Sets "phase_start" as selected input and returns this Unit ready to be patched. This is the starting value of the phazor on retrigger. It is updated only at control-rate.

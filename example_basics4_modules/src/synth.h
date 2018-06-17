@@ -13,6 +13,7 @@ public:
     SlideSynth( const SlideSynth & other ) { patch(); } // you need this to use std::vector with your class, otherwise will not compile
     // remember that is a bad thing to copy construct in pdsp, 
     //      always just resize the vector and let the default constructor do the work
+    //          resizing the vector will also disconnect everything, so do it just once before patching
 
 
     void patch (){

@@ -50,12 +50,12 @@ void ofApp::setup(){
         engine.sequencer.sections[1].launchCell( states[index], true, seq.length());
         
         // on the first six bars the main riff will run
-        if(seq.counter()==0)   engine.sequencer.sections[2].launchCell( 0, true, seq.length());
+        if(seq.counter()==0)   engine.sequencer.sections[2].launch( 0, true, seq.length());
         // on the last two bars we will use a fill choosen at random
-        if(seq.counter()==48)  engine.sequencer.sections[2].launchCell( pdsp::dice(1, 5), true, seq.length()); 
+        if(seq.counter()==48)  engine.sequencer.sections[2].launch( pdsp::dice(1, 5), true, seq.length()); 
     };
     
-    // P.S. obviously we could have done all the beatslicing by coding a  single sequence,
+    // P.S. obviously we could have done all the beatslicing by coding a single sequence,
     //                                                       but this is not the point of this example
 
     

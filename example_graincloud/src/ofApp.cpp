@@ -29,13 +29,12 @@ void ofApp::setup(){
     -12.0f >> cloud.in_pitch();  
 
 
+    ampControl.channels(2);
     ampControl.enableSmoothing(50.0f);    
     ampControl.setv(0.0f); 
-    ampControl * dB(12.0f) >> voiceAmpL.in_mod(); 
-    ampControl * dB(12.0f) >> voiceAmpR.in_mod();
 
-    cloud.out_L() >> voiceAmpL >> engine.audio_out(0); 
-    cloud.out_R() >> voiceAmpR >> engine.audio_out(1); 
+    cloud.out_L() >> ampControl[0] * dB(12.0f) >> engine.audio_out(0); 
+    cloud.out_R() >> ampControl[1] * dB(12.0f) >> engine.audio_out(1); 
     
     cout<<"finished patching\n";
     

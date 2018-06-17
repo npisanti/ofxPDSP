@@ -59,12 +59,21 @@ namespace pdsp{
 		}
 
 		inline_f void Release(int& stageSwitch, int offStageId){
-
+            envelopeOutput = releaseOffset + envelopeOutput*releaseCoeff;
+            int check1 = (envelopeOutput <= 0.0f );
+            int check2 = (releaseTimeMs <= 0.0f);
+            int check = check1 + check2;
+            envelopeOutput = check ? 0.0f : envelopeOutput;
+            stageSwitch = check ? offStageId : stageSwitch;
+            
+            /*
+            // branched code for reference 
 			envelopeOutput = releaseOffset + envelopeOutput*releaseCoeff;
 			if (envelopeOutput <= 0.0f || releaseTimeMs <= 0.0f){
 				envelopeOutput = 0.0f;
 				stageSwitch = offStageId;
 			}
+            */ 
 
 		}
 

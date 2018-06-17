@@ -111,18 +111,19 @@ void pdsp::SequencerSection::launch( int index, bool quantizeLaunch, double quan
 }
 
 
-void pdsp::SequencerSection::setCell( int index, Sequence* sequence, SeqChange* behavior, std::string label ){
+void pdsp::SequencerSection::setCell( int index, Sequence* sequence, SeqChange* behavior){
     if(index>=0){
         if(index>=(int)patterns.size()){
             resizeCells(index+1);
             //all the new patterns are initialized with nullptr, nullptr, length=1.0, quantize = false and quantizeGrid=0.0
         }
-
         patterns[index].sequence = sequence;
         patterns[index].nextCell  = behavior;
-        //sequence->label = label;
-
     }
+}
+
+void pdsp::SequencerSection::setCell( int index, Sequence & sequence, SeqChange* behavior){
+    setCell( index, &sequence, behavior );
 }
 
 void pdsp::SequencerSection::setChange( int index, SeqChange* behavior ){
@@ -131,11 +132,11 @@ void pdsp::SequencerSection::setChange( int index, SeqChange* behavior ){
     }
 }
 
-void pdsp::SequencerSection::setLooping( int index ) {
+void pdsp::SequencerSection::loop( int index ) {
     setChange(index, Behavior::Loop);
 }
 
-void pdsp::SequencerSection::setOneShot( int index ) {
+void pdsp::SequencerSection::oneshot( int index ) {
     setChange(index, Behavior::OneShot);    
 }
 

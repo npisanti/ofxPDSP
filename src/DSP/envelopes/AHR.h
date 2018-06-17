@@ -63,9 +63,9 @@ public:
     /*!
     @brief enable an alternate mode for the trigger dynamics, trigger will output linear value that are the equivalent of dBmin at 0.0f and dBmax at 1.0f
     @param[in] dBmin minimum dB output
-    @param[in] dBmax maximum dB output
+    @param[in] dBmax maximum dB output, 0 dB if not given
     */
-    void enableDBTriggering(float dBmin, float dBmax);
+    void enableDBTriggering(float dBmin, float dBmax=0.0f);
     
     /*!
     @brief disable the alternate mode for the trigger dynamics.

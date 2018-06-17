@@ -45,24 +45,43 @@ namespace pdsp{
 		float attackOffset;
 	
 		void setAttackTime(float attackTimeMs){
-            if(attackTimeMs <= 0.0f){ attackTimeMs = PDSP_MIN_ENVSTAGE_MS; } // to avoid divide by zero into coeff calculations
+            //if(attackTimeMs <= 0.0f){ attackTimeMs = PDSP_MIN_ENVSTAGE_MS; } // to avoid divide by zero into coeff calculations
 			this->attackTimeMs = attackTimeMs;
 			calculateAttackTime();
 		};
 
 		void calculateAttackTime(){
-			float samples = sampleRate * attackTimeMs*0.001f;
-			attackCoeff = exp(-log((1.0f + attackTCO) / attackTCO) / samples);
-			attackOffset = (1.0f + attackTCO) * (1.0f - attackCoeff);
+            if(attackTimeMs>0.0f){
+                float samples = sampleRate * attackTimeMs*0.001f;
+                attackCoeff = exp(-log((1.0f + attackTCO) / attackTCO) / samples);
+                attackOffset = (1.0f + attackTCO) * (1.0f - attackCoeff);                
+            }else{
+                attackCoeff = 0.0f;
+                attackOffset = 1.0f;
+                // 0 ms attack 
+            }
 		}
 
 		inline_f void Attack(int& stageSwitch, int nextStageId){
+
+            bool checkout = (envelopeOutput >= intensity ) ? true : false;
+            
+            stageSwitch = checkout ? nextStageId : stageSwitch;
+            
+            float env = attackOffset + envelopeOutput*attackCoeff; 
+            env = (env > intensity) ? intensity : env;
+            
+            envelopeOutput = checkout ? envelopeOutput : env;
+
+            /*          
+            // branched code for reference
 			if (envelopeOutput >= intensity ){
 				stageSwitch = nextStageId;
 			}else{
                 envelopeOutput = attackOffset + envelopeOutput*attackCoeff;   
                 envelopeOutput = (envelopeOutput > intensity) ? intensity : envelopeOutput; // this should be compiled into branchless code
             }
+            */
 		}
 
 		virtual ~AttackStage(){};

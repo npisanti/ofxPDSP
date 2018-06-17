@@ -59,10 +59,7 @@ protected:
 
         inline_f void Decay(int& stageSwitch, int nextStageId){
                 envelopeOutput = decayOffset + envelopeOutput*decayCoeff;
-                if (envelopeOutput <= decayNextStageLevel ){ // || decayTimeMs <= 0.0f removed
-                        //envelopeOutput = decayNextStageLevel; //decativated for changint intensity
-                        stageSwitch = nextStageId;
-                }
+                stageSwitch = (envelopeOutput <= decayNextStageLevel ) ? nextStageId : stageSwitch;
         }
 
         

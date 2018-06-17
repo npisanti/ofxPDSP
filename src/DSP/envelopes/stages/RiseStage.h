@@ -63,10 +63,14 @@ protected:
 
         inline_f void Rise(int& stageSwitch, int nextStageId){
                 envelopeOutput = riseOffset + envelopeOutput*riseCoeff;
+                
+                stageSwitch = (envelopeOutput >= riseNextStageLevel ) ? nextStageId : stageSwitch;
+                /*
                 if (envelopeOutput >= riseNextStageLevel ){ // || riseTimeMs <= 0.0f removed
                         //envelopeOutput = riseNextStageLevel; //decativated for changint intensity
                         stageSwitch = nextStageId;
                 }
+                */ 
         }
 
         

@@ -138,11 +138,20 @@ public:
     @param[in] index index of the Sequence (or Sequence) to set inside the SequencerSection. If the size is too little the SequencerSection is automatically resized.
     @param[in] sequence pointer to a Sequence, you can also set it to nullptr
     @param[in] behavior pointer to a SeqChange, you can also set it to nullptr, pdsp::Behavior::Loop if not given
-    @param[in] label an optional string to identify this cell
 
     Sets the sequence pattern at a given index. If Sequence is set to nullptr then nothing is played, If SeqChange is set to nullptr the sequencing is stopped after playing this Pattern. Sequence is a subclass of Sequence easiear to manage.
     */ 
-    void setCell( int index, Sequence* sequence, SeqChange* behavior = Behavior::Loop, std::string label = "" );
+    void setCell( int index, Sequence * sequence, SeqChange* behavior = Behavior::Loop );
+    
+    /*!
+    @brief Sets the Cell at the given index to the given one
+    @param[in] index index of the Sequence (or Sequence) to set inside the SequencerSection. If the size is too little the SequencerSection is automatically resized.
+    @param[in] sequence reference to a Sequence.
+    @param[in] behavior pointer to a SeqChange, you can also set it to nullptr, pdsp::Behavior::Loop if not given
+
+    Sets the sequence pattern at a given index. If Sequence is set to nullptr then nothing is played, If SeqChange is set to nullptr the sequencing is stopped after playing this Pattern. Sequence is a subclass of Sequence easiear to manage.
+    */ 
+    void setCell( int index, Sequence & sequence, SeqChange* behavior = Behavior::Loop );
     
     
     /*!
@@ -162,65 +171,44 @@ public:
     
 
     /*!
-    @brief Sets the SeqChange that determine what cell will be played after this
+    @brief Sets the SeqChange that determine what cell will be played after this. It is the same as setBehavior().
     @param[in] index index of the patter to set inside the SequencerSection. If the size is too little the SequencerSection is automatically resized.
 
     */ 
     void setChange( int index, SeqChange* behavior );
-   
-   
+    
+    /*!
+    @brief Sets the SeqChange that determine what cell will be played after this. It is the same as setChange().
+    @param[in] index index of the patter to set inside the SequencerSection. If the size is too little the SequencerSection is automatically resized.
+
+    */ 
+    void setBehavior( int index, SeqChange* behavior );
+    
+    
     /*!
     @brief Sets this Cell to Loop on itself, it is the standard behavior
     @param[in] index index of the patter to set inside the SequencerSection. If the size is too little the SequencerSection is automatically resized.
     @param[in] behavior pointer to a SeqChange
 
     */ 
-    void setLooping( int index );
+    void loop( int index );
    
     /*!
     @brief Sets this Cell to stop after being launched.
     @param[in] index index of the patter to set inside the SequencerSection. If the size is too little the SequencerSection is automatically resized.
 
     */ 
-    void setOneShot( int index );
+    void oneshot( int index );
 
-    
-    /*!
-    @brief Sets some values for the pattern quantized launch.
-    @param[in] index index of the patter to set inside the SequencerSection. This has to be a valid index.
-    @param[in] quantizeLaunch if true the next pattern launch is quantized to the bars, if false is executed when the given length expires. 
-    @param[in] quantizeGrid if the launch is quantized this is the grid division for quantizing, in bars.
 
-    Sets the score pattern timing options.
-    */     
-    void setCellQuantization(int index, bool quantizeLaunch = false, double quantizeGrid = 1.0f );
-
-    /*!
-    @brief enables quantization of next cell launch.
-    @param[in] index index of the patter to set inside the SequencerSection. This has to be a valid index.
-    @param[in] quantizeGrid if the launch is quantized this is the grid division for quantizing, in bars.
-
-    */     
-    void enableQuantization(int index, double quantizeGrid = 1.0f );
-    
-
-    /*!
-    @brief disables quantization of next cell launch.
-    @param[in] index index of the patter to set inside the SequencerSection. This has to be a valid index.
-    @param[in] quantizeGrid if the launch is quantized this is the grid division for quantizing, in bars.
-
-    */     
-    void disableQuantization(int index);
-    
-    
     /*!
     @brief Immediately launch the selected cell, with the given launch timings options. Thread-safe. 
     @param[in] index index of the patter to set inside the SequencerSection. This has to be a valid index. A negative index stops the playing of this section (you can perform quantized stopping if quantizeLaunch = true ).
     @param[in] quantizeLaunch if true the next pattern launch is quantized to the bars, if false the pattern is lanched as soon as possible.  If not given as argument, it is assumed false.
-    @param[in] quantizeGrid if the launch is quantized this is the grid division for quantizing, in bars.  If not given as argument, it is assumed 1.0 (one bar).
+    @param[in] quantizeGrid if the launch is quantized this is the grid division for quantizing, in bars.  If not given as argument, it is assumed 1.0/4.0 (one quarter).
     
     */         
-    void launch(int index, bool quantizeLaunch=false, double quantizeGrid=1.0);
+    void launch(int index, bool quantizeLaunch=false, double quantizeGrid=0.25);
     
     
     /*!
@@ -266,10 +254,47 @@ public:
     @brief create and assign a fresh sequence to each Cell, sets the change to pdsp::Behavior::Loop
     */     
     void autoInitCells();
+  
     
 /*!
     @cond HIDDEN_SYMBOLS
 */
+    inline void launchCell(int index, bool quantizeLaunch=false, double quantizeGrid=1.0){
+        launch(index, quantizeLaunch, quantizeGrid );
+    }    
+
+    inline void setLooping( int index ){ loop(index); }
+    inline void setOneShot( int index ){ oneshot(index); }
+
+    
+    /*!
+    @brief Sets some values for the pattern quantized launch.
+    @param[in] index index of the patter to set inside the SequencerSection. This has to be a valid index.
+    @param[in] quantizeLaunch if true the next pattern launch is quantized to the bars, if false is executed when the given length expires. 
+    @param[in] quantizeGrid if the launch is quantized this is the grid division for quantizing, in bars.
+
+    Sets the score pattern timing options.
+    */     
+    void setCellQuantization(int index, bool quantizeLaunch = false, double quantizeGrid = 1.0f );
+
+    /*!
+    @brief enables quantization of next cell launch.
+    @param[in] index index of the patter to set inside the SequencerSection. This has to be a valid index.
+    @param[in] quantizeGrid if the launch is quantized this is the grid division for quantizing, in bars.
+
+    */     
+    void enableQuantization(int index, double quantizeGrid = 1.0f );
+    
+
+    /*!
+    @brief disables quantization of next cell launch.
+    @param[in] index index of the patter to set inside the SequencerSection. This has to be a valid index.
+    @param[in] quantizeGrid if the launch is quantized this is the grid division for quantizing, in bars.
+
+    */     
+    void disableQuantization(int index);
+
+
     [[deprecated("deprecated function, replaced by resizeCells(int size)")]]
     void resizePatterns(int size);
 
@@ -281,13 +306,6 @@ public:
     
     [[deprecated("Replaced by setCell() for a less ambigous nomenclature")]]
     void setPattern( int index, Sequence* sequence, SeqChange* behavior = nullptr );
-    
-    [[deprecated("Replaced by setChange() for a less ambigous nomenclature")]]
-    void setBehavior( int index, SeqChange* behavior );
-
-    inline void launchCell(int index, bool quantizeLaunch=false, double quantizeGrid=1.0){
-        launch(index, quantizeLaunch, quantizeGrid );
-    }    
 /*!
     @endcond
 */

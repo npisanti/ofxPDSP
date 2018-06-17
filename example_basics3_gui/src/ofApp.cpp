@@ -6,48 +6,56 @@
 void ofApp::setup(){
     
     //--------PATCHING-------
-
+    // pdsp::Parameter/s can be patched to pdsp modules
+    // can be changed in a thread-safe way
+    // and let you return ofParameter to control it from GUISs or serialize/deserialize
+    
+    
     // we patch the pdsp::Parameter to control pitch and amp
     // and then patch the oscillator to the engine outs
     osc1_pitch_ctrl >> osc1.in_pitch();
-                       osc1 >> amp1          >> engine.audio_out(0);
-              osc1_amp_ctrl >> amp1.in_mod() >> engine.audio_out(1);
     osc2_pitch_ctrl >> osc2.in_pitch();
-                       osc2 >> amp2          >> engine.audio_out(0);
-              osc2_amp_ctrl >> amp2.in_mod() >> engine.audio_out(1);
     osc3_pitch_ctrl >> osc3.in_pitch();
-                       osc3 >> amp3          >> engine.audio_out(0);
-              osc3_amp_ctrl >> amp3.in_mod() >> engine.audio_out(1);
+
+
+    // pdsp::ParameterGain can be added to gui like an ofParameter
+    // and has an input and output for signals
+    // it is used to control volume as it has control in deciBel
+    // pdsp::ParameterAmp instead just multiply the input for the parameter value
+    // it is usefule for scaling modulation signals 
+    osc1 >> osc1_amp  >> engine.audio_out(0);
+            osc1_amp  >> engine.audio_out(1);
+    osc2 >> osc2_gain >> engine.audio_out(0);
+            osc2_gain >> engine.audio_out(1);
+    osc3 >> osc3_gain >> engine.audio_out(0);
+            osc3_gain >> engine.audio_out(1);
 
 
     // GUI setup -----------------------------------
-    gui.setup("3-osc");
+    // the API to get ofParameters is the same for pdsp::Parameter, 
+    // pdsp::ParameterAmp and pdsp::ParameterGain
     
-    // you can use pdsp::Parameter as they were ofParameters, but with some difference
-    // inside pdsp::Parameter there is an ofParameter<float> and an ofParameter<int> both set to zero
-    // when they change the the pdsp::Parameter is set as the sum of both
-    
+    gui.setup("3-osc", "settings.xml, 20, 20");
     osc1_group.setName("oscillator 1");
     // if you use float values in the set() method the ofParameter<float> is returned and used
     osc1_group.add( osc1_pitch_ctrl.set( "pitch", 60.0f, 24.0f, 96.0f ) ); 
-    osc1_group.add( osc1_amp_ctrl.set(   "amp",  0.05f,  0.0f, 0.33f ) );
+    osc1_group.add( osc1_amp.set( "amp", 0.25f,  0.0f, 1.0f ) ); 
     gui.add( osc1_group );
    
     osc2_group.setName("oscillator 2");
     // if you use int values in the set() method the ofParameter<int> is returned and used
     osc2_group.add( osc2_pitch_ctrl.set( "pitch", 60, 24, 96 ) ); 
-    osc2_group.add( osc2_amp_ctrl.set(   "amp",  0.05f,  0.0f, 0.33f ) );
+    // you can also use an ofParameter<bool> with values for false/true
+    osc2_group.add( osc2_gain.set( "active", false, -48.0f, -12.0f )); // -48.0f or less mute the signal
     gui.add( osc2_group );
     
     osc3_group.setName("oscillator 3");
     // you can combine both to have both a control in int and another in float for fine-tuning
-    osc3_group.add( osc3_pitch_ctrl.set( "pitch coarse",  60,   24,    96  ) ); 
-    osc3_group.add( osc3_pitch_ctrl.set( "pitch fine  ", 0.0f, -0.5f, 0.5f ) ); 
-    osc3_group.add( osc3_amp_ctrl.set(   "amp",  0.05f,  0.0f, 0.33f ) );
+    osc3_group.add( osc3_pitch_ctrl.set( "pitch coarse",  60,   24,    96  ) ); // only int arguments
+    osc3_group.add( osc3_pitch_ctrl.set( "pitch fine  ", 0.0f, -0.5f, 0.5f ) );  // only float arguments
+    osc3_group.add( osc3_gain.set( "gain", -24.f,  -48.0f, 0.0f )  );  // -48.0f or less mute the signal
     gui.add( osc3_group );
-    
-    gui.setPosition(15, 20);
-    ofSetWindowShape(230,350);
+
     ofBackground(0); 
     
     //------------SETUPS AND START AUDIO-------------

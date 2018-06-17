@@ -10,26 +10,29 @@ void ofApp::setup(){
 
     //--------PATCHING-------
     
-    // a pdsp::ADSR is an envelope that makes a one-shot modulation when triggered
+    // a pdsp::ADSR is an ADSR envelope that makes a one-shot modulation when triggered
     // pdsp::ADSR require an output sending trigger signals
-    // a pdsp::Amp multiply in_signal() and in_mod()      
     // remember, in pdsp out_trig() always have to be connected to in_trig()
     // in_trig() is the default pdsp::ADSR input signal
+
+    // a pdsp::Amp multiply in_signal() and in_mod()      
     
-    gate_ctrl.out_trig() >> env.set(0.0f, 50.0f, 0.5f, 500.0f);
-    // when available, the set() methods make you set the default values that are used when nothing is patched to an input
-    // in this case you set the values for in_attack(), in_decay(), in_sustain(), and in_release()
-                         
-    env * dB(-12.0f) >> amp.in_mod();
+    gate_ctrl.out_trig() >> env;
+                            env >> amp.in_mod();
         
     pitch_ctrl >> osc.in_pitch();
-                  osc >> amp >> engine.audio_out(0);
-                         amp >> engine.audio_out(1);
+                  osc >> amp * dB(-12.0f) >> engine.audio_out(0);
+                         amp * dB(-12.0f) >> engine.audio_out(1);
+
+    0.0f    >> env.in_attack();
+    50.0f   >> env.in_decay();
+    0.5f    >> env.in_sustain();
+    500.0f  >> env.in_release();
 
     pitch_ctrl.setv(72.0f); // we control the value of an pdsp::Parameter directly with the setv function
     
     // you can smooth out an pdsp::Parameter changes, decomment this for less "grainy" pitch changes
-    // pitch_ctrl.enableSmoothing(50.0f); // 50ms smoothing
+    pitch_ctrl.enableSmoothing(50.0f); // 50ms smoothing
 
 
     //------------SETUPS AND START AUDIO-------------

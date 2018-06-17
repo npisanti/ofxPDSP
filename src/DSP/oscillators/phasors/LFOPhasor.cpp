@@ -7,7 +7,7 @@ pdsp::LFOPhasor::LFOPhasor(){
         phase = 0.0f;
 
         addInput("freq", input_freq);
-        addInput("retrig", input_retrig);
+        addInput("trig", input_retrig);
         addInput("phase_start", input_phase_start);
         addOutput("phase", output_phase);
         addOutput("trig", output_trig);
@@ -31,8 +31,12 @@ pdsp::Patchable& pdsp::LFOPhasor::in_freq(){
     return in("freq");
 }
 
+pdsp::Patchable& pdsp::LFOPhasor::in_trig(){
+    return in("trig");
+}
+
 pdsp::Patchable& pdsp::LFOPhasor::in_retrig(){
-    return in("retrig");
+    return in("trig");
 }
 
 pdsp::Patchable& pdsp::LFOPhasor::in_phase_start(){

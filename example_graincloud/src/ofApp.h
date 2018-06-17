@@ -34,10 +34,8 @@ class ofApp : public ofBaseApp{
         pdsp::SampleBuffer          sampleData;
         pdsp::GrainCloud            cloud;
       
-        pdsp::ADSR              ampEnv;
-        pdsp::Amp               voiceAmpL;
-        pdsp::Amp               voiceAmpR;
-        pdsp::Parameter         ampControl;
+        pdsp::ParameterAmp      ampControl;
+
         pdsp::PatchNode         posX;
         pdsp::PatchNode         jitY;
         

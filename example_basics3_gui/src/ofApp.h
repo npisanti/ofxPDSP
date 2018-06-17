@@ -29,16 +29,15 @@ public:
     pdsp::FMOperator        osc1;
     pdsp::FMOperator        osc2;
     pdsp::FMOperator        osc3;
-    pdsp::Amp               amp1;
-    pdsp::Amp               amp2;
-    pdsp::Amp               amp3;
 
-    pdsp::Parameter     osc1_pitch_ctrl;
-    pdsp::Parameter     osc2_pitch_ctrl;
-    pdsp::Parameter     osc3_pitch_ctrl;
-    pdsp::Parameter     osc1_amp_ctrl;
-    pdsp::Parameter     osc2_amp_ctrl;
-    pdsp::Parameter     osc3_amp_ctrl;
+    pdsp::Parameter      osc1_pitch_ctrl;
+    pdsp::Parameter      osc2_pitch_ctrl;
+    pdsp::Parameter      osc3_pitch_ctrl;
+    
+    pdsp::ParameterAmp   osc1_amp;
+    
+    pdsp::ParameterGain  osc2_gain;
+    pdsp::ParameterGain  osc3_gain;
     
     ofParameterGroup     osc1_group;
     ofParameterGroup     osc2_group;
