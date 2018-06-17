@@ -20,6 +20,7 @@ namespace pdsp{
     */    
     class Sequence {
         friend class SequencerSection;
+        friend class SequencerProcessor;
     public:
         Sequence( double stepDivision );
         Sequence();
@@ -28,41 +29,37 @@ namespace pdsp{
         Sequence& operator= (const Sequence & other);
         Sequence& operator= (Sequence && other);
       
-
-        /*!
-        @brief sets the time division to be used for each step. For example 8.0f means each step is 1/8th. Default division is 1/16th.
-        @param[in] value time division
-        */
-        void setDivision( double value );
-        
-        /*!
-        @brief sets the time in bars before the next Sequence will be launched. Messages with a time greater than this won't be played.
-        @param[in] value new length
-        */
-        void setLength( double bars );
-        
-        /*!
-        @brief returns the time in bars before the next Sequence will be launched. 
-        */
-        double length() const;
-
-        /*!
-        @brief returns the currently set time division, for example 8.0 is 1/8th. 
-        */
-        double division() const;
       
+      
+        /*!
+        @brief public access to read and set the sequence label.
+        */     
+        std::string label;
+
+        /*!
+        @brief public access to read and set the step length, initializated to 1.0/16.0 ( one sixteenth ).
+        */     
+        std::atomic<double> steplen;
+        
+        /*!
+        @brief public access to read and set the length of the sequence in bars, initializated to 1.0 (one bar)
+        */     
+        std::atomic<double> bars;
+        
+        
+        
         /*!
         @brief returns how many time this Sequence has been restarted (0 if it is the first time it starts). This internal counter can be reset to zero with resetCount().
         */
         int counter() const;
 
         /*!
-        @brief sets the time division and length of the sequence.
-        @param[in] division time division
-        @param[in] bars new length
+        @brief resets the internal counter you can get with counter(). This counter is resetted automatically when there is a change from a sequence to another or when a Sequence is launched manually.
         */
-        void setTiming( double division, double bars );
-        
+        void resetCount();
+    
+    
+    
         /*!
         @brief sets the sequence from an inlined array. Negative values produce no messages.
         @param[in] init an inline array, for example {1.0f, 0.0f, -1.0f, -1.0f, 0.25f, 0.5f, 0.0f, -1.0f }
@@ -98,18 +95,11 @@ namespace pdsp{
         void set( std::initializer_list<std::initializer_list<float> >  init , double division, double length  ) noexcept;
    
         
+        
         /*!
         @brief you call begin() before calling message, this prepare the Sequence for the message() method, clearing the buffers.
         */
         void begin() noexcept;
-
-        /*!
-        @brief you call begin() before calling message, this prepare the Sequence for the message() method, clearing the buffers. Also set division and length.
-        @param[in] division time division
-        @param[in] length time before the next Sequence/SequencerCell will be started
-        */
-        void begin( double division, double length ) noexcept;
-
 
         /*!
         @brief with this method you can manually add timed values to the sequence. You have to call begin() before adding messages and end() when you've done. Also note that the old Sequence values are not kept so you are adding values to an empty sequence.
@@ -123,7 +113,64 @@ namespace pdsp{
         @brief you call end() when you have finished adding value with Message(). When the Sequence restarts the new sequence will be played.
         */
         void end() noexcept;
+        
+        
 
+        /*!
+        @brief this lambda function is executed each time the Sequence starts from the begin. Assign your own functions to it.
+        This lambda function is executed each time the Sequence starts from the begin. Usually is empty, but you can assign your own lambdas to generate new values each time the Sequence starts. Remember that the code executed can make a previosly called set() method ininfluent. Remember that this function will be executed into the audio-thread so the access to some variable used also into the main thread could cause race conditions.
+        */
+        std::function<void()> code;
+
+
+
+        /*!
+        @brief returns the percentual of completion of this sequence. When the sequence is not playing it will return the last value. Thread-safe.
+        */ 
+        float meter_percent() const; 
+
+
+
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
+        // --------------------------- API TO DEPRECATE -----------------------
+
+        /*!
+        @brief sets the time division to be used for each step. For example 8.0f means each step is 1/8th. Default division is 1/16th.
+        @param[in] value time division
+        */
+        void setDivision( double value );
+        
+        /*!
+        @brief sets the time in bars before the next Sequence will be launched. Messages with a time greater than this won't be played. 
+        @param[in] value new length
+        */
+        void setLength( double bars );
+        
+        /*!
+        @brief returns the time in bars before the next Sequence will be launched. 
+        */
+        double length() const;
+
+        /*!
+        @brief returns the currently set time division, for example 8.0 is 1/8th. 
+        */
+        double division() const;
+
+        /*!
+        @brief sets the time division and length of the sequence.
+        @param[in] division time division
+        @param[in] bars new length
+        */
+        void setTiming( double division, double bars );
+
+        /*!
+        @brief you call begin() before calling message, this prepare the Sequence for the message() method, clearing the buffers. Also set division and length.
+        @param[in] division time division
+        @param[in] length time before the next Sequence/SequencerCell will be started
+        */
+        void begin( double division, double length ) noexcept;
 
         /*!
         @brief call begin() before calling this function. This function will add all the values of the array with the given division.
@@ -148,7 +195,6 @@ namespace pdsp{
         @param[in] multiply multiply all the messages for this value, useful for scaling for external sequencers
         */
         void trigVector( std::vector<float> vect, double gateLength, int outputIndex, float multiply );
-        
 
         /*!
         @brief call begin() before calling this function. This function will add all the values. This function will add values ranging from start to right before stop value, from the stepStart to the stepStop
@@ -161,31 +207,6 @@ namespace pdsp{
         */
         void line(double stepStart, float valueStart, double stepStopExclusive, float valueStopExclusive, int output = 0, int granularity=1 );
 
-        /*!
-        @brief this lambda function is executed each time the Sequence starts from the begin. Assign your own functions to it.
-        This lambda function is executed each time the Sequence starts from the begin. Usually is empty, but you can assign your own lambdas to generate new values each time the Sequence starts. Remember that the code executed can make a previosly called set() method ininfluent. Remember that this function will be executed into the audio-thread so the access to some variable used also into the main thread could cause race conditions.
-        */
-        std::function<void()> code;
-
-        /*!
-        @brief resets the internal counter you can get with counter(). This counter is resetted automatically when there is a change from a sequence to another or when a Sequence is launched manually.
-        */
-        void resetCount();
-    
-        /*!
-        @brief returns the percentual of completion of this sequence. When the sequence is not playing it will return the last value. Thread-safe.
-        */ 
-        float meter_percent() const; 
-
-        /*!
-        @brief public access to read and set the sequence label.
-        */     
-        std::string label;
-
-
-/*!
-    @cond HIDDEN_SYMBOLS
-*/
         /*!
         @brief returns a read-only reference to the internal SequencerMessage vector
         */        
@@ -208,13 +229,11 @@ namespace pdsp{
         std::vector<SequencerMessage> nextScore;
         std::atomic<bool> modified;
 
-        double len;
-        double div;
-        double divMult;
-
         int id;
 
         int loopCounter;
+        
+        static double defaultSteplen;
     };
     
     

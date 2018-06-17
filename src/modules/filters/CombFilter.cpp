@@ -8,7 +8,10 @@ pdsp::CombFilter& pdsp::CombFilter::operator=(const CombFilter& other){ return *
 
 void pdsp::CombFilter::patch(){
     channels(1);
-    
+
+    addModuleInput( "signal", delays[0]->in_signal() );
+    addModuleOutput( "signal", delays[0]->out_signal() );    
+
     addModuleInput( "pitch",  p2f );    
     addModuleInput("feedback", fbcontrol );
     addModuleInput("damping", dampcontrol );
@@ -27,8 +30,6 @@ void pdsp::CombFilter::channels( int size ){
             p2f >> f2ms >> delays[i]->in_time();
             fbcontrol >> delays[i]->in_feedback();
             dampcontrol >> delays[i]->in_damping();
-            addModuleInput( std::to_string(i).c_str(), delays[i]->in_signal() );
-            addModuleOutput( std::to_string(i).c_str(), delays[i]->out_signal() );
         }        
     }else{
         for (int i=size; i<oldsize; ++i ){
@@ -43,7 +44,11 @@ pdsp::Patchable& pdsp::CombFilter::operator[]( const int & ch ){
 }
 
 pdsp::Patchable& pdsp::CombFilter::in_signal(){
-    return in("0");
+    return in("signal");
+}
+
+pdsp::Patchable& pdsp::CombFilter::out_signal(){
+    return out("signal");
 }
 
 pdsp::Patchable& pdsp::CombFilter::in_pitch(){
@@ -61,11 +66,6 @@ pdsp::Patchable& pdsp::CombFilter::in_feedback(){
 pdsp::Patchable& pdsp::CombFilter::in_damping(){
     return in("damping");  
 }
-
-pdsp::Patchable& pdsp::CombFilter::out_signal(){
-    return out("0");
-}
-
 
 float pdsp::CombFilter::meter_pitch() const{
     return p2f.meter_input();

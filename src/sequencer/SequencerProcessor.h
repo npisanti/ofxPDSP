@@ -82,6 +82,12 @@ public:
     */ 
     double getMaxBars() const;
 
+    /*!
+    @brief sets the default step lenght for initializing sequences
+    #param[in] steplen default step lenght
+    */ 
+    void setDefaultSteplen( double steplen );
+
 
 
     /*!

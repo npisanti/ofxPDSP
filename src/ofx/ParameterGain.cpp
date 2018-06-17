@@ -20,6 +20,8 @@ pdsp::ParameterGain::~ParameterGain(){
     
 void pdsp::ParameterGain::patch(){
     channels(1);
+    addModuleInput( "signal", *amps[0] );
+    addModuleOutput(  "signal", *amps[0] );
     value >> dBtoLin;
 }
 
@@ -30,8 +32,6 @@ void pdsp::ParameterGain::channels( int size ){
         for (size_t i=oldsize; i<amps.size(); ++i ){
             amps[i] = new Amp();
             dBtoLin >> amps[i]->in_mod();
-            addModuleInput( std::to_string(i).c_str(), *amps[i] );
-            addModuleOutput( std::to_string(i).c_str(), *amps[i] );
         }        
     }else{
         for (int i=size; i<oldsize; ++i ){
@@ -119,27 +119,57 @@ float pdsp::ParameterGain::meter_mod() const {
 }  
 
 pdsp::Patchable& pdsp::ParameterGain::in_0() {
-    if( amps.size()<2 ) channels(2);
+    if( amps.size()<2 ){
+        channels(2);
+        addModuleInput( "0", *amps[0] );
+        addModuleInput( "1", *amps[1] );
+        addModuleOutput( "0", *amps[0] );
+        addModuleOutput( "1", *amps[1] );
+    } 
     return in("0");
 }
 
 pdsp::Patchable& pdsp::ParameterGain::in_1() {
-    if( amps.size()<2 ) channels(2);
+    if( amps.size()<2 ){
+        channels(2);
+        addModuleInput( "0", *amps[0] );
+        addModuleInput( "1", *amps[1] );
+        addModuleOutput( "0", *amps[0] );
+        addModuleOutput( "1", *amps[1] );
+    } 
     return in("1");
 }
 
 pdsp::Patchable& pdsp::ParameterGain::in_L() {
-    if( amps.size()<2 ) channels(2);
+    if( amps.size()<2 ){
+        channels(2);
+        addModuleInput( "0", *amps[0] );
+        addModuleInput( "1", *amps[1] );
+        addModuleOutput( "0", *amps[0] );
+        addModuleOutput( "1", *amps[1] );
+    } 
     return in("0");
 }
 
 pdsp::Patchable& pdsp::ParameterGain::in_R() {
-    if( amps.size()<2 ) channels(2);
+    if( amps.size()<2 ){
+        channels(2);
+        addModuleInput( "0", *amps[0] );
+        addModuleInput( "1", *amps[1] );
+        addModuleOutput( "0", *amps[0] );
+        addModuleOutput( "1", *amps[1] );
+    } 
     return in("1");
 }
 
 pdsp::Patchable& pdsp::ParameterGain::out_0() {
-    if( amps.size()<2 ) channels(2);
+    if( amps.size()<2 ){
+        channels(2);
+        addModuleInput( "0", *amps[0] );
+        addModuleInput( "1", *amps[1] );
+        addModuleOutput( "0", *amps[0] );
+        addModuleOutput( "1", *amps[1] );
+    } 
     return out("0");
 }
 
@@ -149,13 +179,34 @@ pdsp::Patchable& pdsp::ParameterGain::out_1() {
 }
 
 pdsp::Patchable& pdsp::ParameterGain::out_L() {
-    if( amps.size()<2 ) channels(2);
+    if( amps.size()<2 ){
+        channels(2);
+        addModuleInput( "0", *amps[0] );
+        addModuleInput( "1", *amps[1] );
+        addModuleOutput( "0", *amps[0] );
+        addModuleOutput( "1", *amps[1] );
+    } 
     return out("0");
 }
 
 pdsp::Patchable& pdsp::ParameterGain::out_R() {
-    if( amps.size()<2 ) channels(2);
+    if( amps.size()<2 ){
+        channels(2);
+        addModuleInput( "0", *amps[0] );
+        addModuleInput( "1", *amps[1] );
+        addModuleOutput( "0", *amps[0] );
+        addModuleOutput( "1", *amps[1] );
+    } 
     return out("1");
+}
+
+
+pdsp::Patchable& pdsp::ParameterGain::in_signal(){
+    return in("signal");
+}
+
+pdsp::Patchable& pdsp::ParameterGain::out_signal(){
+    return out("signal");
 }
 
 float pdsp::ParameterGain::get() const{

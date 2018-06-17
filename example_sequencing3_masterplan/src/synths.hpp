@@ -53,8 +53,6 @@ public:
     
     void setAHR ( float attack, float hold, float release ) {
         env.set( attack, hold, release );
-        attack_time = attack;
-        release_time = release;
     }
     
 private:
@@ -62,9 +60,6 @@ private:
     pdsp::Sampler       sampler;
     pdsp::AHR           env;
     pdsp::Amp           amp;
-    
-    float               attack_time;
-    float               release_time;
 
     std::vector<pdsp::SampleBuffer*> samples;
 };
@@ -93,8 +88,8 @@ public:
         env.set(40.0f, 100.0f, 1.0f, 200.0f) >> amp.in_mod();
         
         pitchNode >> osc1.in_pitch(); 
-            -0.3f >> osc1.in_pitch(); 
-             0.3f >> osc2.in_pitch(); 
+           -0.30f >> osc1.in_pitch(); 
+            0.30f >> osc2.in_pitch(); 
         pitchNode >> osc2.in_pitch();         
     }
         

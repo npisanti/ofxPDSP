@@ -16,6 +16,8 @@ pdsp::ParameterAmp& pdsp::ParameterAmp::operator=(const pdsp::ParameterAmp & oth
     
 void pdsp::ParameterAmp::patch(){
     channels(1);
+    addModuleInput(  "signal", *amps[0] );
+    addModuleOutput( "signal", *amps[0] );
 }
 
 pdsp::ParameterAmp::~ParameterAmp(){
@@ -29,8 +31,6 @@ void pdsp::ParameterAmp::channels( int size ){
         for (size_t i=oldsize; i<amps.size(); ++i ){
             amps[i] = new Amp();
             value >> amps[i]->in_mod();
-            addModuleInput( std::to_string(i).c_str(), *amps[i] );
-            addModuleOutput( std::to_string(i).c_str(), *amps[i] );
         }        
     }else{
         for (int i=size; i<oldsize; ++i ){

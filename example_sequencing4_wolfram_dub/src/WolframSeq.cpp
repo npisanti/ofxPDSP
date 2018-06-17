@@ -13,14 +13,14 @@ void WolframSeq::setup( int maxSteps, int maxOutputs, int rule, int generations,
     this->cah = caSide * generations;
     this->maxSteps = maxSteps;
     this->maxOutputs = maxOutputs;
-    this->sequenceLength = ((double) maxSteps) / division;
+    this->bars = ((double) maxSteps) / division;
 
     barHeight = totalHeight - cah - 40;
     
     ca.setup( caw, cah, maxSteps * maxOutputs, generations, rule );
     
     values.resize(maxOutputs);
-    bars.resize(maxOutputs*maxSteps);
+    stepbars.resize(maxOutputs*maxSteps);
 
     string name = "WSEQ n";
     name+= ofToString(number++); 
@@ -31,7 +31,7 @@ void WolframSeq::setup( int maxSteps, int maxOutputs, int rule, int generations,
     ui.add( this->activeOuts.set( "active outs", maxOutputs, 0, maxOutputs ));
     ui.add( this->threshold.set( "threshold", 4, 0, 8 ));
     ui.add( this->seedsDensity.set( "seeds density", 0.33f, 0.0f, 1.0f ));
-    ui.add( this->reverse.set( "reverse bars", false) );
+    ui.add( this->reverse.set( "reverse stepbars", false) );
     ui.add( this->limiting.set( "limiting", (float)maxOutputs, 0.0f, (float)maxOutputs ));
     ui.add( this->dbRange.set( "dB range", 18, 48, 6) );
     
@@ -55,10 +55,10 @@ void WolframSeq::setup( int maxSteps, int maxOutputs, int rule, int generations,
     gate = 0.5f;
     gateOff = false;
     
-    barsFbo.allocate(caw+2, barHeight + 20 + 2);
-    barsFbo.begin();
+    stepbarsFbo.allocate(caw+2, barHeight + 20 + 2);
+    stepbarsFbo.begin();
         ofClear(0, 0, 0, 0);
-    barsFbo.end();
+    stepbarsFbo.end();
     
 }
 
@@ -126,7 +126,7 @@ WolframSeq::WolframSeq(){
         // wolfram to seqs ---------------------------------
         int b;
         if(reverse){
-            b = bars.size()-1;
+            b = stepbars.size()-1;
         }else{
             b=0;
         }
@@ -142,7 +142,7 @@ WolframSeq::WolframSeq(){
             intensity *= scaling;
             if(intensity > 1.0f) intensity = 1.0f;
 
-            bars[b] = intensity;
+            stepbars[b] = intensity;
             
             if(reverse){
                 b--;
@@ -151,9 +151,12 @@ WolframSeq::WolframSeq(){
             }
         }
         
-        sequenceLength = ((double) steps) / division;
+
         // seqs array to messages ---------------------------
-        begin( (double) division, sequenceLength );
+        bars = ((double) steps) / division;
+        steplen = 1.0 / double(division);
+        
+        begin( );
        
         float db = dbRange;
         
@@ -163,7 +166,7 @@ WolframSeq::WolframSeq(){
             
             for(int out=0; out < activeOutsStored; ++out) {
 
-                float value = bars[ (out*steps) + x ];
+                float value = stepbars[ (out*steps) + x ];
                 if( value > 0.0f ){
                     values[out] = dB( -db + db * value );
                 }else{
@@ -198,8 +201,8 @@ WolframSeq::WolframSeq(){
 
 void WolframSeq::draw(int x, int y) {
     
-    // update bars graphics
-    barsFbo.begin();
+    // update stepbars graphics
+    stepbarsFbo.begin();
         ofClear(0, 0, 0, 0);
         ofTranslate(1,1);
 
@@ -218,7 +221,7 @@ void WolframSeq::draw(int x, int y) {
             }
             ofFill();
             
-            float height = bars[x] * barHeight;
+            float height = stepbars[x] * barHeight;
             float yy = barHeight - height;
             ofDrawRectangle(caSide*x, yy, caSide, height); 
        
@@ -250,7 +253,7 @@ void WolframSeq::draw(int x, int y) {
             
             ofTranslate(playheadW,0);
         }
-    barsFbo.end();
+    stepbarsFbo.end();
     
     // draw everything
     ofPushMatrix();
@@ -260,7 +263,7 @@ void WolframSeq::draw(int x, int y) {
         
         ofTranslate(0, cah+20);
         
-        barsFbo.draw(0, 0);
+        stepbarsFbo.draw(0, 0);
     
     ofPopMatrix();
 }

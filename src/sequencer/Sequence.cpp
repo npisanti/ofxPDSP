@@ -1,6 +1,8 @@
 
 #include "Sequence.h"
 
+double pdsp::Sequence::defaultSteplen = 1.0 / 16.0;
+
 pdsp::Sequence::Sequence( double stepDivision ){ 
     modified = false;    
     setDivision(stepDivision);
@@ -10,25 +12,27 @@ pdsp::Sequence::Sequence( double stepDivision ){
     loopCounter = 0;
     id = 1;
     atomic_meter_percent = 0.0f;
+    
+    steplen = 1.0 / stepDivision;
+    bars = 1.0;
 }
 
 pdsp::Sequence::Sequence() : Sequence (16.0){}
 
 void pdsp::Sequence::setDivision( double value ){
-    this->div = value;
-    divMult = 1.0 / div;
+    steplen = 1.0 / value;
 }
 
 void pdsp::Sequence::setLength( double bars ){
-    this->len = bars;
+    this->bars.store( bars );
 }
 
 double pdsp::Sequence::length() const{
-    return len;
+    return bars.load();
 }
 
 double pdsp::Sequence::division() const{
-    return div;
+    return 1.0/steplen;
 }
 
 void pdsp::Sequence::setTiming( double division, double bars ){
@@ -38,39 +42,47 @@ void pdsp::Sequence::setTiming( double division, double bars ){
 
 pdsp::Sequence::Sequence(const Sequence & other) {
     this->modified = other.modified.load();
-    setDivision(other.div);
     score = other.score;
     nextScore.reserve(PDSP_PATTERN_MESSAGE_RESERVE_DEFAULT);
     nextScore = other.nextScore;
     code = other.code;
+    label = other.label;
+    bars.store( other.bars.load() );
+    steplen.store( other.steplen.load() );
 }
 
 pdsp::Sequence::Sequence(Sequence && other) {
     this->modified = other.modified.load();
-    setDivision(other.div);
     score = other.score;
     nextScore.reserve(PDSP_PATTERN_MESSAGE_RESERVE_DEFAULT);
     nextScore = other.nextScore;
     code = other.code;
+    label = other.label;
+    bars.store( other.bars.load() );
+    steplen.store( other.steplen.load() );
 }
 
 pdsp::Sequence& pdsp::Sequence::operator= (const Sequence & other) {
     this->modified = other.modified.load();
-    setDivision(other.div);
     score = other.score;
     nextScore.reserve(PDSP_PATTERN_MESSAGE_RESERVE_DEFAULT);
     nextScore = other.nextScore;
     code = other.code;
+    label = other.label;
+    bars.store( other.bars.load() );
+    steplen.store( other.steplen.load() );
     return *this;
 }
 
 pdsp::Sequence& pdsp::Sequence::operator= (Sequence && other) {
     this->modified = other.modified.load();
-    setDivision(other.div);
     score = other.score;
     nextScore.reserve(PDSP_PATTERN_MESSAGE_RESERVE_DEFAULT);
     nextScore = other.nextScore;
     code = other.code;
+    label = other.label;
+    bars.store( other.bars.load() );
+    steplen.store( other.steplen.load() );
     return *this;
 }
 
@@ -88,7 +100,7 @@ void pdsp::Sequence::set( std::initializer_list<float> init ) noexcept {
         if( value >= 0.0f){
             nextScore.push_back(  pdsp::SequencerMessage( time , value, 0) );            
         }
-        time += divMult;
+        time += 1.0;
     }
     
     modified = true;
@@ -110,7 +122,7 @@ void pdsp::Sequence::set( std::initializer_list<std::initializer_list<float> >  
             if( value >= 0.0f){
                 nextScore.push_back(  pdsp::SequencerMessage( time , value, out) );            
             }
-           time += divMult;     
+           time += 1.0;     
         }
         out++;
     }
@@ -142,7 +154,7 @@ void pdsp::Sequence::begin( double division, double length ) noexcept{
 }
 
 void pdsp::Sequence::message(double step, float value, int outputIndex) noexcept {
-    nextScore.push_back( pdsp::SequencerMessage( step * divMult, value, outputIndex) );
+    nextScore.push_back( pdsp::SequencerMessage( step, value, outputIndex) );
 }
 
 void pdsp::Sequence::end() noexcept{
@@ -156,7 +168,7 @@ void pdsp::Sequence::messageVector( std::vector<float> vect, int outputIndex) {
         if( value >= 0.0f){
             nextScore.push_back(  pdsp::SequencerMessage( time , value, outputIndex) );            
         }
-        time += divMult;
+        time += 1.0;
     }
         
 }
@@ -164,14 +176,14 @@ void pdsp::Sequence::messageVector( std::vector<float> vect, int outputIndex) {
 void pdsp::Sequence::trigVector( std::vector<float> vect, double gateLength, int outputIndex) {
     
     double time=0.0;
-    double offTime = gateLength * divMult;
+    double offTime = gateLength;
     for (const float & value : vect){
         if( value > 0.0f){
             nextScore.push_back(  pdsp::SequencerMessage( time,    value, outputIndex) );            
             nextScore.push_back(  pdsp::SequencerMessage( offTime , 0.0f, outputIndex) );            
         }
-        time    += divMult;
-        offTime += divMult;
+        time    += 1.0;
+        offTime += 1.0;
     }
         
 }
@@ -179,14 +191,14 @@ void pdsp::Sequence::trigVector( std::vector<float> vect, double gateLength, int
 void pdsp::Sequence::trigVector( std::vector<float> vect, double gateLength, int outputIndex, float multiply) {
     
     double time=0.0;
-    double offTime = gateLength * divMult;
+    double offTime = gateLength;
     for (const float & value : vect){
         if( value > 0.0f){
             nextScore.push_back(  pdsp::SequencerMessage( time,    value*multiply, outputIndex) );            
             nextScore.push_back(  pdsp::SequencerMessage( offTime , 0.0f,          outputIndex) );            
         }
-        time    += divMult;
-        offTime += divMult;
+        time    += 1.0;
+        offTime += 1.0;
     }
         
 }
@@ -219,6 +231,9 @@ void pdsp::Sequence::executeGenerateScore() noexcept {
     if(modified){
         score.swap( nextScore ); // swap score in a thread-safe section
         std::sort (score.begin(), score.end(), messageSort); //sort the messages
+        for( size_t i=0; i<score.size(); ++i){
+            score[i].time *= steplen;
+        }
         id = (id == 1) ? 2 : 1;
         modified = false;
     }

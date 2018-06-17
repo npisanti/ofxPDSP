@@ -8,6 +8,9 @@ pdsp::PhaserFilter& pdsp::PhaserFilter::operator=(const PhaserFilter& other){ re
 
 void pdsp::PhaserFilter::patch(){
     channels(1);
+
+    addModuleInput(  "signal", phasers[0]->in_signal() );
+    addModuleOutput( "signal", phasers[0]->out_signal() );
     
     addModuleInput( "pitch",  p2f );    
     addModuleInput( "feedback", fbcontrol );
@@ -27,8 +30,6 @@ void pdsp::PhaserFilter::channels( int size ){
             p2f >> phasers[i]->in_freq();
             fbcontrol >> phasers[i]->in_feedback();
             spreadcontrol >> phasers[i]->in_spread();
-            addModuleInput( std::to_string(i).c_str(), phasers[i]->in_signal() );
-            addModuleOutput( std::to_string(i).c_str(), phasers[i]->out_signal() );
         }        
     }else{
         for (int i=size; i<oldsize; ++i ){
@@ -43,7 +44,7 @@ pdsp::Patchable& pdsp::PhaserFilter::operator[]( const int & ch ){
 }
 
 pdsp::Patchable& pdsp::PhaserFilter::in_signal(){
-    return in("0");
+    return in("signal");
 }
 
 pdsp::Patchable& pdsp::PhaserFilter::in_pitch(){
@@ -63,7 +64,7 @@ pdsp::Patchable& pdsp::PhaserFilter::in_spread(){
 }
 
 pdsp::Patchable& pdsp::PhaserFilter::out_signal(){
-    return out("0");
+    return out("signal");
 }
 
 

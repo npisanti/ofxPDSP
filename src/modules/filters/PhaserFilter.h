@@ -25,7 +25,7 @@ public:
     ~PhaserFilter();
 
     /*!
-    @brief Sets "0" as selected input and returns this module ready to be patched. This is the default input. This is the filter input.
+    @brief Sets "signal" as selected input and returns this module ready to be patched. This is the default input. This is the filter input.
     */      
     Patchable& in_signal();
     
@@ -51,7 +51,7 @@ public:
 
     
     /*!
-    @brief Sets "0" as selected output and returns this module ready to be patched. This is the default output. This is filter signal output.
+    @brief Sets "signal" as selected output and returns this module ready to be patched. This is the default output. This is filter signal output.
     */  
     Patchable& out_signal();
 

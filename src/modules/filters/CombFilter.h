@@ -26,10 +26,15 @@ public:
     ~CombFilter();
 
     /*!
-    @brief Sets "0" as selected input and returns this module ready to be patched. This is the default input. This is the filter input.
+    @brief Sets "signal" as selected input and returns this module ready to be patched. This is the default input. This is the filter input.
     */      
     Patchable& in_signal();
     
+    /*!
+    @brief Sets "signal" as selected output and returns this module ready to be patched. This is the default output. This is filter signal output.
+    */  
+    Patchable& out_signal();
+        
     /*!
     @brief Sets "pitch" as selected input and returns this module ready to be patched. This is the tuning of the delay in semitones.
     */  
@@ -49,11 +54,6 @@ public:
     @brief Sets "damping" as selected input and returns this module ready to be patched. This is the damping of the delay feedback.
     */  
     Patchable& in_damping();
-    
-    /*!
-    @brief Sets "0" as selected output and returns this module ready to be patched. This is the default output. This is filter signal output.
-    */  
-    Patchable& out_signal();
 
     /*!
     @brief sets the number of different inputs this module can process. Be sure to set the channels before doing any patching. You can access channels with in/out methods, using a string with their number as input, for example in("1") or out("4"), or by using ini(int ch) or outi(int ch) methods.

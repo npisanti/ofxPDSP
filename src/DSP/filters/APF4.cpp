@@ -23,6 +23,10 @@ pdsp::Patchable& pdsp::APF4::in_signal(){
     return in("signal");
 }
 
+pdsp::Patchable& pdsp::APF4::out_signal(){
+    return out("signal");
+}
+
 pdsp::Patchable& pdsp::APF4::in_freq(){
     return in("freq");
 }

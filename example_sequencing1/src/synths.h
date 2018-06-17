@@ -15,13 +15,13 @@ public:
         addModuleOutput("signal", amp ); // if in/out is not selected default in/out is used
         
         //patching
-        env.set(0.0f, 100.0f, 350.0f) * 0.25f >> amp.in_mod();
+        env.set(0.0f, 50.0f, 1.0f, 350.0f) * 0.25f >> amp.in_mod();
         env * 0.10f           >> osc.in_fb() >> amp;
     }
 private:
     pdsp::Amp amp;
     pdsp::FMOperator osc;
-    pdsp::AHR env;
+    pdsp::ADSR env;
     
 };
 

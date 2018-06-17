@@ -34,10 +34,7 @@ class ofApp : public ofBaseApp{
         
         BassPattern     bassPattern;
     
-        pdsp::Sequence    bleep1;
-        pdsp::Sequence    bleep2;
-        pdsp::Sequence    bleep3;
-        pdsp::Sequence    bleep4;
+        std::vector<pdsp::Sequence> bleeps;
             
         float masterX;
 };

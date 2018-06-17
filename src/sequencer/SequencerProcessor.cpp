@@ -161,3 +161,7 @@ void pdsp::SequencerProcessor::launchMultipleCells(int index, bool quantizeLaunc
         sections[i].launchCell(index, quantizeLaunch, quantizeGrid );
     }
 }
+
+void pdsp::SequencerProcessor::setDefaultSteplen( double steplen ){
+    pdsp::Sequence::defaultSteplen = steplen;
+}

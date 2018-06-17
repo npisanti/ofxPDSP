@@ -37,7 +37,7 @@ void ofApp::setup(){
     engine.sequencer.sections[0].setCell( 0, &masterplan );
     
     // masterplan coding
-    masterplan.setLength(1.0); // 1 bar loop
+    masterplan.bars = 1.0; // 1 bar loop
     
     masterplan.code = [&] () {
         if(masterplan.counter() >= randomizeBars){

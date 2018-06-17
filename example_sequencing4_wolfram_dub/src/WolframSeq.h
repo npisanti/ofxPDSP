@@ -31,14 +31,14 @@ public:
     
     bool                 gateOff;
 
-    vector<float>   bars;    
+    std::vector<float>   stepbars;    
     Automaton1D     ca;
 
     ofParameterGroup ui;
 
 private:
 
-    ofFbo   barsFbo;
+    ofFbo   stepbarsFbo;
 
     int     cah;
     int     caSide;

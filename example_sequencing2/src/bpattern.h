@@ -32,7 +32,7 @@ struct BassPattern : public pdsp::Sequence{
     // this returns the pitches for the generative routine
     // returns the pitches from the sequence the first, second and third bar
     // on the fourth bar the second part of the returned pitches will be random values
-    // counter() returns the value of an internal counter that measure how many time the sequence has been looped
+    // counter() returns the value of an internal counter that measure how many time the sequence restarted
     float pfun(int index){
         if(index>4 && counter() == 3){
             float nextPitch = static_cast<float> (pdsp::dice(12) + 41.0f); 
@@ -46,23 +46,20 @@ struct BassPattern : public pdsp::Sequence{
     //inits the pattern and set the pitches to use
     BassPattern(){
 
-        sequence.resize(8);
-        sequence[0] = 29.0f;
-        sequence[1] = 31.0f;
-        sequence[2] = 34.0f;
-        sequence[3] = 36.0f;
-        sequence[4] = 38.0f;
-        sequence[5] = 41.0f;
-        sequence[6] = 43.0f;
-        sequence[7] = 29.0f;
+        sequence = { 29.0f, 31.f, 34.f, 36.f, 38.f, 41.f, 43.f, 29.f };
         
         code = [&] () noexcept {
-            if (counter() == 4 ) resetCount(); // pdsp::Sequence has an internal counter that you can reset with resetCount() 
-                                            // this counter is automatically reset on Sequence change or launch
+            if (counter() == 4 ) resetCount(); 
+            // pdsp::Sequence has an internal counter() 
+            // to count how many times the sequence restarted 
+            // that you can reset it with resetCount() 
+            // this counter is automatically reset on Sequence change or launch
 
             shuffleSequence();            
 
-            begin(16.0, 1.0);
+            steplen = 1.0/16.0;
+            
+            begin();
          
             //   step   velo    pitch       slew%    duration
             note(0.0,   1.0f,   29.0f,      0.0f,    gate_long);
@@ -83,7 +80,7 @@ struct BassPattern : public pdsp::Sequence{
 
     const double gate_long =  0.95;  // a bit more than 1/16       
     const double gate_short = 0.4; // almost 1/32th
-    vector<float> sequence;
+    std::vector<float> sequence;
     
 };
 

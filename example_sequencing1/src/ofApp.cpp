@@ -46,41 +46,52 @@ void ofApp::setup(){
     // kick sequences
     kick_seqs.resize(4); 
     
-    // we can use "set" to use an inlined array with the step values and then the timing
+    // we can use "set" to use an inlined array with the step values
+    // "steplen" and "bars" are used for the timing and lenght of the sequence
+    // init step length is 1/16 and init seq lenght is 1 bar
     float o = -1.0f; // when using "set" negative outputs are ignored, 'o' is graphically useful
     
     // kick synth has an AHR envelope, only positive values will trigger it
-    kick_seqs[0].set( { 1.0f, o, o, o }, // our sequence steps
-                        4.0, 1.0 ); // 1/4th steps, 1 bar
-    kick_seqs[1].set( { 1.0f, 0.5f, 0.8f, 0.5f }, // our sequence steps
-                        4.0, 1.0 ); // 1/4th steps, 1 bar
-    kick_seqs[2].set( { 1.0f, 0.5f, o, o,  o, o, 0.3f, o }, // our sequence steps
-                        8.0, 1.0 ); // 1/8th steps, 1 bar
-    kick_seqs[3].set( { 1.0f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f,    // our sequence steps
-                        0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f },  // still our sequence steps
-                        16.0, 2.0 ); // 1/16th steps, 2 bars (last bar is empty as we give just 16 values)
     
+    kick_seqs[0].steplen = 1.0/4.0;
+    kick_seqs[0].bars = 1.0; // this can also be omitted, 1.0 is the default value
+    kick_seqs[0].set( { 1.0f, o, o, o } );
+    
+    kick_seqs[1].steplen = 1.0/4.0;
+    kick_seqs[1].set( { 1.0f, 0.5f, 0.8f, 0.5f } );
+    
+    kick_seqs[2].steplen = 1.0/8.0;
+    kick_seqs[2].set( { 1.0f, 0.5f, o, o,  o, o, 0.3f, o } );
+    
+    kick_seqs[3].steplen = 1.0/16.0;
+    kick_seqs[3].bars    = 2.0; 
+    kick_seqs[3].set( { 1.0f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f,   
+                        0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f }); 
     
     lead_seqs.resize(4);
     
     // lead sequences ( and sequences examples ) 
-    lead_seqs[0].set( { { 1.0f,  0.75f, 1.0f,  0.75f }, // to the first output ( triggers )
-                        { 84.0f, 82.0f, 84.0f, 80.0f } }, // to the second output ( pitch values )
-                          8.0, 1.0 ); // time division (1/8th), sequence length in bars (1 bar)
-  
-    lead_seqs[1].set( { { 1.0f,  o,  1.0f,  0.75f},
-                        { 72.0f, o,  75.0f, 77.0f} }, 8.0, 1.0 );
+    lead_seqs[0].steplen = 1.0/16.0;    
+    lead_seqs[0].set( { { 1.0f,  0.0f,  0.75f,  0.0f,  1.0f,  0.0f, 0.75f, 0.0f }, // triggers outputs
+                        { 84.0f, o,     82.0f,  o,     84.0f, o,    80.0f, o    } }); // pitch outputs
+                        
+    lead_seqs[1].steplen = 1.0/16.0;  
+    lead_seqs[1].set( { { 1.0f,  o,   o,   o,   1.0f,   o,   o,    0.0f },
+                        { 72.0f, o,   o,   o,   75.f,   o,   77.f, o    } } );
      
     
     float minor_penta[] = { 72.0f, 75.0f, 77.0f, 79.0f, 82.0f, 84.0f, 87.0f, 89.0f }; // minor pentatonic scale
  
     // you can also use begin(), message() and end() to set sequences
-    lead_seqs[2].begin( 8.0, 1.0 ); // division, length in bars
+    lead_seqs[2].steplen = 1.0/8.0;
+    lead_seqs[2].begin(); 
         for (int i=0; i<4; ++i){
             float trig = (i%2==0) ? 1.0f : 0.75f;
             float pitch = minor_penta[pdsp::dice(8)]; // random pitch from the array, pdsp::dice give you an int
-            lead_seqs[2].message( double(i), trig,  0 ); // step, value, output (we set 0 as trig out)
-            lead_seqs[2].message( double(i), pitch, 1 ); // step, value, output (we set 1 as value out)
+            
+            lead_seqs[2].message( double(i),      trig,  0 ); // step, value, output (we set 0 as trig out)
+            lead_seqs[2].message( double(i)+0.1f, 0.0f,  0 ); // trigger off, short step gate
+            lead_seqs[2].message( double(i),      pitch, 1 ); // step, value, output (we set 1 as value out)
             // step value is double so you can use fractional timing if you want
         }
     lead_seqs[2].end(); // always call end() when you've done
@@ -92,17 +103,22 @@ void ofApp::setup(){
     // read the ofBook about lambdas: https://openframeworks.cc/ofBook/chapters/c++11.html#lambdafunctions
     
     lead_seqs[3].code = [&] () noexcept { // better to tag noexcept for code used by the DSP engine 
+            pdsp::Sequence & seq = lead_seqs[3]; // reference
+            
             // declaring a variable inside the lambda is fine
             static float akebono[] = { 72.0f, 74.0f, 75.0f, 79.0f, 80.0f, 84.0f, 86.0f, 87.0f }; // akebono scale
-           
-            lead_seqs[3].begin( 8.0, 1.0 ); // division, length in bars
+            
+            seq.steplen = 1.0/8.0;
+            seq.begin();
             for (int i=0; i<4; ++i){
                 float trig = (i%2==0) ? 1.0f : 0.75f;
                 float pitch = akebono[pdsp::dice(8)]; 
-                lead_seqs[3].message( double(i), trig,  0 );
-                lead_seqs[3].message( double(i), pitch, 1 );
+                
+                seq.message( double(i),       trig,  0 );
+                seq.message( double(i)+0.6f,  0.0f,  0 ); // trigger off, half step gate
+                seq.message( double(i),       pitch, 1 );
             }
-            lead_seqs[3].end();
+            seq.end();
     };
 
     // assigning the sequences to the sequencer sections

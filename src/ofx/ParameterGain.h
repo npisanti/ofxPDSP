@@ -199,45 +199,55 @@ public:
     */ 
     float meter_mod() const;     
     
+
     
     /*!
-    @brief Sets "0" as selected input and returns this module ready to be patched. This is the default input. If channel is less than 2, sets channels() to 2.
+    @brief Sets "signal" as selected input and returns this Unit ready to be patched. This is the default input. This input is the signal to attenuate.
+    */   
+    pdsp::Patchable& in_signal();
+    
+    /*!
+    @brief Sets "signal" as selected output and returns this Unit ready to be patched. This is the default output. This is the attenuated output.
+    */ 
+    pdsp::Patchable& out_signal();
+    
+    /*!
+    @brief Sets "0" as selected input and returns this module ready to be patched. This is the default input. If channel is less than 2, ets channels() to 2 and activate "0" and "1" outputs.
     */      
     Patchable& in_0();
 
     /*!
-    @brief Sets "1" as selected input and returns this module ready to be patched. If channel is less than 2, sets channels() to 2.
+    @brief Sets "1" as selected input and returns this module ready to be patched. If channel is less than 2, ets channels() to 2 and activate "0" and "1" outputs.
     */     
     Patchable& in_1();
     
     /*!
-    @brief Sets "0" as selected input and returns this module ready to be patched. This is the default input. If channel is less than 2, sets channels() to 2.
+    @brief Sets "0" as selected input and returns this module ready to be patched. This is the default input. If channel is less than 2, ets channels() to 2 and activate "0" and "1" outputs.
     */      
     Patchable& in_L();
 
     /*!
-    @brief Sets "1" as selected input and returns this module ready to be patched. If channel is less than 2, sets channels() to 2.
+    @brief Sets "1" as selected input and returns this module ready to be patched. If channel is less than 2, ets channels() to 2 and activate "0" and "1" outputs.
     */     
     Patchable& in_R();
     
-
     /*!
-    @brief Sets "0" as selected output and returns this module ready to be patched. This is the default output. If channel is less than 2, sets channels() to 2.
+    @brief Sets "0" as selected output and returns this module ready to be patched. This is the default output. If channel is less than 2, ets channels() to 2 and activate "0" and "1" outputs.
     */  
     Patchable& out_0();
     
     /*!
-    @brief Sets "1" as selected output and returns this module ready to be patched. If channel is less than 2, sets channels() to 2.
+    @brief Sets "1" as selected output and returns this module ready to be patched. If channel is less than 2, ets channels() to 2 and activate "0" and "1" outputs.
     */  
     Patchable& out_1();
             
     /*!
-    @brief Sets "0" as selected output and returns this module ready to be patched. If channel is less than 2, sets channels() to 2.
+    @brief Sets "0" as selected output and returns this module ready to be patched. If channel is less than 2, ets channels() to 2 and activate "0" and "1" outputs.
     */  
     Patchable& out_L();
     
     /*!
-    @brief Sets "1" as selected output and returns this module ready to be patched. If channel is less than 2, sets channels() to 2.
+    @brief Sets "1" as selected output and returns this module ready to be patched. If channel is less than 2, ets channels() to 2 and activate "0" and "1" outputs.
     */  
     Patchable& out_R();
 

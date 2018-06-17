@@ -17,10 +17,16 @@ void ofApp::setup(){
     //-------------------------SETTING UP SCORE--------------
  
     float o = 0.0f; // we need at least two values for each dimension to avoid ambigous calls
-    bleep1.set( { {1.0f, o}, {77.0f, o} }, 16.0, 0.25); // 1.0f goes to out 0, pitch goes to out 1
-    bleep2.set( { {1.0f, o}, {80.0f, o} }, 16.0, 0.25); // 1/16th division, 0.25 bars length
-    bleep3.set( { {1.0f, o}, {84.0f, o} }, 16.0, 0.25); 
-    bleep4.set( { {1.0f, o}, {89.0f, o} }, 16.0, 0.25); 
+    
+    bleeps.resize(4);
+    for( size_t i=0; i<bleeps.size(); ++i ){
+        bleeps[i].steplen = 1.0 / 16.0;
+        bleeps[i].bars = 1.0 / 4.0;        
+    }
+    bleeps[0].set( { {1.0f, o}, {77.0f, o} });    
+    bleeps[1].set( { {1.0f, o}, {80.0f, o} } ); 
+    bleeps[2].set( { {1.0f, o}, {84.0f, o} } ); 
+    bleeps[3].set( { {1.0f, o}, {89.0f, o} } ); 
 
     // SequencerProcessor setup
     engine.sequencer.setTempo(120.0);
@@ -28,25 +34,14 @@ void ofApp::setup(){
     engine.sequencer.sections.resize(2);
 
     // adding the bleep patterns and settings their timings
-    engine.sequencer.sections[0].setCell(0, &bleep1, pdsp::Behavior::Next );
-    engine.sequencer.sections[0].setCell(1, &bleep2, pdsp::Behavior::Next );
-    engine.sequencer.sections[0].setCell(2, &bleep3, pdsp::Behavior::Next );
-    engine.sequencer.sections[0].setCell(3, &bleep4, pdsp::Behavior::Next );
-    // SeqChange triggering quantized to 1/4th
-    engine.sequencer.sections[0].enableQuantization(0, 0.25 );
-    engine.sequencer.sections[0].enableQuantization(1, 0.25 );
-    engine.sequencer.sections[0].enableQuantization(2, 0.25 );
-    engine.sequencer.sections[0].enableQuantization(3, 0.25 );
+    for( size_t i=0; i<bleeps.size(); ++i ){
+        engine.sequencer.sections[0].setCell(i, bleeps[i], pdsp::Behavior::Next );
+    }
+    engine.sequencer.sections[0].launch(0);
 
     // set bass sequence
-    engine.sequencer.sections[1].setCell(0, &bassPattern, pdsp::Behavior::Self); //pdsp::Behavior contains some ready-made SeqChange
-    engine.sequencer.sections[1].enableQuantization( 0, 1.0 ); // nextCell quantized to the next bar
-    engine.sequencer.sections[1].setCell(1, nullptr, nullptr); // a nullptr sequence will stop the bass everything
-    
-    // we launch the sequences
-    engine.sequencer.sections[0].launch(0);
-    engine.sequencer.sections[1].launch(0); 
-
+    engine.sequencer.sections[1].setCell(0, bassPattern); 
+    engine.sequencer.sections[1].launch(0);     
     
     //-------------------------PATCHING--------------
     engine.sequencer.sections[0].out_trig(0)  >> bleep.in("trig"); 
@@ -55,11 +50,14 @@ void ofApp::setup(){
     // connect section outputs to bass
     engine.sequencer.sections[1].out_trig(0)  >> bass.in("trig");
     engine.sequencer.sections[1].out_value(1) >> bass.in("pitch");
+    
     engine.sequencer.sections[1].out_value(1).setSlewTime(80.0f); // 50ms slew
-    engine.sequencer.sections[1].linkSlewControl(1, 2); // now the out 2 will control the slew time of the value output 1
-                                                    // slew time is multiplied by the message value
-                                                    // so for example 0.0f deativates slew and 2.0f doubles it
-                                                    // (the effect is subtle in this example but it's there
+    engine.sequencer.sections[1].linkSlewControl(1, 2); 
+            // now the out 2 will control the slew time of the value output 1
+            // slew time is multiplied by the message value
+            // so for example 0.0f deativates slew and 2.0f doubles it
+            // useful for 303-like glides
+            // (the effect is subtle in this example but it's there)
 
     // connect synths to stereo output
     bass * (pdsp::panL(-0.5f) * dB(-6.0f)) >> engine.audio_out(0);
@@ -98,7 +96,6 @@ void ofApp::draw(){
 
     // draw the sequencer monitor
     engine.graphics.draw();
-
 
     ofSetColor(255);  
 

@@ -9,6 +9,9 @@ const float pdsp::SVFilter::Notch = 3.0f;
 
 void pdsp::SVFilter::patch(){
     channels(1);
+    addModuleInput(  "signal", *submodules[0]);
+    addModuleOutput( "signal", *submodules[0]);
+    
     addModuleInput("pitch", p2f);
     addModuleInput("reso", reso);
     addModuleInput("mode", mode);    
@@ -45,8 +48,6 @@ void pdsp::SVFilter::channels( int size ){
             p2f >> submodules[i]->in("freq");
             reso >> submodules[i]->in("reso");
             mode >> submodules[i]->in("select");            
-            addModuleInput( std::to_string(i).c_str(), *submodules[i] );
-            addModuleOutput( std::to_string(i).c_str(), *submodules[i] );
         }        
     }else{
         for (int i=size; i<oldsize; ++i ){
@@ -62,23 +63,99 @@ pdsp::Patchable& pdsp::SVFilter::operator[]( const int & ch ){
 
 
 pdsp::Patchable& pdsp::SVFilter::in_0(){
-    if( submodules.size()<2 ) channels(2);
+    if( submodules.size()<2 ){
+        channels(2);
+        addModuleInput( "0", *submodules[0] );
+        addModuleInput( "1", *submodules[1] );
+        addModuleOutput( "0", *submodules[0] );
+        addModuleOutput( "1", *submodules[1] );
+    } 
     return in("0");
 }
     
 pdsp::Patchable& pdsp::SVFilter::in_1(){
-    if( submodules.size()<2 ) channels(2);
+    if( submodules.size()<2 ){
+        channels(2);
+        addModuleInput( "0", *submodules[0] );
+        addModuleInput( "1", *submodules[1] );
+        addModuleOutput( "0", *submodules[0] );
+        addModuleOutput( "1", *submodules[1] );
+    } 
     return in("1");
 }
 
 pdsp::Patchable& pdsp::SVFilter::in_L(){
-    if( submodules.size()<2 ) channels(2);
+    if( submodules.size()<2 ){
+        channels(2);
+        addModuleInput( "0", *submodules[0] );
+        addModuleInput( "1", *submodules[1] );
+        addModuleOutput( "0", *submodules[0] );
+        addModuleOutput( "1", *submodules[1] );
+    } 
     return in("0");
 }
     
 pdsp::Patchable& pdsp::SVFilter::in_R(){
-    if( submodules.size()<2 ) channels(2);
+    if( submodules.size()<2 ){
+        channels(2);
+        addModuleInput( "0", *submodules[0] );
+        addModuleInput( "1", *submodules[1] );
+        addModuleOutput( "0", *submodules[0] );
+        addModuleOutput( "1", *submodules[1] );
+    } 
     return in("1");
+}
+
+pdsp::Patchable& pdsp::SVFilter::out_0(){
+    if( submodules.size()<2 ){
+        channels(2);
+        addModuleInput( "0", *submodules[0] );
+        addModuleInput( "1", *submodules[1] );
+        addModuleOutput( "0", *submodules[0] );
+        addModuleOutput( "1", *submodules[1] );
+    } 
+    return out("0");
+}
+    
+pdsp::Patchable& pdsp::SVFilter::out_1(){
+    if( submodules.size()<2 ){
+        channels(2);
+        addModuleInput( "0", *submodules[0] );
+        addModuleInput( "1", *submodules[1] );
+        addModuleOutput( "0", *submodules[0] );
+        addModuleOutput( "1", *submodules[1] );
+    } 
+    return out("1");
+}
+
+pdsp::Patchable& pdsp::SVFilter::out_L(){
+    if( submodules.size()<2 ){
+        channels(2);
+        addModuleInput( "0", *submodules[0] );
+        addModuleInput( "1", *submodules[1] );
+        addModuleOutput( "0", *submodules[0] );
+        addModuleOutput( "1", *submodules[1] );
+    } 
+    return out("0");
+}
+    
+pdsp::Patchable& pdsp::SVFilter::out_R(){
+    if( submodules.size()<2 ){
+        channels(2);
+        addModuleInput( "0", *submodules[0] );
+        addModuleInput( "1", *submodules[1] );
+        addModuleOutput( "0", *submodules[0] );
+        addModuleOutput( "1", *submodules[1] );
+    } 
+    return out("1");
+}
+
+pdsp::Patchable& pdsp::SVFilter::in_signal(){
+    return in("signal");
+}
+
+pdsp::Patchable& pdsp::SVFilter::out_signal(){
+    return out("signal");
 }
 
 pdsp::Patchable& pdsp::SVFilter::in_pitch(){
@@ -95,26 +172,6 @@ pdsp::Patchable& pdsp::SVFilter::in_reso(){
 
 pdsp::Patchable& pdsp::SVFilter::in_mode(){
     return in("mode");
-}
-
-pdsp::Patchable& pdsp::SVFilter::out_0(){
-    if( submodules.size()<2 ) channels(2);
-    return out("0");
-}
-
-pdsp::Patchable& pdsp::SVFilter::out_1(){
-    if( submodules.size()<2 ) channels(2);
-    return out("1");
-}
-
-pdsp::Patchable& pdsp::SVFilter::out_L(){
-    if( submodules.size()<2 ) channels(2);
-    return out("0");
-}
-
-pdsp::Patchable& pdsp::SVFilter::out_R(){
-    if( submodules.size()<2 ) channels(2);
-    return out("1");
 }
 
 float pdsp::SVFilter::meter_cutoff() const {
