@@ -9,9 +9,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     
-    //-------------------GRAPHIC SETUP--------------
     ofBackground(0);
-    ofSetFrameRate(30);
     
     // PATCHING
     serialOut.setVerbose(true); // when compiling in debug this also activates messages to the console when sending serial data
@@ -21,8 +19,8 @@ void ofApp::setup(){
     // setup as usual, check example-scoring for more info
     engine.score.setTempo(145.0);
     engine.score.sections.resize(1); // we need just one section
-    engine.score.sections[0].setCell(0, &sequence, pdsp::Behavior::Self);
-    engine.score.sections[0].launchCell(0);
+    engine.score.sections[0].setCell(0, sequence );
+    engine.score.sections[0].launch(0);
     engine.score.play();  
     
     // sequence
@@ -36,16 +34,26 @@ void ofApp::setup(){
     // those are the value we pass to the serial
     // all values are converted to int and scaled in the 0<-->127 range
 
-
     float duration = 0.25; // duration before a 0.0f value is sent, in steps, so this is 25% of a 1/16th
                            // set it to the right value for your tempo for having a consistent control 
                            // it useful to have a short duration to control solenoids on/off pwm
                            // so you don't have to use delay() in the arduino loop
                            // that will cause bad timing
   
-    sequence.begin(16.0, 1.0);    
-    sequence.trigVector( channel1, duration, 0); // this will add all the values of an std::vector<float> as messages
-    sequence.trigVector( channel2, duration, 1); // and also generate trigger off signals (0.0f values)
+    sequence.steplen = 1.0 / 16.0;
+    sequence.begin();
+        for(size_t i=0; i<channel1.size(); ++i){
+            if( channel1[i]>0.0f){
+                sequence.message( i,   channel1[i], 0);
+                sequence.message( i+duration, 0.0f, 0);
+            }
+        }
+        for(size_t i=0; i<channel2.size(); ++i){
+            if( channel2[i]>0.0f){
+                sequence.message( i,   channel2[i], 1);
+                sequence.message( i+duration, 0.0f, 1);
+            }
+        }
     sequence.end();
     
     // each "channel" can trigger different actions in the arduino sketch

@@ -26,9 +26,6 @@ class ofApp : public ofBaseApp{
         pdsp::Engine        engine;
         pdsp::midi::Output  midiOut;
                         
-        pdsp::Sequence  sequence1;
-        pdsp::Sequence  sequence2;
-        pdsp::Sequence  sequence3;
-        
-        pdsp::GateSequencer gate;
+        std::vector<pdsp::Sequence> sequences;                
+
 };

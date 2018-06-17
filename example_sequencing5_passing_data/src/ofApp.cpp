@@ -31,17 +31,18 @@ void ofApp::setup(){
     // -------------- this code runs in the audio thread ----------------------
     engine.sequencer.sections[0].sequence(0).code = [&] () noexcept { 
         pdsp::Sequence & seq = engine.sequencer.sections[0].sequence(0);
-        seq.begin( 8.0, 1.0 );
-        
-        // we save the index for reading, so there is no problem if it changes while this code is running
-        int read = index; 
-        
-        for (size_t i=0; i<buffer[read].size(); ++i){
-            if(pdsp::chance( chance) ){ // chance could also be changed while this code runs, no problem
-                seq.message( double(i), 1.0f,  0 );
-                seq.message( double(i), buffer[read][i], 1 );
+       
+        seq.steplen = 1.0/8.0;
+        seq.begin( );        
+            // we save the index for reading, so there is no problem if it changes while this code is running
+            int read = index; 
+            
+            for (size_t i=0; i<buffer[read].size(); ++i){
+                if(pdsp::chance( chance) ){ // chance could also be changed while this code runs, no problem
+                    seq.message( double(i), 1.0f,  0 );
+                    seq.message( double(i), buffer[read][i], 1 );
+                }
             }
-        }
         seq.end();
     };
     // ------------------------------------------------------------------------
@@ -81,7 +82,6 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
     string info = "press r to change the sequence data\n";
     info += "note chance = ";
     info += ofToString( chance );
