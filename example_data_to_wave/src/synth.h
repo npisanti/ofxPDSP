@@ -22,18 +22,16 @@ public:
         float meter_pitch() const;
 
     private:
-        void setup(PolySynth & m);
+        void setup(PolySynth & m, int v);
 
         pdsp::PatchNode     voiceTrigger;
         
         pdsp::DataOscillator    oscillator;
         pdsp::VAFilter          filter;
-        pdsp::Amp               voiceAmp;
+        pdsp::Amp               amp;
 
 
         pdsp::ADSR          envelope;    
-        pdsp::Amp           envToTable;
-        pdsp::Amp           envToFilter;  
     }; // end voice class -----------------------------
 
 
@@ -61,17 +59,15 @@ private: // --------------------------------------------------
     pdsp::Parameter     env_decay_ctrl;
     pdsp::Parameter     env_sustain_ctrl;
     pdsp::Parameter     env_release_ctrl;
-    pdsp::Parameter     env_filter_ctrl;
-
-    pdsp::Parameter     filter_lfo_mod_ctrl;    
+    pdsp::ParameterAmp  env_filter_amt;
 
     pdsp::Parameter     lfo_speed_ctrl;    
     pdsp::Parameter     lfo_wave_ctrl;
 
     pdsp::LFO           lfo;
-    pdsp::Amp           lfoToFilter;
-    pdsp::Switch        lfoSwitch;
-
+    pdsp::Switch        lfo_switch;
+    pdsp::ParameterAmp  lfo_filter_amt;    
+    
     pdsp::LowCut			leakDC;  
     
     // chorus ------------------------

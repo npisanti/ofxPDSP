@@ -58,6 +58,9 @@ void pdsp::SVFilter::channels( int size ){
 }
 
 pdsp::Patchable& pdsp::SVFilter::operator[]( const int & ch ){
+    if( ch >= int(submodules.size()) ){
+        channels(ch+1);
+    }
     return *(submodules[ch]);
 }
 

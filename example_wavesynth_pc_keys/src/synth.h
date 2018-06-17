@@ -22,7 +22,7 @@ public:
         float meter_pitch() const;
 
     private:
-        void setup(PolySynth & m);
+        void setup( PolySynth & m, int v );
 
         pdsp::PatchNode     voiceTrigger;
         
@@ -58,8 +58,9 @@ private: // --------------------------------------------------
     pdsp::Parameter     env_decay_ctrl;
     pdsp::Parameter     env_sustain_ctrl;
     pdsp::Parameter     env_release_ctrl;
-    pdsp::Parameter     env_filter_ctrl;
-    pdsp::Parameter     env_table_ctrl;
+    
+    pdsp::ParameterAmp  env_filter_amt;
+    pdsp::ParameterAmp  env_table_amt;
     
     pdsp::Parameter     table_ctrl;
 
@@ -72,16 +73,16 @@ private: // --------------------------------------------------
     pdsp::WaveTable  wavetable;
 
     pdsp::LFO           lfo;
-    pdsp::Amp           lfoToTable;
-    pdsp::Amp           lfoToFilter;
-    pdsp::Switch        lfoSwitch;
+    pdsp::Amp           lfo_to_table;
+    pdsp::Amp           lfo_to_filter;
+    pdsp::Switch        lfo_switch;
 
     // chorus ------------------------
     pdsp::DimensionChorus   chorus;         
     
     ofParameterGroup     ui_chorus;
-    pdsp::Parameter     chorus_speed_ctrl;
-    pdsp::Parameter     chorus_depth_ctrl;
+    pdsp::Parameter      chorus_speed_ctrl;
+    pdsp::Parameter      chorus_depth_ctrl;
     
     std::vector<float> partials_vector;
 

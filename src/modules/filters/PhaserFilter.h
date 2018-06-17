@@ -12,7 +12,7 @@
 
 namespace pdsp{
 /*!
-@brief A 4pole Phaser, multichannel.
+@brief A 4 pole Phaser. Multichannel.
 * 
 */       
 

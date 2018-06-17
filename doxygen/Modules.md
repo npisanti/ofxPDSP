@@ -1,5 +1,5 @@
 
-This is an overview of a selection of the available modules. There are many classes in pdsp, but many are just for very advanced users as they are used to build higher level classes. This is a selection of the most higher level pdsp classes, probably you will never need more than this. Some of the modules have a channel() method to process more inputs with the same settings (or methods to access L/R channes).
+This is an overview of a selection of the available modules. There are many classes in pdsp, but many are just for very advanced users as they are used to build higher level classes. This is a selection of the most higher level pdsp classes, probably you will never need more than this. Module tagged with `[multichannel]` let to process more inputs signals with the same settings by using the `[]` operator. Stereo modules have methods to access L/R channes.
 
 ## Oscillators / Noise
 - pdsp::VAOscillator : band limited oscillator with saw, pulse, triangle and sine outputs
@@ -10,10 +10,10 @@ This is an overview of a selection of the available modules. There are many clas
 - pdsp::BitNoise : digital noise generator with lots of shaping control and stereo outputs
 
 ## Filters
-- pdsp::VAFilter : resonant 4 pole ladder filter with switchable 12db/24db LP, BP and HP outputs and pitched cutoff control
-- pdsp::SVFilter : resonant 2 pole state variable filter with switchable LP, BP, HP and Notch outputs and pitched cutoff control
-- pdsp::CombFilter : Comb Filter with frequency control in pitch, feedback and damping control (this is basically a tuned delay)
-- pdsp::PhaserFilter : 4pole Phaser with frequency control in pitch, feedback and frequency spread control
+- pdsp::VAFilter : resonant 4 pole ladder filter with switchable 12db/24db LP, BP and HP outputs and pitched cutoff control. `[multichannel]`
+- pdsp::SVFilter : resonant 2 pole state variable filter with switchable LP, BP, HP and Notch outputs and pitched cutoff control. `[multichannel]`
+- pdsp::CombFilter : Comb Filter with frequency control in pitch, feedback and damping control (this is basically a tuned delay). `[multichannel]`
+- pdsp::PhaserFilter : 4 pole Phaser with frequency control in pitch, feedback and frequency spread control. `[multichannel]`
 
 ## Delays
 - pdsp::Delay : delay with feedback damping
@@ -70,8 +70,8 @@ This is an overview of a selection of the available modules. There are many clas
 ## Thread-Safe Control / ofParameter compatible
 - pdsp::Parameter : holds a value to control the modules (with optional smoothing), has ofParameter integration for GUIs
 - pdsp::TriggerControl : send triggers
-- pdsp::ParameterAmp : a combination of pdsp::Amp and pdsp::Parameter for easy mod amount control
-- pdsp::ParameterGain : a combination of pdsp::Amp and pdsp::Parameter with dB conversion for easy gain control
+- pdsp::ParameterAmp : a combination of pdsp::Amp and pdsp::Parameter for easy mod amount control. `[multichannel]`
+- pdsp::ParameterGain : a combination of pdsp::Amp and pdsp::Parameter with dB conversion for easy gain control. `[multichannel]`
 
 ## Audio Interface
 - pdsp::Engine : manages audio inputs / outputs and runs the DSPs

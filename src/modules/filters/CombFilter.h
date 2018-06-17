@@ -13,7 +13,7 @@
 
 namespace pdsp{
 /*!
-@brief A comb filter is a delay tuned to a specific pitch frequency (mix it with the dry signal). 
+@brief A comb filter is a delay tuned to a specific pitch frequency (mix it with the dry signal). Multichannel.
 * 
 */       
 

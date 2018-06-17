@@ -40,6 +40,9 @@ void pdsp::CombFilter::channels( int size ){
 }
 
 pdsp::Patchable& pdsp::CombFilter::operator[]( const int & ch ){
+    if( ch >= int(delays.size()) ){
+        channels(ch+1);
+    }
     return *(delays[ch]);
 }
 

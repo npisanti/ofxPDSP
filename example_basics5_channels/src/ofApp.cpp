@@ -1,13 +1,14 @@
 #include "ofApp.h"
 
-// channel() API example
-// some modules have an channel( int size ) method 
-// that let you use that module with multiple signal inputs
+// channels() API example
+//
+// some modules are "multichannel" modules
+// you can use that modules with multiple signal inputs
 // it's really useful for example for using a single pdsp::ParameterAmp 
 // to control multiple modulation amounts
 // or for using a filter for processing stereo channels
-// modules with a channel() method also let you access different signal in/out
-// with the [] operator
+// you can access different signal in/out with the [] operator
+// resources are automatically allocated when needed
 //
 // in this example a single pdsp::ParameterAmp with multiple channels
 // controls the amount of individual LFOs going to individual oscillators
@@ -22,8 +23,10 @@ void ofApp::setup(){
     oscillators.resize(4);
     pitches.resize( oscillators.size() );
     drift_lfo.resize( oscillators.size() );
-    drift_amt.channels( oscillators.size() ); // a channel for each 
-    filter.channels(2); // stereo in/out
+    
+    // to reserve memory in advance you can call channels( int num )
+    // drift_amt.channels( oscillators.size() ); 
+    // filter.channels(2);
     
     for(size_t i=0; i<oscillators.size(); ++i){
         float pan = pdsp::spread( i, oscillators.size(), 0.5f );

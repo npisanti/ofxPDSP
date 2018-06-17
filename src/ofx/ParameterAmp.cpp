@@ -41,6 +41,9 @@ void pdsp::ParameterAmp::channels( int size ){
 }
 
 pdsp::Patchable& pdsp::ParameterAmp::operator[]( const int & ch ){
+    if( ch >= int(amps.size()) ){
+        channels(ch+1);
+    }
     return *(amps[ch]);
 }
 

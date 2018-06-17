@@ -13,7 +13,7 @@ public:
         Voice(){}
         Voice(const Voice& other){}
         
-        void setup(PolySynth & ui);
+        void setup(PolySynth & ui, int v);
         
         float meter_mod_env() const;
         float meter_pitch() const;
@@ -32,7 +32,6 @@ public:
         pdsp::ADSR          modEnv;
         
         pdsp::LFO           lfo;
-        pdsp::Amp           lfoAmt;
      
     }; // end Voice class -------------------------------------------------------
 
@@ -47,10 +46,11 @@ private: // --------------------------------------------------------------------
     pdsp::Parameter     reso;
     pdsp::Parameter     modAttack;
     pdsp::Parameter     modRelease;
+    pdsp::ParameterAmp  modAmt;
     
     pdsp::Parameter     pw;
     pdsp::Parameter     pwmSpeed;
-    pdsp::Parameter     pwm;    
+    pdsp::ParameterAmp  pwmAmt;    
 
 };
 

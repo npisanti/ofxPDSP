@@ -38,13 +38,13 @@ void ofApp::setup(){
         midiCCs.out(1) * 36.0f >> synth.voices[i].in("cutoff");
 
         // connect each voice to chorus
-        synth.voices[i] >> chorus.in_0();
-        synth.voices[i] >> chorus.in_1();
+        synth.voices[i] >> chorus.in_L();
+        synth.voices[i] >> chorus.in_R();
     }
     
     // set up chorus
-    chorus.out_0() >> gainControl.in_L(); gainControl.out_L() >> engine.audio_out(0);
-    chorus.out_1() >> gainControl.in_R(); gainControl.out_R() >> engine.audio_out(1);
+    chorus.out_L() >> gain[0] >> engine.audio_out(0);
+    chorus.out_R() >> gain[1] >> engine.audio_out(1);
 
     chorusSpeed >> chorus.in_speed();
     chorusDepth >> chorus.in_depth();
@@ -72,8 +72,8 @@ void ofApp::setup(){
     chorusUI.add(chorusDepth.set("depth (ms)", 3.5f, 1.0f, 10.0f));
 
     gui.setup("panel");
-    gui.add( gainControl.set("gain", 0, -48, 12) ); 
-    gainControl.enableSmoothing(50.f);
+    gui.add( gain.set("gain", 0, -48, 12) ); 
+    gain.enableSmoothing(50.f);
     gui.add( synth.ui );
     gui.add( chorusUI );
     gui.setPosition(420, 20);
@@ -82,7 +82,7 @@ void ofApp::setup(){
     
     //get MIDI control
     midiIn.listPorts();
-    midiIn.openPort(1); //set the right port !!!
+    midiIn.openPort(0); //set the right port !!!
     // for our midi controllers to work we have to add them to the engine, so it know it has to process them
     engine.addMidiController( midiKeys, midiIn ); // add midi processing to the engine
     engine.addMidiController( midiCCs, midiIn );  // add midi processing to the engine

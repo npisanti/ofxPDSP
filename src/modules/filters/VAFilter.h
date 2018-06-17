@@ -14,7 +14,7 @@
 namespace pdsp{
     
     /*!
-    @brief Multi-mode virtual analog ladder filter, multichannel.
+    @brief Multi-mode virtual analog ladder filter. Multichannel.
     */  
     
 class VAFilter : public Patchable {

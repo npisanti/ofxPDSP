@@ -42,6 +42,9 @@ void pdsp::ParameterGain::channels( int size ){
 }
 
 pdsp::Patchable& pdsp::ParameterGain::operator[]( const int & ch ){
+    if( ch >= int(amps.size()) ){
+        channels(ch+1);
+    }
     return *(amps[ch]);
 }
 

@@ -4,39 +4,37 @@
 void PolySynth::setup(int numVoices){
     
 
-    // -------------------------- PATCHING ---------------------------------------------------------
+    // -------------------------- PATCHING ------------------------------------
     voices.resize( numVoices );
- 
+
     for(int i=0; i<numVoices; ++i){
-        // setup voice
-        voices[i].setup( *this );
+        voices[i].setup( *this, i );
     }
     
     // we filter the frequency below 20 hz (not audible) just to remove DC offsets
     20.0f >> leakDC.in_freq();
     
-    leakDC >> chorus.in_0();
-	leakDC >> chorus.in_1();
+    leakDC >> chorus.in_L();
+	leakDC >> chorus.in_R();
     
-    chorus.out_0() >> gain.in_0();
-    chorus.out_1() >> gain.in_1();
+    chorus.out_L() >> gain[0];
+    chorus.out_R() >> gain[1];
 
-    // pdsp::Switch EXAMPLE ------------------------------------------------------------------------
-    lfoSwitch.resize(5);  // resize input channels
-    lfo.out_triangle()          >> lfoSwitch.input(0); // you cannot use this input() method in a chain
-    lfo.out_saw()               >> lfoSwitch.input(1); // because: API reasons
-    lfo.out_square()            >> lfoSwitch.input(2);
-    lfo.out_sine()              >> lfoSwitch.input(3);
-    lfo.out_sample_and_hold()   >> lfoSwitch.input(4);
+    // pdsp::Switch EXAMPLE ---------------------------------------------------
+    lfo_switch.resize(5);  // resize input channels
+    lfo.out_triangle()          >> lfo_switch.input(0); // you cannot use this input() method in a chain
+    lfo.out_saw()               >> lfo_switch.input(1); // because: API reasons
+    lfo.out_square()            >> lfo_switch.input(2);
+    lfo.out_sine()              >> lfo_switch.input(3);
+    lfo.out_sample_and_hold()   >> lfo_switch.input(4);
  
-    lfo_wave_ctrl >> lfoSwitch.in_select(); // input for output selection
+    lfo_wave_ctrl >> lfo_switch.in_select(); // input for output selection
  
     lfo_speed_ctrl >> lfo.in_freq(); 
-    lfoSwitch >> lfoToFilter;
-    filter_lfo_mod_ctrl >> lfoToFilter.in_mod();
-    // ---------------------------------------------------------------------------------------------
+    lfo_switch >> lfo_filter_amt;
+    // ------------------------------------------------------------------------
     
-    // CONTROLS ------------------------------------------------------------------------------------
+    // CONTROLS ---------------------------------------------------------------
     ui.setName("DATASYNTH");
 
     ui.add(filter_mode_ctrl.set("filter mode", 0, 0, 5) );
@@ -49,41 +47,41 @@ void PolySynth::setup(int numVoices){
     ui.add(env_decay_ctrl.set(  "env decay", 400, 5, 1200) );
     ui.add(env_sustain_ctrl.set("env sustain", 1.0f, 0.0f, 1.0f) );
     ui.add(env_release_ctrl.set("env release", 900, 5, 2000));    
-    ui.add( env_filter_ctrl.set("env to filter", 30, 0, 60) );    
+    ui.add( env_filter_amt.set("env to filter", 30, 0, 60) );    
 
     ui.add(lfo_wave_ctrl.set("lfo wave", 0, 0, 4));
     ui.add(lfo_speed_ctrl.set("lfo freq", 0.5f, 0.005f, 4.0f));
-    ui.add(filter_lfo_mod_ctrl.set("lfo to filter", 0, 0, 60) );
-    // ---------------------------------------------------------------------------------------------
+    ui.add(lfo_filter_amt.set("lfo to filter", 0, 0, 60) );
+    // ------------------------------------------------------------------------
    
-    // Chorus --------------------------------------------------------------------------------------
+    // Chorus -----------------------------------------------------------------
     chorus_speed_ctrl >> chorus.in_speed();
     chorus_depth_ctrl >> chorus.in_depth();
     ui.add(chorus_speed_ctrl.set("chorus freq", 0.5f, 0.25f, 1.0f));
     ui.add(chorus_depth_ctrl.set("chorus depth", 3.5f, 1.0f, 10.0f));
     ui.add(gain.set("gain", -9, -48, 12));
     gain.enableSmoothing(50.f);
-    // ---------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
 }
 
 
-void PolySynth::Voice::setup( PolySynth & m ){
+void PolySynth::Voice::setup( PolySynth & m, int v ){
 
     addModuleInput("trig", voiceTrigger);
     addModuleInput("pitch", oscillator.in_pitch());
-    addModuleOutput("signal", voiceAmp);
+    addModuleOutput("signal", amp);
 
     oscillator.setTable( m.datatable );
     // SIGNAL PATH
-    oscillator >> filter >> voiceAmp >> m.leakDC;
+    oscillator >> filter >> amp >> m.leakDC;
     
     // MODULATIONS AND CONTROL
-    voiceTrigger >> envelope >> voiceAmp.in_mod();
-                    envelope >> envToFilter >> filter.in_pitch();
-                              m.lfoToFilter >> filter.in_pitch();
-                              m.cutoff_ctrl >> filter.in_pitch();
-                                m.reso_ctrl >> filter.in_reso();
-                         m.filter_mode_ctrl >> filter.in_mode();
+    voiceTrigger >> envelope >> amp.in_mod();
+                    envelope >> m.env_filter_amt[v] >> filter.in_pitch();
+                                   m.lfo_filter_amt >> filter.in_pitch();
+                                      m.cutoff_ctrl >> filter.in_pitch();
+                                        m.reso_ctrl >> filter.in_reso();
+                                 m.filter_mode_ctrl >> filter.in_mode();
 
 
         m.env_attack_ctrl  >> envelope.in_attack();
@@ -91,7 +89,6 @@ void PolySynth::Voice::setup( PolySynth & m ){
         m.env_sustain_ctrl >> envelope.in_sustain();
         m.env_release_ctrl >> envelope.in_release();
 
-        m.env_filter_ctrl >> envToFilter.in_mod();
 }
 
 float PolySynth::Voice::meter_mod_env() const{
@@ -103,9 +100,9 @@ float PolySynth::Voice::meter_pitch() const{
 }
 
 pdsp::Patchable& PolySynth::out_L(){
-    return gain.out_0();
+    return gain[0];
 }
 
 pdsp::Patchable& PolySynth::out_R(){
-    return gain.out_1();
+    return gain[1];
 }

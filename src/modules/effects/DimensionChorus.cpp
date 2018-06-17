@@ -56,6 +56,14 @@ pdsp::Patchable& pdsp::DimensionChorus::in_1(){
     return in("1");
 }
 
+pdsp::Patchable& pdsp::DimensionChorus::in_L(){
+    return in("0");
+}
+
+pdsp::Patchable& pdsp::DimensionChorus::in_R(){
+    return in("1");
+}
+
 pdsp::Patchable& pdsp::DimensionChorus::in_speed(){
     return in("speed");
 }
@@ -73,6 +81,14 @@ pdsp::Patchable& pdsp::DimensionChorus::out_0(){
 }
 
 pdsp::Patchable& pdsp::DimensionChorus::out_1(){
+    return out("1");
+}
+
+pdsp::Patchable& pdsp::DimensionChorus::out_L(){
+    return out("0");
+}
+
+pdsp::Patchable& pdsp::DimensionChorus::out_R(){
     return out("1");
 }
 

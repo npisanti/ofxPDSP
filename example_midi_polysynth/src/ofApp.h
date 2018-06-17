@@ -46,6 +46,6 @@ class ofApp : public ofBaseApp{
         pdsp::Parameter chorusSpeed;
         pdsp::Parameter chorusDepth;
         
-        pdsp::ParameterGain  gainControl;
+        pdsp::ParameterGain  gain;
     
 };

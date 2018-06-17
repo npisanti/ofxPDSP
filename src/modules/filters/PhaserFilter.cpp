@@ -40,6 +40,9 @@ void pdsp::PhaserFilter::channels( int size ){
 }
 
 pdsp::Patchable& pdsp::PhaserFilter::operator[]( const int & ch ){
+    if( ch >= int(phasers.size()) ){
+        channels(ch+1);
+    }
     return *(phasers[ch]);
 }
 

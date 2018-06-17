@@ -14,7 +14,7 @@
 namespace pdsp{
     
     /*!
-    @brief Multi-mode virtual analog state variable filter, multichannel.
+    @brief Multi-mode virtual analog state variable filter. Multichannel.
     */  
     
 class SVFilter : public Patchable {

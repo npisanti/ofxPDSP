@@ -40,6 +40,16 @@ public:
     @brief Sets "1" as selected input and returns this module ready to be patched. This is the right input channel.
     */     
     Patchable& in_1();
+    
+    /*!
+    @brief Sets "0" as selected input and returns this module ready to be patched. This is the default input. This is the left input channel.
+    */      
+    Patchable& in_L();
+
+    /*!
+    @brief Sets "1" as selected input and returns this module ready to be patched. This is the right input channel.
+    */     
+    Patchable& in_R();
 
     /*!
     @brief Sets "speed" as selected input and returns this module ready to be patched. This is the chorus modulation rate in hertz. Init default value is 0.25hz.
@@ -65,6 +75,16 @@ public:
     @brief Sets "1" as selected output and returns this module ready to be patched. This is the right output channel. If you don't patch this output the effect will behave as a mono chorus.
     */  
     Patchable& out_1();
+    
+    /*!
+    @brief Sets "0" as selected output and returns this module ready to be patched. This is the default output. This is the left output channel.
+    */  
+    Patchable& out_L();
+    
+    /*!
+    @brief Sets "1" as selected output and returns this module ready to be patched. This is the right output channel. If you don't patch this output the effect will behave as a mono chorus.
+    */  
+    Patchable& out_R();
 
     /*!
     @brief returns a value between -1.0f and 1.0f that rapresent the LFO output signal. This method is thread-safe.
