@@ -115,7 +115,7 @@ void pdsp::Sampler::process(int bufferSize) noexcept {
                 const float* pitchModBuffer = processInput( input_pitch_mod, pitchModState  );
 
             
-                if(pitchModState==Changed){
+                if(pitchModState!=AudioRate){
                         process_once<true>(pitchModBuffer);
                 }
 

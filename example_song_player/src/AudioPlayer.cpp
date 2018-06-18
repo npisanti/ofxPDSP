@@ -135,12 +135,19 @@ void AudioPlayer::loadButtonCall( bool & value ) {
             ofLogVerbose("User hit cancel");
         }
 
-
+        // switch to mono if the sample has just one channel
+        if( sample.channels == 1 ){
+            sampler1.setSample( &sample, 0, 0 );
+        }else{
+            sampler1.setSample( &sample, 0, 1 );
+        }
+        
         loadButton = false;
         
         faderControl.setv(fvalue);
         
-        stop();
+        bool dummy = true;
+        onStop( dummy );
     }
 }
 
@@ -151,7 +158,6 @@ void AudioPlayer::sampleChangedCall( string & value ) {
 
     auto v = ofSplitString(samplePath, "/" );
     sampleName = v[v.size()-1];
-    
 }
     
 void AudioPlayer::loadSample( string path ) {
