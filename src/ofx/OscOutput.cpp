@@ -1,7 +1,7 @@
 
 #include "OscOutput.h"
 
-#define OFXPDSP_OSCOUTPUTCIRCULARBUFFERSIZE 1024
+#define OFXPDSP_OSCOUTPUTCIRCULARBUFFERSIZE 4096
 
 
 pdsp::osc::Output::ScheduledOscMessage::ScheduledOscMessage(){  };
@@ -46,15 +46,12 @@ pdsp::osc::Output::Output(){
     chronoStarted = false;
     
     //midi daemon init
-    messagesReady = false;
     runDaemon = false;
     
     //processing init
-
-    circularMax = OFXPDSP_OSCOUTPUTCIRCULARBUFFERSIZE;
-    circularBuffer.resize(circularMax);
-    circularRead  = 0;
-    circularWrite = 0;
+    circularBuffer.resize(OFXPDSP_OSCOUTPUTCIRCULARBUFFERSIZE);
+    writeindex = 0;
+    send = 0;
     
     //testing
     messageCount = 0;
@@ -71,7 +68,7 @@ void pdsp::osc::Output::setVerbose( bool verbose ){
 }
 
 
-void pdsp::osc::Output::openPort(const string &hostname, int port ) {
+void pdsp::osc::Output::openPort(const std::string &hostname, int port ) {
     if(connected){
         close();
     }
@@ -96,7 +93,7 @@ void pdsp::osc::Output:: close(){
     }
 }
 
-pdsp::ExtSequencer& pdsp::osc::Output::address( string oscAddress ) {
+pdsp::ExtSequencer& pdsp::osc::Output::address( std::string oscAddress ) {
     selectedAddress = oscAddress;
     return *this;
 }
@@ -112,10 +109,10 @@ void pdsp::osc::Output::linkToMessageBuffer(pdsp::MessageBuffer &messageBuffer) 
 void pdsp::osc::Output::unlinkMessageBuffer(pdsp::MessageBuffer &messageBuffer) {
     
     int i=0;
-    for (vector<pdsp::MessageBuffer*>::iterator it = inputs.begin(); it != inputs.end(); ++it){
+    for (std::vector<pdsp::MessageBuffer*>::iterator it = inputs.begin(); it != inputs.end(); ++it){
         if (*it == &messageBuffer){
             inputs.erase(it);
-            vector<string>::iterator linkedAddress = addresses.begin() + i;
+            std::vector<std::string>::iterator linkedAddress = addresses.begin() + i;
             addresses.erase(linkedAddress);
             return;
         }
@@ -126,7 +123,6 @@ void pdsp::osc::Output::unlinkMessageBuffer(pdsp::MessageBuffer &messageBuffer) 
 
 void pdsp::osc::Output::prepareToPlay( int expectedBufferSize, double sampleRate ){
     usecPerSample = 1000000.0 / sampleRate;
-    
 }
 
 void pdsp::osc::Output::releaseResources() {}
@@ -140,8 +136,6 @@ void pdsp::osc::Output::process( int bufferSize ) noexcept{
         messagesToSend.clear();
         
         //add note messages
-        int maxBuffer = inputs.size();
-        
         if(chronoStarted){
             chrono::nanoseconds bufferOffset = chrono::nanoseconds (static_cast<long> ( bufferSize * usecPerSample ));
             bufferChrono = bufferChrono + bufferOffset;
@@ -150,18 +144,12 @@ void pdsp::osc::Output::process( int bufferSize ) noexcept{
             chronoStarted = true;
         }
         
-        for( int i=0; i<maxBuffer; ++i ){
+        for( int i=0; i<(int)inputs.size(); ++i ){
             
             pdsp::MessageBuffer* messageBuffer = inputs[i];
-            //string msg_address = addresses[i];
+            //std::string msg_address = addresses[i];
             
-            /* // OLD WAY
-            bufferChrono = chrono::high_resolution_clock::now();
-            */
-            
-            int bufferMax = messageBuffer->size();
-
-            for(int n=0; n<bufferMax; ++n){                
+            for(int n=0; n<(int)messageBuffer->size(); ++n){                
                 //format message to sent
                 float msg_value = messageBuffer->messages[n].value;
                 int msg_sample = messageBuffer->messages[n].sample;
@@ -172,18 +160,24 @@ void pdsp::osc::Output::process( int bufferSize ) noexcept{
                 ofxOscMessage osc;
                 osc.setAddress( addresses[i] );
                 osc.addFloatArg( msg_value );
-                
+            
                 messagesToSend.push_back( ScheduledOscMessage(osc, scheduleTime) );
             }
         }
         
         //sort messages to send
         sort(messagesToSend.begin(), messagesToSend.end(), scheduledSort);
-        
-        //send to daemon
-        if( ! messagesToSend.empty()){
-            prepareForDaemonAndNotify();
+
+        for(ScheduledOscMessage &msg : messagesToSend){
+
+            circularBuffer[writeindex] = msg;
+            int write = writeindex+1;
+            if( write >= (int)circularBuffer.size() ){ write = 0; };
+            writeindex = write;
+
         }
+        
+        
     }//end checking connected
 }
 
@@ -191,22 +185,6 @@ void pdsp::osc::Output::startDaemon(){ // OK
     
     runDaemon = true;
     daemonThread = thread( daemonFunctionWrapper, this );   
-    
-}
-
-void pdsp::osc::Output::prepareForDaemonAndNotify(){
-    
-    unique_lock<mutex> lck (outMutex);  
-    //send messages in circular buffer
-    for(ScheduledOscMessage &msg : messagesToSend){
-        circularBuffer[circularWrite] = msg;
-        ++circularWrite;
-        if(circularWrite==circularMax){
-            circularWrite = 0;
-        }
-    }
-    messagesReady = true;
-    outCondition.notify_all();
     
 }
    
@@ -220,34 +198,19 @@ void pdsp::osc::Output::daemonFunction() noexcept{
     
     while (runDaemon){
 
-        //midiMutex.lock();
-        unique_lock<mutex> lck (outMutex);
-        while(!messagesReady) outCondition.wait(lck);
-        
-        if(circularRead != circularWrite){
+        while( send!=writeindex && circularBuffer[send].scheduledTime < chrono::high_resolution_clock::now() ){
+           
+            // SEND MESSAGES HERE
+            sender.sendMessage( circularBuffer[send].message, false );
             
-            ScheduledOscMessage& nextMessage = circularBuffer[circularRead];
+            #ifndef NDEBUG
+                if(verbose) cout << "[pdsp] OSC message: address = "<< circularBuffer[send].message.getAddress() << " | value = "<<(int)circularBuffer[send].message.getArgAsFloat(0)<<"\n";
+            #endif
             
-            if( nextMessage.scheduledTime < chrono::high_resolution_clock::now() ){ //we have to process the scheduled midi
-                
-                // SEND MESSAGES HERE
-                sender.sendMessage( nextMessage.message, false );
-                
-                #ifndef NDEBUG
-                    if(verbose) cout << "[pdsp] OSC message: address = "<< nextMessage.message.getAddress() << " | value = "<<(int)nextMessage.message.getArgAsFloat(0)<<"\n";
-                #endif
-                
-                ++circularRead;
-                if(circularRead == circularMax){
-                    circularRead = 0;
-                }
-            }
-
-        }else{
-            messagesReady = false;
+            send++;
         }
 
-        this_thread::yield();
+        std::this_thread::sleep_for(std::chrono::microseconds(500));
 
     }
    
@@ -258,13 +221,7 @@ void pdsp::osc::Output::daemonFunction() noexcept{
     
 void pdsp::osc::Output::closeDaemon(){
     runDaemon = false;
-    
-    unique_lock<mutex> lck (outMutex);  
-    //set messages in circular buffer
-    messagesReady = true;
-    outCondition.notify_all();
     daemonThread.detach();
-
 }
     
     

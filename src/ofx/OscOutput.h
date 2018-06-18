@@ -62,7 +62,7 @@ public:
     @param[in] hostname OSC hostname
     @param[in] port OSC port
     */    
-    void openPort(const string &hostname, int port );
+    void openPort(const std::string &hostname, int port );
 
     /*!
     @brief shuts down the output
@@ -87,7 +87,7 @@ public:
     @brief patch a pdsp::ScoreSection::out_message() method to the result of this method for message to the serial out
     
     */   
-    pdsp::ExtSequencer& address( string oscAddress );
+    pdsp::ExtSequencer& address( std::string oscAddress );
 
 /*!
     @cond HIDDEN_SYMBOLS
@@ -106,41 +106,37 @@ protected:
 private:
 
     ofxOscSender	sender;
-    vector<string>                  addresses;
-    string                          selectedAddress;
+    std::vector<std::string>    addresses;
+    std::string                 selectedAddress;
     
         
     bool            connected;
     bool            verbose;
    
-    vector<ScheduledOscMessage> messagesToSend;
     
-    vector<pdsp::MessageBuffer*>    inputs;
+    std::vector<pdsp::MessageBuffer*>    inputs;
 
+    std::vector<ScheduledOscMessage> messagesToSend;
     int     messageCount;
 
 
     //MIDI DAEMON MEMBERS---------------------------------------------------------------
     void                                                startDaemon();
-    void                                                prepareForDaemonAndNotify();
     void                                                closeDaemon();
     void                                                daemonFunction() noexcept;
     static void                                         daemonFunctionWrapper(Output* parent);
     
     thread                                              daemonThread;
-    mutex                                               outMutex;
-    condition_variable                                  outCondition;
-    atomic<bool>                                        messagesReady;
-    atomic<bool>                                        runDaemon;
+    std::atomic<bool>                                   runDaemon;
     
     //serial output processing members
+    std::chrono::time_point<std::chrono::high_resolution_clock>   bufferChrono;   
     bool                                                chronoStarted;
-    chrono::time_point<chrono::high_resolution_clock>   bufferChrono;     
     double                                              usecPerSample;
-    vector<ScheduledOscMessage>                         circularBuffer;
-    int                                                 circularRead;
-    int                                                 circularWrite;
-    int                                                 circularMax;
+    std::vector<ScheduledOscMessage>                    circularBuffer;
+   
+    std::atomic<int>                                    writeindex;
+    int                                                 send;
 
 };
 

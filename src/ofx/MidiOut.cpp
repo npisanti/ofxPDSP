@@ -3,27 +3,27 @@
 
 #ifndef __ANDROID__
 
-#define OFXPDSP_MIDIOUTPUTCIRCULARBUFFERSIZE 1024
+#define OFXPDSP_MIDIOUTPUTCIRCULARBUFFERSIZE 4096
 
 
-pdsp::midi::Output::ofxScheduledMidiMessage::ofxScheduledMidiMessage(){  };
+pdsp::midi::Output::ScheduledMidiMessage::ScheduledMidiMessage(){  };
 
-pdsp::midi::Output::ofxScheduledMidiMessage::ofxScheduledMidiMessage(ofxMidiMessage message, std::chrono::high_resolution_clock::time_point schedule)
+pdsp::midi::Output::ScheduledMidiMessage::ScheduledMidiMessage(ofxMidiMessage message, std::chrono::high_resolution_clock::time_point schedule)
                 : midi(message), scheduledTime(schedule){};
 
-pdsp::midi::Output::ofxScheduledMidiMessage::ofxScheduledMidiMessage(const pdsp::midi::Output::ofxScheduledMidiMessage &other)
-                : pdsp::midi::Output::ofxScheduledMidiMessage(other.midi, other.scheduledTime){}
+pdsp::midi::Output::ScheduledMidiMessage::ScheduledMidiMessage(const pdsp::midi::Output::ScheduledMidiMessage &other)
+                : pdsp::midi::Output::ScheduledMidiMessage(other.midi, other.scheduledTime){}
 
-pdsp::midi::Output::ofxScheduledMidiMessage& pdsp::midi::Output::ofxScheduledMidiMessage::operator= (const pdsp::midi::Output::ofxScheduledMidiMessage &other){
+pdsp::midi::Output::ScheduledMidiMessage& pdsp::midi::Output::ScheduledMidiMessage::operator= (const pdsp::midi::Output::ScheduledMidiMessage &other){
     this->midi          = other.midi;
     this->scheduledTime = other.scheduledTime;
     return *this;
 }
 
-pdsp::midi::Output::ofxScheduledMidiMessage::~ofxScheduledMidiMessage(){}
+pdsp::midi::Output::ScheduledMidiMessage::~ScheduledMidiMessage(){}
 
 
-bool pdsp::midi::Output::scheduledMidiSort(const ofxScheduledMidiMessage &lhs, const ofxScheduledMidiMessage &rhs ){
+bool pdsp::midi::Output::scheduledMidiSort(const ScheduledMidiMessage &lhs, const ScheduledMidiMessage &rhs ){
     return (lhs.scheduledTime < rhs.scheduledTime);
 }
 
@@ -45,16 +45,15 @@ pdsp::midi::Output::Output(){
     connected = false;
     
     //midi daemon init
-    messagesReady = false;
     runMidiDaemon = false;
     chronoStarted = false;
     
     //processing init
 
-    circularMax = OFXPDSP_MIDIOUTPUTCIRCULARBUFFERSIZE;
-    circularBuffer.resize(circularMax);
-    circularRead  = 0;
-    circularWrite = 0;
+    circularBuffer.resize(OFXPDSP_MIDIOUTPUTCIRCULARBUFFERSIZE);
+   
+    writeindex = 0;
+    send = 0;
     
     //testing
     messageCount = 0;
@@ -265,13 +264,12 @@ void pdsp::midi::Output::process( int bufferSize ) noexcept{
                 midi.control = 0;
                 
                 //todo:: correct nanosec time
-                messagesToSend.push_back( ofxScheduledMidiMessage(midi, scheduleTime) );
+                messagesToSend.push_back( ScheduledMidiMessage(midi, scheduleTime) );
             }
         }
         
         //add midi messages
-        maxBuffer = inputs[ccType].size();
-        for( int i=0; i<maxBuffer; ++i ){
+        for( int i=0; i<(int)inputs[ccType].size(); ++i ){
             
             pdsp::MessageBuffer* ccBufferI = inputs[ccType][i];       
             int ccMax = ccBufferI->size();
@@ -287,7 +285,7 @@ void pdsp::midi::Output::process( int bufferSize ) noexcept{
                 std::chrono::nanoseconds offset = std::chrono::nanoseconds ( static_cast<long>(sample * usecPerSample) );
                 std::chrono::high_resolution_clock::time_point scheduleTime = bufferChrono + offset;
                 
-                messagesToSend.push_back( ofxScheduledMidiMessage(midi, scheduleTime) );
+                messagesToSend.push_back( ScheduledMidiMessage(midi, scheduleTime) );
             }   
         }
             
@@ -295,9 +293,14 @@ void pdsp::midi::Output::process( int bufferSize ) noexcept{
         sort(messagesToSend.begin(), messagesToSend.end(), scheduledMidiSort);
         
         //send to daemon
-        if( ! messagesToSend.empty()){
-            prepareForDaemonAndNotify();
+        for(ScheduledMidiMessage &msg : messagesToSend){
+            circularBuffer[writeindex] = msg;
+            int write = writeindex+1;
+            if( write >= (int)circularBuffer.size() ){ write = 0; };
+            writeindex = write;
         }
+
+
     }//end checking connected
 }
 
@@ -307,23 +310,6 @@ void pdsp::midi::Output::startMidiDaemon(){
     midiDaemonThread = std::thread( midiDaemonFunctionWrapper, this );   
     
 }
-
-void pdsp::midi::Output::prepareForDaemonAndNotify(){
-    
-    std::unique_lock<std::mutex> lck (midiOutMutex);  
-    //send messages in circular buffer
-    for(ofxScheduledMidiMessage &msg : messagesToSend){
-        circularBuffer[circularWrite] = msg;
-        ++circularWrite;
-        if(circularWrite==circularMax){
-            circularWrite = 0;
-        }
-    }
-    messagesReady = true;
-    midiOutCondition.notify_all();
-    
-}
-   
     
 void pdsp::midi::Output::midiDaemonFunctionWrapper(pdsp::midi::Output* parent){
     parent->midiDaemonFunction();
@@ -334,43 +320,31 @@ void pdsp::midi::Output::midiDaemonFunction() noexcept{
     
     while (runMidiDaemon){
 
-        //midiMutex.lock();
-        std::unique_lock<std::mutex> lck (midiOutMutex);
-        while(!messagesReady) midiOutCondition.wait(lck);
-        
-        if(circularRead != circularWrite){
+        while( send!=writeindex && circularBuffer[send].scheduledTime < std::chrono::high_resolution_clock::now() ){
+           
+            // SEND MESSAGES HERE
+            ScheduledMidiMessage& nextMessage = circularBuffer[send];
             
-            ofxScheduledMidiMessage& nextMessage = circularBuffer[circularRead];
-            
-            if( nextMessage.scheduledTime < std::chrono::high_resolution_clock::now() ){ //we have to process the scheduled midi
-                
-                switch(nextMessage.midi.status){
-                case MIDI_NOTE_ON:
-                    midiOut_p->sendNoteOn(nextMessage.midi.channel, nextMessage.midi.pitch, nextMessage.midi.velocity);
-                    break;
-                case MIDI_NOTE_OFF:
-                    midiOut_p->sendNoteOff(nextMessage.midi.channel, nextMessage.midi.pitch, nextMessage.midi.velocity);
-                    break;
-                case MIDI_CONTROL_CHANGE:
-                    midiOut_p->sendNoteOff(nextMessage.midi.channel, nextMessage.midi.control, nextMessage.midi.value);
-                    break;
-                default: break;
-                }
-                
-                ++circularRead;
-                if(circularRead == circularMax){
-                    circularRead = 0;
-                }
+            switch(nextMessage.midi.status){
+            case MIDI_NOTE_ON:
+                midiOut_p->sendNoteOn(nextMessage.midi.channel, nextMessage.midi.pitch, nextMessage.midi.velocity);
+                break;
+            case MIDI_NOTE_OFF:
+                midiOut_p->sendNoteOff(nextMessage.midi.channel, nextMessage.midi.pitch, nextMessage.midi.velocity);
+                break;
+            case MIDI_CONTROL_CHANGE:
+                midiOut_p->sendNoteOff(nextMessage.midi.channel, nextMessage.midi.control, nextMessage.midi.value);
+                break;
+            default: break;
             }
 
-        }else{
-            messagesReady = false;
+            send++;
         }
 
-        std::this_thread::yield();
+        std::this_thread::sleep_for(std::chrono::microseconds(500));
 
-    }
-   
+    }    
+
     if(verbose) std::cout<<"[pdsp] closing midi out daemon thread\n";
 }
     
@@ -378,13 +352,7 @@ void pdsp::midi::Output::midiDaemonFunction() noexcept{
     
 void pdsp::midi::Output::closeMidiDaemon(){
     runMidiDaemon = false;
-    
-    std::unique_lock<std::mutex> lck (midiOutMutex);  
-    //set messages in circular buffer
-    messagesReady = true;
-    midiOutCondition.notify_all();
     midiDaemonThread.detach();
-
 }
     
 #endif

@@ -4,7 +4,7 @@
 #ifndef TARGET_OF_IOS
 #ifndef __ANDROID__
 
-#define OFXPDSP_SERIALOUTPUTCIRCULARBUFFERSIZE 1024
+#define OFXPDSP_SERIALOUTPUTCIRCULARBUFFERSIZE 4096
 
 
 pdsp::serial::Output::ScheduledSerialMessage::ScheduledSerialMessage(){  };
@@ -59,15 +59,13 @@ pdsp::serial::Output::Output(){
     chronoStarted = false;
     
     //midi daemon init
-    messagesReady = false;
     runDaemon = false;
     
     //processing init
 
-    circularMax = OFXPDSP_SERIALOUTPUTCIRCULARBUFFERSIZE;
-    circularBuffer.resize(circularMax);
-    circularRead  = 0;
-    circularWrite = 0;
+    circularBuffer.resize(OFXPDSP_SERIALOUTPUTCIRCULARBUFFERSIZE);   
+    writeindex = 0;
+    send = 0;
     
     //testing
     messageCount = 0;
@@ -217,8 +215,11 @@ void pdsp::serial::Output::process( int bufferSize ) noexcept{
         sort(messagesToSend.begin(), messagesToSend.end(), scheduledSort);
         
         //send to daemon
-        if( ! messagesToSend.empty()){
-            prepareForDaemonAndNotify();
+        for(ScheduledSerialMessage &msg : messagesToSend){
+            circularBuffer[writeindex] = msg;
+            int write = writeindex+1;
+            if( write >= (int)circularBuffer.size() ){ write = 0; };
+            writeindex = write;
         }
     }//end checking connected
 }
@@ -229,65 +230,33 @@ void pdsp::serial::Output::startDaemon(){ // OK
     daemonThread = thread( daemonFunctionWrapper, this );   
     
 }
-
-void pdsp::serial::Output::prepareForDaemonAndNotify(){
-    
-    unique_lock<mutex> lck (outMutex);  
-    //send messages in circular buffer
-    for(ScheduledSerialMessage &msg : messagesToSend){
-        circularBuffer[circularWrite] = msg;
-        ++circularWrite;
-        if(circularWrite==circularMax){
-            circularWrite = 0;
-        }
-    }
-    messagesReady = true;
-    outCondition.notify_all();
-    
-}
-   
     
 void pdsp::serial::Output::daemonFunctionWrapper(pdsp::serial::Output* parent){
     parent->daemonFunction();
 }
-   
-    
+       
 void pdsp::serial::Output::daemonFunction() noexcept{
-    
     while (runDaemon){
 
-        //midiMutex.lock();
-        unique_lock<mutex> lck (outMutex);
-        while(!messagesReady) outCondition.wait(lck);
-        
-        if(circularRead != circularWrite){
+        while( send!=writeindex && circularBuffer[send].scheduledTime < std::chrono::high_resolution_clock::now() ){
+           
+            // SEND MESSAGES HERE
+            ScheduledSerialMessage& nextMessage = circularBuffer[send];
+                           
+            // SEND MESSAGES HERE
+            serial.writeByte( (char)nextMessage.channel );
+            serial.writeByte( (char)nextMessage.message );
             
-            ScheduledSerialMessage& nextMessage = circularBuffer[circularRead];
-            
-            if( nextMessage.scheduledTime < chrono::high_resolution_clock::now() ){ //we have to process the scheduled midi
-                
-                // SEND MESSAGES HERE
-                serial.writeByte( (char)nextMessage.channel );
-                serial.writeByte( (char)nextMessage.message );
-                
-                #ifndef NDEBUG
-                    if(verbose) cout << "[pdsp] serial message: channel = "<< (- (int)nextMessage.channel)<< " | value = "<<(int)nextMessage.message<<"\n";
-                #endif
-                
-                ++circularRead;
-                if(circularRead == circularMax){
-                    circularRead = 0;
-                }
-            }
+            #ifndef NDEBUG
+                if(verbose) cout << "[pdsp] serial message: channel = "<< (- (int)nextMessage.channel)<< " | value = "<<(int)nextMessage.message<<"\n";
+            #endif
 
-        }else{
-            messagesReady = false;
+            send++;
         }
 
-        this_thread::yield();
-
-    }
-   
+        std::this_thread::sleep_for(std::chrono::microseconds(500));
+    }    
+    
     if(verbose) cout<<"[pdsp] closing serial out daemon thread\n";
 }
     
@@ -295,13 +264,7 @@ void pdsp::serial::Output::daemonFunction() noexcept{
     
 void pdsp::serial::Output::closeDaemon(){
     runDaemon = false;
-    
-    unique_lock<mutex> lck (outMutex);  
-    //set messages in circular buffer
-    messagesReady = true;
-    outCondition.notify_all();
     daemonThread.detach();
-
 }
 
 #endif // __ANDROID__

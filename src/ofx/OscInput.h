@@ -133,10 +133,7 @@ private:
 
     double                                              oneSlashMicrosecForSample;
 
-    
-    //bool                                                chronoStarted;
-    chrono::time_point<chrono::high_resolution_clock>   bufferChrono;     
-    //double                                              usecPerSample;
+    chrono::time_point<chrono::high_resolution_clock>   bufferChrono;   
 
     pdsp::SequencerGateOutput invalidGate;
     pdsp::SequencerValueOutput invalidValue;

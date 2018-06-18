@@ -7,7 +7,6 @@
 pdsp::osc::Input::OscChannel::OscChannel(){
     
     key = "";
-    //mode = Gate;
     messageBuffer = nullptr;
     gate_out = nullptr;
     value_out = nullptr;
@@ -29,7 +28,6 @@ void pdsp::osc::Input::OscChannel::deallocate(){
 
 pdsp::osc::Input::Input() {
     
-    //oscChannels.reserve(64);
     oscChannels.clear();
     
     readVector.reserve(OFXPDSP_OSCINPUT_MESSAGERESERVE);
@@ -173,15 +171,7 @@ void pdsp::osc::Input::daemonFunction() noexcept{
             circularBuffer[write].timepoint = std::chrono::high_resolution_clock::now();
 
             index = write;    
-            /*
-            oscMutex.lock();
-                // calculate the right offset inside the bufferSize
-                chrono::duration<double> offset = chrono::high_resolution_clock::now() - bufferChrono; 
-                int sampleOffset =  static_cast<int>(  
-                    static_cast <double>( chrono::duration_cast<chrono::microseconds>(offset).count()) * oneSlashMicrosecForSample);
-                writeVector->push_back(_PositionedOscMessage( osc, sampleOffset));
-            oscMutex.unlock();
-            */ 
+
         }
 
         this_thread::sleep_for(std::chrono::microseconds(daemonRefreshRate));
@@ -201,19 +191,6 @@ void pdsp::osc::Input::pushToReadVector( pdsp::osc::Input::_PositionedOscMessage
 void pdsp::osc::Input::processOsc( int bufferSize ) noexcept {
     
     if(connected){
-        
-        /*
-        oscMutex.lock();
-            //switch buffers
-            vector<_PositionedOscMessage>* temp = readVector;
-            readVector = writeVector;
-            writeVector = temp;
-            //update chrono
-            bufferChrono = chrono::high_resolution_clock::now();
-            //clear buffer to write
-            writeVector->clear(); 
-        oscMutex.unlock();
-        */
         
         readVector.clear();
         int read = index;

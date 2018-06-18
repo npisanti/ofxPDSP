@@ -13,8 +13,9 @@ void ofApp::setup(){
     midiOut.setVerbose(true);
     midiOut.listPorts();
     midiOut.openPort(0); // set the right midi port
-    
-    // some sequences, basically just on/off notes
+
+    // some sequences, basically just on/off notes    
+    sequences.resize(3);
     sequences[0].steplen = 1.0/8.0;
     sequences[0].bars = 2.0;
     sequences[0].set( { 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f } );

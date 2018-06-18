@@ -123,10 +123,10 @@ private:
     bool            connected;
     bool            verbose;
    
-    vector<ScheduledSerialMessage> messagesToSend;
+    std::vector<ScheduledSerialMessage> messagesToSend;
     
-    vector<pdsp::MessageBuffer*>    inputs;
-    vector<int>                     channels;
+    std:: vector<pdsp::MessageBuffer*>    inputs;
+    std::vector<int>                     channels;
     
     int     selectedChannel;
     int     messageCount;
@@ -134,25 +134,21 @@ private:
 
     //MIDI DAEMON MEMBERS---------------------------------------------------------------
     void                                                startDaemon();
-    void                                                prepareForDaemonAndNotify();
     void                                                closeDaemon();
     void                                                daemonFunction() noexcept;
     static void                                         daemonFunctionWrapper(Output* parent);
     
-    thread                                              daemonThread;
-    mutex                                               outMutex;
-    condition_variable                                  outCondition;
-    atomic<bool>                                        messagesReady;
-    atomic<bool>                                        runDaemon;
+    std::thread                                         daemonThread;
+    std::atomic<bool>                                   runDaemon;
     
     //serial output processing members
+    std::chrono::time_point<chrono::high_resolution_clock>   bufferChrono;     
     bool                                                chronoStarted;
-    chrono::time_point<chrono::high_resolution_clock>   bufferChrono;     
     double                                              usecPerSample;
-    vector<ScheduledSerialMessage>                      circularBuffer;
-    int                                                 circularRead;
-    int                                                 circularWrite;
-    int                                                 circularMax;
+    std::vector<ScheduledSerialMessage>                 circularBuffer;
+   
+    std::atomic<int>                                    writeindex;
+    int                                                 send;
 
 };
 
