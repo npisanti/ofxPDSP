@@ -4,7 +4,7 @@ ofxPDSP is an [openFrameworks](https://openframeworks.cc/) addon for audio synth
 - Native c++, made to be tightly integrated into c++ projects.
 - Class design mimics modular synthesizers, where inputs and outputs are patched with the >> operator.
 - Sample accurate timing for the included sequencer.
-- Thread-safe methods for metering and control.
+- Thread-safe, lock-free methods for metering and control.
 - Lazy evaluated DSPs. DSP units are recursively processed in chunks big as the audio buffer size, DSPs switch between routines running at audio rate (process every sample) and control rate (once every buffer) on the fly when the result is the same. DSPs are also coded using SIMD instructions when possible.
 - Cross-platform code: works on Linux (x86/ARM), OSX, Windows, iOS, Android (only on ARM processors with NEON instructions).
 
