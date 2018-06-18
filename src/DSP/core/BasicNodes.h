@@ -453,7 +453,7 @@ private:
     int connections;
     std::vector<InputNode*> outputs;
 
-    static int globalProcessingTurnId;
+    static std::atomic<int> globalProcessingTurnId;
 
     int baseBufferSize;
     

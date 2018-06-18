@@ -7,7 +7,7 @@ pdsp::NullOutput pdsp::Patchable::invalidOutput = NullOutput();
 pdsp::NullInput pdsp::Patchable::invalidInput = pdsp::NullInput();
 
 
-int pdsp::OutputNode::globalProcessingTurnId = 42; // is the answer
+std::atomic<int> pdsp::OutputNode::globalProcessingTurnId(42); // is the answer
 
 //------------------------INPUT NODE--------------------------------
 

@@ -41,7 +41,7 @@ pdsp::osc::Input::Input() {
     connected = false;
     
     runDaemon = false;
-    daemonRefreshRate = 1;
+    daemonRefreshRate = 500;
 }   
 
 
@@ -174,7 +174,7 @@ void pdsp::osc::Input::daemonFunction() noexcept{
             oscMutex.unlock();
         }
 
-        this_thread::sleep_for(std::chrono::milliseconds(daemonRefreshRate));
+        this_thread::sleep_for(std::chrono::microseconds(daemonRefreshRate));
 
     }
    
