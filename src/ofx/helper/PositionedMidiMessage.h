@@ -9,7 +9,7 @@
 #ifndef __ANDROID__
 
 #include "ofxMidi.h"
-
+#include <chrono>
 
 /*!
     @cond HIDDEN_SYMBOLS
@@ -19,9 +19,10 @@ namespace pdsp{
 
 class _PositionedMidiMessage{
 public:
-    _PositionedMidiMessage(){ sample = -1; };
+    _PositionedMidiMessage(){ sample = -1;  message.pitch=72; };
     _PositionedMidiMessage(ofxMidiMessage message, int sample) : message(message), sample(sample){};
     
+    std::chrono::time_point<std::chrono::high_resolution_clock> timepoint;
     ofxMidiMessage message;
     int sample;
 };

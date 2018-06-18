@@ -70,16 +70,15 @@ private:
     ofxMidiIn   midiIn;
     ofxMidiIn*  midiIn_p;
     
-    std::mutex midiMutex;
-    
-    std::vector<_PositionedMidiMessage>*   readVector;       
-    std::vector<_PositionedMidiMessage>    midiMessageVectorA;
-    std::vector<_PositionedMidiMessage>    midiMessageVectorB;
-
-    std::vector<_PositionedMidiMessage>*   writeVector;
+    std::atomic<int> index;
+    int lastread;
+    std::vector<_PositionedMidiMessage>    circularBuffer;
+    std::vector<_PositionedMidiMessage>    readVector;
 
     double                                                      oneSlashMicrosecForSample;
     std::chrono::time_point<std::chrono::high_resolution_clock> bufferChrono;
+    
+    void pushToReadVector( _PositionedMidiMessage & message );
     
     bool connected;
         

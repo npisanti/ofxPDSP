@@ -43,11 +43,13 @@ private:
         
     };
     
-    class _ofxPositionedOscMessage {
+    class _PositionedOscMessage {
     public:
-        _ofxPositionedOscMessage(){ sample = -1; };
-        _ofxPositionedOscMessage(ofxOscMessage message, int sample) : message(message), sample(sample){};
+        _PositionedOscMessage(){ sample = -1; };
+        _PositionedOscMessage(ofxOscMessage message, int sample) : message(message), sample(sample){};
         
+        
+        std::chrono::time_point<std::chrono::high_resolution_clock> timepoint;
         ofxOscMessage message;
         int sample;
     };
@@ -122,13 +124,12 @@ private:
     
     bool    sendClearMessages; 
 
-    mutex       oscMutex;
     
-    vector<_ofxPositionedOscMessage>*   readVector;       
-    vector<_ofxPositionedOscMessage>    oscMessageVectorA;
-    vector<_ofxPositionedOscMessage>    oscMessageVectorB;
+    std::atomic<int> index;
+    int lastread;
+    std::vector<_PositionedOscMessage>    circularBuffer;
+    std::vector<_PositionedOscMessage>    readVector;
 
-    vector<_ofxPositionedOscMessage>*   writeVector;
 
     double                                              oneSlashMicrosecForSample;
 
@@ -149,6 +150,8 @@ private:
     atomic<bool>                                        runDaemon;
     int                                                 daemonRefreshRate;
 
+    void pushToReadVector( _PositionedOscMessage & message );
+    
 };
 
 }}

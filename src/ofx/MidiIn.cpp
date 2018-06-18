@@ -3,19 +3,18 @@
 
 #ifndef __ANDROID__
 
-#define OFXPDSP_MIDIKEYSPROCESSOR_MESSAGERESERVE 128
+#define OFXPDSP_MIDIREADVECTOR_MESSAGERESERVE 128
+#define OFXPDSP_MIDICIRCULARBUFFER_SIZE 4096
 
 pdsp::midi::Input::Input(){
-    midiMessageVectorA.reserve(OFXPDSP_MIDIKEYSPROCESSOR_MESSAGERESERVE);
-    midiMessageVectorA.clear();
-    midiMessageVectorB.reserve(OFXPDSP_MIDIKEYSPROCESSOR_MESSAGERESERVE);
-    midiMessageVectorA.clear();
-    readVector = &midiMessageVectorA;
-    writeVector = &midiMessageVectorB;
-    
+
     midiIn_p = nullptr;
     connected = false;
+    readVector.reserve(OFXPDSP_MIDIREADVECTOR_MESSAGERESERVE);
+    circularBuffer.resize( OFXPDSP_MIDICIRCULARBUFFER_SIZE );
     
+    lastread = 0;
+    index = 0;
 }
 
 pdsp::midi::Input::~Input(){
@@ -72,40 +71,55 @@ void pdsp::midi::Input::releaseResources(){}
 
 
 const std::vector<pdsp::_PositionedMidiMessage> & pdsp::midi::Input::getMessageVector() const{
-    return *readVector;
+    return readVector;
 }
 
 
 void pdsp::midi::Input::newMidiMessage(ofxMidiMessage& eventArgs) noexcept{
     	
-    midiMutex.lock();
-        // calculate the right offset inside the bufferSize
-        std::chrono::duration<double> offset = std::chrono::high_resolution_clock::now() - bufferChrono; 
-        int sampleOffset =  static_cast<int>(  
-            static_cast <double>( std::chrono::duration_cast<std::chrono::microseconds>(offset).count()) * oneSlashMicrosecForSample);
-        writeVector->push_back(_PositionedMidiMessage(eventArgs, sampleOffset));
-    midiMutex.unlock();
+    // calculate the right offset inside the bufferSize
+    int write = index +1;
+    if(write>=(int)circularBuffer.size()){ write = 0; } 
     
+    circularBuffer[write].message = eventArgs;
+    circularBuffer[write].timepoint = std::chrono::high_resolution_clock::now();
+    
+    index = write;    
+}
+
+void pdsp::midi::Input::pushToReadVector( pdsp::_PositionedMidiMessage & message ){
+        std::chrono::duration<double> offset = message.timepoint - bufferChrono; 
+        message.sample = static_cast<int>( static_cast <double>( std::chrono::duration_cast<std::chrono::microseconds>(offset).count()) * oneSlashMicrosecForSample);
+        readVector.push_back( message );    
 }
 
 void pdsp::midi::Input::processMidi( const int &bufferSize ) noexcept{
     if(connected){
-        midiMutex.lock();
-            //switch buffers
-            std::vector<_PositionedMidiMessage>* temp = readVector;
-            readVector = writeVector;
-            writeVector = temp;
-            //update chrono
-            bufferChrono = std::chrono::high_resolution_clock::now();
-            //clear buffer to write
-            writeVector->clear(); 
-        midiMutex.unlock();
+        
+        readVector.clear();
+        int read = index;
+
+        if(read<lastread){ // two segments
+            for(int i=lastread+1; i<(int)circularBuffer.size(); ++i){
+                pushToReadVector( circularBuffer[i] );
+            }            
+            for( int i=0; i<=read; ++i){
+                pushToReadVector( circularBuffer[i] );
+            }            
+        }else{
+            for(int i=lastread+1; i<=read; ++i){
+                pushToReadVector( circularBuffer[i] );
+            }
+        }
+        
+        lastread = read;
+        bufferChrono = std::chrono::high_resolution_clock::now();
         
         //now sanitize messages to bufferSize
-        for(_PositionedMidiMessage &msg : *readVector){
+        for(_PositionedMidiMessage &msg : readVector){
             if(msg.sample >= bufferSize){ msg.sample = bufferSize-1; } else 
             if(msg.sample < 0 ) { msg.sample = 0; }
-        }            
+        }       
     }
 }
 

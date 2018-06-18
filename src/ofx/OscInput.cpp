@@ -2,6 +2,7 @@
 #include "OscInput.h"
 
 #define OFXPDSP_OSCINPUT_MESSAGERESERVE 128
+#define OFXPDSP_OSCCIRCULARBUFFER_SIZE 10000
 
 pdsp::osc::Input::OscChannel::OscChannel(){
     
@@ -30,14 +31,13 @@ pdsp::osc::Input::Input() {
     
     //oscChannels.reserve(64);
     oscChannels.clear();
-
-    oscMessageVectorA.reserve(OFXPDSP_OSCINPUT_MESSAGERESERVE);
-    oscMessageVectorA.clear();
-    oscMessageVectorB.reserve(OFXPDSP_OSCINPUT_MESSAGERESERVE);
-    oscMessageVectorA.clear();
-    readVector = &oscMessageVectorA;
-    writeVector = &oscMessageVectorB;
-
+    
+    readVector.reserve(OFXPDSP_OSCINPUT_MESSAGERESERVE);
+    circularBuffer.resize( OFXPDSP_OSCCIRCULARBUFFER_SIZE );
+    
+    lastread = 0;
+    index = 0;
+    
     connected = false;
     
     runDaemon = false;
@@ -165,13 +165,23 @@ void pdsp::osc::Input::daemonFunction() noexcept{
             ofxOscMessage osc;
             receiver.getNextMessage(osc);
             
+            // calculate the right offset inside the bufferSize
+            int write = index +1;
+            if(write>=(int)circularBuffer.size()){ write = 0; } 
+
+            circularBuffer[write].message = osc;
+            circularBuffer[write].timepoint = std::chrono::high_resolution_clock::now();
+
+            index = write;    
+            /*
             oscMutex.lock();
                 // calculate the right offset inside the bufferSize
                 chrono::duration<double> offset = chrono::high_resolution_clock::now() - bufferChrono; 
                 int sampleOffset =  static_cast<int>(  
                     static_cast <double>( chrono::duration_cast<chrono::microseconds>(offset).count()) * oneSlashMicrosecForSample);
-                writeVector->push_back(_ofxPositionedOscMessage( osc, sampleOffset));
+                writeVector->push_back(_PositionedOscMessage( osc, sampleOffset));
             oscMutex.unlock();
+            */ 
         }
 
         this_thread::sleep_for(std::chrono::microseconds(daemonRefreshRate));
@@ -182,13 +192,20 @@ void pdsp::osc::Input::daemonFunction() noexcept{
 }
     
 
+void pdsp::osc::Input::pushToReadVector( pdsp::osc::Input::_PositionedOscMessage & message ){
+        std::chrono::duration<double> offset = message.timepoint - bufferChrono; 
+        message.sample = static_cast<int>( static_cast <double>( std::chrono::duration_cast<std::chrono::microseconds>(offset).count()) * oneSlashMicrosecForSample);
+        readVector.push_back( message );    
+}
+
 void pdsp::osc::Input::processOsc( int bufferSize ) noexcept {
     
     if(connected){
         
+        /*
         oscMutex.lock();
             //switch buffers
-            vector<_ofxPositionedOscMessage>* temp = readVector;
+            vector<_PositionedOscMessage>* temp = readVector;
             readVector = writeVector;
             writeVector = temp;
             //update chrono
@@ -196,9 +213,29 @@ void pdsp::osc::Input::processOsc( int bufferSize ) noexcept {
             //clear buffer to write
             writeVector->clear(); 
         oscMutex.unlock();
+        */
+        
+        readVector.clear();
+        int read = index;
+
+        if(read<lastread){ // two segments
+            for(int i=lastread+1; i<(int)circularBuffer.size(); ++i){
+                pushToReadVector( circularBuffer[i] );
+            }            
+            for( int i=0; i<=read; ++i){
+                pushToReadVector( circularBuffer[i] );
+            }            
+        }else{
+            for(int i=lastread+1; i<=read; ++i){
+                pushToReadVector( circularBuffer[i] );
+            }
+        }
+        
+        lastread = read;
+        bufferChrono = std::chrono::high_resolution_clock::now();
         
         //now sanitize messages to bufferSize
-        for(_ofxPositionedOscMessage &msg : *readVector){
+        for(_PositionedOscMessage &msg : readVector){
             if(msg.sample >= bufferSize){ msg.sample = bufferSize-1; } else
             if(msg.sample < 0 ) { msg.sample = 0; }
         }
@@ -213,7 +250,7 @@ void pdsp::osc::Input::processOsc( int bufferSize ) noexcept {
         }
         
         // adds the messages to the buffers, only the first arg of each osc message is read, as float
-        for(_ofxPositionedOscMessage &osc : *readVector){
+        for(_PositionedOscMessage &osc : readVector){
             for (size_t i = 0; i < oscChannels.size(); ++i){
                 if(osc.message.getAddress() == oscChannels[i]->key){
                     oscChannels[i]->messageBuffer->addMessage( osc.message.getArgAsFloat(0), osc.sample );
