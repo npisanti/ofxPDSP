@@ -5,7 +5,7 @@
 
 
 #include "../../flags.h"
-#include "../../../libs/audiofft/AudioFFT.h"
+#include "../../libs/audiofft/AudioFFT.h"
 
 
 #endif // PDSP_INCLUDE_AUDIOFFT_H_INCLUDED
