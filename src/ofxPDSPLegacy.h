@@ -33,9 +33,13 @@ typedef pdsp::ParameterGain ofxPDSPStereoFader;
 typedef pdsp::SampleBufferPlotter ofxSampleBufferPlotter;
 typedef pdsp::Scope ofxPDSPScope;
 
-#if !defined(TARGET_OS_IPHONE) || !defined(TARGET_IPHONE_SIMULATOR) || ! defined(__ANDROID__)
+#ifndef TARGET_OS_IPHONE
+#ifndef TARGET_IPHONE_SIMULATOR
+#ifndef __ANDROID__
 typedef pdsp::serial::Output ofxPDSPSerialOut;
-#endif 
+#endif
+#endif
+#endif
 
 namespace pdsp{
     typedef Delay DampedDelay;
