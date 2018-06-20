@@ -33,10 +33,8 @@ typedef pdsp::ParameterGain ofxPDSPStereoFader;
 typedef pdsp::SampleBufferPlotter ofxSampleBufferPlotter;
 typedef pdsp::Scope ofxPDSPScope;
 
-#ifndef TARGET_OF_IOS
-#ifndef __ANDROID__
+#if !defined(TARGET_OS_IPHONE) || !defined(TARGET_IPHONE_SIMULATOR) || ! defined(__ANDROID__)
 typedef pdsp::serial::Output ofxPDSPSerialOut;
-#endif
 #endif 
 
 namespace pdsp{
