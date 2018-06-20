@@ -12,11 +12,14 @@ typedef pdsp::Engine ofxPDSPEngine;
 
 typedef pdsp::ComputerKeyboard ofxPDSPComputerKeyboard;
 
+
+#ifndef __ANDROID__
 typedef pdsp::midi::Input ofxPDSPMidiIn;
 typedef pdsp::midi::Output ofxPDSPMidiOut;
 typedef pdsp::midi::Keys ofxPDSPMidiKeys;
 typedef pdsp::midi::Pads ofxPDSPMidiPads;
 typedef pdsp::midi::Controls ofxPDSPMidiControls;
+#endif
 
 typedef pdsp::osc::Input ofxPDSPOscInput;
 typedef pdsp::osc::Output ofxPDSPOscOutput;
@@ -31,7 +34,9 @@ typedef pdsp::ParameterGain ofxPDSPStereoFader;
 typedef pdsp::SampleBufferPlotter ofxSampleBufferPlotter;
 typedef pdsp::Scope ofxPDSPScope;
 
+#if !defined(__ANDROID__) || !defined(TARGET_OF_IOS)
 typedef pdsp::serial::Output ofxPDSPSerialOut;
+#endif
 
 namespace pdsp{
     typedef Delay DampedDelay;
