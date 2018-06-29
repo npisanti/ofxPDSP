@@ -11,10 +11,18 @@ ofxPDSP is an [openFrameworks](https://openframeworks.cc/) addon for audio synth
 It includes [a good selection of modules ready to be used](http://npisanti.com/ofxPDSP/md__modules.html), like antialiasied oscillators and VA filters, an FFT convolver, analog-sounding envelopes, a delay, a noise generator, a sampler and a graincloud module, biquad equalizers (normal and 2x oversampled), modules for dynamic processing, units for oversampling/downsampling and a framework for writing and sequencing generative music.
 On top of that some other classes that uses openFrameworks for adding midi and OSC in/out, serial output, sequencer monitoring, waveform plotting and scopes, other audio addon wrapping and ofParameter-compatible control.
 
-To learn how to use ofxPDSP be sure to check out all the included examples, starting from the basics, and please also read [this reference page](http://npisanti.com/ofxPDSP/md__modules.html) for a selection of the most high level classes and function (probably you won't ever need more than that).
 
+Documentation
+------------
+[Here is the reference page](http://npisanti.com/ofxPDSP/md__modules.html) for a selection of the most high level classes and function (probably you won't ever need more than that).   
+To learn how to use ofxPDSP also be sure to check out all the included examples, starting from the basics.   
+
+Dependencies
+------------
 It is requires the latest stable release of openFrameworks (0.10) or the master release, [my fork of ofxMidi](https://github.com/npisanti/ofxMidi), [ofxSIMDFloats](https://github.com/npisanti/ofxSIMDFloats), [ofxAudioFile](https://github.com/npisanti/ofxAudioFile) and ofxOsc.
-    
+
+Examples
+------------    
 Check out the videos of some included examples:    
     
 [![ofxPDSP example-scoring4-wolfram-dub](http://img.youtube.com/vi/0-NXEFEFiE4/0.jpg)](https://www.youtube.com/watch?v=0-NXEFEFiE4 "ofxPDSP example-scoring4-wolfram-dub")
@@ -29,6 +37,8 @@ Check out the videos of some included examples:
 
 [![ofxPDSP example-data-to-wave](http://img.youtube.com/vi/oMH_W4b1z5A/0.jpg)](https://www.youtube.com/watch?v=oMH_W4b1z5A "ofxPDSP example-data-to-wave")
 
+License
+------------ 
 Nicola Pisanti, MIT License 2016-2018.   
 For FFT the AudioFFT wrapper is used, Copyright (c) 2013 [HiFi-LoFi](https://github.com/HiFi-LoFi).  
 For loading audio file on OSX [libaudiodecoder](https://github.com/asantoni/libaudiodecoder) was used, it is still included for legacy purposes but it will be removed in one of the next versions. Copyright (c) 2010-2012 Albert Santoni, Bill Good, RJ Ryan.

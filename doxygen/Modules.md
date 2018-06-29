@@ -62,7 +62,7 @@ This is an overview of a selection of the available modules. There are many clas
 - pdsp::Switch : switches between different inputs
 
 ## Sequencing ( you access those classes from `engine.sequencer` )
-- pdsp::SequencerProcessor : engine.score is an instance of this class, manage all the sections
+- pdsp::SequencerProcessor : `engine.sequencer` is an instance of this class, manage all the sections
 - pdsp::SequencerSection : play one pdsp::Sequence at time and has multiple output to patch to the DSP modules
 - pdsp::Sequence : a fixed or generative sequence to send values to one or more outputs
 - pdsp::Behavior : contains standard behaviors for Sequence ending, you mostly use pdsp::Behavior::Loop or pdsp::Behavior::OneShot

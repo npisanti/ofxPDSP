@@ -129,6 +129,11 @@ namespace pdsp{
         */ 
         float meter_percent() const; 
 
+        /*!
+        @brief returns the step index, calculated with the current steplen and bars. When the sequence is not playing it will return the last value. Thread-safe.
+        */ 
+        int meter_step() const; 
+
 
 
 /*!

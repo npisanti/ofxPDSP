@@ -257,6 +257,11 @@ float pdsp::Sequence::meter_percent() const {
     return atomic_meter_percent;
 }
 
+int pdsp::Sequence::meter_step() const {
+    int step = atomic_meter_percent.load() / steplen.load() ;
+    return step;
+}
+
 pdsp::SeqChange::SeqChange(){
     code = [&]() noexcept { return self; };
 }
