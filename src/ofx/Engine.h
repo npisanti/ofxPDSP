@@ -76,6 +76,12 @@ public:
     std::vector<ofSoundDevice> listDevices();
     
     /*!
+    @brief sets the API to use for the engine soundstream, for the APIs see oF `ofSoundBaseTypes.h` file.
+    @param[in] api name of the API to use
+    */
+    void setApi( ofSoundDevice::Api api );
+    
+    /*!
     @brief sets the ID of the audio device to open. You can get the available ID with listDevices(). Sometimes you have to use different ID for input and output devices, for that use setInputDeviceID() and setOutputDeviceID().
     @param[in] deviceID ID to set
     */
@@ -191,7 +197,8 @@ private:
 
     ofSoundStream inputStream;
     ofSoundStream outputStream;
-
+    ofSoundDevice::Api api;
+    
     bool inStreamActive;
     bool outStreamActive;    
     

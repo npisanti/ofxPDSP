@@ -57,6 +57,8 @@ void ofApp::setup(){
     // set up the audio output device
     engine.listDevices();
     engine.setDeviceID(0); // REMEMBER TO SET THIS AT THE RIGHT INDEX!!!!
+    
+    //engine.setApi( ofSoundDevice::Api::PULSE ); // use this if you need to change the API
 
     // start your audio engine !
     engine.setup( 44100, 512, 3); 

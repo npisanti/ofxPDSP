@@ -12,6 +12,8 @@ pdsp::Engine::Engine() : score( sequencer ){
     setChannels(0, 2);
     
     state = closedState;
+    
+    api = ofSoundDevice::Api::UNSPECIFIED;
 
     externalOuts.reserve(10);
     hasExternalOut = false;
@@ -192,6 +194,10 @@ void pdsp::Engine::setup( int sampleRate, int bufferSize, int nBuffers){
     settings.numBuffers = (size_t)  nBuffers;
 	settings.numOutputChannels = (size_t) outputChannels;
 	settings.numInputChannels = (size_t)  inputChannels;
+    
+    if( api != ofSoundDevice::Api::UNSPECIFIED ){
+        settings.setApi( api );
+    }
     
     #if defined(__ANDROID__)
         if( outputChannels > 0 ){
@@ -447,4 +453,8 @@ pdsp::Patchable & pdsp::Engine::out_bar_ms(){
 
 void pdsp::Engine::setBackgroundAudio( bool active ){
     bBackgroundAudio = active;
+}
+
+void pdsp::Engine::setApi( ofSoundDevice::Api api ){
+    this->api = api;
 }
