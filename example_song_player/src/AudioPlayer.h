@@ -18,6 +18,8 @@ public:
     void pause();
     void stop();
     
+    float playhead() const;
+    
 private:
     void patch ();
 

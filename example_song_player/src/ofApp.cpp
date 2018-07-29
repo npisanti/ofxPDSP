@@ -38,6 +38,8 @@ void ofApp::update(){
 void ofApp::draw(){
     ofBackground(0);
     gui.draw();
+    
+    ofDrawRectangle( 0, ofGetHeight()-20, ofGetWidth()*player.playhead(), 20 );
 }
 
 //--------------------------------------------------------------

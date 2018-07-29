@@ -180,3 +180,7 @@ void AudioPlayer::stop() {
     bStop = bStop ? false : true;
 }
 
+    
+float AudioPlayer::playhead() const {
+    return sampler1.meter_position();
+}

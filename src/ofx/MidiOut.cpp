@@ -88,7 +88,7 @@ void pdsp::midi::Output::linkToMidiOut(ofxMidiOut &midiOut){
 }
 
 void pdsp::midi::Output::listPorts(){
-    midiOut.listPorts();
+    midiOut.listOutPorts();
 }
 
 void pdsp::midi::Output::openPort(int portIndex){
@@ -230,9 +230,6 @@ void pdsp::midi::Output::process( int bufferSize ) noexcept{
             if( noteBufferI == nullptr ){ noteMax = 0; } //this deactivates the search for pitch
             else{ noteMax = noteBufferI->size(); }
           
-            /* // OLD WAY
-            bufferChrono = std::chrono::high_resolution_clock::now();
-            */
             for(int gateIndex=0; gateIndex<gateMax; ++gateIndex){
                 //check if we have to change the pitch
                 if(  noteIndex<noteMax && 

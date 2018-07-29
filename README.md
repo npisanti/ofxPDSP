@@ -19,7 +19,7 @@ To learn how to use ofxPDSP also be sure to check out all the included examples,
 
 Dependencies
 ------------
-ofxPDSP requires the latest stable release of openFrameworks (0.10) or the master release, [my fork of ofxMidi](https://github.com/npisanti/ofxMidi), [ofxSIMDFloats](https://github.com/npisanti/ofxSIMDFloats), [ofxAudioFile](https://github.com/npisanti/ofxAudioFile) and ofxOsc.
+ofxPDSP requires the latest stable release of openFrameworks (0.10) or the master release, [ofxMidi](https://github.com/danomatika/ofxMidi), [ofxSIMDFloats](https://github.com/npisanti/ofxSIMDFloats), [ofxAudioFile](https://github.com/npisanti/ofxAudioFile) and ofxOsc.
 
 Examples
 ------------    

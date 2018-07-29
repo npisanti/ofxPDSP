@@ -59,7 +59,7 @@ void pdsp::midi::Input::closePort(){
 }
 
 void pdsp::midi::Input::listPorts(){
-    midiIn.listPorts(); // print input ports to console
+    midiIn.listInPorts(); // print input ports to console
 }
 
 
