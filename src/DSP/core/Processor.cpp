@@ -9,7 +9,10 @@ pdsp::Processor::Processor(int channels){
         }
 }
 
-pdsp::Processor::Processor() : Processor(2) {}
+
+// 32 channels by default
+// as in the engine, this is a dirty hack and has to be revised
+pdsp::Processor::Processor() : Processor(32) {} 
 
 void pdsp::Processor::process(const int &bufferSize) noexcept{
         OutputNode::nextTurn();

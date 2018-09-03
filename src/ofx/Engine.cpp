@@ -7,10 +7,12 @@ pdsp::Engine::Engine() : score( sequencer ){
     outputID = 0;
     inStreamActive = false;
     outStreamActive = false;
+
+    processor.resize(32); // 32 max channels
     
     inputChannels = outputChannels = -1; // for the next method to work
     setChannels(0, 2);
-    
+
     state = closedState;
     
     api = ofSoundDevice::Api::UNSPECIFIED;
@@ -113,7 +115,6 @@ void pdsp::Engine::setChannels( int inputChannels, int outputChannels ){
     
     if(this->outputChannels != outputChannels){
         this->outputChannels = outputChannels;
-        processor.resize(outputChannels);
     }
 
 }
