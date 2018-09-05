@@ -8,8 +8,6 @@ pdsp::Engine::Engine() : score( sequencer ){
     inStreamActive = false;
     outStreamActive = false;
 
-    processor.resize(32); // 32 max channels
-    
     inputChannels = outputChannels = -1; // for the next method to work
     setChannels(0, 2);
 
