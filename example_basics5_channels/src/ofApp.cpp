@@ -1,14 +1,14 @@
 #include "ofApp.h"
 
-// channels() API example
+// modules channels API example
 //
-// some modules are "multichannel" modules
-// you can use that modules with multiple signal inputs
-// it's really useful for example for using a single pdsp::ParameterAmp 
-// to control multiple modulation amounts
-// or for using a filter for processing stereo channels
-// you can access different signal in/out with the [] operator
-// resources are automatically allocated when needed
+// whatever module whic can have more than one input or output channel
+// for example stereo modules, or multichannel modules
+// let you access the channels with the ch() method
+//
+// multichannel modules allocate resources for new channels when required
+// stereo module usually have a fixed number of channels ( two ).
+// check for module reference of the ch() method for knowing what is possible
 //
 // in this example a single pdsp::ParameterAmp with multiple channels
 // controls the amount of individual LFOs going to individual oscillators
@@ -24,19 +24,16 @@ void ofApp::setup(){
     pitches.resize( oscillators.size() );
     drift_lfo.resize( oscillators.size() );
     
-    // to reserve memory in advance you can call channels( int num )
-    // drift_amt.channels( oscillators.size() ); 
-    // filter.channels(2);
-    
+
     for(size_t i=0; i<oscillators.size(); ++i){
         float pan = pdsp::spread( i, oscillators.size(), 0.5f );
-        // [] operator let you access signal channels of the filter
-        oscillators[i].out_saw() * pdsp::panL(pan) >> filter[0]; 
-        oscillators[i].out_saw() * pdsp::panR(pan) >> filter[1]; 
+        // ch() method let you access signal channels of the filter
+        oscillators[i].out_saw() * pdsp::panL(pan) >> filter.ch(0); 
+        oscillators[i].out_saw() * pdsp::panR(pan) >> filter.ch(1); 
         
-        // [] operator let you access signal channels of the drift_amt module
-        1.5f >> drift_lfo[i].out_random() >> drift_amt[i] >> oscillators[i].in_pitch();     
-                                               pitches[i] >> oscillators[i].in_pitch();
+        // ch() method let you access signal channels of the drift_amt module
+        1.5f >> drift_lfo[i].out_random() >> drift_amt.ch(i) >> oscillators[i].in_pitch();     
+                                                  pitches[i] >> oscillators[i].in_pitch();
     }
     
     // the control input is the same for al the filter channels
@@ -44,8 +41,9 @@ void ofApp::setup(){
     cutoff_ctrl >> filter.in_cutoff(); 
     reso_ctrl >> filter.in_reso(); 
     
-    filter[0] * dB(-12.0f) >> engine.audio_out(0);
-    filter[1] * dB(-12.0f) >> engine.audio_out(1);
+    filter.ch(0) * dB(-12.0f) >> engine.audio_out(0);
+    filter.ch(1) * dB(-12.0f) >> engine.audio_out(1);
+        
         
     // --------------- GUI -------------------------- 
     gui.setup("gui", "settings.xml", 20, 20);

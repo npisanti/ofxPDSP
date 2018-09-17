@@ -82,7 +82,17 @@ private:
     PatchOutputNode output;
 };
 
- 
+//--------------CHANNEL NODE-----------------------------------------
+/*!
+@brief A module with no dsp inside, just two public pdsp::PatchNode set as default input and output and not connected between then, useful as send/return for coding multichannel modules.
+
+*/  
+class ChannelNode : public Patchable {
+public:
+    ChannelNode();
+    PatchNode input;
+    PatchNode output;
+};
 
 }//END NAMESPACE
 

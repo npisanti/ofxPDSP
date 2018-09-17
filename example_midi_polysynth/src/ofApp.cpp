@@ -38,13 +38,13 @@ void ofApp::setup(){
         midiCCs.out(1) * 36.0f >> synth.voices[i].in("cutoff");
 
         // connect each voice to chorus
-        synth.voices[i] >> chorus.in_L();
-        synth.voices[i] >> chorus.in_R();
+        synth.voices[i] >> chorus.ch(0);
+        synth.voices[i] >> chorus.ch(1);
     }
     
     // set up chorus
-    chorus.out_L() >> gain[0] >> engine.audio_out(0);
-    chorus.out_R() >> gain[1] >> engine.audio_out(1);
+    chorus.ch(0) >> gain.ch(0) >> engine.audio_out(0);
+    chorus.ch(1) >> gain.ch(1) >> engine.audio_out(1);
 
     chorusSpeed >> chorus.in_speed();
     chorusDepth >> chorus.in_depth();

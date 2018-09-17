@@ -12,7 +12,7 @@
 namespace pdsp{
 
     /*!
-    @brief Pans a signal between two outputs.
+    @brief Pans a signal between L/R outputs.
     */  
     
 class Panner : public Patchable {
@@ -48,9 +48,6 @@ public:
     Panner(const Panner& other);
     Panner& operator=(const Panner& other);
 
-    //Panner(Panner&& other);
-    //Panner& operator=( Panner&& other);
-    //Panner& operator=( Panner&& other);
 
     /*!
     @brief meter the pan value. This method is thread-safe.
@@ -68,16 +65,28 @@ public:
     Patchable& in_pan();
     
     /*!
-    @brief Sets "0" as selected output and returns this module ready to be patched. This is the default output. This is the left output channel.
+    @brief Sets "L" as selected output and returns this module ready to be patched. This is the default output. This is the left output channel.
     */  
-    Patchable& out_0();
+    Patchable& out_L();
     
     /*!
-    @brief Sets "1" as selected output and returns this module ready to be patched. This is the right output channel.
+    @brief Sets "R" as selected output and returns this module ready to be patched. This is the right output channel.
     */  
-    Patchable& out_1();
+    Patchable& out_R();
         
     
+
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
+    [[deprecated("out_0() deprecated, use out_L() instead")]]
+    Patchable& out_0();
+    
+    [[deprecated("out_1() deprecated, use out_R() instead")]]
+    Patchable& out_1();
+/*!
+    @endcond
+*/
 private:
     void patch();
  

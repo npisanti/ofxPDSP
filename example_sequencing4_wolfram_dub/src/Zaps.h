@@ -32,7 +32,7 @@ class Zaps {
 
 public:
     void setup( int numVoices );
-    ofParameterGroup ui;
+    ofParameterGroup parameters;
     
     std::vector<Zap> voices;
     pdsp::ParameterGain fader;

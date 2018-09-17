@@ -36,9 +36,9 @@ pdsp::SVFilter::Submodule::Submodule(){
     filter.out_notch() >> fswitch.input(3);
 }
 
-void pdsp::SVFilter::channels( int size ){
+void pdsp::SVFilter::channels( size_t size ){
     
-    int oldsize = submodules.size();
+    size_t oldsize = submodules.size();
     
     if( size >= oldsize ){
         submodules.resize( size );
@@ -50,18 +50,18 @@ void pdsp::SVFilter::channels( int size ){
             mode >> submodules[i]->in("select");            
         }        
     }else{
-        for (int i=size; i<oldsize; ++i ){
+        for( size_t i=size; i<oldsize; ++i ){
             delete submodules[i];
         }
         submodules.resize( size );
     }
 }
 
-pdsp::Patchable& pdsp::SVFilter::operator[]( const int & ch ){
-    if( ch >= int(submodules.size()) ){
-        channels(ch+1);
+pdsp::Patchable& pdsp::SVFilter::ch( size_t index ){
+    if( index >= submodules.size() ){
+        channels(index+1);
     }
-    return *(submodules[ch]);
+    return *(submodules[index]);
 }
 
 
@@ -181,4 +181,7 @@ float pdsp::SVFilter::meter_cutoff() const {
     return p2f.meter_input();
 }      
     
+pdsp::Patchable& pdsp::SVFilter::operator[]( size_t index ){
+    return ch( index );
+}
     

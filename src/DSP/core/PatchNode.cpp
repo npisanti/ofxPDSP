@@ -78,3 +78,8 @@ const float* pdsp::PatchNode::getBuffer(){
         return output.buffer;
 }
 
+pdsp::ChannelNode::ChannelNode(){
+    addModuleInput("signal", input );
+    addModuleOutput("signal", output );
+}
+

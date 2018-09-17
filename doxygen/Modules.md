@@ -1,5 +1,5 @@
 
-This is an overview of a selection of the available modules. There are many classes in pdsp, but many are just for very advanced users as they are used to build higher level classes. This is a selection of the most higher level pdsp classes, probably you will never need more than this. Module tagged with `[multichannel]` let to process more inputs signals with the same settings by using the `[]` operator. Stereo modules have methods to access L/R channes.
+This is an overview of a selection of the available modules. There are many classes in pdsp, but many are just for very advanced users as they are used to build higher level classes. This is a selection of the most higher level pdsp classes, probably you will never need more than this. Module tagged with `[multichannel]` let to process more inputs signals with the same settings by using the `ch(int index)` method. Module tagged with `[stereo]` let you access just two channels with `ch(0)` and `ch(1)`.
 
 ## Oscillators / Noise
 - pdsp::VAOscillator : band limited oscillator with saw, pulse, triangle and sine outputs
@@ -7,7 +7,7 @@ This is an overview of a selection of the available modules. There are many clas
 - pdsp::DataOscillator : wavetable oscillator with thread-safe setting of waveform in realtime
 - pdsp::FMOperator : sine oscillator with pm input for FM synthesis
 - pdsp::WhiteNoise : noise generator
-- pdsp::BitNoise : digital noise generator with lots of shaping control and stereo outputs
+- pdsp::BitNoise : digital noise generator with lots of shaping control and stereo outputs `[stereo]`
 
 ## Filters
 - pdsp::VAFilter : resonant 4 pole ladder filter with switchable 12db/24db LP, BP and HP outputs and pitched cutoff control. `[multichannel]`
@@ -31,29 +31,29 @@ This is an overview of a selection of the available modules. There are many clas
 
 ## Samplers
 - pdsp::Sampler : one-shot sampler
-- pdsp::GrainCloud : classic granular sampler
+- pdsp::GrainCloud : classic granular sampler `[stereo]`
 
 ## Signal / Effects
 - pdsp::Bitcruncher : reduces the bit for the signal amplitude
 - pdsp::Decimator : reduces the signal sampling frequency
 - pdsp::Saturator1 : overdrive 
 - pdsp::Saturator2 : warmer overdrive 
-- pdsp::DimensionChorus : lush stereo chorus
+- pdsp::DimensionChorus : lush stereo chorus `[stereo]`
 - pdsp::Ducker : pushes down the signal when a trigger is received, useful for side-chaining
 
 ## Equalizers
-- pdsp::LowCut : cuts low frequencies
-- pdsp::LowShelfEQ : low shelf equalizer band
-- pdsp::PeakEQ : peak equalizer band
-- pdsp::HighShelfEQ : high shelf equalizer band
-- pdsp::HighCut : cuts high frequencies
-- pdsp::AALowShelfEQ : low shelf equalizer band, 2x oversampled
-- pdsp::AAPeakEQ : peak equalizer band, 2x oversampled
-- pdsp::AAHighShelfEQ : high shelf equalizer band, 2x oversampled
+- pdsp::LowCut : cuts low frequencies `[multichannel]`
+- pdsp::LowShelfEQ : low shelf equalizer band `[multichannel]`
+- pdsp::PeakEQ : peak equalizer band `[multichannel]`
+- pdsp::HighShelfEQ : high shelf equalizer band `[multichannel]`
+- pdsp::HighCut : cuts high frequencies `[multichannel]`
+- pdsp::AALowShelfEQ : low shelf equalizer band, 2x oversampled `[multichannel]`
+- pdsp::AAPeakEQ : peak equalizer band, 2x oversampled `[multichannel]`
+- pdsp::AAHighShelfEQ : high shelf equalizer band, 2x oversampled `[multichannel]`
 
 ## Reverbs  
-- pdsp::BasiVerb : dubby metallic reverb with mono input and stereo output 
-- pdsp::IRVerb : a impulse response based reverb, with mono/stereo inputs and outputs
+- pdsp::BasiVerb : dubby metallic reverb with mono input and stereo output `[stereo]`
+- pdsp::IRVerb : a impulse response based reverb, with mono/stereo inputs and outputs `[stereo]`
 
 ## Routing
 - pdsp::PatchNode : just sums the inputs (or just pass it to output if there is only one)

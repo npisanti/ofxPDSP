@@ -105,39 +105,39 @@ void ofApp::setup(){
         zaps.voices[i] >> scopes[i] >> engine.blackhole();
     }
     
-    zaps.fader.out_L() >> engine.audio_out(0);
-    zaps.fader.out_R() >> engine.audio_out(1);   
+    zaps.fader.ch(0) >> engine.audio_out(0);
+    zaps.fader.ch(1) >> engine.audio_out(1);   
     
     // patch the zaps to the reverb input 
     float revGain = -60.0f; // -65dB, this IRs are very loud
-    zaps.fader.out_L() * dB(revGain) >> reverb.in_L(); 
-    zaps.fader.out_R() * dB(revGain) >> reverb.in_R();
+    zaps.fader.ch(0) * dB(revGain) >> reverb.ch(0);
+    zaps.fader.ch(1) * dB(revGain) >> reverb.ch(1);
     
     // patch the reverb to an high pass filter and then to the engine
     // ( deactivated on rPi as the processor is too slow for IR convolution using FFT )
 #ifndef __ARM_ARCH
-    reverb.out_L() >> revCut.in_0(); revCut.out_0() >> engine.audio_out(0);
-    reverb.out_R() >> revCut.in_1(); revCut.out_1() >> engine.audio_out(1);
+    reverb.ch(0) >> revCut.ch(0) >> engine.audio_out(0);
+    reverb.ch(1) >> revCut.ch(1) >> engine.audio_out(1);
     100.0f >> revCut.in_freq(); // 100hz, we cut the reverb muddy low end 
 #endif
 
     // connect the zaps to the stereo delay
-    zaps.fader.out_L() >> dub.in("0");
-    zaps.fader.out_R() >> dub.in("1");
-                          dub.out("0") >> engine.audio_out(0);
-                          dub.out("1") >> engine.audio_out(1);
-                          dub.out("0") * dB(12.0f) >> scopes[ZAPS_NUMBER]   >> engine.blackhole();
-                          dub.out("1") * dB(12.0f) >> scopes[ZAPS_NUMBER+1] >> engine.blackhole();
-     
+    zaps.fader.ch(0) >> dub.ch(0);
+    zaps.fader.ch(1) >> dub.ch(1);
+                        dub.ch(0) >> engine.audio_out(0);
+                        dub.ch(1) >> engine.audio_out(1);
+                        dub.ch(0) * dB(12.0f) >> scopes[ZAPS_NUMBER]   >> engine.blackhole();
+                        dub.ch(1) * dB(12.0f) >> scopes[ZAPS_NUMBER+1] >> engine.blackhole();
+
      
     // ------------ GUI ------------
     gui.setup("", "wolframdub.xml", ofGetWidth()-220, 40);
     gui.setName( "WOLFRAM DUB" );
     gui.add( masterplanRandomize.set("masterplan randomize", false) );
     gui.add( randomizeBars.set("num bars", 16, 1, 32) );
-    gui.add( wolframSeq.ui );
-    gui.add( zaps.ui );
-    gui.add( dub.ui );
+    gui.add( wolframSeq.parameters );
+    gui.add( zaps.parameters );
+    gui.add( dub.parameters );
     
     
     //---------------------- audio setup -------------

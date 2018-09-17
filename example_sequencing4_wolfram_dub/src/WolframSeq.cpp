@@ -24,25 +24,25 @@ void WolframSeq::setup( int maxSteps, int maxOutputs, int rule, int generations,
 
     string name = "WSEQ n";
     name+= ofToString(number++); 
-    ui.setName( name );
-    ui.add( this->rule.set( "rule", 60, 0, 150 ));
-    ui.add( this->steps.set( "steps", 16, 0, maxSteps ));
-    ui.add( this->division.set( "division", 16, 0, 32 ));
-    ui.add( this->activeOuts.set( "active outs", maxOutputs, 0, maxOutputs ));
-    ui.add( this->threshold.set( "threshold", 4, 0, 8 ));
-    ui.add( this->seedsDensity.set( "seeds density", 0.33f, 0.0f, 1.0f ));
-    ui.add( this->reverse.set( "reverse stepbars", false) );
-    ui.add( this->limiting.set( "limiting", (float)maxOutputs, 0.0f, (float)maxOutputs ));
-    ui.add( this->dbRange.set( "dB range", 18, 48, 6) );
+    parameters.setName( name );
+    parameters.add( this->rule.set( "rule", 60, 0, 150 ));
+    parameters.add( this->steps.set( "steps", 16, 0, maxSteps ));
+    parameters.add( this->division.set( "division", 16, 0, 32 ));
+    parameters.add( this->activeOuts.set( "active outs", maxOutputs, 0, maxOutputs ));
+    parameters.add( this->threshold.set( "threshold", 4, 0, 8 ));
+    parameters.add( this->seedsDensity.set( "seeds density", 0.33f, 0.0f, 1.0f ));
+    parameters.add( this->reverse.set( "reverse stepbars", false) );
+    parameters.add( this->limiting.set( "limiting", (float)maxOutputs, 0.0f, (float)maxOutputs ));
+    parameters.add( this->dbRange.set( "dB range", 18, 48, 6) );
     
     if(sendGateOff){
         gateOff = true;
-        ui.add( this->gateLen.set( "gate len", 0.5f, 0.001f, 0.999f) );
+        parameters.add( this->gateLen.set( "gate len", 0.5f, 0.001f, 0.999f) );
     }else{
         gateOff = false;
     }
     
-    ui.add( this->remake.set( "remake", false) );
+    parameters.add( this->remake.set( "remake", false) );
 
 
     this->storedRule = rule;

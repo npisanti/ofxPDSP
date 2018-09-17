@@ -40,8 +40,7 @@ public:
 
     void setup( int numVoice );
 
-    pdsp::Patchable& out_L();
-    pdsp::Patchable& out_R();
+    pdsp::Patchable & ch( int index );
 
     std::vector<Voice>       voices;
     ofParameterGroup    ui;

@@ -99,8 +99,8 @@ void pdsp::BasiVerb::patch(){
     addModuleInput("mod_freq", phasor.in_freq() );
     addModuleInput("mod_amount", modAmt.in_mod() );
  
-    addModuleOutput("0", output1);
-    addModuleOutput("1", output2);
+    addModuleOutput("L", output1);
+    addModuleOutput("R", output2);
     
     hi_cut_ctrl.set(5000.0f);
     damping_ctrl.set(0.5f);  
@@ -178,20 +178,33 @@ pdsp::Patchable& pdsp::BasiVerb::in_mod_amount(){
     return in("mod_amount");
 }
 
+pdsp::Patchable& pdsp::BasiVerb::ch( size_t index ){
+    
+    wrapChannelIndex( index, 2, "pdsp::BasiVerb" );
+    
+    switch( index ){
+        case 0: return out("L"); break;
+        case 1: return out("R"); break;
+    }
+    
+    return out("L");
+}
+
+
 pdsp::Patchable& pdsp::BasiVerb::out_0(){
-    return out("0");
+    return out("L");
 }
 
 pdsp::Patchable& pdsp::BasiVerb::out_1(){
-    return out("1");
+    return out("R");
 }
 
 pdsp::Patchable& pdsp::BasiVerb::out_L(){
-    return out("0");
+    return out("L");
 }
 
 pdsp::Patchable& pdsp::BasiVerb::out_R(){
-    return out("1");
+    return out("R");
 }
 
 float pdsp::BasiVerb::meter_lfo() const {

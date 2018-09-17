@@ -25,27 +25,27 @@ void pdsp::ParameterGain::patch(){
     value >> dBtoLin;
 }
 
-void pdsp::ParameterGain::channels( int size ){
-    int oldsize = amps.size();
+void pdsp::ParameterGain::channels( size_t size ){
+    size_t oldsize = amps.size();
     if( size >= oldsize ){
         amps.resize( size );
-        for (size_t i=oldsize; i<amps.size(); ++i ){
+        for( size_t i=oldsize; i<amps.size(); ++i ){
             amps[i] = new Amp();
             dBtoLin >> amps[i]->in_mod();
         }        
     }else{
-        for (int i=size; i<oldsize; ++i ){
+        for( size_t i=size; i<oldsize; ++i ){
             delete amps[i];
         }
         amps.resize( size );
     }
 }
 
-pdsp::Patchable& pdsp::ParameterGain::operator[]( const int & ch ){
-    if( ch >= int(amps.size()) ){
-        channels(ch+1);
+pdsp::Patchable& pdsp::ParameterGain::ch( size_t index ){
+    if( index >= amps.size() ){
+        channels(index+1);
     }
-    return *(amps[ch]);
+    return *(amps[index]);
 }
 
 ofParameter<float>& pdsp::ParameterGain::set(const char * name, float value, float min, float max) {
@@ -100,6 +100,39 @@ void pdsp::ParameterGain::disableSmoothing() {
     value.disableSmoothing();
 }
 
+pdsp::Patchable& pdsp::ParameterGain::in_signal(){
+    return in("signal");
+}
+
+pdsp::Patchable& pdsp::ParameterGain::out_signal(){
+    return out("signal");
+}
+
+float pdsp::ParameterGain::get() const{
+    return value.get();
+}
+
+float pdsp::ParameterGain::meter_output( int ch ) const {
+    return amps[ch]->meter_output();
+}  
+
+ofParameter<bool>& pdsp::ParameterGain::set( std::string name, bool value, float min, float max ){
+    return this->value.set( name, value, min, max );
+}
+
+ofParameter<bool>& pdsp::ParameterGain::set( const char * name, bool value, float min, float max ){
+    return this->value.set( name, value, min, max );
+}
+
+float pdsp::ParameterGain::meter_mod() const {
+    return value.meter_output();
+}  
+
+
+// ------------------ backward compatibility ------------------------
+pdsp::Patchable& pdsp::ParameterGain::operator[]( size_t index ){
+    return ch( index );
+}
 
 float pdsp::ParameterGain::meter_0() const {
     return amps[0]->meter_output();
@@ -115,10 +148,6 @@ float pdsp::ParameterGain::meter_L() const {
 
 float pdsp::ParameterGain::meter_R() const {
     return amps[1]->meter_output();
-}  
-
-float pdsp::ParameterGain::meter_mod() const {
-    return value.meter_output();
 }  
 
 pdsp::Patchable& pdsp::ParameterGain::in_0() {
@@ -202,29 +231,3 @@ pdsp::Patchable& pdsp::ParameterGain::out_R() {
     } 
     return out("1");
 }
-
-
-pdsp::Patchable& pdsp::ParameterGain::in_signal(){
-    return in("signal");
-}
-
-pdsp::Patchable& pdsp::ParameterGain::out_signal(){
-    return out("signal");
-}
-
-float pdsp::ParameterGain::get() const{
-    return value.get();
-}
-
-float pdsp::ParameterGain::meter_output( int ch ) const {
-    return amps[ch]->meter_output();
-}  
-
-ofParameter<bool>& pdsp::ParameterGain::set( std::string name, bool value, float min, float max ){
-    return this->value.set( name, value, min, max );
-}
-
-ofParameter<bool>& pdsp::ParameterGain::set( const char * name, bool value, float min, float max ){
-    return this->value.set( name, value, min, max );
-}
-

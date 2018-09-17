@@ -14,7 +14,7 @@
 namespace pdsp{
 
     /*!
-    @brief A "cloud" of really short sampled segments. 
+    @brief Stereo "cloud" of really short sampled segments. 
     
     By default it has 8 voices, but you can construct it with more voices if you use the non-default constructor. 
     */     
@@ -110,16 +110,12 @@ public:
     @brief Sets "direction" as selected input and returns this module ready to be patched. A positive value makes the grains play forward, a negative in reverse.
     */ 
     Patchable& in_direction();
-    
+     
     /*!
-    @brief Sets "L" as selected output and returns this Unit ready to be patched. This is the default output. This is the left graincloud output.
-    */ 
-    Patchable& out_L();
-
-    /*!
-    @brief Sets "R" as selected output and returns this Unit ready to be patched. This is the right graincloud output.
-    */ 
-    Patchable& out_R();    
+    @brief Uses the selected channel as output for the patching operation. 0 is for the left channel (default output) and 1 is for the right channel. Index values outside of range are remapped to 0 or 1.
+    @param[in] index channel index
+    */  
+    Patchable& ch( size_t index );
     
     /*!
     @brief returns the number of voices used for the graincloud.
@@ -145,7 +141,19 @@ public:
     @param[in] window_length window length, if not specified 1024
     */    
     void setWindowType(Window_t type, int window_length=1024 );
+
+/*!
+    @cond HIDDEN_SYMBOLS
+*/    
+    [[deprecated("out_L() deprecated for this module, use the ch( 0 ) method instead")]]
+    Patchable& out_L();
     
+    [[deprecated("out_R() deprecated for this module, use the ch( 1 ) method instead")]]
+    Patchable& out_R();
+/*!
+    @endcond
+*/
+
 private:
 
     void patch();

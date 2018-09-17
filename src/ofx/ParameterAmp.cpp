@@ -24,8 +24,8 @@ pdsp::ParameterAmp::~ParameterAmp(){
     channels(0);
 }
 
-void pdsp::ParameterAmp::channels( int size ){
-    int oldsize = amps.size();
+void pdsp::ParameterAmp::channels( size_t size ){
+    size_t oldsize = amps.size();
     if( size >= oldsize ){
         amps.resize( size );
         for (size_t i=oldsize; i<amps.size(); ++i ){
@@ -33,18 +33,18 @@ void pdsp::ParameterAmp::channels( int size ){
             value >> amps[i]->in_mod();
         }        
     }else{
-        for (int i=size; i<oldsize; ++i ){
+        for (size_t i=size; i<oldsize; ++i ){
             delete amps[i];
         }
         amps.resize( size );
     }
 }
 
-pdsp::Patchable& pdsp::ParameterAmp::operator[]( const int & ch ){
-    if( ch >= int(amps.size()) ){
-        channels(ch+1);
+pdsp::Patchable& pdsp::ParameterAmp::ch( size_t index ){
+    if( index >= amps.size() ){
+        channels(index+1);
     }
-    return *(amps[ch]);
+    return *(amps[index]);
 }
 
 ofParameter<float>& pdsp::ParameterAmp::set(const char * name, float value, float min, float max) {
@@ -108,11 +108,11 @@ float pdsp::ParameterAmp::meter_mod() const {
 }  
 
 pdsp::Patchable& pdsp::ParameterAmp::in_signal() {
-    return in("0");
+    return in("signal");
 }
 
 pdsp::Patchable& pdsp::ParameterAmp::out_signal() {
-    return out("0");
+    return out("signal");
 }
 
 ofParameter<bool>& pdsp::ParameterAmp::set( std::string name, bool value, float min, float max ){
@@ -121,4 +121,8 @@ ofParameter<bool>& pdsp::ParameterAmp::set( std::string name, bool value, float 
 
 ofParameter<bool>& pdsp::ParameterAmp::set( const char * name, bool value, float min, float max ){
     return this->value.set( name, value, min, max );
+}
+
+pdsp::Patchable& pdsp::ParameterAmp::operator[]( size_t index ){
+    return ch( index );
 }

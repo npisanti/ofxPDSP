@@ -25,31 +25,11 @@ public:
     DimensionChorus(const DimensionChorus& other);
     DimensionChorus& operator=(const DimensionChorus& other);
 
-    //DimensionChorus(DimensionChorus&& other);
-    //DimensionChorus& operator=( DimensionChorus&& other);
-    //DimensionChorus& operator=( DimensionChorus&& other);
-
-
-    
     /*!
-    @brief Sets "0" as selected input and returns this module ready to be patched. This is the default input. This is the left input channel.
-    */      
-    Patchable& in_0();
-
-    /*!
-    @brief Sets "1" as selected input and returns this module ready to be patched. This is the right input channel.
-    */     
-    Patchable& in_1();
-    
-    /*!
-    @brief Sets "0" as selected input and returns this module ready to be patched. This is the default input. This is the left input channel.
-    */      
-    Patchable& in_L();
-
-    /*!
-    @brief Sets "1" as selected input and returns this module ready to be patched. This is the right input channel.
-    */     
-    Patchable& in_R();
+    @brief Uses the selected channel as input/output for the patching operation. 0 is for the left channel (default input/output) and 1 is for the right channel. Index values outside of range are remapped to 0 or 1.
+    @param[in] index channel index
+    */  
+    Patchable& ch( size_t index );
 
     /*!
     @brief Sets "speed" as selected input and returns this module ready to be patched. This is the chorus modulation rate in hertz. Init default value is 0.25hz.
@@ -66,32 +46,51 @@ public:
     */       
     Patchable& in_delay();
     
-    /*!
-    @brief Sets "0" as selected output and returns this module ready to be patched. This is the default output. This is the left output channel.
-    */  
-    Patchable& out_0();
-    
-    /*!
-    @brief Sets "1" as selected output and returns this module ready to be patched. This is the right output channel. If you don't patch this output the effect will behave as a mono chorus.
-    */  
-    Patchable& out_1();
-    
-    /*!
-    @brief Sets "0" as selected output and returns this module ready to be patched. This is the default output. This is the left output channel.
-    */  
-    Patchable& out_L();
-    
-    /*!
-    @brief Sets "1" as selected output and returns this module ready to be patched. This is the right output channel. If you don't patch this output the effect will behave as a mono chorus.
-    */  
-    Patchable& out_R();
 
     /*!
     @brief returns a value between -1.0f and 1.0f that rapresent the LFO output signal. This method is thread-safe.
     */   
     float meter_lfo() const;
+
+
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
+    [[deprecated("in_0() deprecated for this module, use the ch( 0 ) method instead")]]
+    Patchable& in_0();
     
+    [[deprecated("in_1() deprecated for this module, use the ch( 1 ) method instead")]]
+    Patchable& in_1();
+    
+    [[deprecated("out_0() deprecated for this module, use the ch( 0 ) method instead")]]
+    Patchable& out_0();
+    
+    [[deprecated("out_1() deprecated for this module, use the ch( 1 ) method instead")]]
+    Patchable& out_1();
+    
+    [[deprecated("in_L() deprecated for this module, use the ch( 0 ) method instead")]]
+    Patchable& in_L();
+    
+    [[deprecated("in_R() deprecated for this module, use the ch( 1 ) method instead")]]
+    Patchable& in_R();
+    
+    [[deprecated("out_L() deprecated for this module, use the ch( 0 ) method instead")]]
+    Patchable& out_L();
+    
+    [[deprecated("out_R() deprecated for this module, use the ch( 1 ) method instead")]]
+    Patchable& out_R();
+/*!
+    @endcond
+*/
+
 private:
+
+    struct Channel : public Patchable{
+        Channel();
+        PatchNode input;
+        PatchNode output;
+    };
+
     void patch();
  
     LFOPhasor       phasor;
@@ -106,10 +105,8 @@ private:
     OnePole         filter1;
     OnePole         filter2;
  
-    PatchNode       input1;
-    PatchNode       input2;
-    PatchNode       output1;
-    PatchNode       output2;
+    Channel         channel0;
+    Channel         channel1;
 
     PatchNode       delay;
     PatchNode       depth;

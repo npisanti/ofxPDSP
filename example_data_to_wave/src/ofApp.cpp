@@ -41,8 +41,8 @@ void ofApp::setup(){
     }
     
     // patch synth to the engine
-    synth.out_L() >> engine.audio_out(0);
-    synth.out_R() >> engine.audio_out(1);
+    synth.ch(0) >> engine.audio_out(0);
+    synth.ch(1) >> engine.audio_out(1);
 
     // graphic setup---------------------------
     ofSetVerticalSync(true);
@@ -90,7 +90,7 @@ void ofApp::update(){
 		switch( mode ){
 			case 0: // converting pixels to waveform samples
 				synth.datatable.begin();
-				for(size_t n=0; n<camHeight; ++n){
+				for(int n=0; n<camHeight; ++n){
 					float sample = ofMap(pixels.getData()[col*3 + channel + n*3*camWidth], 0, 255, -0.5f, 0.5f);
 					synth.datatable.data(n, sample);
 				}
@@ -99,7 +99,7 @@ void ofApp::update(){
 			
 			case 1: // converting pixels to partials for additive synthesis
 				synth.datatable.begin();
-				for(size_t n=0; n<camHeight; ++n){
+				for(int n=0; n<camHeight; ++n){
 					float partial = ofMap(pixels.getData()[col*3 + channel + n*3*camWidth], 0, 255, 0.0f, 1.0f);
 					synth.datatable.data(n, partial);
 				}
@@ -117,7 +117,7 @@ void ofApp::update(){
 		switch( mode ){
 			case 0: // plot the raw waveforms
 				ofBeginShape();
-				for(size_t n=0; n<camHeight; ++n){
+				for(int n=0; n<camHeight; ++n){
 					float y = ofMap(pixels.getData()[col*3 + channel + n*3*camWidth], 0, 255, camHeight, 0);
 					ofVertex( n*2, y );
 				}
@@ -125,7 +125,7 @@ void ofApp::update(){
 			break;
 			
 			case 1: // plot the partials
-				for(size_t n=0; n<camHeight; ++n){
+				for(int n=0; n<camHeight; ++n){
 					float partial = ofMap(pixels.getData()[col*3 + channel + n*3*camWidth], 0, 255, 0.0f, 1.0f);
 					int h = waveplot.getHeight() * partial;
 					int y = waveplot.getHeight() - h;

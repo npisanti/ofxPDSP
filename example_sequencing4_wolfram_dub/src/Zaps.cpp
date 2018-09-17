@@ -34,11 +34,11 @@ void Zaps::setup( int numVoices ) {
     
     voices.resize(numVoices);
     
-    ui.setName("zaps UI");
-    ui.add(fader.set("gain", -12, -48, 12 ) );
-    ui.add(envAmtControl.set("env to pitch", 48, 0, 72 ) );
-    ui.add(envDecayControl.set("env decay", 50, 5, 100 ) );
-    ui.add(veloToEnv.set( "env dyn amt", 0.5f, 0.0f, 1.0f ) );
+    parameters.setName("zaps UI");
+    parameters.add(fader.set("gain", -12, -48, 12 ) );
+    parameters.add(envAmtControl.set("env to pitch", 48, 0, 72 ) );
+    parameters.add(envDecayControl.set("env decay", 50, 5, 100 ) );
+    parameters.add(veloToEnv.set( "env dyn amt", 0.5f, 0.0f, 1.0f ) );
 
     float panWidth = 0.30f;
     
@@ -49,11 +49,11 @@ void Zaps::setup( int numVoices ) {
         string label = "zap ";
         label += ofToString( i+1 );
         label += " pitch";
-        ui.add( voices[i].pitchControl.set(label, 46+i*7, 24, 84 ));
+        parameters.add( voices[i].pitchControl.set(label, 46+i*7, 24, 84 ));
 
         float pan = pdsp::spread( i, voices.size(), panWidth ); 
-        voices[i] * pdsp::panL(pan) >> fader.in_L();
-        voices[i] * pdsp::panR(pan) >> fader.in_R();
+        voices[i] * pdsp::panL(pan) >> fader.ch(0);
+        voices[i] * pdsp::panR(pan) >> fader.ch(1);
     }
 
 }

@@ -1,7 +1,7 @@
 
 // Ducker.h
 // ofxPDSP
-// Nicola Pisanti, MIT License, 2016
+// Nicola Pisanti, MIT License, 2016-2018
 
 #ifndef PDSP_MODULE_DUCKER_H_INCLUDED
 #define PDSP_MODULE_DUCKER_H_INCLUDED
@@ -15,30 +15,31 @@
 namespace pdsp{
 
 /*!
-@brief Triggered ducking module.
+@brief Triggered ducking module. Multichannel.
 
-This module has a trigger input that activate an envelope to duck the signal, is something like a sidechain compressor but with more control.
+This module has a trigger input that activate an envelope to duck the signal, is something like a sidechain compressor but with more control. Multichannel.
 */       
 
 class Ducker : public Patchable {
     
 public:
     Ducker( bool linkChannels ){ patch(); };
+    ~Ducker();
     
     Ducker(){ patch(); };
     Ducker(const Ducker& other){ patch(); };
     Ducker& operator=(const Ducker& other){ return *this; };
 
     /*!
-    @brief Sets "0" as selected input and returns this module ready to be patched. This is the default input. This is the left input channel.
-    */      
-    Patchable& in_0();
-
-    /*!
-    @brief Sets "0" as selected input and returns this module ready to be patched. This is the right input channel.
-    */     
-    Patchable& in_1();
+    @brief Sets "signal" as selected input and returns this Unit ready to be patched. This is the default input. This input is the first input channel.
+    */   
+    pdsp::Patchable& in_signal();
     
+    /*!
+    @brief Sets "signal" as selected output and returns this Unit ready to be patched. This is the default output. This is the first output channel.
+    */ 
+    pdsp::Patchable& out_signal();
+
     /*!
     @brief Sets "trig" as selected input and returns this module ready to be patched. This input is the trigger input of the ducker. It is not velocity sensitive.
     */   
@@ -69,16 +70,6 @@ public:
     Default time is 100ms.
     */   
     Patchable& in_release();
-        
-    /*!
-    @brief Sets "0" as selected output and returns this module ready to be patched. This is the default output. This is the left output channel.
-    */  
-    Patchable& out_0();
-    
-    /*!
-    @brief Sets "1" as selected output and returns this module ready to be patched. This is the right output channel. I
-    */  
-    Patchable& out_1();
     
     /*!
     @brief sets the curve of the attack stage the internal envelope, from a smoother linear in dB curve to an harder analog-like curve. By default is 0.0f ( linear in dB attack ).
@@ -96,7 +87,41 @@ public:
     @brief returns the envelope signal. This method is thread-safe.
     */  
     float meter_env() const ;
+ 
+    /*!
+    @brief Allocate a number of channels for processing different inputs. This is automatically called if you query for a channel outside the allocated range. You can access different channels with the ch() method.
+    @param[in] size number of channels
+    */        
+    void channels( size_t size );    
+
+    /*!
+    @brief To use the selected channel as input/output for the operation.
+    @param[in] index channel index
+    */  
+    Patchable& ch( size_t index );
+
+
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
+    [[deprecated("operator[] deprecated, use the ch( int index ) method instead")]]    
+    Patchable& operator[]( size_t index );
     
+    [[deprecated("in_0() deprecated, use the ch( int index ) method instead")]]
+    Patchable& in_0();
+    
+    [[deprecated("in_1() deprecated, use the ch( int index ) method instead")]]
+    Patchable& in_1();
+    
+    [[deprecated("out_0() deprecated, use the ch( int index ) method instead")]]
+    Patchable& out_0();
+    
+    [[deprecated("out_1() deprecated, use the ch( int index ) method instead")]]
+    Patchable& out_1();
+/*!
+    @endcond
+*/
+
 private:
     void patch();
     
@@ -109,9 +134,8 @@ private:
     AHR                     envelope;
     OneMinusInput           oneMinusEnv;
     Amp                     envAmt;
-    
-    Amp                     dca1;
-    Amp                     dca2;
+
+    std::vector<Amp*> amps;
     
 };
 

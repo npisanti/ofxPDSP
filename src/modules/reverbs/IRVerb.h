@@ -17,7 +17,7 @@ namespace pdsp{
 @brief Impulse Response based reverb, with stereo or mono input and stereo output.
 */       
 
-class IRVerb : public Patchable, public Preparable {
+class IRVerb : public Patchable {
 
 
 public:
@@ -28,51 +28,10 @@ public:
 
 
     /*!
-    @brief Sets "mono" as selected input and returns this module ready to be patched. This is the default input. This is the mono reverb input.
-    */      
-    Patchable& in_mono();
-
-    /*!
-    @brief Sets "L" as selected input and returns this module ready to be patched. This is the left reverb input.
-    */      
-    Patchable& in_L();
-
-    /*!
-    @brief Sets "R" as selected input and returns this module ready to be patched. This is the right reverb input.
-    */      
-    Patchable& in_R();
-
-
-    /*!
-    @brief Sets "L" as selected input and returns this module ready to be patched. This is the left reverb input.
-    */      
-    Patchable& in_0();
-
-    /*!
-    @brief Sets "R" as selected input and returns this module ready to be patched. This is the right reverb input.
-    */      
-    Patchable& in_1();
-
-        
-    /*!
-    @brief Sets "L" as selected output and returns this module ready to be patched. This is the default output. This is the left output channel.
+    @brief Uses the selected channel as input/output for the patching operation. 0 is for the left channel (default input/output) and 1 is for the right channel. Index values outside of range are remapped to 0 or 1.
+    @param[in] index channel index
     */  
-    Patchable& out_0();
-    
-    /*!
-    @brief Sets "R" as selected output and returns this module ready to be patched. This is the right output channel. 
-    */  
-    Patchable& out_1();
-    
-    /*!
-    @brief Sets "L" as selected output and returns this module ready to be patched. This is the default output. This is the left output channel.
-    */  
-    Patchable& out_L();
-    
-    /*!
-    @brief Sets "R" as selected output and returns this module ready to be patched. This is the right output channel. 
-    */  
-    Patchable& out_R();
+    Patchable& ch( size_t index );
 
     /*!
     @brief sets the impulse response for the reverb
@@ -80,28 +39,46 @@ public:
     */  
     void loadIR ( std::string path );
 
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
+    [[deprecated("in_mono() deprecated for this module, just use one channel for that")]]
+    Patchable& in_mono();
+  
+    [[deprecated("in_0() deprecated for this module, use the ch( 0 ) method instead")]]
+    Patchable& in_0();
     
-private:
-    void prepareToPlay(int expectedBufferSize, double sampleRate);
+    [[deprecated("in_1() deprecated for this module, use the ch( 1 ) method instead")]]
+    Patchable& in_1();
     
-    void releaseResources();
+    [[deprecated("out_0() deprecated for this module, use the ch( 0 ) method instead")]]
+    Patchable& out_0();
+    
+    [[deprecated("out_1() deprecated for this module, use the ch( 1 ) method instead")]]
+    Patchable& out_1();
+    
+    [[deprecated("in_L() deprecated for this module, use the ch( 0 ) method instead")]]
+    Patchable& in_L();
+    
+    [[deprecated("in_R() deprecated for this module, use the ch( 1 ) method instead")]]
+    Patchable& in_R();
+    
+    [[deprecated("out_L() deprecated for this module, use the ch( 0 ) method instead")]]
+    Patchable& out_L();
+    
+    [[deprecated("out_R() deprecated for this module, use the ch( 1 ) method instead")]]
+    Patchable& out_R();
+/*!
+    @endcond
+*/
 
+private:
     void patch();
- 
-    PatchNode       input_L;
-    PatchNode       input_R;
-    PatchNode       input_mono;
 
     FDLConvolver    reverbL;
     FDLConvolver    reverbR;
     
     SampleBuffer    impulse;
-
-    bool monoConnected;
-    bool stereoConnected;
-    
-    void checkMono();
-    void checkStereo();
 
 };
     

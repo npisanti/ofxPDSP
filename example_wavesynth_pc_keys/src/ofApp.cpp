@@ -53,8 +53,8 @@ void ofApp::setup(){
     }
     
     // patch synth to the engine
-    synth.out_L() >> engine.audio_out(0);
-    synth.out_R() >> engine.audio_out(1);
+    synth.ch(0) >> engine.audio_out(0);
+    synth.ch(1) >> engine.audio_out(1);
 
     // graphic setup---------------------------
     ofSetVerticalSync(true);

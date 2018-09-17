@@ -5,9 +5,6 @@ pdsp::Panner::Panner() { patch(); }
 pdsp::Panner::Panner(const Panner& other){ patch(); }
 pdsp::Panner& pdsp::Panner::operator=(const Panner& other){ return *this; }
 
-//pdsp::Panner::Panner(Panner&& other){ patch(); }
-//pdsp::Panner::Panner& operator=( Panner&& other){ return *this; }
-
         
 float pdsp::Panner::PannerFormula::formula(const float &x) noexcept {
     if(x>=1.0f){
@@ -47,8 +44,8 @@ void pdsp::Panner::patch(){
     
     addModuleInput( "signal",  input ); 
     addModuleInput("pan", panning_step1);
-    addModuleOutput("0", amp1);
-    addModuleOutput("1", amp2);    
+    addModuleOutput("L", amp1);
+    addModuleOutput("R", amp2);    
     
     panning_step1.enableBoundaries(-1.0f, 1.0f);
     
@@ -72,10 +69,18 @@ pdsp::Patchable& pdsp::Panner::in_pan(){
     return in("pan");
 }
 
+pdsp::Patchable& pdsp::Panner::out_L(){
+    return out("L");
+}
+
+pdsp::Patchable& pdsp::Panner::out_R(){
+    return out("R");
+}
+
 pdsp::Patchable& pdsp::Panner::out_0(){
-    return out("0");
+    return out("L");
 }
 
 pdsp::Patchable& pdsp::Panner::out_1(){
-    return out("1");
+    return out("R");
 }

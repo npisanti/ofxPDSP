@@ -27,7 +27,6 @@ void ofApp::setup(){
     // each section can output the messages to one or more outputs, as values or triggers
     // thing about them as gate/cv outputs, gate=trig, value=cv
     engine.sequencer.sections[0].out_trig(0)  >> kick.in("trig"); // assign the first sequence output to trig
-    engine.sequencer.sections[0].out_value(1) >> kick.in("pitch"); // assign the second sequence output to values
     engine.sequencer.sections[1].out_trig(0)  >> lead.in("trig"); // assign the first sequence output to trig
     engine.sequencer.sections[1].out_value(1) >> lead.in("pitch"); // assign the second sequence output to values
     

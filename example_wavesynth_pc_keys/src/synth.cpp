@@ -74,8 +74,8 @@ void PolySynth::setup(int numVoices){
         voices[i].setup( *this, i );
     }
     
-    chorus.out_L() >> gain[0];
-    chorus.out_R() >> gain[1];
+    chorus.ch(0) >> gain.ch(0);
+    chorus.ch(1) >> gain.ch(0);
 
     // pdsp::Switch EXAMPLE ---------------------------------------------------
     lfo_switch.resize(5);  // resize input channels
@@ -138,20 +138,20 @@ void PolySynth::Voice::setup( PolySynth & m, int v ){
     oscillator.setTable( m.wavetable );
 
     // SIGNAL PATH
-    oscillator >> filter >> voiceAmp >> m.chorus.in_L();
-                            voiceAmp >> m.chorus.in_R();
+    oscillator >> filter >> voiceAmp >> m.chorus.ch(0);
+                            voiceAmp >> m.chorus.ch(1);
     
     // MODULATIONS AND CONTROL
-    envelope >> m.env_table_amt[v] >> oscillator.in_table();
-                    m.lfo_to_table >> oscillator.in_table();
-                      m.table_ctrl >> oscillator.in_table();
+    envelope >> m.env_table_amt.ch(v) >> oscillator.in_table();
+                       m.lfo_to_table >> oscillator.in_table();
+                         m.table_ctrl >> oscillator.in_table();
 
     voiceTrigger >> envelope >> voiceAmp.in_mod();
-                    envelope >> m.env_filter_amt[v] >> filter.in_pitch();
-                                    m.lfo_to_filter >> filter.in_pitch();
-                                      m.cutoff_ctrl >> filter.in_pitch();
-                                        m.reso_ctrl >> filter.in_reso();
-                                 m.filter_mode_ctrl >> filter.in_mode();
+                    envelope >> m.env_filter_amt.ch(v) >> filter.in_pitch();
+                                       m.lfo_to_filter >> filter.in_pitch();
+                                         m.cutoff_ctrl >> filter.in_pitch();
+                                           m.reso_ctrl >> filter.in_reso();
+                                    m.filter_mode_ctrl >> filter.in_mode();
 
 
         m.env_attack_ctrl  >> envelope.in_attack();
@@ -168,10 +168,7 @@ float PolySynth::Voice::meter_pitch() const{
     return oscillator.meter_pitch();
 }
 
-pdsp::Patchable& PolySynth::out_L(){
-    return gain[0];
-}
-
-pdsp::Patchable& PolySynth::out_R(){
-    return gain[1];
+pdsp::Patchable& PolySynth::ch( int index ){
+    index = index%2;
+    return gain.ch( index );
 }

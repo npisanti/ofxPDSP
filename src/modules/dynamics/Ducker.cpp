@@ -3,8 +3,10 @@
 
 void pdsp::Ducker::patch( ){
     
-    addModuleInput("0", input1);
-    addModuleInput("1", input2);
+    channels( 1 );
+    
+    addModuleInput(  "signal", *amps[0] );
+    addModuleOutput( "signal", *amps[0] );    
     
     addModuleInput("trig", envelope.in_trig());
     addModuleInput("velocity", envelope.in_velocity());
@@ -12,33 +14,44 @@ void pdsp::Ducker::patch( ){
     addModuleInput("hold", envelope.in_hold());
     addModuleInput("release", envelope.in_release());
     addModuleInput("ducking", cleanPart);
-    
-    addModuleOutput("0", dca1);
-    addModuleOutput("1", dca2);
-    
+
     cleanPart.enableBoundaries( -3000.0f, 0.0f );
     envelope.set( 50.0f, 0.0f, 100.0f, 0.0f );
 
-    input1 >> dca1;
-    input2 >> dca2;
-    
     envelope >> oneMinusEnv >> envAmt;
                     ducking >> envAmt.in_mod();
     
     cleanPart >> ducking;
     
-    envAmt    >> dca1.in_mod();
-    envAmt    >> dca2.in_mod();
-    cleanPart >> dca1.in_mod();
-    cleanPart >> dca2.in_mod();
+
 }
 
-pdsp::Patchable& pdsp::Ducker::in_0(){
-    return in("0");
+pdsp::Ducker::~Ducker(){
+    channels( 0 );
+}
+    
+void pdsp::Ducker::channels( size_t size ){
+    size_t oldsize = amps.size();
+    if( size >= oldsize ){
+        amps.resize( size );
+        for (size_t i=oldsize; i<amps.size(); ++i ){
+            amps[i] = new Amp();
+            envAmt    >> amps[i]->in_mod();
+            cleanPart >> amps[i]->in_mod();
+        }        
+    }else{
+        for( size_t i=size; i<oldsize; ++i ){
+            delete amps[i];
+        }
+        amps.resize( size );
+    }
 }
 
-pdsp::Patchable& pdsp::Ducker::in_1(){
-    return in("1");
+pdsp::Patchable& pdsp::Ducker::ch( size_t index ){
+    if( index >= amps.size() ){
+        channels(index+1);
+    }
+    return *(amps[index]);
 }
 
 pdsp::Patchable& pdsp::Ducker::in_attack(){
@@ -65,14 +78,6 @@ pdsp::Patchable& pdsp::Ducker::in_ducking(){
     return in("ducking");
 }
 
-pdsp::Patchable& pdsp::Ducker::out_0(){
-    return out("0");
-}
-
-pdsp::Patchable& pdsp::Ducker::out_1(){
-    return out("1");
-}
-
 float pdsp::Ducker::meter_env() const {
     return envelope.meter_output();
 }
@@ -83,5 +88,49 @@ void pdsp::Ducker::setAttackCurve(float hardness) {
 
 void pdsp::Ducker::setReleaseCurve(float hardness) {
     envelope.setReleaseCurve(hardness);
+}
+
+// ----------------- backward compatibility -------------------------
+
+pdsp::Patchable& pdsp::Ducker::operator[]( size_t index ){
+    return ch( index );
+}
+
+pdsp::Patchable& pdsp::Ducker::in_0() {
+    if( amps.size()<2 ){
+        channels(2);
+        addModuleInput( "0", *amps[0] );
+        addModuleInput( "1", *amps[1] );
+        addModuleOutput( "0", *amps[0] );
+        addModuleOutput( "1", *amps[1] );
+    } 
+    return in("0");
+}
+
+pdsp::Patchable& pdsp::Ducker::in_1() {
+    if( amps.size()<2 ){
+        channels(2);
+        addModuleInput( "0", *amps[0] );
+        addModuleInput( "1", *amps[1] );
+        addModuleOutput( "0", *amps[0] );
+        addModuleOutput( "1", *amps[1] );
+    } 
+    return in("1");
+}
+
+pdsp::Patchable& pdsp::Ducker::out_0() {
+    if( amps.size()<2 ){
+        channels(2);
+        addModuleInput( "0", *amps[0] );
+        addModuleInput( "1", *amps[1] );
+        addModuleOutput( "0", *amps[0] );
+        addModuleOutput( "1", *amps[1] );
+    } 
+    return out("0");
+}
+
+pdsp::Patchable& pdsp::Ducker::out_1() {
+    if( amps.size()<2 ) channels(2);
+    return out("1");
 }
 

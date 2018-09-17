@@ -1,7 +1,7 @@
 
 // ParameterAmp.h
 // ofxPDSP
-// Nicola Pisanti, MIT License, 2016
+// Nicola Pisanti, MIT License, 2016-2018
 
 #ifndef OFXPDSP_PDSPVALUEMULTIPLIER_H_INCLUDED
 #define OFXPDSP_PDSPVALUEMULTIPLIER_H_INCLUDED
@@ -164,27 +164,35 @@ public:
     float meter_mod() const;     
     
     /*!
-    @brief Sets "0" as selected input and returns this Unit ready to be patched. This is the default input. This input is the signal/value to multiply.
+    @brief Sets "signal" as selected input and returns this Unit ready to be patched. This is the default input. This input is the signal/value to multiply.
     */   
     pdsp::Patchable& in_signal();
     
     /*!
-    @brief Sets "0" as selected output and returns this Unit ready to be patched. This is the default output. This is the product of in("signal") multiplied by controlling value.
+    @brief Sets "signal" as selected output and returns this Unit ready to be patched. This is the default output. This is the product of in("signal") multiplied by controlling value.
     */ 
     pdsp::Patchable& out_signal();
     
     /*!
-    @brief sets the number of different inputs this module can process. Be sure to set the channels before doing any patching. You can access channels with in/out methods, using a string with their number as input, for example in("1") or out("4"), or by using ini(int ch) or outi(int ch) methods.
+    @brief Allocate a number of channels for processing different inputs. This is automatically called if you query for a channel outside the allocated range. You can access different channels with the ch() method.
     @param[in] size number of channels
     */        
-    void channels( int size );    
+    void channels( size_t size );    
 
     /*!
-    @brief To use the selected channel as input/output for the operation.
+    @brief Uses the selected channel as input/output for the patching operation.
     @param[in] ch channel index
     */  
-    Patchable& operator[]( const int & ch );
-
+    Patchable& ch( size_t index );
+    
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
+    [[deprecated("operator[] deprecated, use the ch( int index ) method instead")]]    
+    Patchable& operator[]( size_t index );
+/*!
+    @endcond
+*/
 
 private:
 

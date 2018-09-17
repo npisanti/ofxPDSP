@@ -183,12 +183,15 @@ pdsp::Patchable& pdsp::GrainCloud::in_direction(){
     return in("direction");
 }
 
-pdsp::Patchable& pdsp::GrainCloud::out_L(){
+pdsp::Patchable& pdsp::GrainCloud::ch( size_t index ){
+    wrapChannelIndex( index, 2, "pdsp::GrainCloud" );
+    
+    switch( index ){
+        case 0: return out("L"); break;
+        case 1: return out("R"); break;
+    }
+    
     return out("L");
-}
-
-pdsp::Patchable& pdsp::GrainCloud::out_R(){
-    return out("R");
 }
 
 void pdsp::GrainCloud::setSample(SampleBuffer* samplePointer, int index){
@@ -211,4 +214,13 @@ void pdsp::GrainCloud::setWindowType(Window_t type, int window_length){
 
 int pdsp::GrainCloud::getVoicesNum() const {
     return voices;
+}
+
+
+pdsp::Patchable& pdsp::GrainCloud::out_L(){
+    return out("L");
+}
+
+pdsp::Patchable& pdsp::GrainCloud::out_R(){
+    return out("R");
 }

@@ -1,7 +1,7 @@
 
 // VAFilter.h
 // ofxPDSP
-// Nicola Pisanti, MIT License, 2016
+// Nicola Pisanti, MIT License, 2016-2018
 
 #ifndef PDSP_MODULE_VAFILTER_H_INCLUDED
 #define PDSP_MODULE_VAFILTER_H_INCLUDED
@@ -86,60 +86,18 @@ public:
     Patchable& in_mode();
     
     /*!
-    @brief sets the number of different inputs this module can process. Be sure to set the channels before doing any patching. You can access channels with in/out methods, using a string with their number as input, for example in("1") or out("4"), or by using ini(int ch) or outi(int ch) methods.
+    @brief Allocate a number of channels for processing different inputs. This is automatically called if you query for a channel outside the allocated range. You can access different channels with the ch() method.
     @param[in] size number of channels
     */        
-    void channels( int size );    
-    
+    void channels( size_t size );    
+
     /*!
-    @brief To use the selected channel as input/output for the operation.
-    @param[in] ch channel index
+    @brief Uses the selected channel as input/output for the patching operation.
+    @param[in] index channel index
     */  
-    Patchable& operator[]( const int & ch );
+    Patchable& ch( size_t index );
         
 
-    /*!
-    @brief Sets "0" as selected input and returns this module ready to be patched. This is the default input. If channel is less than 2, sets channels() to 2 and activate "0" and "1" outputs.
-    */      
-    Patchable& in_0();
-
-    /*!
-    @brief Sets "1" as selected input and returns this module ready to be patched. If channel is less than 2, sets channels() to 2 and activate "0" and "1" outputs.
-    */     
-    Patchable& in_1();
-    
-    
-    /*!
-    @brief Sets "0" as selected input and returns this module ready to be patched. This is the default input. If channel is less than 2, sets channels() to 2 and activate "0" and "1" outputs.
-    */      
-    Patchable& in_L();
-
-    /*!
-    @brief Sets "1" as selected input and returns this module ready to be patched. If channel is less than 2, sets channels() to 2 and activate "0" and "1" outputs.
-    */     
-    Patchable& in_R();
-    
-
-    /*!
-    @brief Sets "0" as selected output and returns this module ready to be patched. This is the default output. If channel is less than 2, sets channels() to 2 and activate "0" and "1" outputs.
-    */  
-    Patchable& out_0();
-    
-    /*!
-    @brief Sets "1" as selected output and returns this module ready to be patched. If channel is less than 2, sets channels() to 2 and activate "0" and "1" outputs.
-    */  
-    Patchable& out_1();
-            
-    /*!
-    @brief Sets "0" as selected output and returns this module ready to be patched. If channel is less than 2, sets channels() to 2 and activate "0" and "1" outputs.
-    */  
-    Patchable& out_L();
-    
-    /*!
-    @brief Sets "1" as selected output and returns this module ready to be patched. If channel is less than 2, sets channels() to 2 and activate "0" and "1" outputs.
-    */  
-    Patchable& out_R();
-            
     /*!
     @brief Returns the cutoff pitch value.
     */      
@@ -152,7 +110,39 @@ public:
     static const float HighPass12;
     static const float BandPass24;
     static const float BandPass12;
-            
+
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
+    [[deprecated("operator[] deprecated, use the ch( int index ) method instead")]]    
+    Patchable& operator[]( size_t index );
+    
+    [[deprecated("in_0() deprecated for this module, use the ch( 0 ) method instead")]]
+    Patchable& in_0();
+    
+    [[deprecated("in_1() deprecated for this module, use the ch( 1 ) method instead")]]
+    Patchable& in_1();
+    
+    [[deprecated("out_0() deprecated for this module, use the ch( 0 ) method instead")]]
+    Patchable& out_0();
+    
+    [[deprecated("out_1() deprecated for this module, use the ch( 1 ) method instead")]]
+    Patchable& out_1();
+    
+    [[deprecated("in_L() deprecated for this module, use the ch( 0 ) method instead")]]
+    Patchable& in_L();
+    
+    [[deprecated("in_R() deprecated for this module, use the ch( 1 ) method instead")]]
+    Patchable& in_R();
+    
+    [[deprecated("out_L() deprecated for this module, use the ch( 0 ) method instead")]]
+    Patchable& out_L();
+    
+    [[deprecated("out_R() deprecated for this module, use the ch( 1 ) method instead")]]
+    Patchable& out_R();
+/*!
+    @endcond
+*/
     
 private:
     void patch ();

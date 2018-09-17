@@ -34,13 +34,13 @@ void PolySynth::Voice::setup( PolySynth & ui, int v ){
     oscillator.out("pulse") * 4.0f >> saturator >> filter >> voiceAmp;
     
     // MODULATIONS AND CONTROL
-    lfo.out_triangle() >> ui.pwmAmt[v] >> oscillator.in_pw();
-                                 ui.pw >> oscillator.in_pw();
-                            voicePitch >> oscillator.in_pitch();
+    lfo.out_triangle() >> ui.pwmAmt.ch(v) >> oscillator.in_pw();
+                                    ui.pw >> oscillator.in_pw();
+                               voicePitch >> oscillator.in_pitch();
                                                              
-                                                                    ui.cutoff >> filter.in_cutoff(); 
-     voiceTrigger >> modEnv.set(400.0f, 600.0f, 1.0f, 800.0f) >> ui.modAmt[v] >> filter.in_cutoff(); 
-                                                                      ui.reso >> filter.in_reso();
+                                                                       ui.cutoff >> filter.in_cutoff(); 
+     voiceTrigger >> modEnv.set(400.0f, 600.0f, 1.0f, 800.0f) >> ui.modAmt.ch(v) >> filter.in_cutoff(); 
+                                                                         ui.reso >> filter.in_reso();
     
     (voiceTrigger >> (ampEnv.set(200.0f, 400.0f, 1.0f, 600.0f ) * 0.1f)) >> voiceAmp.in_mod();
 

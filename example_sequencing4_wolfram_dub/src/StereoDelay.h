@@ -11,27 +11,36 @@ public:
     StereoDelay() { patch(); };
     StereoDelay(const StereoDelay & other) { patch(); };
     
-    ofParameterGroup ui;
+    ofParameterGroup parameters;
 
     pdsp::ParameterAmp lDelayTimeControl;
     pdsp::ParameterAmp rDelayTimeControl;
     
     pdsp::Parameter lFeedbackControl;
     pdsp::Parameter rFeedbackControl;
-    
+
+    pdsp::Patchable & ch( int index );
+
 private:
+    struct Submodule : public pdsp::Patchable {
+        Submodule();
+        pdsp::PatchNode input;
+        pdsp::PatchNode output;
+    };
+    
+    std::vector<Submodule> channels;
+
+    pdsp::ParameterGain inputFader;
+    pdsp::ParameterGain outputFader;
+
     void patch();
 
-
-    pdsp::Delay ldelay;
-    pdsp::Delay rdelay;
+    pdsp::Delay delay0;
+    pdsp::Delay delay1;
     
     pdsp::OneBarTimeMs time;
 
     pdsp::Parameter dampingControl;
-    
-    pdsp::ParameterGain input;
-    pdsp::ParameterGain output;
     
 };
 

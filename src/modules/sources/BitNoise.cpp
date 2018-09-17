@@ -13,11 +13,11 @@ void pdsp::BitNoise::patch(){
     addModuleInput( "bits",         bits_ctrl );  
     addModuleInput( "trig",         trigger );  
     
-    addModuleOutput( "decimated_0",   bitcrunchA );  
-    addModuleOutput( "noise_0",       noiseA ); 
+    addModuleOutput( "decimated_L",   bitcrunchA );  
+    addModuleOutput( "noise_L",       noiseA ); 
      
-    addModuleOutput( "decimated_1",   bitcrunchB );  
-    addModuleOutput( "noise_1",       noiseB );  
+    addModuleOutput( "decimated_R",   bitcrunchB );  
+    addModuleOutput( "noise_R",       noiseB );  
 
                                p2fDecimator  >> decimateA.in_freq();
                                       noiseA >> decimateA >> bitcrunchA;
@@ -56,42 +56,69 @@ pdsp::Patchable& pdsp::BitNoise::in_trig(){
     return in("trig");
 }
 
+pdsp::Patchable& pdsp::BitNoise::ch( size_t index ){
+    
+    wrapChannelIndex( index, 2, "pdsp::BitNoise" );
+    
+    switch( index ){
+        case 0: return out("decimated_L"); break;
+        case 1: return out("decimated_R"); break;
+    }
+    
+    return out("decimated_L");
+}
+
+pdsp::Patchable& pdsp::BitNoise::ch_noise( size_t index ){
+    
+    wrapChannelIndex( index );
+    
+    switch( index ){
+        case 0: return out("noise_L"); break;
+        case 1: return out("noise_R"); break;
+    }
+    
+    return out("noise_L");
+}
+
+
+// -------------- backward compatibility ----------------------------
+
 pdsp::Patchable& pdsp::BitNoise::out_decimated(){
-    return out("decimated_0");
+    return out("decimated_L");
 }
 
 pdsp::Patchable& pdsp::BitNoise::out_noise(){
-    return out("noise_0");
-}
-
-pdsp::Patchable& pdsp::BitNoise::out_0(){
-    return out("decimated_0");
-}
-
-pdsp::Patchable& pdsp::BitNoise::out_noise_0(){
-    return out("noise_0");
-}
-
-pdsp::Patchable& pdsp::BitNoise::out_1(){
-    return out("decimated_1");
-}
-
-pdsp::Patchable& pdsp::BitNoise::out_noise_1(){
-    return out("noise_1");
+    return out("noise_L");
 }
 
 pdsp::Patchable& pdsp::BitNoise::out_L(){
-    return out("decimated_0");
+    return out("decimated_L");
 }
 
 pdsp::Patchable& pdsp::BitNoise::out_noise_L(){
-    return out("noise_0");
+    return out("noise_L");
 }
 
 pdsp::Patchable& pdsp::BitNoise::out_R(){
-    return out("decimated_1");
+    return out("decimated_R");
 }
 
 pdsp::Patchable& pdsp::BitNoise::out_noise_R(){
-    return out("noise_1");
+    return out("noise_R");
+}
+
+pdsp::Patchable& pdsp::BitNoise::out_0(){
+    return out("decimated_L");
+}
+
+pdsp::Patchable& pdsp::BitNoise::out_noise_0(){
+    return out("noise_L");
+}
+
+pdsp::Patchable& pdsp::BitNoise::out_1(){
+    return out("decimated_R");
+}
+
+pdsp::Patchable& pdsp::BitNoise::out_noise_1(){
+    return out("noise_R");
 }

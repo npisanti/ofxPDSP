@@ -56,22 +56,31 @@ public:
     Patchable& out_signal();
 
     /*!
-    @brief sets the number of different inputs this module can process. Be sure to set the channels before doing any patching. You can access channels with in/out methods, using a string with their number as input, for example in("1") or out("4"), or by using ini(int ch) or outi(int ch) methods.
+    @brief Allocate a number of channels for processing different inputs. This is automatically called if you query for a channel outside the allocated range. You can access different channels with the ch() method.
     @param[in] size number of channels
     */        
-    void channels( int size );    
+    void channels( size_t size );    
 
     /*!
-    @brief To use the selected channel as input/output for the operation.
-    @param[in] ch channel index
+    @brief Uses the selected channel as input/output for the patching operation.
+    @param[in] index channel index
     */  
-    Patchable& operator[]( const int & ch );
+    Patchable& ch( size_t index );
     
     
     /*!
-    @brief returns the actual pitch value.This method is thread-safe.
+    @brief returns the actual pitindex value.This method is thread-safe.
     */  
     float meter_pitch() const;
+
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
+    [[deprecated("operator[] deprecated, use the ch( int index ) method instead")]]    
+    Patchable& operator[]( size_t index );
+/*!
+    @endcond HIDDEN_SYMBOLS
+*/    
 
 private:
     

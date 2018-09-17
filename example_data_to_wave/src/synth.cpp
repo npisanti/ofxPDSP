@@ -14,11 +14,8 @@ void PolySynth::setup(int numVoices){
     // we filter the frequency below 20 hz (not audible) just to remove DC offsets
     20.0f >> leakDC.in_freq();
     
-    leakDC >> chorus.in_L();
-	leakDC >> chorus.in_R();
-    
-    chorus.out_L() >> gain[0];
-    chorus.out_R() >> gain[1];
+    leakDC >> chorus.ch(0) >> gain.ch(0);
+	leakDC >> chorus.ch(1) >> gain.ch(1);
 
     // pdsp::Switch EXAMPLE ---------------------------------------------------
     lfo_switch.resize(5);  // resize input channels
@@ -77,12 +74,11 @@ void PolySynth::Voice::setup( PolySynth & m, int v ){
     
     // MODULATIONS AND CONTROL
     voiceTrigger >> envelope >> amp.in_mod();
-                    envelope >> m.env_filter_amt[v] >> filter.in_pitch();
-                                   m.lfo_filter_amt >> filter.in_pitch();
-                                      m.cutoff_ctrl >> filter.in_pitch();
-                                        m.reso_ctrl >> filter.in_reso();
-                                 m.filter_mode_ctrl >> filter.in_mode();
-
+                    envelope >> m.env_filter_amt.ch(v) >> filter.in_pitch();
+                                      m.lfo_filter_amt >> filter.in_pitch();
+                                         m.cutoff_ctrl >> filter.in_pitch();
+                                           m.reso_ctrl >> filter.in_reso();
+                                    m.filter_mode_ctrl >> filter.in_mode();
 
         m.env_attack_ctrl  >> envelope.in_attack();
         m.env_decay_ctrl   >> envelope.in_decay();
@@ -99,10 +95,8 @@ float PolySynth::Voice::meter_pitch() const{
     return oscillator.meter_pitch();
 }
 
-pdsp::Patchable& PolySynth::out_L(){
-    return gain[0];
+pdsp::Patchable& PolySynth::ch( int index ){
+    index = index%2;
+    return gain.ch( index );
 }
 
-pdsp::Patchable& PolySynth::out_R(){
-    return gain[1];
-}

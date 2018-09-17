@@ -20,7 +20,7 @@
 
 namespace pdsp{
 /*!
-@brief Feed-forward stereo compressor with peak-based or RMS detection and optional lookahead and stereo linking.
+@brief Stereo Feed-forward compressor with peak-based or RMS detection and optional lookahead and stereo linking.
 
 Feed-forward stereo compressor with peak or rms detection (defaults to peak), settable attack, release, threshold, ratio and knee. Optional lookahead. There is also a method for link the signal detection of the stereo channels, by default they are linked. If you set the ratio to a value greater than 40 the compressor will act as a limiter.
 */       
@@ -67,14 +67,10 @@ public:
     
 
     /*!
-    @brief Sets "0" as selected input and returns this module ready to be patched. This is the default input. This is the left input channel.
-    */      
-    Patchable& in_0();
-
-    /*!
-    @brief Sets "0" as selected input and returns this module ready to be patched. This is the right input channel.
-    */     
-    Patchable& in_1();
+    @brief Uses the selected channel as input/output for the patching operation. 0 is for the left channel (default input/output) and 1 is for the right channel. Index values outside of range are remapped to 0 or 1.
+    @param[in] index channel index
+    */  
+    Patchable& ch( size_t index );
     
     /*!
     @brief Sets "attack" as selected input and returns this module ready to be patched. This input is the attack time of the compressor in milliseconds. Init default value is 10 ms.
@@ -100,29 +96,54 @@ public:
     @brief Sets "knee" as selected input and returns this module ready to be patched. This is the knee of the compressor. Init default value is 0dB.
     */  
     Patchable& in_knee();
-    
-    /*!
-    @brief Sets "0" as selected output and returns this module ready to be patched. This is the default output. This is the left output channel.
-    */  
-    Patchable& out_0();
-    
-    /*!
-    @brief Sets "1" as selected output and returns this module ready to be patched. This is the right output channel. If you don't patch this output and you have called stereoLink(false) the compressor behave as a mono compressor with in_0() as input and out_0() as output.
-    */  
-    Patchable& out_1();
   
     /*!
     @brief returns the gain reduction value (updated once each audio buffer). This method is thread-safe.
     */  
     float meter_GR() const ;
     
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
+    [[deprecated("in_0() deprecated for this module, use the ch( 0 ) method instead")]]
+    Patchable& in_0();
+    
+    [[deprecated("in_1() deprecated for this module, use the ch( 1 ) method instead")]]
+    Patchable& in_1();
+    
+    [[deprecated("out_0() deprecated for this module, use the ch( 0 ) method instead")]]
+    Patchable& out_0();
+    
+    [[deprecated("out_1() deprecated for this module, use the ch( 1 ) method instead")]]
+    Patchable& out_1();
+    
+    [[deprecated("in_L() deprecated for this module, use the ch( 0 ) method instead")]]
+    Patchable& in_L();
+    
+    [[deprecated("in_R() deprecated for this module, use the ch( 1 ) method instead")]]
+    Patchable& in_R();
+    
+    [[deprecated("out_L() deprecated for this module, use the ch( 0 ) method instead")]]
+    Patchable& out_L();
+    
+    [[deprecated("out_R() deprecated for this module, use the ch( 1 ) method instead")]]
+    Patchable& out_R();
+/*!
+    @endcond
+*/
 
     
 private:
     void patch(bool stereoLink);
     
-    PatchNode               input1;
-    PatchNode               input2;
+    struct Channel : public Patchable {
+        Channel();
+        PatchNode input;
+        Amp dca;
+    };
+    
+    Channel                 channel0;
+    Channel                 channel1;
     
     FullWavePeakDetector    peak1;
     FullWavePeakDetector    peak2;

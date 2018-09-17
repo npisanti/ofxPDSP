@@ -89,34 +89,36 @@ public:
     @brief Sets "mod_amount" as selected input and returns this module ready to be patched. Mod amount of the reverb internal delays in milliseconds, keep it lower than 0.5f if you don't want to morph your reverb into some kind of seasickness effect. Default value is 0ms (no modulation).
     */       
     Patchable& in_mod_amount();
-    
-
-        
+     
     /*!
-    @brief Sets "0" as selected output and returns this module ready to be patched. This is the default output. This is the left output channel.
+    @brief Uses the selected channel as output for the patching operation. 0 is for the left channel (default output) and 1 is for the right channel. Index values outside of range are remapped to 0 or 1. The input channel remains the in_signal() as pdsp::BasiVerb has mono input.
+    @param[in] index channel index
     */  
-    Patchable& out_0();
+    Patchable& ch( size_t index );
     
-    /*!
-    @brief Sets "1" as selected output and returns this module ready to be patched. This is the right output channel. 
-    */  
-    Patchable& out_1();
-    
-    /*!
-    @brief Sets "0" as selected output and returns this module ready to be patched. This is the default output. This is the left output channel.
-    */  
-    Patchable& out_L();
-    
-    /*!
-    @brief Sets "1" as selected output and returns this module ready to be patched. This is the right output channel. 
-    */  
-    Patchable& out_R();
-
     /*!
     @brief returns a value between 0.0f and 1.0f that rapresent the mod LFO signal. This method is thread-safe.
     */   
     float meter_lfo() const;
+
+/*!
+    @cond HIDDEN_SYMBOLS
+*/    
+    [[deprecated("out_0() deprecated, use ch(0) instead")]]
+    Patchable& out_0();
     
+    [[deprecated("out_1() deprecated, use ch(1) instead")]]
+    Patchable& out_1();
+    
+    [[deprecated("out_L() deprecated, use ch(0) instead")]]
+    Patchable& out_L();
+    
+    [[deprecated("out_R() deprecated, use ch(1) instead")]]
+    Patchable& out_R();
+/*!
+    @endcond
+*/
+
 private:
     void patch();
  

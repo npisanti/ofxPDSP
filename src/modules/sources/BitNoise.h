@@ -17,7 +17,7 @@
 namespace pdsp{
     
     /*!
-    @brief Digital noise generator with lots of control.
+    @brief Stereo Digital noise generator with lots of control.
     */   
     
 class BitNoise : public Patchable {
@@ -46,59 +46,55 @@ public:
     @brief Sets "trig" as selected input and returns this module ready to be patched. Connect a "trig" output to this input to activate retriggering of the noise seed and cycle.
     */  
     Patchable& in_trig();
-
-
     
     /*!
-    @brief Sets "decimated_0" as selected output and returns this module ready to be patched. This is the default output. This is the first channel of decimated and bitcrunched noise output.
-    */     
-    Patchable& out_decimated();
+    @brief Uses the selected channel as output for the patching operation. 0 is for the left channel (default output) and 1 is for the right channel. Index values outside of range are remapped to 0 or 1.
+    @param[in] index channel index
+    */  
+    Patchable& ch( size_t index );
 
     /*!
-    @brief Sets "noise_0" as selected output and returns this module ready to be patched. This is the first channel of noise output before passing in the decimator and bitcruncher. If you don't need those processors use this output for sparing cpu cycles.
-    */     
-    Patchable& out_noise();
+    @brief Uses the selected channel as output for the patching operation. 0 is for the left channel (default output) and 1 is for the right channel. This is the noise output before passing in the decimator and bitcruncher. Index values outside of range are remapped to 0 or 1.
+    @param[in] index channel index
+    */  
+    Patchable& ch_noise( size_t index );
     
-    /*!
-    @brief Sets "decimated_0" as selected output and returns this module ready to be patched. This is the default output. This is the first channel of decimated and bitcrunched noise output.
-    */     
+
+/*!
+    @cond HIDDEN_SYMBOLS
+*/    
+    [[deprecated("out_0() deprecated, use ch(0) instead")]]   
     Patchable& out_0();
     
-    /*!
-    @brief Sets "decimated_1" as selected output and returns this module ready to be patched. This is the second channel of decimated and bitcrunched noise output.
-    */     
+    [[deprecated("out_1() deprecated, use ch(0) instead")]]   
     Patchable& out_1();
-
-    /*!
-    @brief Sets "noise_0" as selected output and returns this module ready to be patched. This is the first channel of noise output before passing in the decimator and bitcruncher. If you don't need those processors use this output for sparing cpu cycles.
-    */     
+    
+    [[deprecated("out_noise() deprecated, use ch_noise(0) instead")]]   
+    Patchable& out_noise();
+    
+    [[deprecated("out_decimated() deprecated, just patch instead, it is the default output")]]
+    Patchable& out_decimated();
+    
+    [[deprecated("out_noise_0() deprecated, use ch_noise(0) instead")]] 
     Patchable& out_noise_0();
     
-    /*!
-    @brief Sets "noise_1" as selected output and returns this module ready to be patched. This is the second channel of noise output before passing in the decimator and bitcruncher. If you don't need those processors use this output for sparing cpu cycles.
-    */     
+    [[deprecated("out_noise_1() deprecated, use ch_noise(1) instead")]]
     Patchable& out_noise_1();
     
-    /*!
-    @brief Sets "decimated_0" as selected output and returns this module ready to be patched. This is the default output. This is the first channel of decimated and bitcrunched noise output.
-    */     
+    [[deprecated("out_L() deprecated, use ch(0) instead")]]   
     Patchable& out_L();
     
-    /*!
-    @brief Sets "decimated_1" as selected output and returns this module ready to be patched. This is the second channel of decimated and bitcrunched noise output.
-    */     
+    [[deprecated("out_R() deprecated, use ch(1) instead")]]
     Patchable& out_R();
 
-    /*!
-    @brief Sets "noise_0" as selected output and returns this module ready to be patched. This is the first channel of noise output before passing in the decimator and bitcruncher. If you don't need those processors use this output for sparing cpu cycles.
-    */     
+    [[deprecated("out_noise_L() deprecated, use ch_noise(0) instead")]]   
     Patchable& out_noise_L();
     
-    /*!
-    @brief Sets "noise_1" as selected output and returns this module ready to be patched. This is the second channel of noise output before passing in the decimator and bitcruncher. If you don't need those processors use this output for sparing cpu cycles.
-    */     
+    [[deprecated("out_noise_R() deprecated, use ch_noise(1) instead")]]
     Patchable& out_noise_R();
-    
+/*!
+    @endcond
+*/
     
     
 private:

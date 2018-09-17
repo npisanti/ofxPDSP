@@ -1,7 +1,7 @@
 
 // LowCut.h
 // ofxPDSP
-// Nicola Pisanti, MIT License, 2016
+// Nicola Pisanti, MIT License, 2016-2018
 
 #ifndef PDSP_MODULE_LOWCUT_H_INCLUDED
 #define PDSP_MODULE_LOWCUT_H_INCLUDED
@@ -13,58 +13,94 @@
 namespace pdsp{
     
     /*!
-    @brief 12 dB Low Cut (aka High-Pass filter). Non-resonant.
+    @brief 12 dB Low Cut (aka High-Pass filter). Non-resonant. Multichannel.
     */  
        
 class LowCut : public Patchable {
+ 
     
+/*!
+    @cond HIDDEN_SYMBOLS
+*/    
+class Submodule : public Patchable{
+public:
+    Submodule();
+private:
+    PatchNode   freq;
+    OnePole lpA;
+    OnePole lpB;
+};
+/*!
+    @endcond
+*/
+
+
 
 public:
     LowCut(){ patch(); };
     LowCut(const LowCut& other){ patch(); };
     LowCut& operator=(const LowCut& other){ return *this; };
-
+    ~LowCut(){ channels(0); };
     
     /*!
-    @brief Sets "0" as selected input and returns this module ready to be patched. This is the default input. This is the left input channel.
+    @brief Sets "signal" as selected input and returns this module ready to be patched. This is the default input. This is the first input channel.
     */      
-    Patchable& in_0();
+    Patchable& in_signal();
 
     /*!
-    @brief Sets "1" as selected input and returns this module ready to be patched. This is the right input channel.
-    */     
-    Patchable& in_1();
+    @brief Sets "signal" as selected output and returns this module ready to be patched. This is the default output. This is the first output channel.
+    */  
+    Patchable& out_signal();
 
     /*!
     @brief Sets "freq" as selected input and returns this module ready to be patched. This is the frequency at which the EQ operates.
     */      
     Patchable& in_freq();
-    
+
     /*!
-    @brief Sets "0" as selected output and returns this module ready to be patched. This is the default output. This is the left output channel.
+    @brief Allocate a number of channels for processing different inputs. This is automatically called if you query for a channel outside the allocated range. You can access different channels with the ch() method.
+    @param[in] size number of channels
+    */        
+    void channels( size_t size );    
+
+    /*!
+    @brief Uses the selected channel as input/output for the patching operation.
+    @param[in] index channel index
     */  
+    Patchable& ch( size_t index );
+        
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
+    [[deprecated("operator[] deprecated, use the ch( int index ) method instead")]]    
+    Patchable& operator[]( size_t index );
+    
+    [[deprecated("in_0() deprecated, use the ch( int index ) method instead")]]
+    Patchable& in_0();
+    
+    [[deprecated("in_1() deprecated, use the ch( int index ) method instead")]]
+    Patchable& in_1();
+    
+    [[deprecated("out_0() deprecated, use the ch( int index ) method instead")]]
     Patchable& out_0();
     
-    /*!
-    @brief Sets "1" as selected output and returns this module ready to be patched. This is the right output channel. If you don't patch this output the effect will behave as a mono EQ.
-    */  
+    [[deprecated("out_1() deprecated, use the ch( int index ) method instead")]]
     Patchable& out_1();
-            
+/*!
+    @endcond
+*/
+
+
             
 private:
     void patch ();
     
     PatchNode   freq;
 
-    PatchNode   out0;
-    PatchNode   out1;
-    
-    OnePole hp0a;
-    OnePole hp0b;
-    OnePole hp1a;
-    OnePole hp1b;
+    std::vector<Submodule*> submodules;
     
 };
+
 
 } // pdsp namespace end
 

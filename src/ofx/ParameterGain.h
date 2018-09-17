@@ -154,19 +154,19 @@ public:
     @brief gets the value
     */       
     float get() const;
-
     
     /*!
-    @brief sets the number of different inputs this module can process. Be sure to set the channels before doing any patching. You can access channels with in/out methods, using a string with their number as input, for example in("1") or out("4"), or by using ini(int ch) or outi(int ch) methods.
+    @brief Allocate a number of channels for processing different inputs. This is automatically called if you query for a channel outside the allocated range. You can access different channels with the ch() method.
     @param[in] size number of channels
     */        
-    void channels( int size );    
+    void channels( size_t size );    
 
     /*!
-    @brief To use the selected channel as input/output for the operation.
-    @param[in] ch channel index
+    @brief Uses the selected channel as input/output for the patching operation.
+    @param[in] index channel index
     */  
-    Patchable& operator[]( const int & ch );
+    Patchable& ch( size_t index );
+    
 
     /*!
     @brief returns the actual output value. Thread-safe.
@@ -175,31 +175,9 @@ public:
     float meter_output( int ch=0 ) const;     
 
     /*!
-    @brief returns the actual output of the channel 0. Thread-safe.
-    */ 
-    float meter_0() const;     
-
-    /*!
-    @brief returns the actual output of the channel 1. Thread-safe.
-    */     
-    float meter_1() const;     
-
-    /*!
-    @brief returns the actual output of the channel 0. Thread-safe.
-    */ 
-    float meter_L() const;     
-
-    /*!
-    @brief returns the actual output of the channel 1. Thread-safe.
-    */     
-    float meter_R() const;     
-
-    /*!
     @brief returns the actual control value. Thread-safe.
     */ 
     float meter_mod() const;     
-    
-
     
     /*!
     @brief Sets "signal" as selected input and returns this Unit ready to be patched. This is the default input. This input is the signal to attenuate.
@@ -211,46 +189,53 @@ public:
     */ 
     pdsp::Patchable& out_signal();
     
-    /*!
-    @brief Sets "0" as selected input and returns this module ready to be patched. This is the default input. If channel is less than 2, ets channels() to 2 and activate "0" and "1" outputs.
-    */      
+    
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
+    [[deprecated("in_0() deprecated for this module, use the ch( int index ) method instead")]]
     Patchable& in_0();
-
-    /*!
-    @brief Sets "1" as selected input and returns this module ready to be patched. If channel is less than 2, ets channels() to 2 and activate "0" and "1" outputs.
-    */     
+    
+    [[deprecated("in_1() deprecated for this module, use the ch( int index ) method instead")]]
     Patchable& in_1();
     
-    /*!
-    @brief Sets "0" as selected input and returns this module ready to be patched. This is the default input. If channel is less than 2, ets channels() to 2 and activate "0" and "1" outputs.
-    */      
-    Patchable& in_L();
-
-    /*!
-    @brief Sets "1" as selected input and returns this module ready to be patched. If channel is less than 2, ets channels() to 2 and activate "0" and "1" outputs.
-    */     
-    Patchable& in_R();
-    
-    /*!
-    @brief Sets "0" as selected output and returns this module ready to be patched. This is the default output. If channel is less than 2, ets channels() to 2 and activate "0" and "1" outputs.
-    */  
+    [[deprecated("out_0() deprecated for this module, use the ch( int index ) method instead")]]
     Patchable& out_0();
     
-    /*!
-    @brief Sets "1" as selected output and returns this module ready to be patched. If channel is less than 2, ets channels() to 2 and activate "0" and "1" outputs.
-    */  
+    [[deprecated("out_1() deprecated for this module, use the ch( int index ) method instead")]]
     Patchable& out_1();
-            
-    /*!
-    @brief Sets "0" as selected output and returns this module ready to be patched. If channel is less than 2, ets channels() to 2 and activate "0" and "1" outputs.
-    */  
+    
+    [[deprecated("in_L() deprecated for this module, use the ch( int index ) method instead")]]
+    Patchable& in_L();
+    
+    [[deprecated("in_R() deprecated for this module, use the ch( int index ) method instead")]]
+    Patchable& in_R();
+    
+    [[deprecated("out_L() deprecated for this module, use the ch( int index ) method instead")]]
     Patchable& out_L();
     
-    /*!
-    @brief Sets "1" as selected output and returns this module ready to be patched. If channel is less than 2, ets channels() to 2 and activate "0" and "1" outputs.
-    */  
+    [[deprecated("out_R() deprecated for this module, use the ch( int index ) method instead")]]
     Patchable& out_R();
 
+    [[deprecated("meter_0() deprecated for this module, use meter_output(0) instead")]]
+    float meter_0() const;     
+
+    [[deprecated("meter_1() deprecated for this module, use meter_output(1) instead")]]
+    float meter_1() const;     
+
+    [[deprecated("meter_L() deprecated for this module, use meter_output(0) instead")]]
+    float meter_L() const;     
+
+    [[deprecated("meter_R() deprecated for this module, use meter_output(1) instead")]]
+    float meter_R() const;   
+
+    [[deprecated("operator[] deprecated, use the ch( int index ) method instead")]]    
+    Patchable& operator[]( size_t index );
+
+/*!
+    @endcond
+*/
+     
 private:
 
     void patch();

@@ -34,7 +34,7 @@ public:
     std::vector<float>   stepbars;    
     Automaton1D     ca;
 
-    ofParameterGroup ui;
+    ofParameterGroup parameters;
 
 private:
 

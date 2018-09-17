@@ -5,15 +5,17 @@ pdsp::DimensionChorus::DimensionChorus() { patch(); }
 pdsp::DimensionChorus::DimensionChorus(const DimensionChorus& other){ patch(); }
 pdsp::DimensionChorus& pdsp::DimensionChorus::operator=(const DimensionChorus& other){ return *this; }
 
-//pdsp::DimensionChorus::DimensionChorus(DimensionChorus&& other){ patch(); }
-//pdsp::DimensionChorus::DimensionChorus& operator=( DimensionChorus&& other){ return *this; }
+pdsp::DimensionChorus::Channel::Channel(){
+    addModuleInput( "signal", input );
+    addModuleOutput( "signal", output );
+}
 
 void pdsp::DimensionChorus::patch(){
     
-    addModuleInput( "0",  input1 );
-    addModuleInput( "1",  input2 );    
-    addModuleOutput("0", output1);
-    addModuleOutput("1", output2);
+    addModuleInput( "L",  channel0.input );
+    addModuleInput( "R",  channel1.input );    
+    addModuleOutput("L", channel0.output);
+    addModuleOutput("R", channel1.output);
     
     addModuleInput("speed", speed);
     addModuleInput("depth", depth);
@@ -27,13 +29,13 @@ void pdsp::DimensionChorus::patch(){
     //delay.enableBoundaries(1.0f, 100.0f);
 
 
-                       input1 >>           output1;
-                       input1 >> delay1 >> output1;
-    input2 * -1.0f >> filter2.out_hpf() >> output1;
+                       channel0.input >>           channel0.output;
+                       channel0.input >> delay1 >> channel0.output;
+    channel1.input * -1.0f >> filter2.out_hpf() >> channel0.output;
     
-                       input2 >>           output2;
-                       input2 >> delay2 >> output2;
-    input1 * -1.0f >> filter1.out_hpf() >> output2;
+                       channel1.input >>           channel1.output;
+                       channel1.input >> delay2 >> channel1.output;
+    channel0.input * -1.0f >> filter1.out_hpf() >> channel1.output;
                     
         
     speed >> phasor.in_freq() >> LFO >> mod1  >> delay1.in_time();
@@ -48,20 +50,15 @@ void pdsp::DimensionChorus::patch(){
     filter2.set(500.0f); // set default cutoff                              
 }
 
-pdsp::Patchable& pdsp::DimensionChorus::in_0(){
-    return in("0");
-}
-
-pdsp::Patchable& pdsp::DimensionChorus::in_1(){
-    return in("1");
-}
-
-pdsp::Patchable& pdsp::DimensionChorus::in_L(){
-    return in("0");
-}
-
-pdsp::Patchable& pdsp::DimensionChorus::in_R(){
-    return in("1");
+pdsp::Patchable& pdsp::DimensionChorus::ch( size_t index ){
+    wrapChannelIndex( index, 2, "pdsp::DimensionChorus" );
+    
+    switch( index ){
+        case 0: return channel0; break;
+        case 1: return channel1; break;
+    }
+    
+    return channel0;
 }
 
 pdsp::Patchable& pdsp::DimensionChorus::in_speed(){
@@ -76,23 +73,41 @@ pdsp::Patchable& pdsp::DimensionChorus::in_delay(){
     return in("delay");
 }
 
-pdsp::Patchable& pdsp::DimensionChorus::out_0(){
-    return out("0");
-}
-
-pdsp::Patchable& pdsp::DimensionChorus::out_1(){
-    return out("1");
-}
-
-pdsp::Patchable& pdsp::DimensionChorus::out_L(){
-    return out("0");
-}
-
-pdsp::Patchable& pdsp::DimensionChorus::out_R(){
-    return out("1");
-}
-
 float pdsp::DimensionChorus::meter_lfo() const{
     return LFO.meter_output();
 }
 
+
+// ------------------ backward compatibility ------------------------
+
+pdsp::Patchable& pdsp::DimensionChorus::in_L(){
+    return in("L");
+}
+
+pdsp::Patchable& pdsp::DimensionChorus::in_R(){
+    return in("R");
+}
+
+pdsp::Patchable& pdsp::DimensionChorus::out_L(){
+    return out("L");
+}
+
+pdsp::Patchable& pdsp::DimensionChorus::out_R(){
+    return out("R");
+}
+
+pdsp::Patchable& pdsp::DimensionChorus::in_0(){
+    return in("L");
+}
+
+pdsp::Patchable& pdsp::DimensionChorus::in_1(){
+    return in("R");
+}
+
+pdsp::Patchable& pdsp::DimensionChorus::out_0(){
+    return out("L");
+}
+
+pdsp::Patchable& pdsp::DimensionChorus::out_1(){
+    return out("R");
+}

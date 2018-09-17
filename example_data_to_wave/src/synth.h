@@ -41,8 +41,7 @@ public:
     
     pdsp::DataTable  datatable;
 
-    pdsp::Patchable& out_L();
-    pdsp::Patchable& out_R();
+    pdsp::Patchable& ch( int index );
 
     vector<Voice>       voices;
     ofParameterGroup    ui;
