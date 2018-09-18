@@ -31,6 +31,7 @@
 #include "control/SequencerValueOutput.h"
 #include "control/TriggerGeiger.h"
 #include "control/TriggerControl.h"
+#include "control/ValueControl.h"
 
 #include "dynamics/EnvelopeFollower.h"
 #include "dynamics/PositiveValue.h"

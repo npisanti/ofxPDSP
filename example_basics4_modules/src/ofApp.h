@@ -27,7 +27,7 @@ public:
     pdsp::Engine    engine;
     
     SlideSynth          synth;
-    pdsp::Parameter     amp_ctrl;
-    pdsp::Parameter     pitch_ctrl;
+    pdsp::ValueControl  amp_ctrl;
+    pdsp::ValueControl  pitch_ctrl;
 
 };

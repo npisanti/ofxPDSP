@@ -79,10 +79,6 @@ ofParameter<int>& pdsp::ParameterAmp::set( std::string name, int min, int max) {
     return set( name.c_str(), min, max);
 }
 
-void pdsp::ParameterAmp::setv(float value) {
-    this->value.setv(value);
-}
-
 ofParameter<float>& pdsp::ParameterAmp::getOFParameterFloat() {
     return value.getOFParameterFloat();
 }

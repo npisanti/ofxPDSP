@@ -30,10 +30,14 @@ void ofApp::setup(){
 
 
     ampControl.enableSmoothing(50.0f);    
-    ampControl.setv(0.0f); 
+    ampControl.set(0.0f); 
 
-    cloud.ch(0) >> ampControl.ch(0) * dB(12.0f) >> engine.audio_out(0); 
-    cloud.ch(1) >> ampControl.ch(1) * dB(12.0f) >> engine.audio_out(1); 
+    amps.resize(2);
+    ampControl >> amps[0].in_mod();
+    ampControl >> amps[1].in_mod();
+
+    cloud.ch(0) >> amps[0] * dB(12.0f) >> engine.audio_out(0); 
+    cloud.ch(1) >> amps[1] * dB(12.0f) >> engine.audio_out(1); 
     
     cout<<"finished patching\n";
     
@@ -120,7 +124,7 @@ void ofApp::controlOn(int x, int y){
     ofMap(y, uiY, uiMaxY, 0.25f, 0.0f) >> jitY;
     
     if(x > uiX && x<uiMaxX && y>uiY && y<uiMaxY){
-        ampControl.setv(1.0f);
+        ampControl.set(1.0f);
         drawGrains = true;
         controlX = x;
         controlY = y;
@@ -137,14 +141,14 @@ void ofApp::mousePressed(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-    ampControl.setv(0.0f);
+    ampControl.set(0.0f);
     drawGrains = false;
 }
 
 //--------------------------------------------------------------        
 void ofApp::loadRoutine() {
     
-    ampControl.setv( 0.0f );  
+    ampControl.set( 0.0f );  
     drawGrains = false;  
     
     //Open the Open File Dialog

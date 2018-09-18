@@ -7,7 +7,7 @@
 #define OFXPDSP_COMPUTERKEYBOARD_H_INCLUDED
 
 #include "../messages/header.h"
-#include "Parameter.h"
+#include "../DSP/control/ValueControl.h"
 #include "../DSP/control/TriggerControl.h"
 #include "helper/MidiKeysBuffers.h"
 /*!
@@ -76,7 +76,7 @@ public:
         @brief returns the pitch output of the given voice
         @param[in] voice voice number. It won't be clamped, so use a valid voice number to avoid segfaults.
         */
-        pdsp::Parameter &  out_pitch( int voice );
+        pdsp::ValueControl &  out_pitch( int voice );
 
 /*!
     @cond HIDDEN_SYMBOLS
@@ -89,7 +89,7 @@ public:
         /*!
         @brief vector for the pitch outputs
         */
-        vector<pdsp::Parameter>        outs_pitch;
+        vector<pdsp::ValueControl>   outs_pitch;
 /*!
     @endcond
 */ 

@@ -1,14 +1,14 @@
 
 // Parameter.h
 // ofxPDSP
-// Nicola Pisanti, MIT License, 2016
+// Nicola Pisanti, MIT License, 2016-2018
 
-#ifndef OFXPDSP_PDSPVALUE_H_INCLUDED
-#define OFXPDSP_PDSPVALUE_H_INCLUDED
+#ifndef OFXPDSP_PDSPPARAMETER_H_INCLUDED
+#define OFXPDSP_PDSPPARAMETER_H_INCLUDED
 
 #include "../DSP/pdspCore.h"
 #include "../DSP/helpers/UsesSlew.h"
-#include "../DSP/control/TriggerControl.h"
+#include "../DSP/control/ValueControl.h"
 
 #include "ofMain.h"
 
@@ -17,13 +17,15 @@
 /*!
 @brief Utility class control the audio dsp parameter and bind them to one or more internal ofParameter
 
-pdsp::Parameter contains some ofParameter and an internal atomic float value, that is read and processed in a thread-safe manner. When one of the ofParameters is changed also the internal value is changed. The setv() methods sets only the internal value, for setting parameter faster when you don't need the ofParameter features. The output of this class can be patched to the audio DSP and can be optionally smoothed out.
+pdsp::Parameter contains some ofParameter and a pdsp::ValueControl, that is read and processed in a thread-safe manner. When one of the ofParameters is changed the pdsp::ValueControl is set. The output of this class can be patched to the audio DSP and can be optionally smoothed out. 
 
 */
 
 namespace pdsp{
 
-class Parameter : public pdsp::Unit, public pdsp::UsesSlew {
+class Parameter : public pdsp::Patchable {
+    friend class ParameterAmp;  // those friendships can be removed
+    friend class ParameterGain; // when the setv method is removed from API
     
 public:
     Parameter();
@@ -120,16 +122,6 @@ public:
     */    
     ofParameter<bool>& set( const char * name, bool value, float min=0.0f, float max=1.0f  );
 
-
-    /*!
-    @brief sets the value without updating the ofParameters
-    @param[in] value new value
-    
-    This set method don't update the ofParameter, for faster computation when you're not using this class for UI
-    */   
-    void setv(float value);
-
-
     /*!
     @brief returns the ofParameter ready to be added to the UI
     */  
@@ -145,7 +137,6 @@ public:
     */  
     ofParameter<bool>& getOFParameterBool();
 
-
     /*!
     @brief enables the smoothing of the setted values
     @param[in] timeMs how many milliseconds will take to reach the setted value
@@ -158,29 +149,38 @@ public:
     void disableSmoothing();
 
     /*!
+    @brief sets the value and updates the ofParameters, this is safe to call on the main oF thread but not from other threads.
+    @param[in] value new value
+    
+    */   
+    void set( float value );
+
+    /*!
     @brief gets the value
     */       
-    float get() const;
+    float get() const { return valueControl.get(); }
 
     /*!
     @brief returns the actual output value. Thread-safe.
     */ 
-    float meter_output() const;     
+    float meter_output() const{ return valueControl.meter_output(); }
+
+
+    ofParameter<float>& set(const char * name, double value, double min, double max);
+    ofParameter<float>& set(const char * name, double min, double max);
+    ofParameter<float>& set( std::string name, double value, double min, double max);
+    ofParameter<float>& set( std::string name, double min, double max);
+
+
+    [[deprecated("setv(float value) method deprecated, use the set(float value) method that also updates the ofParameters or use the pdsp::ValueControl class with its set() method if you don't need ofParameters")]]  
+    void setv(float value){ valueControl.set(value); }
+
 
 private:
 
     ofParameter<float>  parameter;
     ofParameter<int>    parameter_i;
     ofParameter<bool>   parameter_b;
-    
-    pdsp::OutputNode output;
-    
-    void prepareUnit( int expectedBufferSize, double sampleRate ) override;
-    void releaseResources () override ;
-    void process (int bufferSize) noexcept override;
-
-    atomic<float> lastValue;
-    atomic<float> value;
     
     void onSet(float &newValue);
     void onSetI(int   &newValue);
@@ -189,8 +189,18 @@ private:
     float boolmin;
     float boolmax;
     
+    ValueControl valueControl;
+    
+    int mode;
+    std::atomic<bool> bCanUpdate;
+    
+    static const int modeUnsetted = 0;
+    static const int modeFloat = 1;
+    static const int modeInt = 2;
+    static const int modeCombined = 3;
+    static const int modeBool = 4;
 };
 
 }
 
-#endif //OFXPDSP_PDSPVALUE_H_INCLUDED
+#endif //OFXPDSP_PDSPPARAMETER_H_INCLUDED

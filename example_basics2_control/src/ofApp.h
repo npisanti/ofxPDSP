@@ -29,6 +29,6 @@ public:
     pdsp::Amp               amp;
     pdsp::ADSR              env;
     pdsp::TriggerControl    gate_ctrl;
-    pdsp::Parameter         pitch_ctrl;
+    pdsp::ValueControl      pitch_ctrl;
     
 };

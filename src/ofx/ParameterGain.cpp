@@ -80,10 +80,6 @@ ofParameter<int>& pdsp::ParameterGain::set( std::string name, int min, int max) 
     return set( name.c_str(), min, max);
 }
 
-void pdsp::ParameterGain::setv(float value) {
-    this->value.setv(value);
-}
-
 ofParameter<float>& pdsp::ParameterGain::getOFParameterFloat() {
     return value.getOFParameterFloat();
 }

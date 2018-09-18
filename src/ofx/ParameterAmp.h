@@ -117,12 +117,11 @@ public:
     ofParameter<bool>& set( const char * name, bool value, float min=0.0f, float max=1.0f  );
 
     /*!
-    @brief sets the value without updating the ofParameters
+    @brief sets the value and updates the ofParameters, this is safe to call on the main oF thread but not from other threads.
     @param[in] value new value
     
-    This set method don't update the ofParameter, for faster computation when you're not using this class for UI
     */   
-    void setv(float value);
+    void set(float value) { this->value.set( value ); }
 
 
     /*!
@@ -188,6 +187,10 @@ public:
 /*!
     @cond HIDDEN_SYMBOLS
 */
+    [[deprecated("setv(float value) method deprecated, use the set(float value) method that also updates the ofParameters or use the pdsp::ValueControl class with its set() method if you don't need ofParameters")]]  
+    void setv(float value){ this->value.valueControl.set(value); }
+
+
     [[deprecated("operator[] deprecated, use the ch( int index ) method instead")]]    
     Patchable& operator[]( size_t index );
 /*!

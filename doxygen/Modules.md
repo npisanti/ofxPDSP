@@ -1,5 +1,5 @@
 
-This is an overview of a selection of the available modules. There are many classes in pdsp, but many are just for very advanced users as they are used to build higher level classes. This is a selection of the most higher level pdsp classes, probably you will never need more than this. Module tagged with `[multichannel]` let to process more inputs signals with the same settings by using the `ch(int index)` method. Module tagged with `[stereo]` let you access just two channels with `ch(0)` and `ch(1)`.
+This is an overview of a selection of the available modules. There are many classes in pdsp, but many are just for very advanced users as they are used to build higher level classes. This is a selection of the most higher level pdsp classes, probably you will never need more than this. Module tagged with `[multichannel]` let to access more than one channel by selecting channels with the `ch(size_t index)` method. Module tagged with `[stereo]` let you access just two channels with `ch(0)` and `ch(1)`.
 
 ## Oscillators / Noise
 - pdsp::VAOscillator : band limited oscillator with saw, pulse, triangle and sine outputs
@@ -67,9 +67,12 @@ This is an overview of a selection of the available modules. There are many clas
 - pdsp::Sequence : a fixed or generative sequence to send values to one or more outputs
 - pdsp::Behavior : contains standard behaviors for Sequence ending, you mostly use pdsp::Behavior::Loop or pdsp::Behavior::OneShot
 
-## Thread-Safe Control / ofParameter compatible
-- pdsp::Parameter : holds a value to control the modules (with optional smoothing), has ofParameter integration for GUIs
+## Thread-Safe Control
+- pdsp::ValueControl : control value with smoothing
 - pdsp::TriggerControl : send triggers
+
+## ofParameter compatible (also thread-safe when set() from the oF main thread)
+- pdsp::Parameter : holds a value to control the modules, has ofParameter inside for integration with GUIs
 - pdsp::ParameterAmp : a combination of pdsp::Amp and pdsp::Parameter for easy mod amount control. `[multichannel]`
 - pdsp::ParameterGain : a combination of pdsp::Amp and pdsp::Parameter with dB conversion for easy gain control. `[multichannel]`
 

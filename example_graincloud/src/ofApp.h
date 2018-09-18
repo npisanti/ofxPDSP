@@ -33,12 +33,13 @@ class ofApp : public ofBaseApp{
         int                         grainVoices;
         pdsp::SampleBuffer          sampleData;
         pdsp::GrainCloud            cloud;
-      
-        pdsp::ParameterAmp      ampControl;
+
+        std::vector<pdsp::Amp>  amps;      
+        pdsp::ValueControl      ampControl;
 
         pdsp::PatchNode         posX;
         pdsp::PatchNode         jitY;
-        
+
         
         bool    drawGrains;
   

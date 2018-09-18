@@ -284,7 +284,7 @@ void ComputerKeyboard::processPolyNoteOn( int pitch ) noexcept{
         outs_trig[noteIndex].trigger( dynamic );
 
         if(!retrigger){ //with retrigger the pitch is always the same
-                outs_pitch[noteIndex].setv(static_cast<float>(pitch));                
+                outs_pitch[noteIndex].set(static_cast<float>(pitch));                
         }
 
         //update the note state
@@ -391,7 +391,7 @@ void ComputerKeyboard::processMonoNoteOn( int pitch ) noexcept{
         }
 
         if(monoNoteIndex!=lastMonoNoteIndex){ //if mono note index is changed
-                outs_pitch[0].setv(static_cast<float>(notes[monoNoteIndex].note));
+                outs_pitch[0].set(static_cast<float>(notes[monoNoteIndex].note));
         } 
         
         if(monoNoteIndex!=lastMonoNoteIndex || activeNotes==0){
@@ -432,7 +432,7 @@ void ComputerKeyboard::processMonoNoteOff( int pitch ) noexcept {
                             
                                 //we released the active mono note index, but we can switch to another note
                                 monoNoteIndex = getHighestPriorityMono();
-                                outs_pitch[0].setv( static_cast<float>(notes[monoNoteIndex].note) );
+                                outs_pitch[0].set( static_cast<float>(notes[monoNoteIndex].note) );
                                 outs_trig[0].trigger(dynamic);
 
                         }
@@ -488,7 +488,7 @@ pdsp::TriggerControl & ComputerKeyboard::out_trig( int voice ) {
     return outs_trig[voice];
 }
 
-pdsp::Parameter &  ComputerKeyboard::out_pitch( int voice ) {
+pdsp::ValueControl &  ComputerKeyboard::out_pitch( int voice ) {
     return outs_pitch[voice]; 
 }
 

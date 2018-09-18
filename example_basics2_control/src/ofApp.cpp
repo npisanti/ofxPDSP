@@ -29,9 +29,9 @@ void ofApp::setup(){
     0.5f    >> env.in_sustain();
     500.0f  >> env.in_release();
 
-    pitch_ctrl.setv(72.0f); // we control the value of an pdsp::Parameter directly with the setv function
+    pitch_ctrl.set(72.0f); // we control the value of an pdsp::ValueControl directly with the set function
     
-    // you can smooth out an pdsp::Parameter changes, decomment this for less "grainy" pitch changes
+    // you can smooth out an pdsp::ValueControl changes, decomment this for less "grainy" pitch changes
     pitch_ctrl.enableSmoothing(50.0f); // 50ms smoothing
 
 
@@ -56,13 +56,13 @@ void ofApp::draw(){
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
     float pitch = ofMap(x, 0, ofGetWidth(), 36.0f, 72.0f);
-    pitch_ctrl.setv(pitch);
+    pitch_ctrl.set(pitch);
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
     float pitch = ofMap(x, 0, ofGetWidth(), 36.0f, 72.0f);
-    pitch_ctrl.setv(pitch);
+    pitch_ctrl.set(pitch);
     
     // y value controls the trigger intensity
     float trig = ofMap(y, 0, ofGetHeight(), 1.0f, 0.000001f); 

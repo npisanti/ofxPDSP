@@ -93,11 +93,8 @@ void ofApp::mouseReleased(int x, int y, int button){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     if(key=='t'){
-        // when you use setv the ofParameter value is not updated
-        // this is for sparing cpu time when you are not using ofxPDSPValue for GUIs
-        // also: even if we are using an int UI for osc2 
-        // the setv method can set it to float values
-        osc2_pitch_ctrl.setv( ofRandom(48.0f, 96.0f) );
+        // sets the parameter to a random value 
+        osc2_pitch_ctrl.set( ofRandom(48.0f, 96.0f) );
     }
 }
 

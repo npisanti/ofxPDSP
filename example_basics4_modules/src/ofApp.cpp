@@ -15,9 +15,9 @@ void ofApp::setup(){
                   synth * dB(-12.0f) >> engine.audio_out(1);
 
 
-    pitch_ctrl.setv(60.0f);
+    pitch_ctrl.set(60.0f);
     pitch_ctrl.enableSmoothing(50.0f); // 50ms smoothing
-    amp_ctrl.setv(0.0f);
+    amp_ctrl.set(0.0f);
     amp_ctrl.enableSmoothing(50.0f); // 50ms smoothing
 
 
@@ -42,17 +42,17 @@ void ofApp::draw(){
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
     float pitch = ofMap(x, 0, ofGetWidth(), 36.0f, 72.0f);
-    pitch_ctrl.setv(pitch);
+    pitch_ctrl.set(pitch);
     float amp = ofMap(y, 0, ofGetHeight(), 1.0f, 0.0f);
-    amp_ctrl.setv(amp);
+    amp_ctrl.set(amp);
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y ){
     float pitch = ofMap(x, 0, ofGetWidth(), 36.0f, 72.0f);
-    pitch_ctrl.setv(pitch);
+    pitch_ctrl.set(pitch);
     float amp = ofMap(y, 0, ofGetHeight(), 1.0f, 0.0f);
-    amp_ctrl.setv(amp);
+    amp_ctrl.set(amp);
 }
 
 //--------------------------------------------------------------

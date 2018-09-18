@@ -17,7 +17,7 @@ void Zap::patch(){
     triggers >> pEnv.set(0.0f, 0.0f,  50.0f) >> pModAmt.set(48.0f) >> osc.in_pitch();
                                                       pitchControl >> osc.in_pitch(); // overriden by ensemble
 
-    pitchControl.setv(36.0f);
+    pitchControl.set(36.0f);
     
 }           
 
