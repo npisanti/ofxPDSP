@@ -134,7 +134,11 @@ public:
     */  
     ofParameter<int>& getOFParameterInt();
 
-
+    /*!
+    @brief returns the ofParameter ready to be added to the UI
+    */  
+    ofParameter<bool>& getOFParameterBool();
+    
     /*!
     @brief enables the smoothing of the setted values
     @param[in] timeMs how many milliseconds will take to reach the setted value

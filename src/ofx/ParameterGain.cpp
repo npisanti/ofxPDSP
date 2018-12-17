@@ -88,6 +88,10 @@ ofParameter<int>& pdsp::ParameterGain::getOFParameterInt() {
     return value.getOFParameterInt();
 }
 
+ofParameter<bool>& pdsp::ParameterGain::getOFParameterBool() {
+    return value.getOFParameterBool();
+}
+
 void pdsp::ParameterGain::enableSmoothing(float timeMs) {
     value.enableSmoothing( timeMs );
 }

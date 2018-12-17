@@ -87,6 +87,10 @@ ofParameter<int>& pdsp::ParameterAmp::getOFParameterInt() {
     return value.getOFParameterInt();
 }
 
+ofParameter<bool>& pdsp::ParameterAmp::getOFParameterBool() {
+    return value.getOFParameterBool();
+}
+
 void pdsp::ParameterAmp::enableSmoothing(float timeMs) {
     value.enableSmoothing( timeMs );
 }
