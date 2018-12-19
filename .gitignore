@@ -28,6 +28,9 @@ Release*/
 # Visual Studio Code
 .vscode/
 *.code-workspace
+GPATH
+GRTAGS
+GTAGS
 
 # IDE-specific ignore patterns (e.g. user-specific files)
 
