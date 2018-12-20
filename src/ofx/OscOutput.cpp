@@ -1,16 +1,20 @@
 
 #include "OscOutput.h"
 
-#define OFXPDSP_OSCOUTPUTCIRCULARBUFFERSIZE 4096
+#define OFXPDSP_OSCOUTPUTCIRCULARBUFFERSIZE 1024
 
 
-pdsp::osc::Output::ScheduledOscMessage::ScheduledOscMessage(){  };
+pdsp::osc::Output::ScheduledOscMessage::ScheduledOscMessage(){ 
+    ofxOscMessage osc;
+    osc.setAddress( "/unknown" );
+    osc.addFloatArg( 0.0f );
+    this->message = osc;
+    this->scheduledTime = std::chrono::time_point<std::chrono::high_resolution_clock>::min();
+ };
 
 pdsp::osc::Output::ScheduledOscMessage::ScheduledOscMessage(ofxOscMessage message,  chrono::high_resolution_clock::time_point schedule) {
-
     this->message = message;
     this->scheduledTime = schedule;
-                    
 };
 
 pdsp::osc::Output::ScheduledOscMessage::ScheduledOscMessage(const pdsp::osc::Output::ScheduledOscMessage &other){
@@ -169,14 +173,11 @@ void pdsp::osc::Output::process( int bufferSize ) noexcept{
         sort(messagesToSend.begin(), messagesToSend.end(), scheduledSort);
 
         for(ScheduledOscMessage &msg : messagesToSend){
-
-            circularBuffer[writeindex] = msg;
             int write = writeindex+1;
             if( write >= (int)circularBuffer.size() ){ write = 0; };
+            circularBuffer[write] = msg;
             writeindex = write;
-
         }
-        
         
     }//end checking connected
 }
@@ -199,15 +200,18 @@ void pdsp::osc::Output::daemonFunction() noexcept{
     while (runDaemon){
 
         while( send!=writeindex && circularBuffer[send].scheduledTime < chrono::high_resolution_clock::now() ){
-           
-            // SEND MESSAGES HERE
-            sender.sendMessage( circularBuffer[send].message, false );
             
             #ifndef NDEBUG
                 if(verbose) cout << "[pdsp] OSC message: address = "<< circularBuffer[send].message.getAddress() << " | value = "<<(int)circularBuffer[send].message.getArgAsFloat(0)<<"\n";
             #endif
-            
+                       
+            // SEND MESSAGES HERE
+            sender.sendMessage( circularBuffer[send].message, false );
+
             send++;
+            if( send >= int(circularBuffer.size()) ){
+                send = 0;
+            }
         }
 
         std::this_thread::sleep_for(std::chrono::microseconds(500));
@@ -223,6 +227,3 @@ void pdsp::osc::Output::closeDaemon(){
     runDaemon = false;
     daemonThread.detach();
 }
-    
-    
-    
