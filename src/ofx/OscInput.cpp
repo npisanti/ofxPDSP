@@ -10,6 +10,7 @@ pdsp::osc::Input::OscChannel::OscChannel(){
     messageBuffer = nullptr;
     gate_out = nullptr;
     value_out = nullptr;
+    argument = 0;
     
 }
 
@@ -87,14 +88,14 @@ void pdsp::osc::Input::close(){
 
 
 
-pdsp::SequencerGateOutput& pdsp::osc::Input::out_trig( string oscAddress ) {
+pdsp::SequencerGateOutput& pdsp::osc::Input::out_trig( string oscAddress, int argument ) {
     
     for ( OscChannel* & osc : oscChannels ){
-        if( osc->key == oscAddress ) {
+        if( osc->key == oscAddress && osc->argument == argument ) {
             if( osc->gate_out != nullptr ){
                 return *(osc->gate_out);
             }else{
-                cout<<"[pdsp] warning! this osc string was already used as value output, returning dummy gate output\n";
+                cout<<"[pdsp] warning! this osc string and argument was already used as value output, returning dummy gate output\n";
                 pdsp::pdsp_trace();
                 return invalidGate;
             }
@@ -104,6 +105,7 @@ pdsp::SequencerGateOutput& pdsp::osc::Input::out_trig( string oscAddress ) {
     // not found
     OscChannel* osc = new OscChannel();
     osc->key = oscAddress;
+    osc->argument = argument;
     //osc->mode = Gate;
     osc->messageBuffer = new pdsp::MessageBuffer();
     osc->gate_out = new pdsp::SequencerGateOutput();
@@ -111,18 +113,17 @@ pdsp::SequencerGateOutput& pdsp::osc::Input::out_trig( string oscAddress ) {
     oscChannels.push_back(osc);
 
     return *(osc->gate_out);
-
 }
 
 
-pdsp::SequencerValueOutput& pdsp::osc::Input::out_value( string oscAddress ) {
+pdsp::SequencerValueOutput& pdsp::osc::Input::out_value( string oscAddress, int argument ) {
    
     for ( OscChannel* & osc : oscChannels ){
-        if( osc->key == oscAddress ) {
+        if( osc->key == oscAddress  && osc->argument == argument ) {
             if( osc->value_out != nullptr ){
                 return *(osc->value_out);
             }else{
-                cout<<"[pdsp] warning! this osc string was already used as gate output, returning dummy value output\n";
+                cout<<"[pdsp] warning! this osc string and argument was already used as gate output, returning dummy value output\n";
                 pdsp::pdsp_trace();
                 return invalidValue;
             }
@@ -132,6 +133,7 @@ pdsp::SequencerValueOutput& pdsp::osc::Input::out_value( string oscAddress ) {
     // not found
     OscChannel* osc = new OscChannel();
     osc->key = oscAddress;
+    osc->argument = argument;
     //osc->mode = Value;
     osc->messageBuffer = new pdsp::MessageBuffer();
     osc->value_out = new pdsp::SequencerValueOutput();
@@ -229,8 +231,35 @@ void pdsp::osc::Input::processOsc( int bufferSize ) noexcept {
         // adds the messages to the buffers, only the first arg of each osc message is read, as float
         for(_PositionedOscMessage &osc : readVector){
             for (size_t i = 0; i < oscChannels.size(); ++i){
-                if(osc.message.getAddress() == oscChannels[i]->key){
-                    oscChannels[i]->messageBuffer->addMessage( osc.message.getArgAsFloat(0), osc.sample );
+                
+                if(osc.message.getAddress() == oscChannels[i]->key && oscChannels[i]->argument < int(osc.message.getNumArgs()) ){
+                    
+                    switch( osc.message.getArgType(oscChannels[i]->argument) ){
+                        case OFXOSC_TYPE_INT32:
+                            oscChannels[i]->messageBuffer->addMessage( osc.message.getArgAsInt32(oscChannels[i]->argument), osc.sample );
+                        break;
+                        
+                        case OFXOSC_TYPE_FLOAT:
+                            oscChannels[i]->messageBuffer->addMessage( osc.message.getArgAsFloat(oscChannels[i]->argument), osc.sample );
+                        break;
+
+                        case OFXOSC_TYPE_TRUE:
+                            oscChannels[i]->messageBuffer->addMessage( 1.0f, osc.sample );
+                        break;
+                        
+                        case OFXOSC_TYPE_FALSE:
+                            oscChannels[i]->messageBuffer->addMessage( 0.0f, osc.sample );
+                        break;
+                        
+                        case OFXOSC_TYPE_STRING:
+                        {   // try to parse string
+                            float number = ofToFloat(osc.message.getArgAsString(oscChannels[i]->argument));
+                            oscChannels[i]->messageBuffer->addMessage( number, osc.sample );
+                        }
+                        break;
+                        
+                        default: break;
+                    }
                 }
             }
         }
@@ -263,6 +292,3 @@ void pdsp::osc::Input::closeDaemon(){
 void pdsp::osc::Input::daemonFunctionWrapper(pdsp::osc::Input* parent){
     parent->daemonFunction();
 }
-    
-    
-

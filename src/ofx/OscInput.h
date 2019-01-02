@@ -26,7 +26,6 @@ namespace pdsp{ namespace osc {
 class Input : public pdsp::Preparable {
 
 private:
-
     //enum OscChannelMode { Gate, Value };
 
     class OscChannel {
@@ -36,6 +35,7 @@ private:
         void deallocate();
         
         string key;
+        int argument;
         pdsp::MessageBuffer* messageBuffer;
         //OscChannelMode mode;
         pdsp::SequencerGateOutput* gate_out;
@@ -87,14 +87,16 @@ public:
     /*!
     @brief get a trigger output for the given OSC address. Only the first value of those address will be taken, as float value. When you have used an address as trig output you can't use it as value
     @param[in] oscAddress address for OSC input
+    @param[in] argument index of argument from message, 0 if not gived (first argument)
     */       
-    pdsp::SequencerGateOutput& out_trig( string oscAddress );
+    pdsp::SequencerGateOutput& out_trig( string oscAddress, int argument=0 );
 
     /*!
     @brief get a value output for the given OSC address. Only the first value of those address will be taken, as float value. When you have used an address as value output you can't use it as trigger
     @param[in] oscAddress address for OSC input
+    @param[in] argument index of argument from message, 0 if not gived (first argument)
     */    
-    pdsp::SequencerValueOutput& out_value( string oscAddress );
+    pdsp::SequencerValueOutput& out_value( string oscAddress, int argument=0  );
 
 
     /*!
