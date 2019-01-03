@@ -49,9 +49,6 @@ private:
     void releaseResources () override;
     void process (int bufferSize) noexcept override ;
 
-    template<bool smoothed>
-    void process_audio (int bufferSize) noexcept ;
-
     OutputNode output;
 
     InputNode input_trig;
