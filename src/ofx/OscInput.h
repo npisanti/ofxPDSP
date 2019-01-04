@@ -23,6 +23,8 @@
 
 namespace pdsp{ namespace osc {
 
+static const float Ignore = std::numeric_limits<float>::infinity(); 
+
 class Input : public pdsp::Preparable {
 
 private:
@@ -41,6 +43,8 @@ private:
         pdsp::SequencerGateOutput* gate_out;
         pdsp::SequencerValueOutput* value_out;
         
+        bool hasParser;
+        std::function<float(float)> code;
     };
     
     class _PositionedOscMessage {
@@ -82,7 +86,13 @@ public:
     @param[in] verbose true for enabling, false for disabling
     */   
     void setVerbose( bool verbose );
-
+    
+    /*!
+    @brief control the clock of the units and sequencer with an OSC message
+    @param[in] oscAddress address for OSC input
+    @param[in] argument index of argument from message, 0 if not gived (first argument)
+    */       
+    void linkTempo( string oscAddress, int argument=0 );
 
     /*!
     @brief get a trigger output for the given OSC address. Only the first value of those address will be taken, as float value. When you have used an address as trig output you can't use it as value
@@ -100,6 +110,13 @@ public:
 
 
     /*!
+    @brief get a reference to the parser for the selected address and argument. You can assign a lambda function to this value to elaborate the signal.
+    @param[in] oscAddress address for OSC input
+    @param[in] argument index of argument from message, 0 if not gived (first argument)
+    */       
+    std::function<float(float)> & parser( string oscAddress, int argument=0 );
+
+    /*!
     @brief sends 0.0f as message to all the connected trigger and value outputs.
     */   
     void clearAll();
@@ -108,6 +125,8 @@ public:
     @cond HIDDEN_SYMBOLS
 */  
     void processOsc( int bufferSize ) noexcept;
+    bool hasTempoChange(); 
+    double getTempo();
 /*!
     @endcond
 */   
@@ -139,6 +158,7 @@ private:
 
     pdsp::SequencerGateOutput invalidGate;
     pdsp::SequencerValueOutput invalidValue;
+    std::function<float(float)> invalidCode;
 
 
     void                                                startDaemon();
@@ -151,6 +171,11 @@ private:
 
     void pushToReadVector( _PositionedOscMessage & message );
     
+    bool        tempoLinked;
+    std::string tempoAddress;
+    int         tempoArgument;
+    double      tempo;
+    bool        tempoChanged;
 };
 
 }}

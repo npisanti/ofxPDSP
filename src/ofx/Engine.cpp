@@ -326,8 +326,6 @@ void pdsp::Engine::close(){
 void pdsp::Engine::audioOut(ofSoundBuffer &outBuffer) {
     
     int bufferSize =  outBuffer.getNumFrames() ;
-    // score and playhead processing
-    score.process( bufferSize );
 
 #ifndef __ANDROID__
     // midi input processing
@@ -344,15 +342,22 @@ void pdsp::Engine::audioOut(ofSoundBuffer &outBuffer) {
     if(hasOscIn){
         for( pdsp::osc::Input * &in : oscIns){
             in->processOsc( bufferSize );
+            if( in->hasTempoChange() ){
+                sequencer.setTempo( in->getTempo() );
+            }
         } 
     }
-    
+   
+    // score and playhead processing
+    sequencer.process( bufferSize );
+ 
     // external outputs processing
     if(hasExternalOut){
         for( pdsp::ExtSequencer * &out : externalOuts){
             out->process( bufferSize );
         }
     }
+    
     //DSP processing
     processor.processAndCopyInterleaved(outBuffer.getBuffer().data(), outBuffer.getNumChannels(), outBuffer.getNumFrames());    
 }

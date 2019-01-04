@@ -11,7 +11,11 @@ pdsp::osc::Input::OscChannel::OscChannel(){
     gate_out = nullptr;
     value_out = nullptr;
     argument = 0;
+    hasParser = false;
     
+    code = [](float input) noexcept{
+        return input;
+    };
 }
 
 void pdsp::osc::Input::OscChannel::deallocate(){
@@ -41,6 +45,10 @@ pdsp::osc::Input::Input() {
     
     runDaemon = false;
     daemonRefreshRate = 500;
+    
+    tempoLinked = false;
+    tempoAddress = "";
+    tempoArgument = 0;
 }   
 
 
@@ -86,7 +94,11 @@ void pdsp::osc::Input::close(){
     }
 }
 
-
+void pdsp::osc::Input::linkTempo( string oscAddress, int argument ){
+    tempoLinked = true;
+    tempoAddress = oscAddress;
+    tempoArgument = argument;
+}
 
 pdsp::SequencerGateOutput& pdsp::osc::Input::out_trig( string oscAddress, int argument ) {
     
@@ -143,6 +155,19 @@ pdsp::SequencerValueOutput& pdsp::osc::Input::out_value( string oscAddress, int 
     return *(osc->value_out);    
 
 }
+
+std::function<float(float)> & pdsp::osc::Input::parser( string oscAddress, int argument ){
+    for ( OscChannel* & osc : oscChannels ){
+        if( osc->key == oscAddress  && osc->argument == argument ) {
+            osc->hasParser = true; 
+            return osc->code;
+        }
+    }
+    cout<<"[pdsp] warning! this osc string and argument still has to be assigned, use out_trig or out_value before setting the parser, returning invalid parser\n";
+    pdsp::pdsp_trace();
+    return invalidCode;
+}
+
 
 void pdsp::osc::Input::clearAll(){
     sendClearMessages = true;
@@ -230,35 +255,63 @@ void pdsp::osc::Input::processOsc( int bufferSize ) noexcept {
         
         // adds the messages to the buffers, only the first arg of each osc message is read, as float
         for(_PositionedOscMessage &osc : readVector){
-            for (size_t i = 0; i < oscChannels.size(); ++i){
-                
-                if(osc.message.getAddress() == oscChannels[i]->key && oscChannels[i]->argument < int(osc.message.getNumArgs()) ){
+            int ma = osc.message.getNumArgs();
+            for( int a=0; a<ma; ++a ){
+                for (size_t i = 0; i < oscChannels.size(); ++i){
                     
-                    switch( osc.message.getArgType(oscChannels[i]->argument) ){
-                        case OFXOSC_TYPE_INT32:
-                            oscChannels[i]->messageBuffer->addMessage( osc.message.getArgAsInt32(oscChannels[i]->argument), osc.sample );
-                        break;
-                        
-                        case OFXOSC_TYPE_FLOAT:
-                            oscChannels[i]->messageBuffer->addMessage( osc.message.getArgAsFloat(oscChannels[i]->argument), osc.sample );
-                        break;
+                    if(osc.message.getAddress() == oscChannels[i]->key && oscChannels[i]->argument == a ){
+                        float value = 0.0f;
+                        switch( osc.message.getArgType( a ) ){
+                            case OFXOSC_TYPE_INT32:
+                                value = osc.message.getArgAsInt32(oscChannels[i]->argument);
+                            break;
+                            
+                            case OFXOSC_TYPE_FLOAT:
+                                value = osc.message.getArgAsFloat(oscChannels[i]->argument);
+                            break;
 
-                        case OFXOSC_TYPE_TRUE:
-                            oscChannels[i]->messageBuffer->addMessage( 1.0f, osc.sample );
-                        break;
-                        
-                        case OFXOSC_TYPE_FALSE:
-                            oscChannels[i]->messageBuffer->addMessage( 0.0f, osc.sample );
-                        break;
-                        
-                        case OFXOSC_TYPE_STRING:
-                        {   // try to parse string
-                            float number = ofToFloat(osc.message.getArgAsString(oscChannels[i]->argument));
-                            oscChannels[i]->messageBuffer->addMessage( number, osc.sample );
+                            case OFXOSC_TYPE_TRUE:
+                                value = 1.0f;
+                            break;
+                            
+                            case OFXOSC_TYPE_FALSE:
+                                value = 0.0f;
+                            break;
+                            
+                            case OFXOSC_TYPE_STRING:
+                                // try to parse string
+                                value = ofToFloat(osc.message.getArgAsString(oscChannels[i]->argument));
+                            break;
+                            
+                            default: break;
                         }
-                        break;
                         
-                        default: break;
+                        if( oscChannels[i]->hasParser ){
+                            value = oscChannels[i]->code( value );
+                        }
+                        if( value != Ignore ){
+                            oscChannels[i]->messageBuffer->addMessage( value, osc.sample );
+                        }
+                    }
+                }                
+            }
+            
+            if( tempoLinked ){
+                if(osc.message.getAddress() == tempoAddress ){
+                    if(tempoArgument < osc.message.getNumArgs() ){
+                        switch( osc.message.getArgType( tempoArgument ) ){
+                            case OFXOSC_TYPE_INT32:
+                                tempoChanged = true;
+                                tempo = osc.message.getArgAsInt32( tempoArgument );
+                            break;
+                            
+                            case OFXOSC_TYPE_FLOAT:
+                                tempoChanged = true;
+                                tempo = osc.message.getArgAsFloat( tempoArgument );
+                            break;
+                            
+                            default: break;
+                        }
                     }
                 }
             }
@@ -273,6 +326,17 @@ void pdsp::osc::Input::processOsc( int bufferSize ) noexcept {
     
 }
 
+bool pdsp::osc::Input::hasTempoChange(){
+    if( tempoChanged ){
+        tempoChanged = false;
+        return true;
+    }else{
+        return false;
+    }
+}
+double pdsp::osc::Input::getTempo(){
+    return tempo;
+}
 
 void pdsp::osc::Input::startDaemon(){ // OK
     if(verbose) cout<<"[pdsp] starting OSC input daemon\n";

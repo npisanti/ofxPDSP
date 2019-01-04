@@ -25,4 +25,3 @@ void pdsp::OneBarTimeMs::process (int bufferSize) noexcept {
     setControlRateOutput(output, Clockable::getOneBarTimeMs() );
 
 }
-

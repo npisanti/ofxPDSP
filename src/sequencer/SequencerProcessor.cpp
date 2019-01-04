@@ -6,7 +6,8 @@
 pdsp::SequencerProcessor::SequencerProcessor(){
     
     //synchronizeClockable = true;
-    tempo = 120.0;
+    tempo = -120.0;
+    tempoControl = 120.0f;
     playHead = 0.0;
     playHeadEnd = 0.0;
     newPlayHead = 0.0f;
@@ -41,7 +42,13 @@ void pdsp::SequencerProcessor::setMaxBars(double maxBars){
 
 
 void pdsp::SequencerProcessor::process(int const &bufferSize) noexcept{
-   
+    
+    if( tempo != tempoControl.load() ){
+        tempo = tempoControl;
+        barsPerSample = static_cast<double>(tempo)  / ((60.0 * 4.0) * sampleRate )  ;
+        Clockable::setTempo(tempo);      
+    }
+
     if( playing.load() ){
         
         if(newPlayHead >= 0.0f){
@@ -79,19 +86,14 @@ void pdsp::SequencerProcessor::process(int const &bufferSize) noexcept{
 
 void pdsp::SequencerProcessor::prepareToPlay( int expectedBufferSize, double sampleRate ){
     this->sampleRate = sampleRate;
-    setTempo(tempo);
 }
 
 
 void pdsp::SequencerProcessor::releaseResources() {}
 
 
-void pdsp::SequencerProcessor::setTempo( float tempo ){
-    this->tempo = tempo;
-    barsPerSample = static_cast<double>(tempo)  / ((60.0 * 4.0) * sampleRate )  ;
-
-    Clockable::setTempo(tempo);
-
+void pdsp::SequencerProcessor::setTempo( double tempo ){
+    tempoControl.store( tempo );
 }
 
 
@@ -164,4 +166,8 @@ void pdsp::SequencerProcessor::launchMultipleCells(int index, bool quantizeLaunc
 
 void pdsp::SequencerProcessor::setDefaultSteplen( double steplen ){
     pdsp::Sequence::defaultSteplen = steplen;
+}
+
+double pdsp::SequencerProcessor::getTempo() const{
+    return tempo;
 }

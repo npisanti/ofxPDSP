@@ -274,7 +274,7 @@ void pdsp::SequencerSection::playScore(double const &range, double const &offset
         
     double patternMax = scorePlayHead + range - offset;
     
-    while( (scoreIndex < patternToProcess->score.size()) && (patternToProcess->score[scoreIndex].time < patternMax) ){
+    while( ( scoreIndex < int(patternToProcess->score.size()) ) && (patternToProcess->score[scoreIndex].time < patternMax) ){
         
         if( (patternToProcess->score[scoreIndex].time >= scorePlayHead) && (patternToProcess->score[scoreIndex].lane < (int)outputs.size() )   ){ //check if we are inside the outputs boundaries and inside the processed time
             int sample = static_cast<int>( (patternToProcess->score[scoreIndex].time - scorePlayHead + offset) * oneSlashBarsPerSample);

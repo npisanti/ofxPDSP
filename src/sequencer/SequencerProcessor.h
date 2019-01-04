@@ -27,8 +27,12 @@ public:
     @brief sets the global tempo
     @param tempo tempo to set
     */ 
-    void setTempo( float tempo );
+    void setTempo( double tempo );
     
+    /*!
+    @brief returns the global tempo
+    */ 
+    double getTempo() const;
     
 /*!
     @cond HIDDEN_SYMBOLS
@@ -150,6 +154,8 @@ private:
     
     std::atomic<float> playhead_meter;
     int clearToken;
+    
+    std::atomic<double> tempoControl;
     
 };
 

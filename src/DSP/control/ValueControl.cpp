@@ -61,8 +61,6 @@ void pdsp::ValueControl::process (int bufferSize) noexcept {
     }else{
         setControlRateOutput(output, slewLastValue);
     }
-
     
     lastValue = newValue;
 }
-

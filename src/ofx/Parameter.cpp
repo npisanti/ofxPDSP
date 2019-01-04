@@ -43,12 +43,12 @@ pdsp::Parameter::~Parameter(){
 }
 
 ofParameter<float>& pdsp::Parameter::set(const char * name, float value, float min, float max){
-    parameter.set(name, value, min, max);
     if( mode==modeInt ){
         mode = modeCombined;
     }else{
         mode = modeFloat;
     }
+    parameter.set(name, value, min, max);
     return parameter;
 }
 
@@ -63,12 +63,12 @@ ofParameter<float>& pdsp::Parameter::set(const char * name, float min, float max
 }
 
 ofParameter<int>& pdsp::Parameter::set(const char * name, int value, int min, int max){
-    parameter_i.set(name, value, min, max);
     if( mode==modeFloat ){
         mode = modeCombined;
     }else{
         mode = modeInt;
     }
+    parameter_i.set(name, value, min, max);
     return parameter_i;
 }
 
@@ -85,8 +85,8 @@ ofParameter<int>& pdsp::Parameter::set(const char * name, int min, int max){
 ofParameter<bool>& pdsp::Parameter::set(const char * name, bool value, float min, float max ){
     boolmin = min;
     boolmax = max;
-    parameter_b.set( name, value );
     mode = modeBool;
+    parameter_b.set( name, value );
     return parameter_b;
 }
 
