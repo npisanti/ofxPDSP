@@ -91,7 +91,6 @@
 #include "utility/BipolarToUnipolar.h"
 #include "utility/MaxValue.h"
 #include "utility/OneBarTimeMs.h"
-#include "utility/OnTrigger.h"
 #include "utility/FreqToMs.h"
 #include "utility/SamplesDelay.h"
 
