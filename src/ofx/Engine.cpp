@@ -294,7 +294,7 @@ void pdsp::Engine::close(){
         } 
     }
 #endif
-
+process
     if(hasOscIn){
         for( pdsp::osc::Input * &in : oscIns){
             in->close();
@@ -359,7 +359,9 @@ void pdsp::Engine::audioOut(ofSoundBuffer &outBuffer) {
     }
     
     //DSP processing
-    processor.processAndCopyInterleaved(outBuffer.getBuffer().data(), outBuffer.getNumChannels(), outBuffer.getNumFrames());    
+    if(outputChannels > 0){
+        processor.processAndCopyInterleaved(outBuffer.getBuffer().data(), outBuffer.getNumChannels(), outBuffer.getNumFrames());    
+    }
 }
 
 void pdsp::Engine::audioIn (ofSoundBuffer &inBuffer) {
