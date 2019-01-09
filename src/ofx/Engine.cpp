@@ -294,7 +294,7 @@ void pdsp::Engine::close(){
         } 
     }
 #endif
-process
+
     if(hasOscIn){
         for( pdsp::osc::Input * &in : oscIns){
             in->close();
