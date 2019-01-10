@@ -106,10 +106,15 @@ pdsp::SequencerGateOutput& pdsp::osc::Input::out_trig( string oscAddress, int ar
         if( osc->key == oscAddress && osc->argument == argument ) {
             if( osc->gate_out != nullptr ){
                 return *(osc->gate_out);
-            }else{
+            }else if( osc->value_out != nullptr ){
                 cout<<"[pdsp] warning! this osc string and argument was already used as value output, returning dummy gate output\n";
                 pdsp::pdsp_trace();
                 return invalidGate;
+            } else {
+                osc->messageBuffer = new pdsp::MessageBuffer();
+                osc->gate_out = new pdsp::SequencerGateOutput();
+                osc->gate_out->link( *(osc->messageBuffer) );
+                return *(osc->gate_out);
             }
         }
     }
@@ -118,7 +123,6 @@ pdsp::SequencerGateOutput& pdsp::osc::Input::out_trig( string oscAddress, int ar
     OscChannel* osc = new OscChannel();
     osc->key = oscAddress;
     osc->argument = argument;
-    //osc->mode = Gate;
     osc->messageBuffer = new pdsp::MessageBuffer();
     osc->gate_out = new pdsp::SequencerGateOutput();
     osc->gate_out->link( *(osc->messageBuffer) );
@@ -134,10 +138,15 @@ pdsp::SequencerValueOutput& pdsp::osc::Input::out_value( string oscAddress, int 
         if( osc->key == oscAddress  && osc->argument == argument ) {
             if( osc->value_out != nullptr ){
                 return *(osc->value_out);
+            }else if( osc->gate_out != nullptr ){
+                    cout<<"[pdsp] warning! this osc string and argument was already used as gate output, returning dummy value output\n";
+                    pdsp::pdsp_trace();
+                    return invalidValue;                    
             }else{
-                cout<<"[pdsp] warning! this osc string and argument was already used as gate output, returning dummy value output\n";
-                pdsp::pdsp_trace();
-                return invalidValue;
+                osc->messageBuffer = new pdsp::MessageBuffer();
+                osc->value_out = new pdsp::SequencerValueOutput();
+                osc->value_out->link( *(osc->messageBuffer) );
+                return *(osc->value_out);
             }
         }
     }
@@ -146,14 +155,12 @@ pdsp::SequencerValueOutput& pdsp::osc::Input::out_value( string oscAddress, int 
     OscChannel* osc = new OscChannel();
     osc->key = oscAddress;
     osc->argument = argument;
-    //osc->mode = Value;
     osc->messageBuffer = new pdsp::MessageBuffer();
     osc->value_out = new pdsp::SequencerValueOutput();
     osc->value_out->link( *(osc->messageBuffer) );
     oscChannels.push_back(osc);
 
     return *(osc->value_out);    
-
 }
 
 std::function<float(float)> & pdsp::osc::Input::parser( string oscAddress, int argument ){
@@ -163,9 +170,14 @@ std::function<float(float)> & pdsp::osc::Input::parser( string oscAddress, int a
             return osc->code;
         }
     }
-    cout<<"[pdsp] warning! this osc string and argument still has to be assigned, use out_trig or out_value before setting the parser, returning invalid parser\n";
-    pdsp::pdsp_trace();
-    return invalidCode;
+    
+    // not found, creating
+    OscChannel* osc = new OscChannel();
+    osc->key = oscAddress;
+    osc->argument = argument;
+    osc->hasParser = true; 
+    oscChannels.push_back(osc);
+    return osc->code;
 }
 
 
@@ -246,10 +258,12 @@ void pdsp::osc::Input::processOsc( int bufferSize ) noexcept {
         
         // clean the message buffers
         for (size_t i = 0; i < oscChannels.size(); ++i){
-            oscChannels[i]->messageBuffer->clearMessages();
+            if( oscChannels[i]->messageBuffer != nullptr ){
+                oscChannels[i]->messageBuffer->clearMessages();
 
-            if(sendClearMessages){
-                oscChannels[i]->messageBuffer->addMessage(0.0f, 0);
+                if(sendClearMessages){
+                    oscChannels[i]->messageBuffer->addMessage(0.0f, 0);
+                }                
             }
         }
         
@@ -289,7 +303,7 @@ void pdsp::osc::Input::processOsc( int bufferSize ) noexcept {
                         if( oscChannels[i]->hasParser ){
                             value = oscChannels[i]->code( value );
                         }
-                        if( value != Ignore ){
+                        if( oscChannels[i]->messageBuffer != nullptr && value != Ignore ){
                             oscChannels[i]->messageBuffer->addMessage( value, osc.sample );
                         }
                     }
@@ -298,7 +312,7 @@ void pdsp::osc::Input::processOsc( int bufferSize ) noexcept {
             
             if( tempoLinked ){
                 if(osc.message.getAddress() == tempoAddress ){
-                    if(tempoArgument < osc.message.getNumArgs() ){
+                    if( tempoArgument < int(osc.message.getNumArgs()) ){
                         switch( osc.message.getArgType( tempoArgument ) ){
                             case OFXOSC_TYPE_INT32:
                                 tempoChanged = true;
@@ -319,11 +333,11 @@ void pdsp::osc::Input::processOsc( int bufferSize ) noexcept {
         
         // now process all the linked sequencers
         for (size_t i = 0; i < oscChannels.size(); ++i){
-            oscChannels[i]->messageBuffer->processDestination(bufferSize);
-        }
-        
+            if( oscChannels[i]->messageBuffer != nullptr ){
+                oscChannels[i]->messageBuffer->processDestination(bufferSize);
+            }   
+        }   
     }
-    
 }
 
 bool pdsp::osc::Input::hasTempoChange(){

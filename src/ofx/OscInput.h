@@ -158,7 +158,6 @@ private:
 
     pdsp::SequencerGateOutput invalidGate;
     pdsp::SequencerValueOutput invalidValue;
-    std::function<float(float)> invalidCode;
 
 
     void                                                startDaemon();
