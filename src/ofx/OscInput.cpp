@@ -43,12 +43,12 @@ pdsp::osc::Input::Input() {
     
     connected = false;
     
-    runDaemon = false;
-    daemonRefreshRate = 500;
-    
     tempoLinked = false;
     tempoAddress = "";
     tempoArgument = 0;
+    
+    receiver.circularBuffer = &circularBuffer;
+    receiver.index = &index;
 }   
 
 
@@ -75,9 +75,6 @@ void pdsp::osc::Input::openPort( int port ) {
     }
     
     receiver.setup( port );
-    
-    startDaemon();
-    
     connected = true;
     bufferChrono = chrono::high_resolution_clock::now();
 }
@@ -88,7 +85,8 @@ void pdsp::osc::Input::close(){
     if(connected){
         if(verbose) cout<<"[pdsp] shutting down OSC out\n";
         //stop the daemon before
-        closeDaemon();
+        
+        receiver.stop();
 
         connected = false;        
     }
@@ -192,34 +190,6 @@ void pdsp::osc::Input::prepareToPlay( int expectedBufferSize, double sampleRate 
 void pdsp::osc::Input::releaseResources(){}
 
 
-
-void pdsp::osc::Input::daemonFunction() noexcept{
-    
-    while (runDaemon){
-        
-        while(receiver.hasWaitingMessages()){
-            
-            ofxOscMessage osc;
-            receiver.getNextMessage(osc);
-            
-            // calculate the right offset inside the bufferSize
-            int write = index +1;
-            if(write>=(int)circularBuffer.size()){ write = 0; } 
-
-            circularBuffer[write].message = osc;
-            circularBuffer[write].timepoint = std::chrono::high_resolution_clock::now();
-
-            index = write;    
-
-        }
-
-        this_thread::sleep_for(std::chrono::microseconds(daemonRefreshRate));
-
-    }
-   
-    if(verbose) cout<<"[pdsp] closing OSC input daemon thread\n";
-}
-    
 
 void pdsp::osc::Input::pushToReadVector( pdsp::osc::Input::_PositionedOscMessage & message ){
         std::chrono::duration<double> offset = message.timepoint - bufferChrono; 
@@ -352,21 +322,79 @@ double pdsp::osc::Input::getTempo(){
     return tempo;
 }
 
-void pdsp::osc::Input::startDaemon(){ // OK
-    if(verbose) cout<<"[pdsp] starting OSC input daemon\n";
-    runDaemon = true;
-    daemonThread = thread( daemonFunctionWrapper, this );   
-    
-}
 
+void pdsp::osc::Input::CustomOscReceiver::ProcessMessage(const _PDSPOscReceivedMessage_t &m, const _PDSPIpEndpointName_t &remoteEndpoint){
+	// convert the message to an ofxOscMessage
+	ofxOscMessage msg;
 
-void pdsp::osc::Input::closeDaemon(){
- 
-    runDaemon = false;
-    daemonThread.detach();
+	// set the address
+	msg.setAddress(m.AddressPattern());
+	
+	// set the sender ip/host
+	char endpointHost[_PDSPIpEndpointName_t::ADDRESS_STRING_LENGTH];
+	remoteEndpoint.AddressAsString(endpointHost);
+	msg.setRemoteEndpoint(endpointHost, remoteEndpoint.port);
 
-}
-        
-void pdsp::osc::Input::daemonFunctionWrapper(pdsp::osc::Input* parent){
-    parent->daemonFunction();
+	// transfer the arguments
+	for(_PDSPOscReceivedMessage_t::const_iterator arg = m.ArgumentsBegin(); arg != m.ArgumentsEnd(); ++arg){
+		if(arg->IsInt32()){
+			msg.addIntArg(arg->AsInt32Unchecked());
+		}
+		else if(arg->IsInt64()){
+			msg.addInt64Arg(arg->AsInt64Unchecked());
+		}
+		else if( arg->IsFloat()){
+			msg.addFloatArg(arg->AsFloatUnchecked());
+		}
+		else if(arg->IsDouble()){
+			msg.addDoubleArg(arg->AsDoubleUnchecked());
+		}
+		else if(arg->IsString()){
+			msg.addStringArg(arg->AsStringUnchecked());
+		}
+		else if(arg->IsSymbol()){
+			msg.addSymbolArg(arg->AsSymbolUnchecked());
+		}
+		else if(arg->IsChar()){
+			msg.addCharArg(arg->AsCharUnchecked());
+		}
+		else if(arg->IsMidiMessage()){
+			msg.addMidiMessageArg(arg->AsMidiMessageUnchecked());
+		}
+		else if(arg->IsBool()){
+			msg.addBoolArg(arg->AsBoolUnchecked());
+		}
+		else if(arg->IsNil()){
+			msg.addNoneArg();
+		}
+		else if(arg->IsInfinitum()){
+			msg.addTriggerArg();
+		}
+		else if(arg->IsTimeTag()){
+			msg.addTimetagArg(arg->AsTimeTagUnchecked());
+		}
+		else if(arg->IsRgbaColor()){
+			msg.addRgbaColorArg(arg->AsRgbaColorUnchecked());
+		}
+		else if(arg->IsBlob()){
+			const char * dataPtr;
+			_PDSPosc_bundle_element_size_t len = 0;
+			arg->AsBlobUnchecked((const void*&)dataPtr, len);
+			ofBuffer buffer(dataPtr, len);
+			msg.addBlobArg(buffer);
+		}
+		else {
+			ofLogError("ofxOscReceiver") << "ProcessMessage(): argument in message "
+				<< m.AddressPattern() << " is an unknown type "
+				<< (int) arg->TypeTag() << " '" << (char) arg->TypeTag() << "'";
+				break;
+		}
+	}
+
+    int write = index->load() +1;
+    if(write>=(int)circularBuffer->size()){ write = 0; } 
+    circularBuffer->at(write).message = msg;
+    circularBuffer->at(write).timepoint = std::chrono::high_resolution_clock::now();
+
+    index->store( write );   
 }

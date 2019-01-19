@@ -21,6 +21,16 @@
 @brief utility class manage OSC input to the DSP
 */
 
+/*!
+    @cond HIDDEN_SYMBOLS
+*/  
+typedef osc::ReceivedMessage _PDSPOscReceivedMessage_t;
+typedef osc::IpEndpointName _PDSPIpEndpointName_t;
+typedef osc::osc_bundle_element_size_t _PDSPosc_bundle_element_size_t;
+/*!
+    @endcond
+*/   
+
 namespace pdsp{ namespace osc {
 
 static const float Ignore = std::numeric_limits<float>::infinity(); 
@@ -39,7 +49,6 @@ private:
         string key;
         int argument;
         pdsp::MessageBuffer* messageBuffer;
-        //OscChannelMode mode;
         pdsp::SequencerGateOutput* gate_out;
         pdsp::SequencerValueOutput* value_out;
         
@@ -58,6 +67,13 @@ private:
         int sample;
     };
 
+    class CustomOscReceiver : public ofxOscReceiver {
+    public:
+        std::vector<_PositionedOscMessage> * circularBuffer;
+        std::atomic<int> * index;
+    protected:
+        void ProcessMessage(const _PDSPOscReceivedMessage_t &m, const _PDSPIpEndpointName_t &remoteEndpoint) override;
+    };
 
 public:
     Input();    
@@ -136,8 +152,8 @@ protected:
     void releaseResources() override;    
 
 private:
-    ofxOscReceiver  receiver;
-        
+    CustomOscReceiver receiver;
+    
     vector<OscChannel*> oscChannels;    
     
     bool            connected;
@@ -159,15 +175,6 @@ private:
     pdsp::SequencerGateOutput invalidGate;
     pdsp::SequencerValueOutput invalidValue;
 
-
-    void                                                startDaemon();
-    void                                                closeDaemon();
-    void                                                daemonFunction() noexcept;
-    static void                                         daemonFunctionWrapper(Input* parent);
-    thread                                              daemonThread;
-    atomic<bool>                                        runDaemon;
-    int                                                 daemonRefreshRate;
-
     void pushToReadVector( _PositionedOscMessage & message );
     
     bool        tempoLinked;
@@ -175,6 +182,7 @@ private:
     int         tempoArgument;
     double      tempo;
     bool        tempoChanged;
+    
 };
 
 }}
