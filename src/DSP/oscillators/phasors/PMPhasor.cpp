@@ -1,27 +1,25 @@
 
-
 #include "PMPhasor.h"
-//#include <iostream>
 
 pdsp::PMPhasor::PMPhasor(){
     
-        phase = 0.0f;
+    phase = 0.0f;
 
-        addInput("freq", input_freq);
-        addInput("sync", input_sync);
-        addInput("pm", input_phase_mod);
-        addOutput("phase", output_phase);
-        addOutput("inc", output_inc);
-        addOutput("sync", output_sync);
-        updateOutputNodes();
+    addInput("freq", input_freq);
+    addInput("sync", input_sync);
+    addInput("pm", input_phase_mod);
+    addOutput("phase", output_phase);
+    addOutput("inc", output_inc);
+    addOutput("sync", output_sync);
+    updateOutputNodes();
 
-        input_freq.setDefaultValue(440.0f);
+    input_freq.setDefaultValue(440.0f);
 
-        input_phase_mod.setDefaultValue(0.0f);
+    input_phase_mod.setDefaultValue(0.0f);
 
-        if(dynamicConstruction){
-                prepareToPlay(globalBufferSize, globalSampleRate);
-        }
+    if(dynamicConstruction){
+        prepareToPlay(globalBufferSize, globalSampleRate);
+    }
 }
 
 pdsp::Patchable& pdsp::PMPhasor::in_freq(){
@@ -49,11 +47,8 @@ pdsp::Patchable& pdsp::PMPhasor::out_sync(){
 }
 
 void pdsp::PMPhasor::prepareUnit( int expectedBufferSize, double sampleRate) {
-
-        phase = 0.0f;
-
-        incCalculationMultiplier = 1.0f / sampleRate;
-        
+    phase = 0.0f;
+    incCalculationMultiplier = 1.0f / sampleRate;
 }
 
 void pdsp::PMPhasor::releaseResources () {
@@ -61,99 +56,99 @@ void pdsp::PMPhasor::releaseResources () {
 }
 
 void pdsp::PMPhasor::process (int bufferSize) noexcept {
-        
-        int freqBufferState;
-        const float* freqBuffer = processInput(input_freq, freqBufferState);
-        int syncBufferState;
-        const float* syncBuffer = processInput(input_sync, syncBufferState);
-        int phaseModState;
-        const float* phaseModBuffer = processInput(input_phase_mod, phaseModState);
     
-        if(freqBufferState!=AudioRate){
-                inc = freqBuffer[0] * incCalculationMultiplier;
-        }
+    int freqBufferState;
+    const float* freqBuffer = processInput(input_freq, freqBufferState);
+    int syncBufferState;
+    const float* syncBuffer = processInput(input_sync, syncBufferState);
+    int phaseModState;
+    const float* phaseModBuffer = processInput(input_phase_mod, phaseModState);
 
-        setControlRateOutput(output_inc, inc);
+    if(freqBufferState!=AudioRate){
+        inc = freqBuffer[0] * incCalculationMultiplier;
+    }
 
-        int switcher = freqBufferState + syncBufferState*4 + phaseModState*16;
-        //process audio rate
-        switch ( switcher & processAudioBitMask ) {
-        case audioFFFF :
-                process_audio<false, false, false>(freqBuffer, syncBuffer, phaseModBuffer, bufferSize);
-                break;
-        case audioFFTF :
-                process_audio<false, false, true>(freqBuffer, syncBuffer, phaseModBuffer, bufferSize);
-                break;
-        case audioFTFF :
-                process_audio<false, true, false>(freqBuffer, syncBuffer, phaseModBuffer, bufferSize);
-                break;
-        case audioFTTF:
-                process_audio<false, true, true>(freqBuffer, syncBuffer, phaseModBuffer, bufferSize);
-                break;
-        case audioTFFF :
-                process_audio<true, false, false>(freqBuffer, syncBuffer, phaseModBuffer, bufferSize);
-                break;
-        case audioTFTF :
-                process_audio<true, false, true>(freqBuffer, syncBuffer, phaseModBuffer, bufferSize);
-                break;
-        case audioTTFF :
-                process_audio<true, true, false>(freqBuffer, syncBuffer, phaseModBuffer, bufferSize);
-                break;
-        case audioTTTF:
-                process_audio<true, true, true>(freqBuffer, syncBuffer, phaseModBuffer, bufferSize);
-                break;
-        default:
-                break;
-        }
+    setControlRateOutput(output_inc, inc);
 
+    int switcher = freqBufferState + syncBufferState*4 + phaseModState*16;
+    //process audio rate
+    switch ( switcher & processAudioBitMask ) {
+    case audioFFFF :
+        process_audio<false, false, false>(freqBuffer, syncBuffer, phaseModBuffer, bufferSize);
+        break;
+    case audioFFTF :
+        process_audio<false, false, true>(freqBuffer, syncBuffer, phaseModBuffer, bufferSize);
+        break;
+    case audioFTFF :
+        process_audio<false, true, false>(freqBuffer, syncBuffer, phaseModBuffer, bufferSize);
+        break;
+    case audioFTTF:
+        process_audio<false, true, true>(freqBuffer, syncBuffer, phaseModBuffer, bufferSize);
+        break;
+    case audioTFFF :
+        process_audio<true, false, false>(freqBuffer, syncBuffer, phaseModBuffer, bufferSize);
+        break;
+    case audioTFTF :
+        process_audio<true, false, true>(freqBuffer, syncBuffer, phaseModBuffer, bufferSize);
+        break;
+    case audioTTFF :
+        process_audio<true, true, false>(freqBuffer, syncBuffer, phaseModBuffer, bufferSize);
+        break;
+    case audioTTTF:
+        process_audio<true, true, true>(freqBuffer, syncBuffer, phaseModBuffer, bufferSize);
+        break;
+    default:
+        break;
+    }
 }
 
 template<bool pitchAR, bool syncAR, bool phaseAR>
 void pdsp::PMPhasor::process_audio(const float* freqBuffer, const float* syncBuffer, const float* pmBuffer, int bufferSize)noexcept{
-    
-        float* outputBuffer = getOutputBufferToFill(output_phase);
-        float* incBuffer = nullptr;
 
-        float* syncOutput = getOutputBufferToFill(output_sync);
-        ofx_Aeq_S(syncOutput, pdspSyncNull, bufferSize);
+    float* outputBuffer = getOutputBufferToFill(output_phase);
+    float* incBuffer = nullptr;
+
+    float* syncOutput = getOutputBufferToFill(output_sync);
+    ofx_Aeq_S(syncOutput, pdspSyncNull, bufferSize);
+
+    if(pitchAR){
+        ofx_Aeq_BmulS(outputBuffer, freqBuffer, incCalculationMultiplier, bufferSize);
+        incBuffer = getOutputBufferToFill(output_inc);
+    }
+
+    for (int n=0; n<bufferSize; ++n) {
 
         if(pitchAR){
-                ofx_Aeq_BmulS(outputBuffer, freqBuffer, incCalculationMultiplier, bufferSize);
-                incBuffer = getOutputBufferToFill(output_inc);
+            inc = outputBuffer[n];
         }
 
-        for (int n=0; n<bufferSize; ++n) {
-
-                if(pitchAR){
-                        inc = outputBuffer[n];
-                }
-
-                if(syncAR){
-                        if ( checkSync(syncBuffer[n]) ) {
-                                phase = syncBuffer[n]*inc; //right phase offset 
-                        }
-                }
-
-                if( phase>=1.0f ) {
-                        phase -= 1.0f;
-                        syncOutput[n] = (inc-phase)/inc;	//intersample phase out
-                }
-
-
-                outputBuffer[n] = phase;
-
-                phase += inc;
-
-                if(pitchAR){
-                        incBuffer[n] = inc;
-                }
+        if(syncAR){
+            if ( checkSync(syncBuffer[n]) ) {
+                phase = syncBuffer[n]*inc; //right phase offset 
+            }
         }
 
-        if(phaseAR){
-                vect_phazorShiftB(outputBuffer, pmBuffer, bufferSize);
-                phaseOffset = pmBuffer[bufferSize-1];
+        if( phase>=1.0f ) {
+            // needed as FM can make really big increments
+            float sub = floor( phase );
+            phase -= sub;
+            syncOutput[n] = (inc-phase)/inc;	//intersample phase out
         }
-    
+
+        outputBuffer[n] = phase;
+
+        phase += inc;
+
+        if(pitchAR){
+            incBuffer[n] = inc;
+        }
+    }
+
+    if(phaseAR){
+        vect_phazorShiftB(outputBuffer, pmBuffer, bufferSize);
+        phaseOffset = pmBuffer[bufferSize-1];
+    }
+
 }
 
 
