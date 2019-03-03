@@ -44,6 +44,12 @@ pdsp::Engine::~Engine(){
 void pdsp::Engine::onExit( ofEventArgs &args ){
     if(state!= closedState){
         close();
+        for( int in=0; in<inputChannels; in++ ){
+            audio_in(in).disconnectAll();
+        }
+        for( int out=0; out<outputChannels; out++ ){
+            audio_out(out).disconnectAll();
+        }
     }
 }
 
