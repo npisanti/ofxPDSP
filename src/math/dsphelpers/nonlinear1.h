@@ -52,7 +52,7 @@ namespace pdsp{
             c4 = ofx::m_mul(c4, x4); //x^5
             
             c0 = ofx::m_mul1(c0, 0.0098546f);
-            c4 = ofx::m_mul1(c0, 0.0098546f);
+            c4 = ofx::m_mul1(c4, 0.0098546f);
             
             ofx::f128 a0 = ofx::m_add(b0, c0);
             ofx::f128 a4 = ofx::m_add(b4, c4);

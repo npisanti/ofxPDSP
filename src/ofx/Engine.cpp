@@ -397,7 +397,6 @@ void pdsp::Engine::addMidiController( pdsp::Controller & controller, pdsp::midi:
             midiControllerFound = true;
             std::cout<<"[pdsp] warning! you have already added this controller, you shouldn't add it twice\n";
             pdsp::pdsp_trace();
-            assert(false);
         } 
     }
     if( ! midiControllerFound ){
