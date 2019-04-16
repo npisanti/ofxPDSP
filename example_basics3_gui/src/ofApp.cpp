@@ -35,7 +35,7 @@ void ofApp::setup(){
     // the API to get ofParameters is the same for pdsp::Parameter, 
     // pdsp::ParameterAmp and pdsp::ParameterGain
     
-    gui.setup("3-osc", "settings.xml, 20, 20");
+    gui.setup("3-osc", "settings.xml", 20, 20);
     osc1_group.setName("oscillator 1");
     // if you use float values in the set() method the ofParameter<float> is returned and used
     osc1_group.add( osc1_pitch_ctrl.set( "pitch", 60.0f, 24.0f, 96.0f ) ); 
