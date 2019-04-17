@@ -10,7 +10,7 @@ void ofApp::setup(){
     //--------PATCHING-------
 
     pitch_ctrl >> synth.in("pitch"); // patching with in("tag")
-    amp_ctrl   >> synth.in_amp(); // patching with custom in_tag()
+    amp_ctrl   >> synth.in("amp"); // patching with custom in_tag()
                   synth * dB(-12.0f) >> engine.audio_out(0);
                   synth * dB(-12.0f) >> engine.audio_out(1);
 
