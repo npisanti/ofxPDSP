@@ -34,8 +34,8 @@ public:
     
     
 private:
-    void prepareOscillator( double sampleRate);
-    void releaseOscillator();
+    void prepareOscillator( double sampleRate) override;
+    void releaseOscillator() override;
 
     void oscillateShapeCR(float* outputBuffer, const float* phaseBuffer, const float shape, int bufferSize) noexcept override;
     void oscillateShapeAR(float* outputBuffer, const float* phaseBuffer, const float* shapeBuffer, int bufferSize) noexcept override;
