@@ -124,7 +124,7 @@ public:
 
 private:
 
-    void process(int bufferSize) noexcept;
+    void process(int bufferSize) noexcept override;
     void prepareUnit( int expectedBufferSize, double sampleRate) override;
     void releaseResources() override;
 

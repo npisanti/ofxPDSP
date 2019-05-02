@@ -77,7 +77,6 @@ private:
     float fb_z1;
   
     float alphaMultiplier;
-    float sampleRate;
 
     ALIGNPRE float alpha [4] ALIGNPOST;
     ALIGNPRE float freqMult [4] ALIGNPOST;

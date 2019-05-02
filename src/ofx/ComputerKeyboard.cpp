@@ -1,6 +1,8 @@
 
 #include "ComputerKeyboard.h"
 
+#ifndef __ANDROID__
+
 namespace pdsp{
 
 ComputerKeyboard::ComputerKeyboard(){
@@ -494,3 +496,5 @@ pdsp::ValueControl &  ComputerKeyboard::out_pitch( int voice ) {
 
 
 }
+
+#endif //__ANDROID__

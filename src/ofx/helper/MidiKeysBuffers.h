@@ -31,7 +31,12 @@ public:
 
 };
 
+}} // end namespaces
+
 #ifndef __ANDROID__
+
+namespace pdsp{  namespace helper {
+    
 class MidiKeysBuffers {
 public:
         MidiKeysBuffers();

@@ -5,38 +5,35 @@
 #include <map>
 #include "ofxPDSP.h"
 
-
 class ofApp : public ofxAndroidApp{
 
-public:
+	public:
+		void setup();
+		void update();
+		void draw();
 
-	void setup();
-	void update();
-	void draw();
-    void exit();
+		void keyPressed  (int key);
+		void keyReleased(int key);
+		void windowResized(int w, int h);
 
-	void keyPressed(int key);
-	void keyReleased(int key);
-	void windowResized(int w, int h);
+		void touchDown(int x, int y, int id);
+		void touchMoved(int x, int y, int id);
+		void touchUp(int x, int y, int id);
+		void touchDoubleTap(int x, int y, int id);
+		void touchCancelled(int x, int y, int id);
+		void swipe(ofxAndroidSwipeDir swipeDir, int id);
 
-	void touchDown(int x, int y, int id);
-	void touchMoved(int x, int y, int id);
-	void touchUp(int x, int y, int id);
-	void touchDoubleTap(int x, int y, int id);
-	void touchCancelled(int x, int y, int id);
-	void swipe(ofxAndroidSwipeDir swipeDir, int id);
+		void pause();
+		void stop();
+		void resume();
+		void reloadTextures();
 
-	void pause();
-	void stop();
-	void resume();
-	void reloadTextures();
+		bool backPressed();
+		void okPressed();
+		void cancelPressed();
 
-	bool backPressed();
-	void okPressed();
-	void cancelPressed();
+        pdsp::Engine    engine;
 
-	pdsp::Engine    engine;
-
-	pdsp::VAOscillator      osc;
-	pdsp::Amp               amp;
+        pdsp::VAOscillator      osc;
+        pdsp::Amp               amp;
 };
