@@ -1,6 +1,5 @@
 ofxGui
-ofxMidi
-ofxPDSP
-ofxSIMDFloats
 ofxOsc
+ofxMidi
 ofxAudioFile
+ofxPDSP

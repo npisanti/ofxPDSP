@@ -15,7 +15,7 @@ void pdsp::Processor::process(const int &bufferSize) noexcept{
         OutputNode::nextTurn();
         Preparable::setTurnBufferSize(bufferSize);
 
-        for(int i=0; i<channels.size(); ++i){
+        for (size_t i=0; i<channels.size(); ++i){
                 channels[i].process(bufferSize);
         }
 }
@@ -32,7 +32,7 @@ void pdsp::Processor::processAndCopyOutput(float** bufferToFill, const int &chan
         OutputNode::nextTurn();
         Preparable::setTurnBufferSize(bufferSize);
         
-        for(int i=0; i<channels.size(); ++i){
+        for( int i=0; i< int(channels.size()); ++i ){
                 
                 channels[i].process(bufferSize);
                 
@@ -61,7 +61,7 @@ void pdsp::Processor::processAndCopyInterleaved(float* bufferToFill, const int &
         Preparable::setTurnBufferSize(bufferSize);
         
         int min;
-        if(channels.size() < channelsNum){
+        if( int(channels.size()) < channelsNum){
             min = channels.size();
         }else{
             min = channelsNum;

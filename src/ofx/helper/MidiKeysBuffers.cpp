@@ -69,7 +69,7 @@ void MidiKeysBuffers::setMidiChannel( int channel ){
 void MidiKeysBuffers::processMidi (const std::vector<_PositionedMidiMessage> & readVector, const int &bufferSize ) noexcept{
 
         //clear buffers
-        for(int i=0; i<gateMessages.size(); ++i){
+        for( size_t i=0; i<gateMessages.size(); ++i ){
                 gateMessages[i].clearMessages();
                 pitchMessages[i].clearMessages();
                 portaMessages[i].clearMessages();
@@ -80,7 +80,7 @@ void MidiKeysBuffers::processMidi (const std::vector<_PositionedMidiMessage> & r
 
         
         if(sendClearMessages){
-                for(int i=0; i<gateMessages.size(); ++i){
+                for( size_t i=0; i<gateMessages.size(); ++i ){
                         gateMessages[i].addMessage(0.0f, 0);
                         switch(portamentoMode){
                             case Off: case Legato: portaMessages[i].addMessage(0.0f, 0); break;

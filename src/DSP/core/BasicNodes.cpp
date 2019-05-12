@@ -1007,7 +1007,7 @@ void pdsp::Patchable::disconnectAll(){
 std::vector<std::string> pdsp::Patchable::getInputsList(){
     std::vector<std::string> toReturn;
     toReturn.reserve(inputs.size());
-    for(int i=0; i<inputs.size(); ++i){
+    for( size_t i=0; i<inputs.size(); ++i ){
         toReturn.push_back(inputs[i].tag);
     }
     return toReturn;
@@ -1016,7 +1016,7 @@ std::vector<std::string> pdsp::Patchable::getInputsList(){
 std::vector<std::string> pdsp::Patchable::getOutputsList(){
     std::vector<std::string> toReturn;
     toReturn.reserve(outputs.size());
-    for(int i=0; i<outputs.size(); ++i){
+    for( size_t i=0; i<outputs.size(); ++i ){
         toReturn.push_back(outputs[i].tag);
     }
     return toReturn;

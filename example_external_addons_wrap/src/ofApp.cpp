@@ -14,7 +14,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     
-    int bufferSize = 256;
+    int bufferSize = 512;
     
     //-------------------GRAPHIC SETUP--------------
 	
@@ -95,8 +95,8 @@ void ofApp::draw(){
 		ofSetLineWidth(3);
 					
 			ofBeginShape();
-			for (unsigned int i = 0; i < wrapper.left.size(); i++){
-				ofVertex(i*2, 100 -wrapper.left[i]*180.0f);
+			for (unsigned int i = 0; i < wrapper.left.size(); i+=2){
+				ofVertex(i, 100 -wrapper.left[i]*180.0f);
 			}
 			ofEndShape(false);
 			
@@ -118,8 +118,8 @@ void ofApp::draw(){
 		ofSetLineWidth(3);
 					
 			ofBeginShape();
-			for (unsigned int i = 0; i < wrapper.right.size(); i++){
-				ofVertex(i*2, 100 -wrapper.right[i]*180.0f);
+			for (unsigned int i = 0; i < wrapper.right.size(); i+=2){
+				ofVertex(i, 100 -wrapper.right[i]*180.0f);
 			}
 			ofEndShape(false);
 			

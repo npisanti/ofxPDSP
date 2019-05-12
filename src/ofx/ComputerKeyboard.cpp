@@ -112,7 +112,7 @@ void ComputerKeyboard::clearNotes(){
                 notes[i].note = -1;
                 notes[i].eventNumber = eventIdGenerator++;
         }
-        for(int i=0; i<outs_trig.size(); ++i){
+        for( size_t i=0; i<outs_trig.size(); ++i ){
                 outs_trig[i].off();
         }
         activeNotes = 0;

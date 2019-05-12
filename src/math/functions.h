@@ -8,11 +8,11 @@
 #define PDSP_MATH_FUNCTIONS_H_INCLUDED
 
 #include "../DSP/pdspConstants.h"
-//#include "../../../ofxSIMDFloats/src/functions.h"
-#include "../../../ofxSIMDFloats/src/core/inlines.h"
-#include "../../../ofxSIMDFloats/src/functions.h"
-#include "../../../ofxSIMDFloats/src/core/activate.h"
-#include "../../../ofxSIMDFloats/src/core/allocator.h"
-#include "../../../ofxSIMDFloats/src/vectors/vect_ops.h"
+
+#include "simd/core/inlines.h"
+#include "simd/functions.h"
+#include "simd/core/activate.h"
+#include "simd/core/allocator.h"
+#include "simd/vectors/vect_ops.h"
 
 #endif  // PDSP_MATH_FUNCTIONS_H_INCLUDED

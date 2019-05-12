@@ -74,11 +74,11 @@ void pdsp::Sampler::addSample(SampleBuffer* newSample, int channel){
 }
 
 bool pdsp::Sampler::setSample(SampleBuffer* newSample, int index, int channel){
-        if(index<samples.size() && index>=0){
+        if(index< int(samples.size()) && index>=0){
                 samples[index] = newSample;
                 channels[index] = channel;
                 return true;
-        }if(index == samples.size() ){
+        }if(index == int(samples.size()) ){
                 addSample(newSample, channel);
                 return true;
         }else{
@@ -224,7 +224,7 @@ void pdsp::Sampler::selectSample( int n, int bufferSize, float trigger )noexcept
         
         if(sampleIndex<0){
                 sampleIndex=0;
-        }else if(sampleIndex>=samples.size()){
+        }else if(sampleIndex>=int(samples.size())){
                 sampleIndex = samples.size() - 1 ;
         }
         

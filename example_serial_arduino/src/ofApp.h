@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxSIMDFloats.h"
 #include "ofxPDSP.h"
 
 class ofApp : public ofBaseApp{

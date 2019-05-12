@@ -119,7 +119,7 @@ void pdsp::SequencerValueOutput::process (int bufferSize) noexcept {
                         }
                         
                         if( slewControl != nullptr && 
-                           (k < slewControl->messages.size()) && 
+                           (k < int(slewControl->messages.size())) && 
                            (slewControl->messages[k].sample <= msg.sample))
                         {
                                 slewTimeMod = slewControl->messages[k].value;

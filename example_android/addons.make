@@ -1,4 +1,3 @@
 ofxOsc
-ofxSIMDFloats
-ofxPDSP
 ofxAudioFile
+ofxPDSP

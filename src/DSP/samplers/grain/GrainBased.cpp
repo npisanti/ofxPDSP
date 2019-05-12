@@ -44,7 +44,7 @@ pdsp::GrainTable*  pdsp::GrainBased::getTable(Window_t type, int length){
 pdsp::GrainTable*  pdsp::GrainBased::getTable(int index){
     if (index<0) {
         index = 0;
-    }else if(index>=tables.size()){
+    }else if( index >= int(tables.size() ) ){
         index = tables.size()-1;
     }
     

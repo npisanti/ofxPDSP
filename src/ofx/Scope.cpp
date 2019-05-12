@@ -95,7 +95,7 @@ void pdsp::Scope::draw( int x, int y, int w, int h) const {
         float yMult = -yHalf;
 					
         ofBeginShape();
-        for (unsigned int xx = 0; xx < w; xx++){
+        for ( int xx = 0; xx < w; xx++ ){
             int index = xx*xMult; 
             float value = buffer[index];
             ofVertex(xx, yHalf + value*yMult);

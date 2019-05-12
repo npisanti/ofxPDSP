@@ -37,7 +37,7 @@ void pdsp::BLEPBased::setTable(Window_t type, bool eight, int length, bool inter
 pdsp::BLEPTable* pdsp::BLEPBased::getTable(int index){
     if (index<0) {
         index = 0;
-    }else if(index>=tables.size()){
+    }else if(index>=int(tables.size())){
         index = tables.size()-1;
     }
 

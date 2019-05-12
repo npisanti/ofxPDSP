@@ -101,7 +101,7 @@ void pdsp::helper::EngineGraphics::drawGraphics() {
                 label += (char) assignedKeys[i][k];
                 label += ") ";
                 label += score->sections[i].getLabel(k);
-                if(label.size() > textmax) label.resize(textmax);
+                if( label.size() > size_t( textmax ) ) label.resize(textmax);
                 
                 if( score->sections[i].meter_current() == k || score->sections[i].meter_next() != k || blink > 4 ){
                     ofDrawBitmapString ( label, cellW*k + 5.0f, 14.0f );

@@ -99,7 +99,7 @@ void pdsp::DataTable::update( ) {
 		if( bAdditive ) {
 			additive();
 		} else {
-			for(size_t n=0; n<length; ++n){
+			for( int n=0; n<length; ++n ){
 				bufferNew[n] = vData[n];
 			}
 		}
@@ -127,7 +127,7 @@ void pdsp::DataTable::additive() {
     
     double signalMax = 0.0;
     
-	for ( size_t i=0; i<(lastIndex+1) && i<maxPartials; ++i ){
+	for ( int i=0; i<(lastIndex+1) && i<maxPartials; ++i ){
 		
 		int partial_i = i+1;
 		double harmonic_amp = vData[i];
