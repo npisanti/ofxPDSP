@@ -1,6 +1,9 @@
 
 #include "Engine.h"
 
+#ifdef __ANDROID__
+#include "ofxAndroid.h"
+#endif
 
 pdsp::Engine::Engine() : score( sequencer ){
     inputID = 0;
@@ -208,11 +211,12 @@ void pdsp::Engine::setup( int sampleRate, int bufferSize, int nBuffers){
     #if defined(__ANDROID__)
         if( outputChannels > 0 ){
             outStreamActive = true;
-            outputStream.setOutput(this);
+            settings.setOutListener(this);
         }
         if(inputChannels > 0 ){
             outStreamActive = true;
-            outputStream.setInput(this);
+            settings.setInListener(this);
+            ofxAndroidRequestPermission(OFX_ANDROID_PERMISSION_RECORD_AUDIO);
         }
         outputStream.setup( settings ); 
 

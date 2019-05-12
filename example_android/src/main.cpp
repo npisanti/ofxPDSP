@@ -20,7 +20,7 @@ void ofAndroidApplicationInit()
 
 void ofAndroidActivityInit()
 {
-    //activity scope init
-    main();
+	//activity scope init
+	main();
 }
 #endif

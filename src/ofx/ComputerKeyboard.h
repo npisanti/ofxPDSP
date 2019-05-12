@@ -6,6 +6,8 @@
 #ifndef OFXPDSP_COMPUTERKEYBOARD_H_INCLUDED
 #define OFXPDSP_COMPUTERKEYBOARD_H_INCLUDED
 
+#ifndef __ANDROID__
+
 #include "../messages/header.h"
 #include "../DSP/control/ValueControl.h"
 #include "../DSP/control/TriggerControl.h"
@@ -135,5 +137,6 @@ private:
     
 }
     
+#endif // __ANDROID__
 
 #endif // OFXPDSP_COMPUTERKEYBOARD_H_INCLUDED

@@ -10,9 +10,8 @@ typedef pdsp::TriggerControl ofxPDSPTrigger;
 
 typedef pdsp::Engine ofxPDSPEngine;
 
-typedef pdsp::ComputerKeyboard ofxPDSPComputerKeyboard;
-
 #ifndef __ANDROID__
+typedef pdsp::ComputerKeyboard ofxPDSPComputerKeyboard;
 typedef pdsp::midi::Input ofxPDSPMidiIn;
 typedef pdsp::midi::Output ofxPDSPMidiOut;
 typedef pdsp::midi::Keys ofxPDSPMidiKeys;

@@ -37,18 +37,13 @@ void ofApp::draw(){
 }
 
 //--------------------------------------------------------------
-void ofApp::exit(){
-    
-}
-
-//--------------------------------------------------------------
-void ofApp::keyPressed  (int key){
+void ofApp::keyPressed  (int key){ 
 
 }
 
 //--------------------------------------------------------------
-void ofApp::keyReleased(int key){
-
+void ofApp::keyReleased(int key){ 
+	
 }
 
 //--------------------------------------------------------------
@@ -75,6 +70,7 @@ void ofApp::touchUp(int x, int y, int id){
         0.0f >> amp.in_mod();
     }
 }
+
 
 //--------------------------------------------------------------
 void ofApp::touchDoubleTap(int x, int y, int id){
@@ -113,7 +109,7 @@ void ofApp::reloadTextures(){
 
 //--------------------------------------------------------------
 bool ofApp::backPressed(){
-    return false;
+	return false;
 }
 
 //--------------------------------------------------------------
@@ -125,4 +121,3 @@ void ofApp::okPressed(){
 void ofApp::cancelPressed(){
 
 }
-
