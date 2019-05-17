@@ -148,8 +148,6 @@ void pdsp::SampleBuffer::load( float* interleavedBuffer, double sampleRate, int 
 
 void pdsp::SampleBuffer::load( std::string filePath ){
     
-#if defined(PDSP_USE_OFXAUDIOFILE)
-   
     if(verbose) std::cout<< "[pdsp] loading audio file: "<<filePath<<"\n";
     
     ofxAudioFile audiofile;
@@ -169,102 +167,6 @@ void pdsp::SampleBuffer::load( std::string filePath ){
     }
 
     audiofile.free();
-    
-#elif defined(PDSP_USE_LIBSNDFILE)
-   
-    const char * filePath_c = filePath.c_str();  
- 
-    SndfileHandle fileHandle = SndfileHandle(filePath_c); 
-    
-    if(verbose) std::cout<< "[pdsp] loading audio file: "<<filePath<<"\n";
-    
-    if( strcmp(fileHandle.strError(), "No Error.") ==0 ){
-        
-        double sampleRate = fileHandle.samplerate();
-        int waveLength = int(fileHandle.frames());
-        int channels = fileHandle.channels();
-       
-        float* samples;
-        
-        try
-        {
-            samples = new float [channels * waveLength];
-        }
-        catch (std::bad_alloc& ba)
-        {
-            std::string error = "error loading file: bad_alloc caught: ";
-            error += ba.what();
-            error +="\n";
-            if(verbose) std::cout<<"[pdsp]"<< error<<"\n";
-            this->filePath = error;
-            return; //abort
-        }
-        
-        fileHandle.read (samples, channels * waveLength);
-    
-        this->load(samples, sampleRate, waveLength, channels);
-        this->filePath = filePath;
-        
-        delete [] samples;
-
-    }else{
-        std::string error =  std::string(fileHandle.strError());
-        if(verbose) std::cout<<"[pdsp] "<<error<<"\n";
-        this->filePath = error;
-    }
-
-#elif defined(PDSP_USE_LIBAUDIODECODER)
-    
-    AudioDecoder * fileHandle = new AudioDecoder(filePath);
-    
-    int loadState = fileHandle->open();
-    
-    if(loadState == AUDIODECODER_OK){
-        double sampleRate = static_cast<double>(fileHandle->sampleRate());
-
-        std::cout<< " testing channels:"<<fileHandle->channels()<<"\n";
-        std::cout<< " testing length:"<<fileHandle->numSamples()<<"\n";
-        int channels = fileHandle->channels();
-        int waveLength = fileHandle->numSamples() / channels;
-        
-        float* samples;
-        
-        try
-        {
-            samples = new float [channels * waveLength];
-        }
-        catch (std::bad_alloc& ba)
-        {
-            std::string error = "error loading file: bad_alloc caught: ";
-            error += ba.what();
-            error +="\n";
-            if(verbose) std::cout<<"[pdsp]"<< error<<"\n";
-            this->filePath = error;
-            delete fileHandle;
-            return; //abort
-        }
-        
-        fileHandle->read ( channels * waveLength, samples);
-        
-        this->load(samples, sampleRate, waveLength, channels);
-        this->filePath = filePath;
-        
-        delete [] samples;
-        
-    }else{
-        std::string error =  "error opening file";
-        if(verbose) std::cout<<"[pdsp] "<<error<<"\n";
-        this->filePath = error;
-        delete fileHandle;
-        return;
-    }
-    
-#else 
-
-    std::cout<<"[pdsp] loading file unsuccessful, no library for loading audio files on this platform\n";
-    this->filePath = "impossible to load file";
-    
-#endif
     
 }
 

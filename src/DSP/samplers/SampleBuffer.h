@@ -11,15 +11,7 @@
 #include <assert.h>
 #include "../../flags.h"
 
-
-
-#if defined(PDSP_USE_OFXAUDIOFILE)
-    #include "ofxAudioFile.h"
-#elif defined(PDSP_USE_LIBSNDFILE)
-    #include <sndfile.hh>
-#elif defined(PDSP_USE_LIBAUDIODECODER)
-    #include "../../../libs/libaudiodecoder/audiodecoder.h"
-#endif
+#include "ofxAudioFile.h"
 
 #include <cstring>
 #include <string>

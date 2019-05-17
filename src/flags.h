@@ -6,23 +6,6 @@
 #ifndef PDSP_FLAGS_H_INCLUDED
 #define PDSP_FLAGS_H_INCLUDED
 
-//#define PDSP_LEGACY_SAMPLES
-
-#ifdef PDSP_LEGACY_SAMPLES
-    #if defined(__linux)
-        #ifndef __ANDROID__
-            #define PDSP_USE_LIBSNDFILE
-        #endif
-    #elif defined(__APPLE__)
-        #define PDSP_USE_LIBAUDIODECODER
-    #else
-        #define PDSP_USE_OFXAUDIOFILE
-    #endif
-#else
-    #define PDSP_USE_OFXAUDIOFILE
-#endif
-
-
 //if you are on osx/ios, you can add the accelerate framework and decomment this for faster FFT
 //#define AUDIOFFT_APPLE_ACCELERATE
 

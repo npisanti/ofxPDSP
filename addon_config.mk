@@ -69,44 +69,34 @@ common:
 	# ADDON_INCLUDES_EXCLUDE =
 	
 linux64:
-    # when parsing the file system looking for sources exclude this for all or
-    # a specific platform
-    ADDON_SOURCES_EXCLUDE = libs/libaudiodecoder/%
+	
 	
 linux:
-    # when parsing the file system looking for sources exclude this for all or
-    # a specific platform
-    ADDON_SOURCES_EXCLUDE = libs/libaudiodecoder/%
+
 	
 msys2:
-
+        ADDON_CFLAGS = -msse2 -mstackrealign
 	
 vs:
-    # when parsing the file system looking for sources exclude this for all or
-    # a specific platform
-    ADDON_SOURCES_EXCLUDE = libs/libaudiodecoder/%
+
 	
 linuxarmv6l:
-    # when parsing the file system looking for sources exclude this for all or
-    # a specific platform
-    ADDON_SOURCES_EXCLUDE = libs/libaudiodecoder/%
-
+	# ofxSIMDFloats is not useful without NEON, this flags are for running it on a raspbian rpi2
+	ADDON_CFLAGS = -mfpu=neon -mfloat-abi=hard -ftree-vectorize
 	
 linuxarmv7l:
-    # when parsing the file system looking for sources exclude this for all or
-    # a specific platform
-    ADDON_SOURCES_EXCLUDE = libs/libaudiodecoder/%
+	# enable NEON as is not enabled by default, i'm assuming this is a raspberry Pi / other ARMhf
+	ADDON_CFLAGS = -march=armv7-a -mfpu=neon -mfloat-abi=hard -ftree-vectorize
 
 android/armeabi:	
-    ADDON_SOURCES_EXCLUDE = libs/libaudiodecoder/%	
+	
 	
 android/armeabi-v7a:	
-    # when parsing the file system looking for sources exclude this for all or
-    # a specific platform
-    ADDON_SOURCES_EXCLUDE = libs/libaudiodecoder/%
+	# make sure NEON is enabled
+	ADDON_CFLAGS = -mfpu=neon
 
 osx:
 
-
+    
 ios:
 
