@@ -33,6 +33,18 @@ public:
     void openPort(int index);
 
     /*!
+    @brief open the port with the given name
+    @param[in] name of the port to open
+    */    
+    void openPort( std::string name );
+
+    /*!
+    @brief create a virtual input port with the given name
+    @param[in] name of the port to crate
+    */    
+    void openVirtualPort( std::string name );
+
+    /*!
     @brief close the opened port
     */   
     void closePort();
@@ -81,6 +93,8 @@ private:
     void pushToReadVector( _PositionedMidiMessage & message );
     
     bool connected;
+    
+    void initPort();
         
 };
 

@@ -31,20 +31,31 @@ void pdsp::midi::Input::linkToMidiIn(ofxMidiIn &midiInput){
     connected = true;
 }
 
-
-void pdsp::midi::Input::openPort(int index){
-    if(connected){
-        closePort();
-    }
-    
-    midiIn.openPort(index); 
-    
+void pdsp::midi::Input::initPort() {
     if(midiIn.isOpen()){
         midiIn_p = &midiIn;
         midiIn_p->addListener(this); // add ofApp as a listener
         connected = true;
         bufferChrono = std::chrono::high_resolution_clock::now();
     }
+}
+
+void pdsp::midi::Input::openPort(int index){
+    if(connected){ closePort(); }
+    midiIn.openPort(index); 
+    initPort();
+}
+
+void pdsp::midi::Input::openPort( std::string name){
+    if(connected){ closePort(); }
+    midiIn.openPort(name); 
+    initPort();
+}
+
+void pdsp::midi::Input::openVirtualPort( std::string name){
+    if(connected){ closePort(); }
+    midiIn.openVirtualPort( name ); 
+    initPort();
 }
 
 void pdsp::midi::Input::closePort(){
