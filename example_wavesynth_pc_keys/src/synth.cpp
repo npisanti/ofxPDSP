@@ -75,7 +75,7 @@ void PolySynth::setup(int numVoices){
     }
     
     chorus.ch(0) >> gain.ch(0);
-    chorus.ch(1) >> gain.ch(0);
+    chorus.ch(1) >> gain.ch(1);
 
     // pdsp::Switch EXAMPLE ---------------------------------------------------
     lfo_switch.resize(5);  // resize input channels
