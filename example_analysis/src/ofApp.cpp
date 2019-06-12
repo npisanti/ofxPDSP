@@ -39,6 +39,11 @@ void ofApp::setup(){
     // start your audio engines!
     engine.listDevices();
     engine.setDeviceID(0); 
+
+    // if listDevices() lists different devices for in and out you need to make something like this 
+	//engine.setInputDeviceID(0);    
+    //engine.setOutputDeviceID(2); // a valid output device is required
+    
     engine.setup( 44100, 512, 3); 
   
 }
