@@ -29,16 +29,18 @@ public:
     @brief adds a new trigger layer. This will parse the notes from noteLow o noteHigh (both included) and convert the midi message to a pdsp trigger output
     @param[in] noteLow low note for parsing, included
     @param[in] noteLow high note for parsing, included
+    @param[in] channel midi channel, 0 if not given. 0 = all channels
     */   
-    void addTriggerLayer(int noteLow, int noteHigh);
+    void addTriggerLayer(int noteLow, int noteHigh, int channel = 0 );
     
     /*!
     @brief sets a trigger layer. This layer will parse the notes from noteLow o noteHigh (both included) and convert the midi message to a pdsp trigger output
     @param[in] layerIndex index of the layer to set
     @param[in] noteLow low note for parsing, included
     @param[in] noteLow high note for parsing, included
+    @param[in] channel midi channel, 0 if not given. 0 = all channels
     */   
-    void setTriggerLayer(int layerIndex, int noteLow, int noteHigh);
+    void setTriggerLayer(int layerIndex, int noteLow, int noteHigh, int channel = 0 );
     
     /*!
     @brief resizes the trigger layers number
@@ -51,8 +53,9 @@ public:
     @param[in] lowNote the lowest note of the first layer
     @param[in] numLayer the number of layers
     @param[in] layerSpan how many notes each layer has
+    @param[in] channel midi channel for all the laters, 0 if not given. 0 = all channels
     */    
-    void simpleInit(int lowNote, int numLayer, int layerSpan=1);
+    void simpleInit(int lowNote, int numLayer, int layerSpan=1, int channel=0);
     
     /*!
     @brief return the trigger output of the given note layer.
@@ -90,6 +93,7 @@ private:
     std::vector<pdsp::MessageBuffer>     trigBuffers;       
     std::vector<int>                     lowThreshold;
     std::vector<int>                     highThreshold;
+    std::vector<int>                     channels;
 
     int size;
 };

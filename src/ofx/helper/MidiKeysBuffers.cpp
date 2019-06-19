@@ -63,6 +63,8 @@ void MidiKeysBuffers::setMidiChannel( int channel ){
         this->channel = channel;
     }else{
         this->channel = 0;
+        std::cout << "[pdsp] error: invalid midi channel value";
+        pdsp_trace();
     }
 }
 

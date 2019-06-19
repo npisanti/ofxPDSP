@@ -40,9 +40,15 @@ void pdsp::midi::Pads::resizeLayers(int size){
 }
 
 
-void pdsp::midi::Pads::addTriggerLayer(int noteLow, int noteHigh){
+void pdsp::midi::Pads::addTriggerLayer(int noteLow, int noteHigh, int channel ){
+    if( channel < 0 || channel > 16){
+        channel = 0;
+        std::cout << "[pdsp] error: invalid midi channel value, 0 used instead";
+        pdsp_trace();        
+    }
     lowThreshold.push_back(noteLow);
     highThreshold.push_back(noteHigh);
+    channels.push_back( channel );
     trigBuffers.resize(size + 1);
     outs_trig.resize(size +1);
     trigBuffers[size] >> outs_trig[size];
@@ -51,15 +57,22 @@ void pdsp::midi::Pads::addTriggerLayer(int noteLow, int noteHigh){
 }
 
 
-void pdsp::midi::Pads::setTriggerLayer(int layerIndex, int noteLow, int noteHigh){
+void pdsp::midi::Pads::setTriggerLayer(int layerIndex, int noteLow, int noteHigh, int channel ){
+    if( channel < 0 || channel > 16){
+        channel = 0;
+        std::cout << "[pdsp] error: invalid midi channel value, 0 used instead";
+        pdsp_trace();        
+    }
+    
     if(layerIndex>=0 && layerIndex<= size){
         lowThreshold[layerIndex] = noteLow;
         highThreshold[layerIndex] = noteHigh; 
+        channels[layerIndex] = channel; 
     }
 }
 
 
-void pdsp::midi::Pads::simpleInit(int lowNote, int numLayer, int layerSpan){
+void pdsp::midi::Pads::simpleInit(int lowNote, int numLayer, int layerSpan, int channel ){
     trigBuffers.clear();
     lowThreshold.clear();
     highThreshold.clear();
@@ -68,11 +81,12 @@ void pdsp::midi::Pads::simpleInit(int lowNote, int numLayer, int layerSpan){
     trigBuffers.reserve(numLayer);
     lowThreshold.reserve(numLayer);
     highThreshold.reserve(numLayer);
+    channels.reserve(numLayer);
     outs_trig.reserve(numLayer);  
     
     for(int i=0; i<numLayer; ++i){
         int baseNote = lowNote + i*layerSpan;
-        addTriggerLayer(baseNote, baseNote+layerSpan-1);
+        addTriggerLayer(baseNote, baseNote+layerSpan-1, channel );
     }
     
     size = numLayer;
@@ -102,11 +116,14 @@ void pdsp::midi::Pads::processMidi(const pdsp::midi::Input &midiInProcessor, con
         trigBuffers[i].clearMessages();
     }
     
-    for( const _PositionedMidiMessage & midi : midiInProcessor.getMessageVector() ){
+    for( const _PositionedMidiMessage & midi : midiInProcessor.getMessageVector() ){      
         switch(midi.message.status){
             case MIDI_NOTE_ON:
                 for(int i=0; i<size; ++i){
-                    if(midi.message.pitch >= lowThreshold[i] && midi.message.pitch <= highThreshold[i]){
+                    if( midi.message.pitch >= lowThreshold[i] 
+                    && midi.message.pitch <= highThreshold[i] 
+                    && (channels[i]==0 || midi.message.channel == channels[i]) )
+                    { 
                         float gateValue = static_cast<float>(midi.message.velocity+1)*0.0078125f; 
                         trigBuffers[i].addMessage(gateValue, midi.sample);
                     }
@@ -115,7 +132,10 @@ void pdsp::midi::Pads::processMidi(const pdsp::midi::Input &midiInProcessor, con
             
             case MIDI_NOTE_OFF:
                 for(int i=0; i<size; ++i){
-                    if(midi.message.pitch >= lowThreshold[i] && midi.message.pitch <= highThreshold[i]){ 
+                    if( midi.message.pitch >= lowThreshold[i] 
+                    && midi.message.pitch <= highThreshold[i] 
+                    && (channels[i]==0 || midi.message.channel == channels[i]) )
+                    { 
                         trigBuffers[i].addMessage(0.0f, midi.sample);
                     }
                 }
@@ -123,6 +143,7 @@ void pdsp::midi::Pads::processMidi(const pdsp::midi::Input &midiInProcessor, con
             
             default: break;
         }
+    
     }            
     
     for(int i=0; i<size; ++i){
@@ -133,5 +154,6 @@ void pdsp::midi::Pads::processMidi(const pdsp::midi::Input &midiInProcessor, con
 pdsp::SequencerGateOutput &  pdsp::midi::Pads::out_trig( int layerIndex ) {
     return outs_trig[layerIndex];
 }
+
 
 #endif
