@@ -37,11 +37,12 @@ install:
 - git clone --depth=1 --branch=master https://github.com/danomatika/ofxMidi openframeworks/addons/ofxMidi
 - git clone --depth=1 --branch=master https://github.com/npisanti/ofxAudioFile openframeworks/addons/ofxAudioFile
 - call openFrameworks\scripts\ci\addons\install.cmd
-- rm -rf openframeworks/addons/ofxPDSP/example_android
-- rm -rf openframeworks/addons/ofxPDSP/example_ios
+
 
 build_script:
 - cd %OF_PATH%
+- rm -rf addons/ofxPDSP/example_android
+- rm -rf addons/ofxPDSP/example_ios
 - scripts\ci\addons\build.cmd
 
 
