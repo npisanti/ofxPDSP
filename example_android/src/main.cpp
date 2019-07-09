@@ -1,6 +1,8 @@
 #include "ofMain.h"
 #include "ofApp.h"
 
+#ifdef OF_TARGET_ANDROID
+
 int main(){
 	ofSetupOpenGL(1024,768, OF_WINDOW);			// <-------- setup the GL context
 
@@ -11,8 +13,6 @@ int main(){
 	return 0;
 }
 
-
-#ifdef TARGET_ANDROID
 void ofAndroidApplicationInit()
 {
     //application scope init

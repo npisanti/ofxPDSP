@@ -1,5 +1,7 @@
 #include "ofApp.h"
 
+#ifdef OF_TARGET_IOS
+
 int main() {
     
     //  here are the most commonly used iOS window settings.
@@ -17,3 +19,5 @@ int main() {
     
 	return ofRunApp(new ofApp);
 }
+
+#endif

@@ -1,7 +1,11 @@
 #include "ofApp.h"
 
+#ifdef OF_TARGET_IOS
+
 // this is a basic ios example,
 // it is just a little more than a "hello world" program to test that everything is working
+
+// the OF_TARGET_IOS defines are for making travis/appveyor happy, you can remove them
 
 // before looking at this check out the basics examples
 
@@ -86,3 +90,5 @@ void ofApp::gotMemoryWarning(){
 void ofApp::deviceOrientationChanged(int newOrientation){
 
 }
+
+#endif

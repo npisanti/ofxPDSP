@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef OF_TARGET_ANDROID
+
 #include "ofMain.h"
 #include "ofxAndroid.h"
 #include <map>
@@ -37,3 +39,5 @@ class ofApp : public ofxAndroidApp{
         pdsp::VAOscillator      osc;
         pdsp::Amp               amp;
 };
+
+#endif

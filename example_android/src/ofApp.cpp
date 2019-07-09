@@ -1,7 +1,9 @@
 #include "ofApp.h"
+#ifdef OF_TARGET_ANDROID
 
 // this is a basic android example,
 // it is just a little more than a "hello world" program to test that everything is working
+// the OF_TARGET_ANDROID defines are for making travis/appveyor happy, you can remove them
 
 // before looking at this check out the basics examples
 
@@ -121,3 +123,5 @@ void ofApp::okPressed(){
 void ofApp::cancelPressed(){
 
 }
+
+#endif 
