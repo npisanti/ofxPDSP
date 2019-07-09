@@ -1,5 +1,7 @@
 ofxPDSP
 ==============
+[![Build status](https://travis-ci.org/npisanti/ofxPDSP.svg?branch=master)](https://travis-ci.org/npisanti/ofxPDSP) [![Build status](https://ci.appveyor.com/api/projects/status/7iv8fc8870mkwnwv?svg=true)](https://ci.appveyor.com/project/npisanti/ofxpdsp)
+
 ofxPDSP is an [openFrameworks](https://openframeworks.cc/) addon for audio synthesis and generative music. It is based on those design principles:
 - Native c++, made to be tightly integrated into c++ projects.
 - Class design mimics modular synthesizers, where inputs and outputs are patched with the >> operator.
