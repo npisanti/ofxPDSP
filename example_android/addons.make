@@ -1,3 +1,4 @@
 ofxOsc
 ofxAudioFile
 ofxPDSP
+ofxMidi

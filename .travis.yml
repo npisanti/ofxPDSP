@@ -193,6 +193,8 @@ install:
   - scripts/ci/addons/install.sh
   - git clone --depth=1  --branch=master https://github.com/danomatika/ofxMidi addons/ofxMidi
   - git clone --depth=1  --branch=master https://github.com/npisanti/ofxAudioFile addons/ofxAudioFile
+  - rm -rf addons/ofxPDSP/example_android
+  - rm -rf addons/ofxPDSP/example_ios
 
 
 script:

@@ -1,7 +1,5 @@
 #pragma once
 
-#ifdef OF_TARGET_IOS
-
 #include "ofxiOS.h"
 #include "ofxPDSP.h"
 
@@ -28,5 +26,3 @@ class ofApp : public ofxiOSApp {
         pdsp::VAOscillator      osc;
         pdsp::Amp               amp;
 };
-
-#endif
