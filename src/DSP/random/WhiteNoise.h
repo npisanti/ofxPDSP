@@ -14,6 +14,7 @@
 #ifdef _MSC_VER
 #pragma warning( push )
 #pragma warning( disable : C4838)
+#pragma warning( disable : C4554)
 #endif
 
 #ifdef __GNUC__
