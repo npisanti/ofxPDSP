@@ -149,10 +149,14 @@ void pdsp::midi::Keys::setPolyMode(int maxNotes, int unisonVoices ){
 
 void pdsp::midi::Keys::setMonoMode(int unisonVoices, bool legato, MonoPriority priority){
 
-        for(int i=0; i<this->maxNotes; ++i){
-                gates[i].unLink();
-                values[i].unLink();
+        for( auto & gate : gates ){
+                gate.unLink();
         }
+        
+        for( auto & value : values ){
+                value.unLink();
+        }
+        
         out_singletrigger.unLink();
         
         midiConverter.setVoiceMode(Mono);
