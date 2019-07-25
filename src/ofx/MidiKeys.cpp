@@ -25,6 +25,7 @@ pdsp::midi::Keys::Keys(){
     setPitchBend(-2, 2);
 
     setPolyMode(8, 1);
+
 }
 
 void pdsp::midi::Keys::setMidiChannel( int channel ){
@@ -74,12 +75,12 @@ void pdsp::midi::Keys::setPolyMode(int maxNotes, int unisonVoices ){
       
         this->maxNotes = maxNotes;
         
-        for(int i=0; i<this->maxNotes && i<(int)gates.size(); ++i){
-                gates[i].unLink();
+        for( auto & gate : gates ){
+                gate.unLink();
         }
         
-        for(int i=0; i<this->maxNotes && i<(int)values.size(); ++i){
-                values[i].unLink();
+        for( auto & value : values ){
+                value.unLink();
         }
         
         out_singletrigger.unLink();
