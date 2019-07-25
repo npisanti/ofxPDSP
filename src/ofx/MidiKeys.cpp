@@ -71,14 +71,19 @@ void pdsp::midi::Keys::setNoteRange(int lowNote, int highNote){
 }
 
 void pdsp::midi::Keys::setPolyMode(int maxNotes, int unisonVoices ){
-        
-        for(int i=0; i<this->maxNotes; ++i){
-                gates[i].unLink();
-                values[i].unLink();
-        }
-        out_singletrigger.unLink();
+      
         this->maxNotes = maxNotes;
         
+        for(int i=0; i<this->maxNotes && i<(int)gates.size(); ++i){
+                gates[i].unLink();
+        }
+        
+        for(int i=0; i<this->maxNotes && i<(int)values.size(); ++i){
+                values[i].unLink();
+        }
+        
+        out_singletrigger.unLink();
+
         midiConverter.setVoiceMode(Poly);
         midiConverter.setMaxNotes(maxNotes);
         
