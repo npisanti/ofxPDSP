@@ -73,6 +73,16 @@ void pdsp::midi::Input::listPorts(){
     midiIn.listInPorts(); // print input ports to console
 }
 
+int pdsp::midi::Input::getPortCount()
+{
+  return midiIn.getNumInPorts();
+}
+
+std::vector<std::string> pdsp::midi::Input::getPortList()
+{
+  return midiIn.getInPortList();
+}
+
 
 void pdsp::midi::Input::prepareToPlay( int expectedBufferSize, double sampleRate ){
     oneSlashMicrosecForSample = 1.0 / (1000000.0 / sampleRate);
