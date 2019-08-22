@@ -55,6 +55,16 @@ public:
     void listPorts();
 
     /*!
+    @brief return number of available midi in ports
+    */
+    int getPortCount();
+
+    /*!
+    @brief return list of available ports name
+    */
+    std::vector<std::string> getPortList();
+
+    /*!
     @brief uses an already open ofxMidiIn instead of opening a port
     @param[in] midiInput ofxMidiIn object
     */    
