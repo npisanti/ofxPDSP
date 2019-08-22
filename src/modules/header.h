@@ -20,6 +20,7 @@
 #include "oscillators/FMOperator.h"
 #include "oscillators/TableOscillator.h"
 #include "oscillators/DataOscillator.h"
+#include "oscillators/ADSR_OSC.h"
 
 #include "samplers/GrainCloud.h"
 #include "samplers/TriggeredGrain.h"
