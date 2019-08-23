@@ -12,6 +12,7 @@ pdsp::ADSR_OSC::ADSR_OSC()
   detuneCoarse.set(0);
   detuneFine.set(0);
 
+  // pach pitch and detune
   pitch + detuneCoarse + detuneFine >> osc.in_pitch();
 
   waveForm.resize(4);
@@ -20,6 +21,7 @@ pdsp::ADSR_OSC::ADSR_OSC()
   osc.out_saw() >> waveForm.input(2);
   osc.out_pulse() >> waveForm.input(3);
 
+  // default wave form to sine
   0.0f >> waveForm.in_select();
 
   trigger >> adsr >> amp.in_mod();
