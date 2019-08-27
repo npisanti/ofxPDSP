@@ -1,0 +1,10 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\modules",
+    "\\src\\modules\\oscillators"
+  ],
+  "SelectedNode": "\\src\\modules\\oscillators\\ADSR_OSC.cpp",
+  "PreviewInSolutionExplorer": false
+}

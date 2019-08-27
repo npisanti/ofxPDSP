@@ -59,7 +59,11 @@ pdsp::Patchable& pdsp::Switch::out_signal(){
              
 pdsp::InputNode& pdsp::Switch::input(int channel){
         if( channel < 0 ) channel = 0;
-        if( channel >= (int) inputs.size()) channel = inputs.size()-1;
+        if (channel >= (int)inputs.size())
+        {
+          std::cout << "[pdsp] warning! switch input out of range"<< channel <<" set to size "<< (int)inputs.size() << "\n";
+          channel = inputs.size() - 1;
+        }
         return inputs[channel];
 }
 
