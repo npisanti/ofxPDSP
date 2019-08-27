@@ -80,7 +80,7 @@ void pdsp::Switch::process(int bufferSize) noexcept {
         if( state ){ // Changed or AudioRate
             channel = selectBuffer[0];
             if( channel < 0 ) channel = 0;
-            if( channel > (int) inputs.size()) channel = inputs.size()-1;
+            if( channel >= (int) inputs.size()) channel = inputs.size()-1;
         } 
         
         inputs[channel].process();
