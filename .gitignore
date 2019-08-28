@@ -26,6 +26,7 @@ Release*/
 .svn/
 
 # Visual Studio Code
+.vs/
 .vscode/
 *.code-workspace
 GPATH
