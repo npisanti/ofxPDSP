@@ -193,7 +193,7 @@ void pdsp::ADSR::onRetrigger(float triggerValue, int n) {
         }
         */
         
-        if(triggerValue == pdspTriggerOff){
+        if(triggerValue == PDSP_TRIGGER_OFF){
                 stageSwitch = releaseStage;
         }else if( triggerValue > 0.0f ){
                 stageSwitch = attackStage;
@@ -261,7 +261,12 @@ void pdsp::ADSR::process_T( const float* &trigBuffer, const int &bufferSize){
     float* outputBuffer = getOutputBufferToFill(output);
 
     for (int n = 0; n < bufferSize; ++n){
-        if ( envTrigger( trigBuffer[n] ) ){ onRetrigger( trigBuffer[n], n ); };
+        float t = trigBuffer[n];
+        if ( notTrigger( t ) ){
+            //likely
+        }else{ 
+            onRetrigger( t, n ); 
+        };
 
         doEnvelope();
         outputBuffer[n] = envelopeOutput;

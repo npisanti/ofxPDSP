@@ -30,7 +30,7 @@ void pdsp::TriggerControl::trigger(float value){
 }
 
 void pdsp::TriggerControl::off(){
-    nextTrigger.store(TriggerOff);
+    nextTrigger.store(PDSP_TRIGGER_OFF);
 }
 
 void pdsp::TriggerControl::prepareUnit( int expectedBufferSize, double sampleRate ){

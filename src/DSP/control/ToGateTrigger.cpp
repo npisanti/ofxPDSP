@@ -95,7 +95,7 @@ void pdsp::ToGateTrigger::process (int bufferSize) noexcept {
                         float* outputBuffer = getOutputBufferToFill(output);
                         ofx_Aeq_Zero(outputBuffer, bufferSize);
                         this->gate = 0;
-                        outputBuffer[0] = pdspTriggerOff;
+                        outputBuffer[0] = PDSP_TRIGGER_OFF;
                     }
                 break;
                 
@@ -133,7 +133,7 @@ void pdsp::ToGateTrigger::process (int bufferSize) noexcept {
                                 ofx_Aeq_Zero(outputBuffer, bufferSize);
                             }
                             gate = 0;
-                            outputBuffer[n] = pdspTriggerOff;
+                            outputBuffer[n] = PDSP_TRIGGER_OFF;
                         }
                     break;
                     

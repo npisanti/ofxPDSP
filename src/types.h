@@ -6,7 +6,7 @@
 #ifndef PDSP_TYPES_H_INCLUDED
 #define PDSP_TYPES_H_INCLUDED
 
-#include <limits>
+#include <cfloat>
 
 namespace pdsp{
 
@@ -16,7 +16,7 @@ enum Interpolator_t {Linear, Smooth};
 
 enum SlewMode_t {Rate, Time};
 
-static const float TriggerOff = - std::numeric_limits<float>::infinity();
+#define PDSP_TRIGGER_OFF FLT_MIN
 
 } // end namespace
 

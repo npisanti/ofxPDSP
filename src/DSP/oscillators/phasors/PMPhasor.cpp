@@ -109,7 +109,7 @@ void pdsp::PMPhasor::process_audio(const float* freqBuffer, const float* syncBuf
     float* incBuffer = nullptr;
 
     float* syncOutput = getOutputBufferToFill(output_sync);
-    ofx_Aeq_S(syncOutput, pdspSyncNull, bufferSize);
+    ofx_Aeq_S(syncOutput, PDSP_SYNC_NULL, bufferSize);
 
     if(pitchAR){
         ofx_Aeq_BmulS(outputBuffer, freqBuffer, incCalculationMultiplier, bufferSize);

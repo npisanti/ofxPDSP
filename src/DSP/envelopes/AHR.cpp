@@ -179,7 +179,12 @@ void pdsp::AHR::process_T( const float* &trigBuffer, const int &bufferSize){
     float* outputBuffer = getOutputBufferToFill(output);
 
     for (int n = 0; n < bufferSize; ++n){
-        if ( envTrigger( trigBuffer[n] ) ){ onRetrigger( trigBuffer[n], n ); };
+        float t = trigBuffer[n];
+        if ( notTrigger( t ) ){
+            //likely
+        }else{ 
+            onRetrigger( t, n ); 
+        };
 
         doEnvelope();
         outputBuffer[n] = envelopeOutput;

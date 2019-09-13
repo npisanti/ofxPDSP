@@ -72,7 +72,7 @@ void pdsp::SequencerGateOutput::process (int bufferSize) noexcept {
                         ControlMessage &msg = messageBuffer->messages[i];
                         
                         if(msg.value <=0.0f){
-                                trigBuffer[ msg.sample  * getOversampleLevel() ] = pdspTriggerOff;
+                                trigBuffer[ msg.sample  * getOversampleLevel() ] = PDSP_TRIGGER_OFF;
                                 gateState = false;
                         }else{
                                 if(!singleTrigger || (singleTrigger && !gateState) ){

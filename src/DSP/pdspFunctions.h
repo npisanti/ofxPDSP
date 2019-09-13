@@ -20,6 +20,10 @@ inline_f bool envTrigger(float x){
         return (x != 0.0f);
 }
 
+inline_f bool notTrigger(float x){
+        return (x == 0.0f);
+}
+
 inline_f bool checkSync(float x){
         return (x >= 0.0f);
 }

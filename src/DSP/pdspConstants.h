@@ -21,16 +21,11 @@
     #define M_PI_DOUBLE 3.141592653589793238462643383279502884
 #endif
 
+#define PDSP_SYNC_NULL -1.0f
+#define PDSP_SYNC_PULSE 0.0f
+
 
 namespace pdsp{
-
-static const float pdspSyncNull = -1.0f;
-static const float pdspSyncPulse = 0.0f;
-
-
-//static const float pdspTriggerOff = -32000.0f;
-static const float pdspTriggerOff = TriggerOff;
-
 
 static const int Unchanged = 0;
 static const int Changed = 1;
