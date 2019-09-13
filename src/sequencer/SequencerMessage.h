@@ -14,13 +14,15 @@
 
 namespace pdsp{
 
-//---------------------------------------------------------------------------
     /*!
     @brief Basic message block for scoring.
     
     This class rapresent a message contained inside the vector of a ScoreCell, having a time of execution, a value that will be interpreted by GateSequencer or ValueSequencer and the index of the output lane choosen between the one available of the ScoreSection that contains the ScoreCell.
 
     */ 
+
+    enum MessageType{ MValue, MSlew, MLegato };
+
 class SequencerMessage{
 public:
 
@@ -35,23 +37,31 @@ public:
     SequencerMessage(double time, float value );
     
     SequencerMessage(double time, float value, int lane);
+    SequencerMessage(double time, float value, int lane, MessageType mtype );
     SequencerMessage(const SequencerMessage &other);
     SequencerMessage& operator= (const SequencerMessage &other);
     ~SequencerMessage();
     /*!
     @brief time in bars of the execution, relative to the ScoreCell start
     */     
-    double   time;    
+    double time;  
+      
     /*!
     @brief value to be output. GateSequencer and ValueSequencer interpret the received value in different manners.
     
     Value to be output. GateSequencer and ValueSequencer interpret the received value in different manners. GateSequencer emits a trigger on for values > 0.0f and a trigger off for value <= 0.0f. ValueSequencer constantly outputs a value, the sequenced value is changed at the right time, eventually the change is slewed if the slew is active.
     */     
-    float    value;
+    float value;
+    
     /*!
     @brief  the index of the output lane choosen between the one available of the ScoreSection that contains the ScoreCell.
     */     
-    int      lane;
+    int lane;
+
+    /*!
+    @brief type of message, for implementing some GateSequencer and ValueSequencer behaviors
+    */         
+    MessageType mtype;
 };
 
 

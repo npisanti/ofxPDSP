@@ -1,12 +1,13 @@
 
 #include "SequencerMessage.h"
 
+pdsp::SequencerMessage::SequencerMessage(double time, float value, int lane, MessageType mtype ) : time(time), value(value), lane(lane), mtype(mtype) {}
 
-pdsp::SequencerMessage::SequencerMessage( double time, float value, int lane) : time(time), value(value), lane(lane) {}
+pdsp::SequencerMessage::SequencerMessage( double time, float value, int lane) : time(time), value(value), lane(lane), mtype(MValue) {}
 
-pdsp::SequencerMessage::SequencerMessage( double time, float value ) : time(time), value(value), lane(0) {}
+pdsp::SequencerMessage::SequencerMessage( double time, float value ) : time(time), value(value), lane(0), mtype(MValue) {}
 
-pdsp::SequencerMessage::SequencerMessage() : pdsp::SequencerMessage( 0.0, 0.0f, 0 ) {}
+pdsp::SequencerMessage::SequencerMessage() : pdsp::SequencerMessage( 0.0, 0.0f, 0, MValue ) {}
 
 pdsp::SequencerMessage::SequencerMessage(const pdsp::SequencerMessage &other) : pdsp::SequencerMessage( other.time, other.value, other.lane) {}
 

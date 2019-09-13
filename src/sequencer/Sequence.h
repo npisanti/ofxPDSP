@@ -30,23 +30,15 @@ namespace pdsp{
         Sequence& operator= (Sequence && other);
       
       
-      
         /*!
         @brief public access to read and set the sequence label.
         */     
         std::string label;
-
-        /*!
-        @brief public access to read and set the step length, initializated to 1.0/16.0 ( one sixteenth ).
-        */     
-        std::atomic<double> steplen;
         
         /*!
-        @brief public access to read and set the length of the sequence in bars, initializated to 1.0 (one bar)
+        @brief public access to read and set the duration of the sequence in bars, initializated to 1.0 (one bar loop)
         */     
-        std::atomic<double> bars;
-        
-        
+        std::atomic<double> timing;
         
         /*!
         @brief returns how many time this Sequence has been restarted (0 if it is the first time it starts). This internal counter can be reset to zero with resetCount().
@@ -57,9 +49,78 @@ namespace pdsp{
         @brief resets the internal counter you can get with counter(). This counter is resetted automatically when there is a change from a sequence to another or when a Sequence is launched manually.
         */
         void resetCount();
+            
+        /*!
+        @brief you call begin() before calling message, this prepare the Sequence for the message() method, clearing the buffers.
+        */
+        void begin() noexcept;
+
+        /*!
+        @brief you call end() when you have finished adding value with Message(). When the Sequence restarts the new sequence will be played.
+        */
+        void end() noexcept;
+        
+        /*!
+        @brief sets the output for the next banged message
+        @param[in] tag the output's name
+        */        
+        pdsp::Sequence & out( std::string tag );
+
+        /*!
+        @brief sets the output for the next banged message
+        @param[in] value the output's index
+        */    
+        pdsp::Sequence & out( int value );
+
+        /*!
+        @brief sets the delay from the start of the sequence of the next message, in fraction of the sequence's timing
+        @param[in] value the delay of the message
+        */            
+        pdsp::Sequence &  delay( double value );
+        
+        /*!
+        @brief outputs a message. You can use out() to choose the output or delay() to change the timing
+        @param[in] value the message value
+        */ 
+        pdsp::Sequence &  bang( float value );
+
+        /*!
+        @brief outputs a legato message. You can use out() to choose the output or delay() to change the timing. This message won't retrigger envelopes like ADSR, instead the envelope will decay to the given value. Only works if the selected output is patched as trigger output.
+        @param[in] value the message value
+        */ 
+        pdsp::Sequence &  legato( float value );
+        
+        /*!
+        @brief outputs a slew message. You can use out() to choose the output or delay() to change the timing. Smooths out next messages with the give time in milliseconds. Only works if the selected output is patched as value output.
+        @param[in] value the message value
+        */ 
+        pdsp::Sequence &  slew( float milliseconds );
+
+        /*!
+        @brief this lambda function is executed each time the Sequence starts from the begin. Assign your own functions to it.
+        This lambda function is executed each time the Sequence starts from the begin. Usually is empty, but you can assign your own lambdas to generate new values each time the Sequence starts. Remember that the code executed can make a previosly called set() method ininfluent. Remember that this function will be executed into the audio-thread so the access to some variable used also into the main thread could cause race conditions.
+        */
+        std::function<void()> code;
+
+        /*!
+        @brief returns the percentual of completion of this sequence. When the sequence is not playing it will return the last value. Thread-safe.
+        */ 
+        float meter_percent() const; 
+
+
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
+        // --------------------------- API TO DEPRECATE --------------
     
-    
-    
+        /*!
+        @brief with this method you can manually add timed values to the sequence. You have to call begin() before adding messages and end() when you've done. Also note that the old Sequence values are not kept so you are adding values to an empty sequence.
+        @param[in] step the step index 
+        @param[in] value the value of the step
+        @param[in] outputIndex the output of the SequencerSection that will operate with the message, 0 if not given
+        */
+        void message(double step, float value, int outputIndex=0) noexcept;
+                
         /*!
         @brief sets the sequence from an inlined array. Negative values produce no messages.
         @param[in] init an inline array, for example {1.0f, 0.0f, -1.0f, -1.0f, 0.25f, 0.5f, 0.0f, -1.0f }
@@ -93,53 +154,11 @@ namespace pdsp{
         
         */
         void set( std::initializer_list<std::initializer_list<float> >  init , double division, double length  ) noexcept;
-   
-        
-        
-        /*!
-        @brief you call begin() before calling message, this prepare the Sequence for the message() method, clearing the buffers.
-        */
-        void begin() noexcept;
-
-        /*!
-        @brief with this method you can manually add timed values to the sequence. You have to call begin() before adding messages and end() when you've done. Also note that the old Sequence values are not kept so you are adding values to an empty sequence.
-        @param[in] step the step index 
-        @param[in] value the value of the step
-        @param[in] outputIndex the output of the SequencerSection that will operate with the message, 0 if not given
-        */
-        void message(double step, float value, int outputIndex=0) noexcept;
-        
-        /*!
-        @brief you call end() when you have finished adding value with Message(). When the Sequence restarts the new sequence will be played.
-        */
-        void end() noexcept;
-        
-        
-
-        /*!
-        @brief this lambda function is executed each time the Sequence starts from the begin. Assign your own functions to it.
-        This lambda function is executed each time the Sequence starts from the begin. Usually is empty, but you can assign your own lambdas to generate new values each time the Sequence starts. Remember that the code executed can make a previosly called set() method ininfluent. Remember that this function will be executed into the audio-thread so the access to some variable used also into the main thread could cause race conditions.
-        */
-        std::function<void()> code;
-
-
-
-        /*!
-        @brief returns the percentual of completion of this sequence. When the sequence is not playing it will return the last value. Thread-safe.
-        */ 
-        float meter_percent() const; 
 
         /*!
         @brief returns the step index, calculated with the current steplen and bars. When the sequence is not playing it will return the last value. Thread-safe.
         */ 
         int meter_step() const; 
-
-
-
-/*!
-    @cond HIDDEN_SYMBOLS
-*/
-        // --------------------------- API TO DEPRECATE -----------------------
 
         /*!
         @brief sets the time division to be used for each step. For example 8.0f means each step is 1/8th. Default division is 1/16th.
@@ -221,28 +240,41 @@ namespace pdsp{
         @brief if the returned number is different than the last one you've got, then a change happened in the sequence and now is safe to access the score
         */
         int getChangeID() const;
+        
+
+        /*!
+        @brief public access to read and set the step length, initializated to 1.0/16.0 ( one sixteenth ).
+        */     
+        std::atomic<double> steplen;
+
+        // THIS IS DEPRECATED, but adding a deprecated message will always trigger messages from backward compatibility
+        std::atomic<double> & bars;
 /*!
     @endcond 
 */
 
     private:
         std::atomic<float> atomic_meter_percent;
+        std::atomic<int> loopCounter;
+        std::atomic<bool> modified;
         
-        void executeGenerateScore() noexcept;
-        
+        int id;
+        int currentOutput;
+        double currentDelay;
+                
         std::vector<SequencerMessage> score;   
         std::vector<SequencerMessage> nextScore;
-        std::atomic<bool> modified;
-
-        int id;
-
-        int loopCounter;
         
+        void executeGenerateScore() noexcept;
+                
+        void message(double step, float value, int outputIndex, MessageType mtype ) noexcept;
+
         static double defaultSteplen;
+        
     };
     
     
-    
+    // ---------------------------------------------------------------
     
     /*!
     @brief class for managing sequencing of Sequence
