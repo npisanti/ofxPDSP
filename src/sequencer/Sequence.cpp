@@ -1,9 +1,11 @@
 
 #include "Sequence.h"
 
+#include<bits/stdc++.h> 
+
 double pdsp::Sequence::defaultSteplen = 1.0 / 16.0;
 
-pdsp::Sequence::Sequence( double stepDivision ) : bars(timing){ 
+pdsp::Sequence::Sequence( double stepDivision ){ 
     modified = false;    
     setDivision(stepDivision);
     setLength(1.0);
@@ -16,30 +18,30 @@ pdsp::Sequence::Sequence( double stepDivision ) : bars(timing){
     currentOutput = 0;
     currentDelay = 0.0;
     steplen = 1.0 / stepDivision;
-    timing = 1.0;
+    bars = 1.0;
 }
 
 pdsp::Sequence::Sequence() : Sequence (1.0){}
 
-pdsp::Sequence::Sequence(const Sequence & other) : bars(timing){
+pdsp::Sequence::Sequence(const Sequence & other){
     this->modified = other.modified.load();
     score = other.score;
     nextScore.reserve(PDSP_PATTERN_MESSAGE_RESERVE_DEFAULT);
     nextScore = other.nextScore;
     code = other.code;
     label = other.label;
-    timing.store( other.timing.load() );
+    bars.store( other.bars.load() );
     steplen.store( other.steplen.load() );
 }
 
-pdsp::Sequence::Sequence(Sequence && other) : bars(timing) {
+pdsp::Sequence::Sequence(Sequence && other){
     this->modified = other.modified.load();
     score = other.score;
     nextScore.reserve(PDSP_PATTERN_MESSAGE_RESERVE_DEFAULT);
     nextScore = other.nextScore;
     code = other.code;
     label = other.label;
-    timing.store( other.timing.load() );
+    bars.store( other.bars.load() );
     steplen.store( other.steplen.load() );
 }
 
@@ -50,7 +52,7 @@ pdsp::Sequence& pdsp::Sequence::operator= (const Sequence & other){
     nextScore = other.nextScore;
     code = other.code;
     label = other.label;
-    timing.store( other.timing.load() );
+    bars.store( other.bars.load() );
     steplen.store( other.steplen.load() );
     return *this;
 }
@@ -62,7 +64,7 @@ pdsp::Sequence& pdsp::Sequence::operator= (Sequence && other){
     nextScore = other.nextScore;
     code = other.code;
     label = other.label;
-    timing.store( other.timing.load() );
+    bars.store( other.bars.load() );
     steplen.store( other.steplen.load() );
     return *this;
 }
@@ -79,17 +81,31 @@ void pdsp::Sequence::message(double step, float value, int outputIndex, MessageT
     nextScore.push_back( pdsp::SequencerMessage( step, value, outputIndex, mtype) );
 }
                 
-pdsp::Sequence &  pdsp::Sequence::out( std::string tag ){
+pdsp::Sequence &  pdsp::Sequence::out( const char * tag ) noexcept{
     std::cout << "out(std::string name) CODE STILL TODO!!!\n";
+    
+    int max = tags->size();
+    const auto & data = tags->data();
+    for( int i=0; i<max; ++i ){
+        if( strcmp( data[i], tag ) == 0 ){
+            currentOutput = i;
+            return *this;
+        }
+    }
+#ifdef DEBUG
+    std::cout<<"[pdsp] seq out tag has not been patched to any output! check out the spelling of the tag\n";
+    pdsp_trace();
+#endif
+    currentOutput = INT_MAX;
     return *this;
 }
 
-pdsp::Sequence &  pdsp::Sequence::out( int value ){
+pdsp::Sequence &  pdsp::Sequence::out( int value ) noexcept{
     currentOutput = value;
     return *this;
 }
 
-pdsp::Sequence &  pdsp::Sequence::delay( double value ){
+pdsp::Sequence &  pdsp::Sequence::delay( double value ) noexcept{
     currentDelay = value;
 #ifdef DEBUG
     if( value >=1.0 ) {
@@ -101,22 +117,23 @@ pdsp::Sequence &  pdsp::Sequence::delay( double value ){
     return *this;
 }
 
-pdsp::Sequence &  pdsp::Sequence::bang( float value ){
+pdsp::Sequence &  pdsp::Sequence::bang( float value ) noexcept{
     message( currentDelay, value, currentOutput, MValue );
     return *this;
 }
 
-pdsp::Sequence &  pdsp::Sequence::legato( float value ){
+pdsp::Sequence &  pdsp::Sequence::legato( float value ) noexcept{
     message( currentDelay, value, currentOutput, MLegato );
     return *this;
 }
 
-pdsp::Sequence &  pdsp::Sequence::slew( float milliseconds ){
+pdsp::Sequence &  pdsp::Sequence::slew( float milliseconds ) noexcept{
     message( currentDelay, milliseconds, currentOutput, MSlew );
     return *this;
 }
 
-void pdsp::Sequence::executeGenerateScore() noexcept {
+void pdsp::Sequence::executeGenerateScore( std::vector<const char*> * tags ) noexcept {
+    this->tags = tags;
     currentOutput = 0;
     currentDelay = 0.0;
     code();
@@ -175,11 +192,11 @@ void pdsp::Sequence::setDivision( double value ){
 }
 
 void pdsp::Sequence::setLength( double bars ){
-    this->timing.store( bars );
+    this->bars.store( bars );
 }
 
 double pdsp::Sequence::length() const{
-    return timing.load();
+    return bars.load();
 }
 
 double pdsp::Sequence::division() const{

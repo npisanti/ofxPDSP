@@ -303,7 +303,7 @@ void pdsp::SequencerSection::onSchedule() noexcept{
     if( patternIndex >=0 && patterns[patternIndex].sequence!=nullptr){ //if there is a pattern, execute it's generative routine
         if(reset) patterns[patternIndex].sequence->resetCount();
         
-        patterns[patternIndex].sequence->executeGenerateScore( );
+        patterns[patternIndex].sequence->executeGenerateScore( &outputsNames );
         
         atomic_meter_current.store(patternIndex);
         atomic_meter_length.store(patterns[patternIndex].sequence->length());
@@ -379,6 +379,7 @@ void pdsp::SequencerSection::setOutputsNumber(int size){
     if( size > (int) outputs.size()){
         int oldSize = outputs.size();
         outputs.resize(size);        
+        outputsNames.resize(size);
         for(int i=oldSize; i<size; ++i){
             outputs[i] = new MessageBuffer();
         }        
@@ -387,10 +388,25 @@ void pdsp::SequencerSection::setOutputsNumber(int size){
 
 
 pdsp::MessageBuffer& pdsp::SequencerSection::out_message( int index ){
-    if(index<0) index = 0;
+    if(index<0){ 
+        std::cout<<"[pdsp] score section output index less than zero\n";
+        pdsp_trace();
+    }
 
     setOutputsNumber(index+1); // make the array larger if needed
     return *outputs[index];
+}
+
+pdsp::MessageBuffer& pdsp::SequencerSection::out_message( const char * tag ){
+   
+    for( size_t i=0; i<outputsNames.size(); ++i ){
+        if( strcmp(outputsNames[i], tag ) == 0 ) return *outputs[i];
+    }
+   
+    int k = outputs.size();
+    setOutputsNumber( k+1 ); // make the array larger if needed
+    outputsNames[k] = tag;
+    return *outputs[k];
 }
 
 pdsp::MessageBuffer& pdsp::SequencerSection::out( int index ){
@@ -400,7 +416,10 @@ pdsp::MessageBuffer& pdsp::SequencerSection::out( int index ){
 
 pdsp::SequencerGateOutput& pdsp::SequencerSection::out_trig( int index ){
     
-    if(index<0){ index = 0; }
+    if(index<0){ 
+        std::cout<<"[pdsp] score section output index less than zero\n";
+        pdsp_trace();
+    }
     
     if(index < (int) values.size()){
         if(values[index]!=nullptr){
@@ -417,20 +436,56 @@ pdsp::SequencerGateOutput& pdsp::SequencerSection::out_trig( int index ){
             gates[i] = nullptr;
         }
     }
-    
+            
     if(gates[index]==nullptr){
         gates[index] = new SequencerGateOutput();
         setOutputsNumber(index+1);
         *outputs[index] >> *gates[index];
+        outputsNames[index] = "trig";
     }
     
     return *gates[index];
     
 }
 
+pdsp::SequencerGateOutput& pdsp::SequencerSection::out_trig( const char * tag ){
+    
+    for( size_t i=0; i<outputsNames.size(); ++i ){
+        if( strcmp(outputsNames[i], tag ) == 0  ){
+            if(values[i]!=nullptr){
+                std::cout<<"[pdsp] score section name already used as value out, assignation invalid\n";
+                pdsp_trace();
+                return invalidGate;
+            }else{
+                return *gates[i];
+            }
+        }
+    }
+   
+    int index = outputs.size();
+
+    if( index >= (int) gates.size() ){
+        int oldSize = gates.size();
+        gates.resize(index+1);
+        for(int i=oldSize; i<=index; ++i){
+            gates[i] = nullptr;
+        }
+    }
+    gates[index] = new SequencerGateOutput();
+
+    setOutputsNumber( index+1 ); // make the array larger if needed
+    outputsNames[index] = tag;
+
+    return *gates[index];
+    
+}
+
 pdsp::SequencerValueOutput& pdsp::SequencerSection::out_value( int index ){
     
-    if(index<0){ index = 0; }
+    if(index<0){ 
+        std::cout<<"[pdsp] score section output index less than zero\n";
+        pdsp_trace();
+    }
     
     if(index < (int) gates.size()){
         if(gates[index]!=nullptr){
@@ -447,13 +502,47 @@ pdsp::SequencerValueOutput& pdsp::SequencerSection::out_value( int index ){
             values[i] = nullptr;
         }
     }
-    
+
     if(values[index]==nullptr){
         values[index] = new SequencerValueOutput();
         setOutputsNumber(index+1);
         *outputs[index] >> *values[index];
+        outputsNames[index] = "value";
     }
     
+    return *values[index];  
+    
+}
+
+pdsp::SequencerValueOutput& pdsp::SequencerSection::out_value( const char * tag ){
+    
+    for( size_t i=0; i<outputsNames.size(); ++i ){
+        if( strcmp(outputsNames[i], tag ) == 0 ){
+            if(values[i]!=nullptr){
+                if(gates[i]!=nullptr){
+                    std::cout<<"[pdsp] score section name already used as trigger out, assignation invalid\n";
+                    pdsp_trace();
+                    return invalidValue;
+                }
+            }else{
+                return *values[i];
+            }
+        }
+    }
+    
+    int index = outputs.size();
+
+    if( index >= (int) values.size() ){
+        int oldSize = values.size();
+        values.resize(index+1);
+        for(int i=oldSize; i<=index; ++i){
+            values[i] = nullptr;
+        }
+    }
+    values[index] = new SequencerValueOutput();
+    setOutputsNumber(index+1);
+    outputsNames[index] = tag;
+
     return *values[index];  
     
 }
