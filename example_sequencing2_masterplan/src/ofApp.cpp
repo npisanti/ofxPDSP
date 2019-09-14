@@ -4,8 +4,9 @@
 void ofApp::setup(){
     
     // ---------------------SEQUENCING------------------------
-    engine.sequencer.init( 3, 5, 200.0f); // sections, sequences, tempo
-    
+    engine.sequencer.init( 3, 5, 200.0f); 
+    //              sections, sequences, tempo
+   
     states.resize(16);
     
     // a good tecnique for arranging with pdsp is using the first sequence as "masterplan"
@@ -90,8 +91,8 @@ void ofApp::setup(){
     engine.sequencer.sections[2].sequence(0).begin()
         .out(0).bang(1.0f)
         .out(1).bang(29.f)
-        .out(1).delay( 6.0/4.0 ).bang( 31.f )
-        .out(0).delay( 7.0/4.0 ).bang( 0.0f )
+        .delay( 6.0/4.0 ).out(1).bang( 31.f )
+        .delay( 7.0/4.0 ).out(0).bang( 0.0f )
     .end();
                                                     
     engine.sequencer.sections[2].sequence(1).label = "fill 1";
@@ -99,38 +100,42 @@ void ofApp::setup(){
     engine.sequencer.sections[2].sequence(1).begin()
         .out(0).bang( 1.0f )
         .out(1).bang( 29.f )
-        .out(0).delay( 1.0 ).bang( 0.0f )
+        .delay( 1.0 ).out(0).bang( 0.0f )
     .end();
                                                     
     engine.sequencer.sections[2].sequence(2).label = "fill 2";
     engine.sequencer.sections[2].sequence(2).bars = 2.0;
     engine.sequencer.sections[2].sequence(2).begin()
         .out(0).bang( 0.0f )
-        .out(0).delay( 2.0 / 4.0 ).bang( 1.0f )
-        .out(1).delay( 2.0 / 4.0 ).bang( 32.0f )
-        .out(1).delay( 4.0 / 4.0 ).bang( 31.0f )
-        .out(1).delay( 6.0 / 4.0 ).bang( 30.0f )
+        .delay( 2.0 / 4.0 ).out(0).bang( 1.0f )
+        .delay( 2.0 / 4.0 ).out(1).bang( 32.0f )
+        .delay( 4.0 / 4.0 ).out(1).bang( 31.0f )
+        .delay( 6.0 / 4.0 ).out(1).bang( 30.0f )
+        // any order is fine, but bang goes to the end
     .end();
                                                 
     engine.sequencer.sections[2].sequence(3).label = "fill 3";
     engine.sequencer.sections[2].sequence(3).bars = 2.0;
     engine.sequencer.sections[2].sequence(3).begin()
-        .out(0).bang( 1.0f )
-        .out(1).bang( 29.0f )
-        .out(0).delay( 2.0 / 4.0 ).bang( 0.0f )
-        .out(0).delay( 3.0 / 4.0 ).bang( 1.0f )
-        .out(1).delay( 4.0 / 4.0 ).bang( 34.f )
-        .out(0).delay( 6.0 / 4.0 ).bang( 0.f )
-        .out(1).delay( 6.0 / 4.0 ).bang( 33.f )
+        .out(0)
+            .bang( 1.0f )
+            .delay( 2.0 / 4.0 ).bang( 0.0f )
+            .delay( 3.0 / 4.0 ).bang( 1.0f )
+            .delay( 6.0 / 4.0 ).bang( 0.0f )
+        .out(1)
+            .bang( 29.0f )
+            .delay( 4.0 / 4.0 ).bang( 34.f )
+            .delay( 6.0 / 4.0 ).bang( 33.f )
+        // messages don't need to be in chronological order
     .end();
                                                     
-    engine.sequencer.sections[2].sequence(3).label = "fill 4";
-    engine.sequencer.sections[2].sequence(3).bars = 2.0;
-    engine.sequencer.sections[2].sequence(3).begin()
+    engine.sequencer.sections[2].sequence(4).label = "fill 4";
+    engine.sequencer.sections[2].sequence(4).bars = 2.0;
+    engine.sequencer.sections[2].sequence(4).begin()
         .out(0).bang( 0.0f )
         .out(1).bang( 32.f )
-        .out(1).delay( 6.0 / 4.0 ).bang( 31.f )
-        .out(0).delay( 7.0 / 4.0 ).bang( 0.0f )
+        .delay( 6.0 / 4.0 ).out(1).bang( 31.f )
+        .delay( 7.0 / 4.0 ).out(0).bang( 0.0f )
     .end();
                                     
     // launch masterplan
@@ -168,7 +173,7 @@ void ofApp::setup(){
     engine.graphics.setPosition( 10, 10 );
     engine.graphics.setColor (ofColor( 255 ) );
     
-    ofSetWindowTitle("pdsp example-scoring3-masterplan");
+    ofSetWindowTitle("pdsp example-scoring2-masterplan");
     
     // ------------SETUPS AND START AUDIO-------------
     engine.listDevices();
