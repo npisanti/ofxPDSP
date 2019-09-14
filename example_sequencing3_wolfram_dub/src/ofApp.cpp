@@ -7,9 +7,13 @@
 // before looking at this check out the basics and scoring examples
 
 // this is the most complex example in ofxPDSP, and it shows you an example of workflow
+
+// instead of hardcoding your values you should write your own
+// generative sequences or code to parse value from files
+
 // ideally you should have your pdsp::Sequence classes, your synth and effect classes with their ofParameterGroups 
+
 // patch them together in your app and fine tune them in the ui
-// (remember you can use your mouse scroll wheel for fine tuning paramenter, point on a slider and move the wheel)
 // also it is always handy to use a masterplan sequence to launch other sequences and change parameters
 
 // the included impulse response come from:

@@ -105,8 +105,6 @@ WolframSeq::WolframSeq(){
                 actionCode = 0;
                 break;
                 
-
-                
             default: break;
         }
         
@@ -154,9 +152,8 @@ WolframSeq::WolframSeq(){
 
         // seqs array to messages ---------------------------
         bars = ((double) steps) / division;
-        steplen = 1.0 / double(division);
-        
-        begin( );
+                
+        this->begin();
        
         float db = dbRange;
         
@@ -164,35 +161,38 @@ WolframSeq::WolframSeq(){
             
             float sum = 0.0f;
             
-            for(int out=0; out < activeOutsStored; ++out) {
+            for(int o=0; o < activeOutsStored; ++o) {
 
-                float value = stepbars[ (out*steps) + x ];
+                float value = stepbars[ (o*steps) + x ];
                 if( value > 0.0f ){
-                    values[out] = dB( -db + db * value );
+                    values[o] = dB( -db + db * value );
                 }else{
-                    values[out] = 0.0f;
+                    values[o] = 0.0f;
                 }
-                sum+= values[out];
+                sum+= values[o];
            
             }
             
             if( sum > limiting ){
                 float multiplier = limiting / sum;
-                for(int out=0; out < activeOutsStored; ++out){
-                    values[out] *= multiplier;
+                for(int o=0; o < activeOutsStored; ++o){
+                    values[o] *= multiplier;
                 }
             }
             
-            for(int out=0; out < activeOutsStored; ++out){
-                if(values[out]!=0.0f){
-                     message( (double)(x), values[out], out);               // gate on
-                     if(gateOff) message( (double)(x) + gate, 0.0f, out);   // gate off
+            double d = division;
+            
+            for(int o=0; o < activeOutsStored; ++o){
+                if(values[o]!=0.0f){
+                     this->out( o ).delay( x / d ).bang( values[o] );         
+                     // gate on
+                     if(gateOff){
+                         this->out( o ).delay( (x + gate)/d ).bang( 0.0f );
+                     }
                 }
             }
-            
         }
-        
-        end();
+        this->end();
     };    
     
 }
