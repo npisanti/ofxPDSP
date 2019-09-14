@@ -2,7 +2,7 @@
 
 // before looking at this check out the basics examples
 
-// generative sequences
+// pdsp sequencing 
 //
 // PS: the sequence code is executed in the DSP thread, so please don't hold lock or allocate / deallocate memory
 // if you need some heavy computation make it in another thread and copy it to the sequence when it's time
@@ -13,25 +13,172 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
  
-    // ------------------------- PATCHING -------------------------------------
     seq_mode = 0;
     quantize = true;
     quantime = 1.0/8.0; // 1/4th
-    
-    engine.sequencer.setTempo(120.0f); // sets the tempo of the music
 
-    engine.sequencer.sections.resize(2); 
-    // this is very important, each section can play just one sequence at time
-    // you have to resize it to a sufficient number before starting to assign sequences
- 
+
+    // ------------------------ SEQUENCING ---------------------------
+    
+    // set up the sequencer 
+    // sections, sequences, tempo
+    engine.sequencer.init( 2, 4, 120.0f);
+    int kicksect = 0;
+    int leadsect = 1;
+    
+
+    // KICK SEQUENCES 
+    
+    auto & kick0 = engine.sequencer.sections[kicksect].sequence(0);
+    
+    kick0.bars = 1.0; // this is the sequence loop lenght
+    kick0.begin(); // use begin() and end() to set the messages
+        kick0.bang( 1.0f ); // bang sends a message
+        //kick_seqs[0].message( 0.0, 1.0f, 0 );
+    kick0.end();
+
+    auto & kick1 = engine.sequencer.sections[kicksect].sequence(1);
+    kick1.bars = 1.0;     
+    kick1.begin(); 
+        // 4 steps, delay sets the offset from start (in bars)
+        kick1.delay( 0.0 ).bang(1.0f);
+        kick1.delay( 1.0/4.0 );
+        kick1.bang( 0.5f );
+        kick1.delay( 2.0f / 4.0 ).bang(0.8f);
+        kick1.delay( 3.0f / 4.0 ).bang(0.6f);
+    kick1.end();
+
+
+    auto & kick2 = engine.sequencer.sections[kicksect].sequence(2);
+    // bars defaults to 1.0, can be omitted for 1 bars loops
+    kick2.begin(); // another seq
+        kick2.bang(1.0f);
+        kick2.delay( 1.0f / 8.0f ).bang(0.8f);
+        kick2.delay( 4.0f / 8.0f ).bang(0.6f);
+    kick2.end();
+    
+    
+    auto & kick3 = engine.sequencer.sections[kicksect].sequence(3);
+    kick3.begin(); // many kicks
+        kick3.bang(1.0f);
+        for( int i=1; i<15; ++i ){
+            kick3.delay( i/16.0 ).bang(0.5f);
+        }
+    kick3.end();    
+        
+    
+    // LEAD SEQUENCES
+    
+    // we need to control gate and pitch of leads
+    // we can use out() to change the output for the messages 
+    
+    auto & lead0 = engine.sequencer.sections[leadsect].sequence(0);
+    lead0.begin();
+        lead0.out(0).bang(1.0);
+        lead0.out(1).bang(84.f);
+        
+        lead0.delay( 2.0 / 16.0 );
+        lead0.out(0).bang( 0.75f );
+        lead0.out(1).bang( 82.f) ;
+        
+        lead0.delay( 3.0 / 16.0 ).out(0).bang(0.0f); //gate off
+        
+        lead0.delay( 4.0 / 16.0 );
+        lead0.out(0).bang( 1.0f );
+        lead0.out(1).bang( 84.f );
+        
+        lead0.delay( 5.0 / 16.0 ).out(0).bang(0.0f); 
+        
+        lead0.delay( 6.0 / 16.0 );
+        lead0.out(0).bang( 0.75f );
+        lead0.out(1).bang( 80.f ); 
+        
+        lead0.delay( 7.0 / 16.0 ).out(0).bang(0.0f); 
+    lead0.end();
+    
+    
+    auto & lead1 = engine.sequencer.sections[leadsect].sequence(1);
+    lead1.begin();
+        lead1.out(0).bang(1.0);
+        lead1.out(1).bang(72.f);
+        
+        // just to pitch
+        lead1.delay( 4.0 / 16.0 ).out(1).bang( 75.f );
+        lead1.delay( 6.0 / 16.0 ).out(1).bang( 77.f );
+        
+        // gate off
+        lead1.delay( 7.0 / 16.0 ).out(0).bang( 0.f ); 
+    lead1.end();        
+
+
+    auto & lead2 = engine.sequencer.sections[leadsect].sequence(2);
+    
+    float minor_penta[] = { 72.0f, 75.0f, 77.0f, 79.0f, 82.0f, 84.0f, 87.0f, 89.0f }; // minor pentatonic scale
+    
+    lead2.begin(); 
+        for (int i=0; i<4; ++i){
+            float trig = (i%2==0) ? 1.0f : 0.75f;
+            float pitch = minor_penta[pdsp::dice(8)]; // random pitch from the array, pdsp::dice give you an int
+            
+            lead2.out(0).delay( i/8.0 ).bang( trig );
+            lead2.out(0).delay( (i+0.1)/8.0 ).bang( 0.0f );
+            
+            lead2.out(1).delay( i/8.0 ).bang( pitch );
+        }
+    lead2.end();
+
+    
+    // this is the same as before, but we put the code into a lambda function,
+    // the lambda function code is executed each time the sequence is retriggered
+    // so each time the sequence is started it generates new patterns
+    // read the ofBook about lambdas: https://openframeworks.cc/ofBook/chapters/c++11.html#lambdafunctions
+    auto & lead3 = engine.sequencer.sections[leadsect].sequence(3);
+    lead3.bars = 0.5; // half bar loop
+    lead3.code = [&] () noexcept { // better to tag noexcept for code used by the DSP engine 
+            // declaring a variable inside the lambda is fine
+            static float akebono[] = { 72.0f, 74.0f, 75.0f, 79.0f, 80.0f, 84.0f, 86.0f, 87.0f }; // akebono scale
+            
+            lead3.begin();
+            for (int i=0; i<4; ++i){
+                float trig = (i%2==0) ? 1.0f : 0.75f;
+                float pitch = akebono[pdsp::dice(8)]; 
+                
+                lead3.message( double(i),       trig,  0 );
+                lead3.message( double(i)+0.6f,  0.0f,  0 ); // trigger off, half step gate
+                lead3.message( double(i),       pitch, 1 );
+                
+
+                lead3.out(0).delay( i/8.0 ).bang( trig );
+                lead3.out(0).delay( (i+0.6)/8.0 ).bang( 0.0f );
+                
+                lead3.out(1).delay( i/8.0 ).bang( pitch );
+            }
+            lead3.end();
+    };
+    
+    // MEMO: you can concatenay how many out(), delay() and bang()
+    // you want, just remember that bang() will send a message
+    // with the last given value of out() and delay()
+    // out() and delay() are reset to 0 by seq.begin()
+    
+
+    for(int i = 0; i<4; ++i){
+        // the section can play the sequenced looped or not
+        // you can change this behavior with loop() or oneshot() 
+        // loop is default 
+        engine.sequencer.sections[1].oneshot( i ); 
+    } 
+    
+    //----------------- PATCH THE SEQUENCES --------------------
+    
     // each section can output the messages to one or more outputs, as values or triggers
     // thing about them as gate/cv outputs, gate=trig, value=cv
-    engine.sequencer.sections[0].out_trig(0)  >> kick.in("trig"); // assign the first sequence output to trig
-    engine.sequencer.sections[1].out_trig(0)  >> lead.in("trig"); // assign the first sequence output to trig
-    engine.sequencer.sections[1].out_value(1) >> lead.in("pitch"); // assign the second sequence output to values
+    engine.sequencer.sections[kicksect].out_trig(0) >> kick.in("trig");
     
-    // decomment this to slew the lead value output signal
-    // engine.sequencer.sections[1].out_value(1).enableSmoothing(100.0f);
+    // lead seq out 0 to trig
+    engine.sequencer.sections[leadsect].out_trig(0) >> lead.in("trig");
+    // lead seq out 1 to pitch 
+    engine.sequencer.sections[leadsect].out_value(1) >> lead.in("pitch"); 
     
     // patching (with panning)
     kick * (dB(-6.0f) * pdsp::panL(-0.25f)) >> engine.audio_out(0);
@@ -39,98 +186,10 @@ void ofApp::setup(){
     
     lead * (dB(-6.0f) * pdsp::panL(0.25f)) >> engine.audio_out(0);
     lead * (dB(-6.0f) * pdsp::panR(0.25f)) >> engine.audio_out(1);
-
-    // ------------------------ SEQUENCING ------------------------------------
-
-    // kick sequences
-    kick_seqs.resize(4); 
-    
-    // we can use "set" to use an inlined array with the step values
-    // "steplen" and "bars" are used for the timing and lenght of the sequence
-    // init step length is 1/16 and init seq lenght is 1 bar
-    float o = -1.0f; // when using "set" negative outputs are ignored, 'o' is graphically useful
-    
-    // kick synth has an AHR envelope, only positive values will trigger it
-    
-    kick_seqs[0].steplen = 1.0/4.0;
-    kick_seqs[0].bars = 1.0; // this can also be omitted, 1.0 is the default value
-    kick_seqs[0].set( { 1.0f, o, o, o } );
-    
-    kick_seqs[1].steplen = 1.0/4.0;
-    kick_seqs[1].set( { 1.0f, 0.5f, 0.8f, 0.5f } );
-    
-    kick_seqs[2].steplen = 1.0/8.0;
-    kick_seqs[2].set( { 1.0f, 0.5f, o, o,  o, o, 0.3f, o } );
-    
-    kick_seqs[3].steplen = 1.0/16.0;
-    kick_seqs[3].bars    = 2.0; 
-    kick_seqs[3].set( { 1.0f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f,   
-                        0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f }); 
-    
-    lead_seqs.resize(4);
-    
-    // lead sequences ( and sequences examples ) 
-    lead_seqs[0].steplen = 1.0/16.0;    
-    lead_seqs[0].set( { { 1.0f,  0.0f,  0.75f,  0.0f,  1.0f,  0.0f, 0.75f, 0.0f }, // triggers outputs
-                        { 84.0f, o,     82.0f,  o,     84.0f, o,    80.0f, o    } }); // pitch outputs
-                        
-    lead_seqs[1].steplen = 1.0/16.0;  
-    lead_seqs[1].set( { { 1.0f,  o,   o,   o,   1.0f,   o,   o,    0.0f },
-                        { 72.0f, o,   o,   o,   75.f,   o,   77.f, o    } } );
-     
-    
-    float minor_penta[] = { 72.0f, 75.0f, 77.0f, 79.0f, 82.0f, 84.0f, 87.0f, 89.0f }; // minor pentatonic scale
- 
-    // you can also use begin(), message() and end() to set sequences
-    lead_seqs[2].steplen = 1.0/8.0;
-    lead_seqs[2].begin(); 
-        for (int i=0; i<4; ++i){
-            float trig = (i%2==0) ? 1.0f : 0.75f;
-            float pitch = minor_penta[pdsp::dice(8)]; // random pitch from the array, pdsp::dice give you an int
-            
-            lead_seqs[2].message( double(i),      trig,  0 ); // step, value, output (we set 0 as trig out)
-            lead_seqs[2].message( double(i)+0.1f, 0.0f,  0 ); // trigger off, short step gate
-            lead_seqs[2].message( double(i),      pitch, 1 ); // step, value, output (we set 1 as value out)
-            // step value is double so you can use fractional timing if you want
-        }
-    lead_seqs[2].end(); // always call end() when you've done
-
-    
-    // this is the same as before, but we put the code into a lambda function,
-    // the lambda function code is executed each time the sequence is retriggered
-    // so each time the sequence is started it generates new patterns
-    // read the ofBook about lambdas: https://openframeworks.cc/ofBook/chapters/c++11.html#lambdafunctions
-    
-    lead_seqs[3].code = [&] () noexcept { // better to tag noexcept for code used by the DSP engine 
-            pdsp::Sequence & seq = lead_seqs[3]; // reference
-            
-            // declaring a variable inside the lambda is fine
-            static float akebono[] = { 72.0f, 74.0f, 75.0f, 79.0f, 80.0f, 84.0f, 86.0f, 87.0f }; // akebono scale
-            
-            seq.steplen = 1.0/8.0;
-            seq.begin();
-            for (int i=0; i<4; ++i){
-                float trig = (i%2==0) ? 1.0f : 0.75f;
-                float pitch = akebono[pdsp::dice(8)]; 
-                
-                seq.message( double(i),       trig,  0 );
-                seq.message( double(i)+0.6f,  0.0f,  0 ); // trigger off, half step gate
-                seq.message( double(i),       pitch, 1 );
-            }
-            seq.end();
-    };
-
-    // assigning the sequences to the sequencer sections
-    for(int i = 0; i<4; ++i){
-        // arguments: cell index, pointer to pdsp:Sequence, behavior (pdsp::Behavior::Loop if not given)
-        engine.sequencer.sections[0].setCell(i, kick_seqs[i] ); 
-        engine.sequencer.sections[1].setCell(i, lead_seqs[i], pdsp::Behavior::OneShot); 
-    } 
-    
     
     //------------SETUPS AND START AUDIO-------------
     engine.listDevices();
-    engine.setDeviceID(0); // REMEMBER TO SET THIS AT THE RIGHT INDEX!!!!
+    engine.setDeviceID(0); // <--- set this at the right index
     engine.setup( 44100, 512, 3); 
     
 }

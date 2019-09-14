@@ -3,12 +3,10 @@
 
 #include<bits/stdc++.h> 
 
-double pdsp::Sequence::defaultSteplen = 1.0 / 16.0;
+double pdsp::Sequence::defaultSteplen = 1.0;
 
 pdsp::Sequence::Sequence( double stepDivision ){ 
     modified = false;    
-    setDivision(stepDivision);
-    setLength(1.0);
     nextScore.reserve(PDSP_PATTERN_MESSAGE_RESERVE_DEFAULT);
     code = []() noexcept {};
     loopCounter = 0;
@@ -81,24 +79,6 @@ void pdsp::Sequence::message(double step, float value, int outputIndex, MessageT
     nextScore.push_back( pdsp::SequencerMessage( step, value, outputIndex, mtype) );
 }
                 
-pdsp::Sequence &  pdsp::Sequence::out( const char * tag ) noexcept{
-    std::cout << "out(std::string name) CODE STILL TODO!!!\n";
-    
-    int max = tags->size();
-    const auto & data = tags->data();
-    for( int i=0; i<max; ++i ){
-        if( strcmp( data[i], tag ) == 0 ){
-            currentOutput = i;
-            return *this;
-        }
-    }
-#ifdef DEBUG
-    std::cout<<"[pdsp] seq out tag has not been patched to any output! check out the spelling of the tag\n";
-    pdsp_trace();
-#endif
-    currentOutput = INT_MAX;
-    return *this;
-}
 
 pdsp::Sequence &  pdsp::Sequence::out( int value ) noexcept{
     currentOutput = value;
@@ -132,10 +112,7 @@ pdsp::Sequence &  pdsp::Sequence::slew( float milliseconds ) noexcept{
     return *this;
 }
 
-void pdsp::Sequence::executeGenerateScore( std::vector<const char*> * tags ) noexcept {
-    this->tags = tags;
-    currentOutput = 0;
-    currentDelay = 0.0;
+void pdsp::Sequence::executeGenerateScore() noexcept {
     code();
     if(modified){
         score.swap( nextScore ); // swap score in a thread-safe section
@@ -182,8 +159,8 @@ int pdsp::SeqChange::getNextPattern( int currentPattern, int size ) noexcept {
 // ------------------ DEPRECATED -------------------------------------
 
 void pdsp::Sequence::begin( double division, double length ) noexcept{
-    setDivision(division);
-    setLength(length);
+    steplen = 1.0 / division;
+    bars = length;
     nextScore.clear();
 }
 
@@ -204,8 +181,8 @@ double pdsp::Sequence::division() const{
 }
 
 void pdsp::Sequence::setTiming( double division, double bars ){
-    setDivision(division);
-    setLength(bars);
+    steplen = 1.0 / division;
+    this->bars = bars;
 }
 
 void pdsp::Sequence::message(double step, float value, int outputIndex) noexcept {
@@ -255,15 +232,51 @@ void pdsp::Sequence::set( std::initializer_list<std::initializer_list<float> >  
 }
 
 void pdsp::Sequence::set( std::initializer_list<float> init, double division, double length ) noexcept{
-    setDivision(division);
-    setLength(length);
-    set(init);
+    steplen = 1.0 / division;
+    bars = length;
+    
+    if(modified==true){
+        std::cout<<"[pdsp] warning! you have already set this Sequence, but it hasn't been processed yet, please set it once and wait for the changes to be effective before setting it again to avoid race conditions!\n";
+        pdsp_trace();
+    }
+    
+    nextScore.clear();
+    
+    double time=0.0;
+    for (const float & value : init){
+        if( value >= 0.0f){
+            nextScore.push_back(  pdsp::SequencerMessage( time , value, 0) );            
+        }
+        time += 1.0;
+    }
+    
+    modified = true;
 }
 
-void pdsp::Sequence::set(  std::initializer_list<std::initializer_list<float> >  init , double division, double length ) noexcept{
-    setDivision(division);
-    setLength(length);
-    set(init);
+void pdsp::Sequence::set(  std::initializer_list<std::initializer_list<float> >  init , double division, double length ) noexcept{    
+    steplen = 1.0 / division;
+    bars = length;
+    
+    if(modified==true){
+        std::cout<<"[pdsp] warning! you have already set this Sequence, but it hasn't been processed yet, please set it once and wait for the changes to be effective before setting it again to avoid race conditions!\n";
+        pdsp_trace();
+    }
+
+    nextScore.clear();
+
+    int out = 0;
+    for(const std::initializer_list<float> & list : init){
+        double time = 0.0;
+        for ( const float & value : list){
+            if( value >= 0.0f){
+                nextScore.push_back(  pdsp::SequencerMessage( time , value, out) );            
+            }
+           time += 1.0;     
+        }
+        out++;
+    }
+    
+    modified = true;
 }
 
 void pdsp::Sequence::messageVector( std::vector<float> vect, int outputIndex) {

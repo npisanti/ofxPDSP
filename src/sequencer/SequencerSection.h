@@ -109,9 +109,6 @@ public:
     */     
     pdsp::MessageBuffer& out_message( int index );
    
-   
-    pdsp::MessageBuffer& out_message( const char * tag );
-    
     
     /*!
     @brief Set the output with the given index as a gate output and return the SequencerGateOutput for patching
@@ -119,16 +116,12 @@ public:
     */     
     SequencerGateOutput& out_trig( int index );
     
-    SequencerGateOutput& out_trig( const char * tag );
-    
     
     /*!
     @brief Set the output with the given index as a value output and return the SequencerValueOutput reference. You can use the result for patching or for set the value slew time (slew is deactivated by default).
     @param[in] index index of the out to patch, 0 if not given
     */   
     SequencerValueOutput& out_value( int index );
-    
-    SequencerValueOutput& out_value( const char * tag );
     
     
     /*!
@@ -372,8 +365,6 @@ private:
     std::vector<SequencerValueOutput*>    values;
     
     std::vector<MessageBuffer*>  outputs;
-    std::vector<const char *>    outputsNames;
-    
     
     //std::mutex                  patternMutex;
     

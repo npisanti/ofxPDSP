@@ -62,18 +62,12 @@ namespace pdsp{
         
         /*!
         @brief sets the output for the next banged message
-        @param[in] tag the output's name
-        */        
-        pdsp::Sequence & out( const char * tag ) noexcept;
-
-        /*!
-        @brief sets the output for the next banged message
         @param[in] value the output's index
         */    
         pdsp::Sequence & out( int value ) noexcept;
 
         /*!
-        @brief sets the delay from the start of the sequence of the next message, in fraction of the sequence's timing
+        @brief sets the delay from the start of the sequence of the next message, in bars
         @param[in] value the delay of the message
         */            
         pdsp::Sequence &  delay( double value ) noexcept;
@@ -108,65 +102,68 @@ namespace pdsp{
         float meter_percent() const; 
 
 
+
 /*!
     @cond HIDDEN_SYMBOLS
 */
         // --------------------------- API TO DEPRECATE --------------
     
-
+        //[[deprecated("deprecated, use the new sequence API as in the examples")]]
         void message(double step, float value, int outputIndex=0) noexcept;
                 
-        
+        [[deprecated("deprecated, use the new sequence API as in the examples")]]        
         void set( std::initializer_list<float> init ) noexcept;
 
-
+        [[deprecated("deprecated, use the new sequence API as in the examples")]]
         void set( std::initializer_list<std::initializer_list<float> >  init ) noexcept;
 
-
+        [[deprecated("deprecated, use the new sequence API as in the examples")]]
         void set( std::initializer_list<float> init, double division, double length  ) noexcept;
 
-
+        [[deprecated("deprecated, use the new sequence API as in the examples")]]
         void set( std::initializer_list<std::initializer_list<float> >  init , double division, double length  ) noexcept;
 
-
+        [[deprecated("deprecated, better not to use this anymore")]]
         int meter_step() const; 
 
-
+        [[deprecated("deprecated, use the new sequence API as in the examples")]]
         void setDivision( double value );
         
-
+        [[deprecated("deprecated, use the new sequence API as in the examples")]]
         void setLength( double bars );
         
-
+        [[deprecated("deprecated, use the new sequence API as in the examples")]]
         double length() const;
 
-
+        [[deprecated("deprecated, use the new sequence API as in the examples")]]
         double division() const;
 
-
+        [[deprecated("deprecated, use the new sequence API as in the examples")]]
         void setTiming( double division, double bars );
 
-
+        [[deprecated("deprecated, use the new sequence API as in the examples")]]
         void begin( double division, double length ) noexcept;
 
-
+        [[deprecated("deprecated, use the new sequence API as in the examples")]]
         void messageVector( std::vector<float> vect, int outputIndex = 0);
 
- 
+         [[deprecated("deprecated, use the new sequence API as in the examples")]]
         void trigVector( std::vector<float> vect, double gateLength, int outputIndex = 0);
 
-
+        [[deprecated("deprecated, use the new sequence API as in the examples")]]
         void trigVector( std::vector<float> vect, double gateLength, int outputIndex, float multiply );
 
-
+        [[deprecated("deprecated, use the new sequence API as in the examples")]]
         void line(double stepStart, float valueStart, double stepStopExclusive, float valueStopExclusive, int output = 0, int granularity=1 );
       
+        [[deprecated("deprecated, better not to use this anymore")]]
         const std::vector<SequencerMessage> & getScore() const;
         
-
-       std::atomic<double> steplen;
         
-
+        // this is deprecated but still used for backward compatibility
+        // a deprecate message will generate unwanted warnings
+        std::atomic<double> steplen;
+        
 
         // this is not deprecated, just hidden from docs!
         int getChangeID() const;
@@ -188,7 +185,7 @@ namespace pdsp{
         std::vector<SequencerMessage> score;   
         std::vector<SequencerMessage> nextScore;
         
-        void executeGenerateScore( std::vector<const char*> * tags ) noexcept;
+        void executeGenerateScore() noexcept;
                 
         void message(double step, float value, int outputIndex, MessageType mtype ) noexcept;
 

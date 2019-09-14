@@ -27,9 +27,6 @@ class ofApp : public ofBaseApp{
         pdsp::Engine            engine;
         SineBleep               lead;
         KickSynth               kick;
-        
-        std::vector<pdsp::Sequence>  lead_seqs;
-        std::vector<pdsp::Sequence>  kick_seqs;
 
         int                     seq_mode;        
         std::atomic<bool>       quantize;
