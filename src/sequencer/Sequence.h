@@ -53,12 +53,12 @@ namespace pdsp{
         /*!
         @brief you call begin() before calling message, this prepare the Sequence for the message() method, clearing the buffers.
         */
-        void begin() noexcept;
+        pdsp::Sequence & begin() noexcept;
 
         /*!
         @brief you call end() when you have finished adding value with Message(). When the Sequence restarts the new sequence will be played.
         */
-        void end() noexcept;
+        pdsp::Sequence & end() noexcept;
         
         /*!
         @brief sets the output for the next banged message

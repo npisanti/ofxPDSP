@@ -67,12 +67,16 @@ pdsp::Sequence& pdsp::Sequence::operator= (Sequence && other){
     return *this;
 }
 
-void pdsp::Sequence::begin() noexcept{
+pdsp::Sequence & pdsp::Sequence::begin() noexcept{
     nextScore.clear();
+    currentOutput = 0;
+    currentDelay = 0.0;
+    return *this;
 }
 
-void pdsp::Sequence::end() noexcept{
+pdsp::Sequence & pdsp::Sequence::end() noexcept{
     modified = true;
+    return * this;
 }
 
 void pdsp::Sequence::message(double step, float value, int outputIndex, MessageType mtype ) noexcept{

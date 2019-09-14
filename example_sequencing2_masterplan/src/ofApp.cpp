@@ -40,69 +40,99 @@ void ofApp::setup(){
         int index = seq.counter()%16; // we repeat the same states four time, so each pattern is 2 bars
 
         // launch the drum sequence, quantized to this masterplan
-        engine.sequencer.sections[1].launchCell( states[index], true, seq.length());
+        engine.sequencer.sections[1].launchCell( states[index], true, seq.bars );
         
         // on the first six bars the main riff will run
-        if(seq.counter()==0)   engine.sequencer.sections[2].launch( 0, true, seq.length());
+        if(seq.counter()==0)   engine.sequencer.sections[2].launch( 0, true, seq.bars );
         // on the last two bars we will use a fill choosen at random
-        if(seq.counter()==48)  engine.sequencer.sections[2].launch( pdsp::dice(1, 5), true, seq.length()); 
+        if(seq.counter()==48)  engine.sequencer.sections[2].launch( pdsp::dice(1, 5), true, seq.bars ); 
     };
     
     // P.S. obviously we could have done all the beatslicing by coding a single sequence,
-    //                                                       but this is not the point of this example
+    // but this is not the point of this example
 
-    float o = -1.0f;
     
     // drums sequence "cells" 
     // first out is trigger, second is sample index select
-    
     engine.sequencer.sections[1].sequence(0).label = "kick";
-    engine.sequencer.sections[1].sequence(0).set( { { 0.7f, o   },
-                                                    { 0.0f, o } });
-    engine.sequencer.sections[1].sequence(1).label = "snare";
-    engine.sequencer.sections[1].sequence(1).set( { { 0.7f, o },
-                                                    { 1.0f, o } });
-    engine.sequencer.sections[1].sequence(2).label = "hh";
-    engine.sequencer.sections[1].sequence(2).set( { {  1.0f, o },
-                                                    {  2.0f, o } });
-    engine.sequencer.sections[1].sequence(3).label = "hh soft";
-    engine.sequencer.sections[1].sequence(3).set( { {  0.5f, o },
-                                                    {  2.0f, o } } );
-    engine.sequencer.sections[1].sequence(4).label = "shuffle";
-    engine.sequencer.sections[1].sequence(4).set( { { 0.7f, 0.7f },
-                                                    { 2.0f, 3.0f } });
+    engine.sequencer.sections[1].sequence(0).begin()
+        .out(0).bang(0.7f)
+        .out(1).bang(0.0f)
+    .end();
 
-    // reese bass loops 
-    engine.sequencer.sections[2].sequence(0).label   = "main";
-    engine.sequencer.sections[2].sequence(0).steplen = 1.0/4.0;
-    engine.sequencer.sections[2].sequence(0).bars    = 2.0;
-    engine.sequencer.sections[2].sequence(0).set( { { 1.0f,  o,  o,  o,  o,  o,   o,   0.f },
-                                                    { 29.0f, o,  o,  o,  o,  o,  31.f,  o   } });
+    engine.sequencer.sections[1].sequence(1).label = "snare";
+    engine.sequencer.sections[1].sequence(1).begin()
+        .out(0).bang(0.7f)
+        .out(1).bang(1.0f)
+    .end();
+        
+    engine.sequencer.sections[1].sequence(2).label = "hh";
+    engine.sequencer.sections[1].sequence(2).begin()
+        .out(0).bang(1.0f)
+        .out(1).bang(2.0f)
+    .end();
+    
+    engine.sequencer.sections[1].sequence(3).label = "hh soft";
+    engine.sequencer.sections[1].sequence(3).begin()
+        .out(0).bang(0.5f)
+        .out(1).bang(2.0f)
+    .end();
+    
+    engine.sequencer.sections[1].sequence(4).label = "shuffle";
+    engine.sequencer.sections[1].sequence(4).begin()
+        .out(0).bang(0.7f)
+        .out(1).bang(3.0f)
+    .end();
+    
+    // reese bass loops ----------------
+    engine.sequencer.sections[2].sequence(0).label = "main";
+    engine.sequencer.sections[2].sequence(0).bars = 2.0;
+    engine.sequencer.sections[2].sequence(0).begin()
+        .out(0).bang(1.0f)
+        .out(1).bang(29.f)
+        .out(1).delay( 6.0/4.0 ).bang( 31.f )
+        .out(0).delay( 7.0/4.0 ).bang( 0.0f )
+    .end();
                                                     
-    engine.sequencer.sections[2].sequence(1).label   = "fill 1";
-    engine.sequencer.sections[2].sequence(1).steplen = 1.0/4.0;
-    engine.sequencer.sections[2].sequence(1).bars    = 2.0;
-    engine.sequencer.sections[2].sequence(1).set( { { 1.0f,  o,  o,  o, 0.0f },
-                                                   {  29.0f, o,  o,  o,  o } });
+    engine.sequencer.sections[2].sequence(1).label = "fill 1";
+    engine.sequencer.sections[2].sequence(1).bars = 2.0;
+    engine.sequencer.sections[2].sequence(1).begin()
+        .out(0).bang( 1.0f )
+        .out(1).bang( 29.f )
+        .out(0).delay( 1.0 ).bang( 0.0f )
+    .end();
+                                                    
+    engine.sequencer.sections[2].sequence(2).label = "fill 2";
+    engine.sequencer.sections[2].sequence(2).bars = 2.0;
+    engine.sequencer.sections[2].sequence(2).begin()
+        .out(0).bang( 0.0f )
+        .out(0).delay( 2.0 / 4.0 ).bang( 1.0f )
+        .out(1).delay( 2.0 / 4.0 ).bang( 32.0f )
+        .out(1).delay( 4.0 / 4.0 ).bang( 31.0f )
+        .out(1).delay( 6.0 / 4.0 ).bang( 30.0f )
+    .end();
                                                 
-    engine.sequencer.sections[2].sequence(2).label   = "fill 2"; 
-    engine.sequencer.sections[2].sequence(2).steplen = 1.0/4.0;
-    engine.sequencer.sections[2].sequence(2).bars    = 2.0;
-    engine.sequencer.sections[2].sequence(2).set( { { 0.0f,  o, 1.0f,  o,  o,  o,   o,  o},
-                                                     { o,    o,  32.f,  o, 31.f,  o,  30.f,  o   } } );
-                                                
-    engine.sequencer.sections[2].sequence(3).label   ="fill 3";  
-    engine.sequencer.sections[2].sequence(3).steplen = 1.0/8.0;
-    engine.sequencer.sections[2].sequence(3).bars    = 2.0;
-    engine.sequencer.sections[2].sequence(3).set( { { 1.0f,  o,  0.f,   1.f,  o,   o,   0.0f,  o },
-                                                    { 29.0f, o,  o,  o, 34.f, o,  33.0f,   o   } } );
-                                                
-    engine.sequencer.sections[2].sequence(4).label   = "fill 4"; 
-    engine.sequencer.sections[2].sequence(2).steplen = 1.0/4.0;
-    engine.sequencer.sections[2].sequence(2).bars    = 2.0;
-    engine.sequencer.sections[2].sequence(4).set( { { 1.0f,  o,  o,  o,  o,  o,   o,   0.f },
-                                                    { 32.0f, o,  o,  o,  o,  o,  31.f,  o   } } );
- 
+    engine.sequencer.sections[2].sequence(3).label = "fill 3";
+    engine.sequencer.sections[2].sequence(3).bars = 2.0;
+    engine.sequencer.sections[2].sequence(3).begin()
+        .out(0).bang( 1.0f )
+        .out(1).bang( 29.0f )
+        .out(0).delay( 2.0 / 4.0 ).bang( 0.0f )
+        .out(0).delay( 3.0 / 4.0 ).bang( 1.0f )
+        .out(1).delay( 4.0 / 4.0 ).bang( 34.f )
+        .out(0).delay( 6.0 / 4.0 ).bang( 0.f )
+        .out(1).delay( 6.0 / 4.0 ).bang( 33.f )
+    .end();
+                                                    
+    engine.sequencer.sections[2].sequence(3).label = "fill 4";
+    engine.sequencer.sections[2].sequence(3).bars = 2.0;
+    engine.sequencer.sections[2].sequence(3).begin()
+        .out(0).bang( 0.0f )
+        .out(1).bang( 32.f )
+        .out(1).delay( 6.0 / 4.0 ).bang( 31.f )
+        .out(0).delay( 7.0 / 4.0 ).bang( 0.0f )
+    .end();
+                                    
     // launch masterplan
     engine.sequencer.sections[0].launchCell(0);
     
