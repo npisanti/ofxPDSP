@@ -76,7 +76,7 @@ public:
 */
     void processMidi( const int &bufferSize ) noexcept;
     
-    void newMidiMessage(ofxMidiMessage& eventArgs) noexcept;
+    void newMidiMessage(ofxMidiMessage& eventArgs) noexcept override;
     	
  	const std::vector<_PositionedMidiMessage> & getMessageVector() const;
 /*!
