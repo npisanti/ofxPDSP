@@ -109,6 +109,7 @@ namespace pdsp{
         // --------------------------- API TO DEPRECATE --------------
     
         //[[deprecated("deprecated, use the new sequence API as in the examples")]]
+        [[deprecated("deprecated, use the new sequence API as in the examples")]]      
         void message(double step, float value, int outputIndex=0) noexcept;
                 
         [[deprecated("deprecated, use the new sequence API as in the examples")]]        

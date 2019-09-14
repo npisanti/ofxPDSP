@@ -85,9 +85,8 @@ void SequencerSectionPlotter::update() {
 
 void SequencerSectionPlotter::updateGraphics( const pdsp::Sequence & seq ){
                 
-        timeMult = 1.0 / seq.length();
+        timeMult = 1.0 / seq.bars;
         
-
 
         fbo.begin();
         ofNoFill();

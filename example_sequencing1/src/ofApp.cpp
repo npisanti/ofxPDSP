@@ -142,11 +142,6 @@ void ofApp::setup(){
             for (int i=0; i<4; ++i){
                 float trig = (i%2==0) ? 1.0f : 0.75f;
                 float pitch = akebono[pdsp::dice(8)]; 
-                
-                lead3.message( double(i),       trig,  0 );
-                lead3.message( double(i)+0.6f,  0.0f,  0 ); // trigger off, half step gate
-                lead3.message( double(i),       pitch, 1 );
-                
 
                 lead3.out(0).delay( i/8.0 ).bang( trig );
                 lead3.out(0).delay( (i+0.6)/8.0 ).bang( 0.0f );
