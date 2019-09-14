@@ -16,15 +16,41 @@ void ofApp::setup(){
 
     // some sequences, basically just on/off notes    
     sequences.resize(3);
-    sequences[0].steplen = 1.0/8.0;
     sequences[0].bars = 2.0;
-    sequences[0].set( { 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f } );
-    sequences[1].steplen = 1.0/16.0;
+    sequences[0].begin()
+        .bang( 1.0f )
+        .delay( 1.0/8.0 ).bang(0.0f)
+        .delay( 2.0/8.0 ).bang(1.0f)
+        .delay( 3.0/8.0 ).bang(0.0f)
+        .delay( 4.0/8.0 ).bang(1.0f)
+        .delay( 5.0/8.0 ).bang(0.0f)
+        .delay( 6.0/8.0 ).bang(1.0f)
+        .delay( 7.0/8.0 ).bang(0.0f)
+    .end();
+
     sequences[1].bars = 2.0;
-    sequences[1].set( { 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f } );
-    sequences[2].steplen = 1.0/32.0;
+    sequences[1].begin()
+        .bang( 1.0f )
+        .delay( 1.0/16.0 ).bang(0.0f)
+        .delay( 2.0/16.0 ).bang(1.0f)
+        .delay( 3.0/16.0 ).bang(0.0f)
+        .delay( 4.0/16.0 ).bang(1.0f)
+        .delay( 5.0/16.0 ).bang(0.0f)
+        .delay( 6.0/16.0 ).bang(1.0f)
+        .delay( 7.0/16.0 ).bang(0.0f)
+    .end();
+    
     sequences[2].bars = 2.0;
-    sequences[2].set( { 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f } );
+    sequences[2].begin()
+        .bang( 1.0f )
+        .delay( 1.0/32.0 ).bang(0.0f)
+        .delay( 2.0/32.0 ).bang(1.0f)
+        .delay( 3.0/32.0 ).bang(0.0f)
+        .delay( 4.0/32.0 ).bang(1.0f)
+        .delay( 5.0/32.0 ).bang(0.0f)
+        .delay( 6.0/32.0 ).bang(1.0f)
+        .delay( 7.0/32.0 ).bang(0.0f)
+    .end();
     
     // setup as usual, check example-scoring for more info
     engine.sequencer.setTempo(172.0);
@@ -37,7 +63,7 @@ void ofApp::setup(){
     // you connect the ScoreSections to midiOut like this
     // outputs a midi on on a message with value > 0.0f and a midi off message for a value <= 0.0f
     // first argument of gate() is midi channel, second the default note
-    engine.sequencer.sections[0].out_message() >> midiOut.gate(1, 60); 
+    engine.sequencer.sections[0].out_message(0) >> midiOut.gate(1, 60); 
     
     // if you patch an out to a note() this out will control the note number of the last patched gate()
     // so beware! use gate() and note() always one after the other, like this

@@ -24,12 +24,11 @@ void ofApp::setup(){
     engine.score.play();  
     
     // sequence
-
     float o = -1.0f; // using 'o' as graphical aid for empty steps
 
-    vector<float> channel1 
+    std::vector<float> channel1 
         = { 120.0f,  o  ,   o  ,  100.0f ,  o,    o  ,   o  ,    o,     o,    o,  120.0f ,  o,     o  ,    o,     o ,    o  };
-    vector<float> channel2 
+    std::vector<float> channel2 
         = { 120.0f,  o  , 90.0f,   o  ,  90.0f,  o  , 120.0f,   o  ,  90.0f,  o  , 90.0f,   o  , 120.0f,   o  ,  90.0f,  o  };
     // those are the value we pass to the serial
     // all values are converted to int and scaled in the 0<-->127 range
@@ -44,14 +43,14 @@ void ofApp::setup(){
     sequence.begin();
         for(size_t i=0; i<channel1.size(); ++i){
             if( channel1[i]>0.0f){
-                sequence.message( i,   channel1[i], 0);
-                sequence.message( i+duration, 0.0f, 0);
+                sequence.out( 0 ).delay( i/16.0 ).bang( channel1[i] ); 
+                sequence.out( 0 ).delay( (i+duration)/16.0 ).bang( 0.0f); 
             }
         }
         for(size_t i=0; i<channel2.size(); ++i){
             if( channel2[i]>0.0f){
-                sequence.message( i,   channel2[i], 1);
-                sequence.message( i+duration, 0.0f, 1);
+                sequence.out( 1 ).delay( i/16.0 ).bang( channel2[i] ); 
+                sequence.out( 1 ).delay( (i+duration)/16.0 ).bang( 0.0f ); 
             }
         }
     sequence.end();
