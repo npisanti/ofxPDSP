@@ -1,8 +1,6 @@
 
 #include "Sequence.h"
 
-#include<bits/stdc++.h> 
-
 double pdsp::Sequence::defaultSteplen = 1.0;
 
 pdsp::Sequence::Sequence( double stepDivision ){ 
@@ -336,7 +334,7 @@ void pdsp::Sequence::line( double stepStart, float valueStart, double stepStopEx
     float  valueAdd = ( valueStopExclusive - valueStart ) / steps;
 
     for( double s = stepStart; s< (double) stepStopExclusive; s += stepAdd ) {
-        message( s, value, output);
+        message( s, value, output, MValue );
         value += valueAdd;
     }
 
