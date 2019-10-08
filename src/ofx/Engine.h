@@ -9,14 +9,13 @@
 #include "ofMain.h"
 #include "../DSP/pdspCore.h"
 #include "../sequencer/SequencerSection.h"
+#include "../sequencer/SequencerProcessor.h"
 #include "../DSP/utility/OneBarTimeMs.h"
 #include "../modules/oscillators/FMOperator.h"
 #include "../DSP/utility/DBtoLin.h"
 
 #include "SerialOut.h"
 #include "OscInput.h"
-
-#include "helper/EngineGraphics.h"
 
 #ifndef __ANDROID__
 #include "helper/Controller.h"
@@ -157,11 +156,6 @@ public:
     @brief a SequencerProcessor class to manage the playhead and for sequencing. Look SequencerProcessor page for knowing more.
     */
     pdsp::SequencerProcessor sequencer;
-    
-    /*!
-    @brief manages a class to graphically monitor sequences
-    */    
-    helper::EngineGraphics graphics;
    
     /*!
     @brief returns a module that outputs the time of a musical bar in milliseconds

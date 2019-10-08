@@ -33,7 +33,6 @@ pdsp::Engine::Engine() : score( sequencer ){
 #endif
 
     bBackgroundAudio = false;
-    graphics.setParent( score );
 
 }
 
