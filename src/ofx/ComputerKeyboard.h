@@ -24,6 +24,13 @@ public:
            
         void keyPressed  ( int key );
         void keyReleased ( int key );
+        
+        /*!
+        @brief when active, pressing a key generate a note on and pressing it again a note off
+        @param[in] active true for activating the mode, false by default
+        */             
+        void setKeysToggle( bool active );
+        
 
         /*!
         @brief set the mode to Poly, with the given max notes
@@ -97,6 +104,26 @@ public:
 */ 
 
 private:
+        int     eventIdGenerator;
+        int     activeNotes;
+        int     maxNotes;
+        int     monoNoteIndex;
+
+        int basePitch;
+        float dynamic;
+  
+        VoiceMode               voiceMode;
+        MonoPriority            monoMode;
+
+        bool legato;
+        bool toggle;
+        
+        std::vector<int> keysPressed;
+        std::vector<int> keysWhite;
+        
+        std::vector<helper::NoteState_t>             notes;
+
+        void releaseCode ( int key, bool fromPressed );
         void keysControl( int key );
 
         void setVoiceMode( pdsp::VoiceMode mode);
@@ -114,25 +141,7 @@ private:
 
         void checkIdGeneration();
         void clearNotes();
-        
 
-        int     eventIdGenerator;
-        int     activeNotes;
-        int     maxNotes;
-        int     monoNoteIndex;
-        
-        std::vector<int> keysPressed;
-        std::vector<int> keysWhite;
-        
-        std::vector<helper::NoteState_t>             notes;
-        
-        bool legato;
-  
-        VoiceMode               voiceMode;
-        MonoPriority            monoMode;
-
-        int basePitch;
-        float dynamic;
 };       
     
 }

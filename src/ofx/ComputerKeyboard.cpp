@@ -53,6 +53,8 @@ ComputerKeyboard::ComputerKeyboard(){
         dynamic = 1.0f;
         basePitch = 48;
         
+        toggle = false;
+        
 }
 
 
@@ -70,6 +72,10 @@ void ComputerKeyboard::setMonoMode( bool legato, pdsp::MonoPriority priority ) {
 
 int ComputerKeyboard::getVoicesNumber() const{
     return maxNotes;
+}
+
+void ComputerKeyboard::setKeysToggle( bool active ){
+    toggle = active;
 }
 
 void ComputerKeyboard::setVoiceMode( pdsp::VoiceMode mode){
@@ -143,65 +149,70 @@ void ComputerKeyboard::keysControl( int key ) {
 }
 
 
-void ComputerKeyboard::keyPressed ( int key ) {
+void ComputerKeyboard::keyPressed( int key ) {
+    
+        keysControl ( key ); // function keys
+        
+        if( toggle ){
+            for(int i=0; i<13; ++i){
+                if(key == keys[i] && keysPressed[i]==1){
+                    releaseCode( key, true );
+                    return;
+                }
+            }
+        }
     
         int pitch = -1;
         for(int i=0; i<13; ++i){
             if(key == keys[i] && keysPressed[i]==0){
                 keysPressed[i] = 1;
                 pitch = basePitch +i;
+                switch( voiceMode ){
+                    case Poly :
+                        processPolyNoteOn( pitch );
+                        break;
+                        
+                    case Mono:
+                        processMonoNoteOn( pitch );
+                        break;
+                        
+                    default: break;
+                }
+                checkIdGeneration();  
+                // for checking overflow of note generation, it will fail only there are more than 2000 events generated between calls, unlikely
             }
-        }
-
-        if(pitch > 0){
-            switch( voiceMode ){
-                case Poly :
-                    processPolyNoteOn( pitch );
-                    break;
-                    
-                case Mono:
-                    processMonoNoteOn( pitch );
-                    break;
-                    
-                default: break;
-            }
-    
-            // for checking overflow of note generation, it will fail only there are more than 2000 events generated between calls, unlikely
-            checkIdGeneration();            
         }
 }
 
 void ComputerKeyboard::keyReleased ( int key ) {
+    releaseCode( key, false );
+}
 
+void ComputerKeyboard::releaseCode ( int key, bool fromPressed ){
+
+    if( !toggle || fromPressed ){
         int pitch = -1;
         for(int i=0; i<13; ++i){
             if(key == keys[i] ){
                 keysPressed[i] = 0;
                 pitch = basePitch + i;
+                switch( voiceMode ){
+                    case Poly :
+                        processPolyNoteOff( pitch );
+                        break;
+                        
+                    case Mono:
+                        processMonoNoteOff( pitch );
+                        break;
+                    default: break;
+                }        
+                
+                // for checking overflow of note generation, it will fail only there are more than 2000 events generated between calls, unlikely
+                checkIdGeneration();  
             }
         }
-
-        if(pitch > 0){
-            switch( voiceMode ){
-                case Poly :
-                    processPolyNoteOff( pitch );
-                    break;
-                    
-                case Mono:
-                    processMonoNoteOff( pitch );
-                    break;
-                default: break;
-            }        
-            
-            // for checking overflow of note generation, it will fail only there are more than 2000 events generated between calls, unlikely
-            checkIdGeneration();            
-        }else{
-            
-            keysControl ( key ); // function keys
-        
-        }
+    }
 }
-
 
 
 void ComputerKeyboard::checkIdGeneration(){
