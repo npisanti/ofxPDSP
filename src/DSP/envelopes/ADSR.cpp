@@ -21,6 +21,7 @@ pdsp::ADSR::ADSR(){
         decayTCO = riseTCO = releaseTCO = exp(-4.95); //digital 
         
         dBtrig = false;
+        trigcount = 0;
         
         sustainLevel = 0.0f;
         decayNextStageLevel = 0.0f;
@@ -82,9 +83,12 @@ void pdsp::ADSR::disableDBTriggering(){
     dBtrig = false;
 }
 
-
 float pdsp::ADSR::meter_output() const{
     return meter.load();
+}
+
+int pdsp::ADSR::meter_triggers() const{
+    return trigcount.load();
 }
 
 pdsp::Patchable& pdsp::ADSR::in_trig(){
@@ -197,6 +201,7 @@ void pdsp::ADSR::onRetrigger(float triggerValue, int n) {
                 stageSwitch = releaseStage;
         }else if( triggerValue > 0.0f ){
                 stageSwitch = attackStage;
+                trigcount++;
         }else if( triggerValue < 0.0f ){ //legato triggers
                 triggerValue = -triggerValue;
                 if(stageSwitch!=attackStage){

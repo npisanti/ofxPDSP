@@ -122,6 +122,11 @@ public:
     */    
     float meter_output() const;
 
+    /*!
+    @brief returns number of received triggers since the start of the program, as int. Can overflow. This method is thread-safe.
+    */     
+    int meter_triggers() const;
+
 private:
 
     void process(int bufferSize) noexcept override;
@@ -152,6 +157,7 @@ private:
     InputNode input_release;
     InputNode input_velocity;
 
+    std::atomic<int> trigcount;
     std::atomic<bool> dBtrig;
     float dBmin;
     float dBmax;    

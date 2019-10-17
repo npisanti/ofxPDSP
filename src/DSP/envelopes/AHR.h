@@ -108,7 +108,11 @@ public:
     @brief returns the first value of the last processed output buffer. This method is thread-safe.
     */    
     float meter_output() const;
-
+    
+    /*!
+    @brief returns number of received triggers since the start of the program, as int. Can overflow. This method is thread-safe.
+    */     
+    int meter_triggers() const;
 private:
     void process(int bufferSize) noexcept override;
     void prepareUnit( int expectedBufferSize, double sampleRate) override;
@@ -148,6 +152,7 @@ private:
     static const int releaseStage = 3;
     
     std::atomic<float> meter;
+    std::atomic<int>   trigcount;
 };
 
 } // pdsp end namespace

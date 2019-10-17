@@ -24,6 +24,7 @@ pdsp::AHR::AHR(){
         input_velocity.setDefaultValue(1.0f);
         
         dBtrig = false;
+        trigcount = 0;
         
         if(dynamicConstruction){
                 prepareToPlay(globalBufferSize, globalSampleRate);
@@ -73,6 +74,10 @@ void pdsp::AHR::disableDBTriggering(){
 
 float pdsp::AHR::meter_output() const{
     return meter.load();
+}
+
+int pdsp::AHR::meter_triggers() const{
+    return trigcount.load();
 }
 
 pdsp::Patchable& pdsp::AHR::in_trig(){
@@ -153,6 +158,7 @@ void pdsp::AHR::onRetrigger(float triggerValue, int n) {
                 }
                 
                 stageSwitch = attackStage;
+                trigcount++;
         }        
 
         setAttackTime(  processAndGetSingleValue(input_attack,  n) );
