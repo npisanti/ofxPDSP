@@ -4,36 +4,9 @@
 #define OFXPDSP_OSCINPUT_MESSAGERESERVE 128
 #define OFXPDSP_OSCCIRCULARBUFFER_SIZE 10000
 
-pdsp::osc::Input::OscChannel::OscChannel(){
-    
-    key = "";
-    messageBuffer = nullptr;
-    gate_out = nullptr;
-    value_out = nullptr;
-    argument = 0;
-    hasParser = false;
-    
-    code = [](float input) noexcept{
-        return input;
-    };
-}
-
-void pdsp::osc::Input::OscChannel::deallocate(){
-    if( messageBuffer != nullptr ){
-        delete messageBuffer;
-    }
-    if( gate_out != nullptr ) {
-        delete gate_out;
-    }
-    if ( value_out != nullptr ) {
-        delete value_out;
-    }            
-}
-
-
 pdsp::osc::Input::Input() {
     
-    oscChannels.clear();
+    parsers.clear();
     
     readVector.reserve(OFXPDSP_OSCINPUT_MESSAGERESERVE);
     circularBuffer.resize( OFXPDSP_OSCCIRCULARBUFFER_SIZE );
@@ -56,11 +29,8 @@ pdsp::osc::Input::~Input(){
     if(connected){
         close();
     }
-    
-    for (size_t i = 0; i < oscChannels.size(); ++i){
-        oscChannels[i]->deallocate();
-        delete oscChannels[i];
-        oscChannels[i] = nullptr;
+    for( size_t i=0; i<parsers.size(); ++i ){
+        delete parsers[i];
     }
 }
 
@@ -98,98 +68,45 @@ void pdsp::osc::Input::linkTempo( string oscAddress, int argument ){
     tempoArgument = argument;
 }
 
-pdsp::SequencerGateOutput& pdsp::osc::Input::out_trig( string oscAddress, int argument ) {
-    
-    for ( OscChannel* & osc : oscChannels ){
-        if( osc->key == oscAddress && osc->argument == argument ) {
-            if( osc->gate_out != nullptr ){
-                return *(osc->gate_out);
-            }else if( osc->value_out != nullptr ){
-                cout<<"[pdsp] warning! this osc string and argument was already used as value output, returning dummy gate output\n";
-                pdsp::pdsp_trace();
-                return invalidGate;
-            } else {
-                osc->messageBuffer = new pdsp::MessageBuffer();
-                osc->gate_out = new pdsp::SequencerGateOutput();
-                osc->gate_out->link( *(osc->messageBuffer) );
-                return *(osc->gate_out);
-            }
+int pdsp::osc::Input::checkParser( std::string oscAddress ){
+    for( size_t i=0; i<parsers.size(); ++i ){
+        if( parsers[i]->address == oscAddress ){
+            return i;
         }
     }
-    
-    // not found
-    OscChannel* osc = new OscChannel();
-    osc->key = oscAddress;
-    osc->argument = argument;
-    osc->messageBuffer = new pdsp::MessageBuffer();
-    osc->gate_out = new pdsp::SequencerGateOutput();
-    osc->gate_out->link( *(osc->messageBuffer) );
-    oscChannels.push_back(osc);
+    parsers.emplace_back();
+    parsers.back() = new OscParser();
+    parsers.back()->address = oscAddress;
+    return parsers.size()-1;
+}
 
-    return *(osc->gate_out);
+
+pdsp::SequencerGateOutput& pdsp::osc::Input::out_trig( string oscAddress, int argument ) {
+    int i = checkParser( oscAddress );
+    return parsers[i]->out_trig( argument );
 }
 
 
 pdsp::SequencerValueOutput& pdsp::osc::Input::out_value( string oscAddress, int argument ) {
-   
-    for ( OscChannel* & osc : oscChannels ){
-        if( osc->key == oscAddress  && osc->argument == argument ) {
-            if( osc->value_out != nullptr ){
-                return *(osc->value_out);
-            }else if( osc->gate_out != nullptr ){
-                    cout<<"[pdsp] warning! this osc string and argument was already used as gate output, returning dummy value output\n";
-                    pdsp::pdsp_trace();
-                    return invalidValue;                    
-            }else{
-                osc->messageBuffer = new pdsp::MessageBuffer();
-                osc->value_out = new pdsp::SequencerValueOutput();
-                osc->value_out->link( *(osc->messageBuffer) );
-                return *(osc->value_out);
-            }
-        }
-    }
-
-    // not found
-    OscChannel* osc = new OscChannel();
-    osc->key = oscAddress;
-    osc->argument = argument;
-    osc->messageBuffer = new pdsp::MessageBuffer();
-    osc->value_out = new pdsp::SequencerValueOutput();
-    osc->value_out->link( *(osc->messageBuffer) );
-    oscChannels.push_back(osc);
-
-    return *(osc->value_out);    
+    int i = checkParser( oscAddress );
+    return parsers[i]->out_value( argument );
 }
 
 std::function<float(float)> & pdsp::osc::Input::parser( string oscAddress, int argument ){
-    for ( OscChannel* & osc : oscChannels ){
-        if( osc->key == oscAddress  && osc->argument == argument ) {
-            osc->hasParser = true; 
-            return osc->code;
-        }
-    }
-    
-    // not found, creating
-    OscChannel* osc = new OscChannel();
-    osc->key = oscAddress;
-    osc->argument = argument;
-    osc->hasParser = true; 
-    oscChannels.push_back(osc);
-    return osc->code;
+    int i = checkParser( oscAddress );
+    return parsers[i]->parser( argument );
 }
-
 
 void pdsp::osc::Input::clearAll(){
     sendClearMessages = true;
 }
+
 
 void pdsp::osc::Input::prepareToPlay( int expectedBufferSize, double sampleRate ){
     oneSlashMicrosecForSample = 1.0 / (1000000.0 / sampleRate);
 }
 
 void pdsp::osc::Input::releaseResources(){}
-
-
 
 void pdsp::osc::Input::pushToReadVector( pdsp::osc::Input::_PositionedOscMessage & message ){
         std::chrono::duration<double> offset = message.timepoint - bufferChrono; 
@@ -227,58 +144,17 @@ void pdsp::osc::Input::processOsc( int bufferSize ) noexcept {
         }
         
         // clean the message buffers
-        for (size_t i = 0; i < oscChannels.size(); ++i){
-            if( oscChannels[i]->messageBuffer != nullptr ){
-                oscChannels[i]->messageBuffer->clearMessages();
-
-                if(sendClearMessages){
-                    oscChannels[i]->messageBuffer->addMessage(0.0f, 0);
-                }                
-            }
+        for (size_t i = 0; i < parsers.size(); ++i){
+            parsers[i]->clear( sendClearMessages );
         }
         
         // adds the messages to the buffers, only the first arg of each osc message is read, as float
         for(_PositionedOscMessage &osc : readVector){
-            int ma = osc.message.getNumArgs();
-            for( int a=0; a<ma; ++a ){
-                for (size_t i = 0; i < oscChannels.size(); ++i){
-                    
-                    if(osc.message.getAddress() == oscChannels[i]->key && oscChannels[i]->argument == a ){
-                        float value = 0.0f;
-                        switch( osc.message.getArgType( a ) ){
-                            case OFXOSC_TYPE_INT32:
-                                value = osc.message.getArgAsInt32(oscChannels[i]->argument);
-                            break;
-                            
-                            case OFXOSC_TYPE_FLOAT:
-                                value = osc.message.getArgAsFloat(oscChannels[i]->argument);
-                            break;
-
-                            case OFXOSC_TYPE_TRUE:
-                                value = 1.0f;
-                            break;
-                            
-                            case OFXOSC_TYPE_FALSE:
-                                value = 0.0f;
-                            break;
-                            
-                            case OFXOSC_TYPE_STRING:
-                                // try to parse string
-                                value = ofToFloat(osc.message.getArgAsString(oscChannels[i]->argument));
-                            break;
-                            
-                            default: break;
-                        }
-                        
-                        if( oscChannels[i]->hasParser ){
-                            value = oscChannels[i]->code( value );
-                        }
-                        if( oscChannels[i]->messageBuffer != nullptr && value != Ignore ){
-                            oscChannels[i]->messageBuffer->addMessage( value, osc.sample );
-                        }
-                    }
-                }                
-            }
+            for( size_t k=0; k<parsers.size(); ++k){
+                if( parsers[k]->address == osc.message.getAddress() ){
+                    parsers[k]->process( osc.message, osc.sample );
+                }
+            } 
             
             if( tempoLinked ){
                 if(osc.message.getAddress() == tempoAddress ){
@@ -302,10 +178,8 @@ void pdsp::osc::Input::processOsc( int bufferSize ) noexcept {
         }
         
         // now process all the linked sequencers
-        for (size_t i = 0; i < oscChannels.size(); ++i){
-            if( oscChannels[i]->messageBuffer != nullptr ){
-                oscChannels[i]->messageBuffer->processDestination(bufferSize);
-            }   
+        for (size_t i = 0; i < parsers.size(); ++i){
+            parsers[i]->processDestinations( bufferSize );
         }   
     }
 }

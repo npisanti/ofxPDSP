@@ -16,6 +16,7 @@
 #include "../DSP/pdspCore.h"
 #include "../sequencer/SequencerSection.h"
 #include "ofxOsc.h"
+#include "helper/OscParser.h"
 
 /*!
 @brief utility class manage OSC input to the DSP
@@ -33,28 +34,9 @@ typedef osc::osc_bundle_element_size_t _PDSPosc_bundle_element_size_t;
 
 namespace pdsp{ namespace osc {
 
-static const float Ignore = std::numeric_limits<float>::infinity(); 
-
 class Input : public pdsp::Preparable {
 
 private:
-    //enum OscChannelMode { Gate, Value };
-
-    class OscChannel {
-    public:
-        OscChannel();
-        
-        void deallocate();
-        
-        string key;
-        int argument;
-        pdsp::MessageBuffer* messageBuffer;
-        pdsp::SequencerGateOutput* gate_out;
-        pdsp::SequencerValueOutput* value_out;
-        
-        bool hasParser;
-        std::function<float(float)> code;
-    };
     
     class _PositionedOscMessage {
     public:
@@ -124,7 +106,6 @@ public:
     */    
     pdsp::SequencerValueOutput& out_value( string oscAddress, int argument=0  );
 
-
     /*!
     @brief get a reference to the parser for the selected address and argument. You can assign a lambda function to this value to elaborate the signal.
     @param[in] oscAddress address for OSC input
@@ -154,28 +135,22 @@ protected:
 private:
     CustomOscReceiver receiver;
     
-    vector<OscChannel*> oscChannels;    
+    std::vector<OscParser*> parsers;    
     
     bool            connected;
     bool            verbose;    
     
     bool    sendClearMessages; 
-
     
     std::atomic<int> index;
     int lastread;
     std::vector<_PositionedOscMessage>    circularBuffer;
     std::vector<_PositionedOscMessage>    readVector;
 
-
-    double                                              oneSlashMicrosecForSample;
+    double oneSlashMicrosecForSample;
 
     chrono::time_point<chrono::high_resolution_clock>   bufferChrono;   
 
-    pdsp::SequencerGateOutput invalidGate;
-    pdsp::SequencerValueOutput invalidValue;
-
-    void pushToReadVector( _PositionedOscMessage & message );
     
     bool        tempoLinked;
     std::string tempoAddress;
@@ -183,6 +158,8 @@ private:
     double      tempo;
     bool        tempoChanged;
     
+    void pushToReadVector( _PositionedOscMessage & message );
+    int checkParser( std::string oscAddress );
 };
 
 }}
