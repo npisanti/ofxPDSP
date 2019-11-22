@@ -16,7 +16,7 @@ enum Interpolator_t {Linear, Smooth};
 
 enum SlewMode_t {Rate, Time};
 
-#define PDSP_TRIGGER_OFF FLT_MIN
+#define PDSP_TRIGGER_OFF -FLT_MAX
 
 } // end namespace
 
