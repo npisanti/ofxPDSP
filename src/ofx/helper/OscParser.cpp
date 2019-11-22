@@ -106,6 +106,9 @@ std::function<float(float)> & pdsp::osc::OscParser::parser( int argument ){
 
 void pdsp::osc::OscParser::process( ofxOscMessage msg, int sample ){
     int ma = msg.getNumArgs();
+    if( ma > (int) channels.size() ){
+        ma = channels.size();
+    }
     
     for( int a=0; a<ma; ++a ){
         bool bParse = channels[a]->hasParser;
