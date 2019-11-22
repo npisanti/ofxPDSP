@@ -112,6 +112,14 @@ public:
     @param[in] argument index of argument from message, 0 if not gived (first argument)
     */       
     std::function<float(float)> & parser( string oscAddress, int argument=0 );
+    
+    /*!
+    @brief sets an initial value for the selected addres and argument, valid until any other OSC message is received
+    @param[in] oscAddress address for OSC input
+    @param[in] argument index of argument from message, 0 if not gived (first argument)    
+    @param[in] value initial value for the selected address and argument
+    */       
+    void initTo( string oscAddress, int argument, float value  );
 
     /*!
     @brief sends 0.0f as message to all the connected trigger and value outputs.

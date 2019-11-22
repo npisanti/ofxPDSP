@@ -34,6 +34,8 @@ private:
         
         bool hasParser;
         std::function<float(float)> code;
+        
+        float initValue;
     };
     
 public:
@@ -42,8 +44,10 @@ public:
     
     std::string address;
         
+        
     pdsp::SequencerGateOutput& out_trig( int out );  
     pdsp::SequencerValueOutput& out_value(  int out );
+    void initTo( int argument, float value );
 
     void process( ofxOscMessage msg, int sample );
     void processDestinations( int bufferSize );

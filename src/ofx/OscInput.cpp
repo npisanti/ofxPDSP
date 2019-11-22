@@ -97,6 +97,18 @@ std::function<float(float)> & pdsp::osc::Input::parser( string oscAddress, int a
     return parsers[i]->parser( argument );
 }
 
+void pdsp::osc::Input::initTo( string oscAddress, int argument, float value  ){
+    for( size_t i=0; i<parsers.size(); ++i ){
+        if( parsers[i]->address == oscAddress ){
+            parsers[i]->initTo( argument, value );
+            return;
+        }
+    }
+    std::cout<<"[pdsp] wrong address selected for initTo\n";
+    pdsp_trace();
+}
+
+
 void pdsp::osc::Input::clearAll(){
     sendClearMessages = true;
 }

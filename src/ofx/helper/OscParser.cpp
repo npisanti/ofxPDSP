@@ -10,6 +10,7 @@ pdsp::osc::OscParser::OscChannel::OscChannel(){
     gate_out = nullptr;
     value_out = nullptr;
     hasParser = false;
+    initValue = 0.0f;
 }
 
 void pdsp::osc::OscParser::OscChannel::deallocate(){
@@ -149,6 +150,18 @@ void pdsp::osc::OscParser::process( ofxOscMessage msg, int sample ){
     }    
 }
 
+void pdsp::osc::OscParser::initTo( int argument, float value ){
+    
+    if( argument >= (int) channels.size() ){
+        size_t oldsize = channels.size();
+        channels.resize( argument+1 );
+        for( size_t i=oldsize; i<channels.size(); ++i ){
+            channels[i] = new OscChannel();
+        }
+    }
+    channels[argument]->initValue = value;
+}
+
 void pdsp::osc::OscParser::clear( bool sendClearMessage ){
     for( size_t i=0; i<channels.size(); ++i ){
         if( channels[i]->messageBuffer != nullptr ){
@@ -156,6 +169,9 @@ void pdsp::osc::OscParser::clear( bool sendClearMessage ){
 
             if(sendClearMessage){
                 channels[i]->messageBuffer->addMessage(0.0f, 0);
+            }                
+            if(channels[i]->initValue!=0.0f){
+                channels[i]->messageBuffer->addMessage(channels[i]->initValue, 0);
             }                
         }        
     }
