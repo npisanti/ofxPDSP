@@ -101,7 +101,7 @@ void pdsp::InputNode::prepareToPlay( int expectedBufferSize, double sampleRate )
     int size = ( expectedBufferSize * requiredOversampleLevel * PDSP_BUFFERS_EXTRA_DIM)/(PDSP_BUFFERS_EXTRA_DIM-1);
     ofx_allocate_aligned( sumBuffer, size);
     for(int i=0; i<size; ++i){ sumBuffer[i]=0.0f; }
-    
+
     buffer = sumBuffer;
 }
 
@@ -177,11 +177,11 @@ void pdsp::InputNode::process() noexcept {
                 break;
             default: break;
             }
-            
+
             break;
         case 1: // multiplyNow is true
             buffer = sumBuffer;
-            
+
             switch(state){
             case Unchanged:
             case Changed:
@@ -192,7 +192,7 @@ void pdsp::InputNode::process() noexcept {
                 break;
             default: break;
             }
-            
+
             break;
         case 2: // clampToBoundaries is true;
             buffer = sumBuffer;
@@ -212,7 +212,7 @@ void pdsp::InputNode::process() noexcept {
                 break;
             default: break;
             }
-            
+
             break;
         case 3: // all true, multiply and then clamp
             buffer = sumBuffer;
@@ -233,9 +233,9 @@ void pdsp::InputNode::process() noexcept {
                 break;
             default: break;
             }
-            
+
             break;
-            
+
         default: break;
         }
 
@@ -257,7 +257,7 @@ void pdsp::InputNode::process() noexcept {
             break;
         default: break;
         }
-        
+
         break; // SINGLE INPUT BREAK
 
     default: // MORE THAN ONE INPUT-----------------------------
@@ -272,10 +272,10 @@ void pdsp::InputNode::process() noexcept {
             OutputData& odata = inputs[i];
             OutputNode* nodei = odata.node;
             //combined switch
-            int tripleSwitch = nodei->state + state*4; 
+            int tripleSwitch = nodei->state + state*4;
             if(odata.multiply) tripleSwitch += 16;
-            
-            
+
+
             switch(tripleSwitch){
             case 4: case 5: // odata CR, state Changed
                 scalarSum += nodei->getCRValue();
@@ -300,7 +300,7 @@ void pdsp::InputNode::process() noexcept {
             case 24: case 25: // odata CR, state AudioRate, multiply
                 scalarSum += nodei->getCRValue() * odata.multiplier;
                 break;
-            case 26: // odata AR, state AudioRate , multiply           
+            case 26: // odata AR, state AudioRate , multiply
                 ofx_Aeq_Badd_CmulS(sumBuffer, sumBuffer, nodei->buffer, odata.multiplier, bufferSize * requiredOversampleLevel);
                 break;
             default: break;
@@ -330,7 +330,7 @@ void pdsp::InputNode::process() noexcept {
                     scalarSum += nodei->getCRValue();
                 }
             }
-            */ 
+            */
 
 
         //now we sum / assign the scalar
@@ -353,11 +353,11 @@ void pdsp::InputNode::process() noexcept {
             }
 
             lastValue = buffer[0];
-            
+
             //vect_sanity_check(buffer, 1); // maybe i will activate this in future
-            
+
             break;
-        
+
         case AudioRate:
             if( scalarSum!=0.0f ) {
                 ofx_Aeq_BaddS( sumBuffer, sumBuffer, scalarSum, bufferSize * requiredOversampleLevel );
@@ -366,14 +366,14 @@ void pdsp::InputNode::process() noexcept {
                 ofx_Aeq_clipB( sumBuffer, sumBuffer, lowBoundary, highBoundary, bufferSize * requiredOversampleLevel );
             }
             lastValue = sumBuffer[bufferSize*requiredOversampleLevel -1 ];
-            
+
             //vect_sanity_check(buffer, bufferSize); // maybe i will activate this in future
-            
+
             break;
-      
+
         default: break;
         }
-    
+
         break; //MULTIPLE INPUTS BREAK
 
     } // END SWITCH----------------------------------------------------------
@@ -587,7 +587,7 @@ void pdsp::OutputNode::prepareToPlay( int expectedBufferSize, double sampleRate 
     if( buffer!=nullptr ) {
         ofx_deallocate_aligned( buffer );
     }
-    
+
     int size = ( expectedBufferSize * oversampleLevel * PDSP_BUFFERS_EXTRA_DIM)/(PDSP_BUFFERS_EXTRA_DIM-1);
     ofx_allocate_aligned( buffer, size );
     for(int i=0; i<size; ++i){ buffer[i] = 0.0f; }
@@ -676,7 +676,7 @@ const int pdsp::OutputNode::getState() const {
     return state;
 }
 
-std::vector<pdsp::InputNode *> pdsp::OutputNode::getOutputs()
+const std::vector<pdsp::InputNode *> & pdsp::OutputNode::getOutputs() const
 {
     return outputs;
 }
@@ -718,7 +718,7 @@ void pdsp::OutputNode::setParent( Unit* parent ) {
 void pdsp::OutputNode::updateTurnId() {
     lastProcessedTurnId = globalProcessingTurnId;
 }
-    
+
 //----------------------------VALUE NODE--------------------------------
 
 pdsp::ValueNode::ValueNode() {
@@ -766,7 +766,7 @@ pdsp::OutputNode& pdsp::ValueNode::setAndGetNode( float value ) {
 }
 
 float pdsp::ValueNode::getCRValue() const{
-    return nodeValue.load();   
+    return nodeValue.load();
 }
 
 void pdsp::ValueNode::prepareToPlay( int expectedBufferSize, double sampleRate ) {  }
@@ -901,7 +901,7 @@ pdsp::InputNode& pdsp::Patchable::getSelectedInput()  {
     if ( selectedInput == reinterpret_cast<InputNode*>( &invalidInput ) ){
         std::cout<< "[pdsp] warning! patching to invalid input, probably this unit/module has no input or you have used an invalid tag\n";
         pdsp_trace();
-    }  
+    }
     return *selectedInput;
 }
 pdsp::OutputNode& pdsp::Patchable::getSelectedOutput() {
@@ -946,8 +946,8 @@ void pdsp::Patchable::addUnitOutput( const char* tag, Patchable &unit ){
     unit.resetOutputToDefault();
     resetOutputToDefault();
 }
-    
-    
+
+
 void pdsp::Patchable::addUnitInput( const char* tag, Patchable &unit ){
     addInput(tag, unit.getSelectedInput() );
     unit.resetInputToDefault();
@@ -959,8 +959,8 @@ void pdsp::Patchable::addModuleOutput( const char* tag, Patchable &unit ){
     unit.resetOutputToDefault();
     resetOutputToDefault();
 }
-    
-    
+
+
 void pdsp::Patchable::addModuleInput( const char* tag, Patchable &unit ){
     addInput(tag, unit.getSelectedInput() );
     unit.resetInputToDefault();
@@ -968,7 +968,7 @@ void pdsp::Patchable::addModuleInput( const char* tag, Patchable &unit ){
 }
 
 void pdsp::Patchable::clearAllAddedNodes(){
-    
+
     for( NamedInput &item : inputs ) {
         item.input->disconnectAll();
     }
@@ -979,8 +979,8 @@ void pdsp::Patchable::clearAllAddedNodes(){
     inputs.clear();
     outputs.clear();
 }
-    
-    
+
+
 void pdsp::Patchable::disconnectIn(){
     if(selectedInput->exists()){
         selectedInput->disconnectAll();
@@ -993,7 +993,7 @@ void pdsp::Patchable::disconnectOut(){
     if(selectedOutput->exists()){
         selectedOutput->disconnectAll();
     }
-    this->resetOutputToDefault();    
+    this->resetOutputToDefault();
 }
 
 
@@ -1003,11 +1003,11 @@ void pdsp::Patchable::disconnectAll(){
     }
     for( NamedOutput &item : outputs ) {
         item.output->disconnectAll();
-    }    
-    this->resetInputToDefault();   
-    this->resetOutputToDefault();   
+    }
+    this->resetInputToDefault();
+    this->resetOutputToDefault();
 }
-    
+
 std::vector<std::string> pdsp::Patchable::getInputsList(){
     std::vector<std::string> toReturn;
     toReturn.reserve(inputs.size());
@@ -1034,4 +1034,3 @@ void pdsp::Unit::updateOutputNodes() {
     resetInputToDefault();
     resetOutputToDefault();
 }
-
