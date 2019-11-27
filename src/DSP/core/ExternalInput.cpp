@@ -19,6 +19,20 @@ pdsp::ExternalInput::ExternalInput(const ExternalInput & other){
     pdsp_trace();
 }
 
+pdsp::ExternalInput::ExternalInput(ExternalInput && other) noexcept
+: buffer(other.buffer), output(other.output), inputUpdated(other.inputUpdated) {
+    other.buffer = nullptr;
+    other.output.buffer = nullptr;
+    other.output.state = Unchanged;
+    other.inputUpdated = false;
+    addOutput("signal", output);
+    updateOutputNodes();
+
+    if (dynamicConstruction) {
+        prepareToPlay(globalBufferSize, globalSampleRate);
+    }
+}
+
 pdsp::ExternalInput::~ExternalInput(){
         output.buffer = nullptr; //otherwise output will delete other buffers on decostruction, leading to segfaults
 }

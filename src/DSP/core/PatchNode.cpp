@@ -26,6 +26,16 @@ pdsp::PatchNode::PatchNode(const PatchNode& other) : PatchNode(){
         pdsp_trace();
 };
 
+pdsp::PatchNode::PatchNode(PatchNode && other) noexcept
+: output(other.output) {
+    other.output.buffer = nullptr;
+    other.output.state = Unchanged;
+    addInput("patch", input);
+    addOutput("patch", output);
+    updateOutputNodes();
+    input.setDefaultValue(0.0f);
+}
+
 pdsp::PatchNode& pdsp::PatchNode::operator=(const PatchNode& other){
         output.buffer = other.output.buffer;
         return *this;
