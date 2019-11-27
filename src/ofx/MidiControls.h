@@ -35,12 +35,12 @@ public:
     void setCCSlew(float slewTimeMs);
 
     /*!
-    @brief returns the min CC out
+    @brief returns the lowest CC out
     */
     int  getMinCCNum();
 
     /*!
-    @brief returns the max CC out
+    @brief returns the highest CC out
     */
     int  getMaxCCNum();
 
