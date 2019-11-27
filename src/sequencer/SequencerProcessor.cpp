@@ -4,26 +4,26 @@
 
 
 pdsp::SequencerProcessor::SequencerProcessor(){
-    
+
     //synchronizeClockable = true;
     tempo = -120.0;
     tempoControl = 120.0f;
     playHead = 0.0;
     playHeadEnd = 0.0;
     newPlayHead = 0.0f;
-    
+
     maxBars = 32000.0;
-    
+
     clearToken = 0;
-    
+
     playhead_meter.store(0.0f);
-    
+
     sections.clear();
     sections.reserve(16);
     sections.clear();
-    
+
     playing.store(true);
-    
+
     if(dynamicConstruction){
         prepareToPlay(globalBufferSize, globalSampleRate);
     }
@@ -42,27 +42,27 @@ void pdsp::SequencerProcessor::setMaxBars(double maxBars){
 
 
 void pdsp::SequencerProcessor::process(int const &bufferSize) noexcept{
-    
+
     if( tempo != tempoControl.load() ){
         tempo = tempoControl;
         barsPerSample = static_cast<double>(tempo)  / ((60.0 * 4.0) * sampleRate )  ;
-        Clockable::setTempo(tempo);      
+        Clockable::setTempo(tempo);
     }
 
     if( playing.load() ){
-        
+
         if(newPlayHead >= 0.0f){
             playHeadEnd = newPlayHead;
             newPlayHead = -1.0f;
         }
-    
+
         playHead = playHeadEnd;
         if( playHead > maxBars ) { playHead -= maxBars; } //wrap score
         double playHeadDifference = bufferSize * barsPerSample;
         playHeadEnd = playHead + playHeadDifference;
 
         playhead_meter.store(playHead);
-        
+
         //now process sections-----------------
         for(SequencerSection &sect : sections){
             sect.processSection(playHead, playHeadEnd, playHeadDifference, maxBars, barsPerSample, bufferSize);
@@ -70,7 +70,7 @@ void pdsp::SequencerProcessor::process(int const &bufferSize) noexcept{
         //---------------------------------
 
         Clockable::globalBarPosition = playHead;
-        
+
     }else{
         // on pause we send trigger offs to gates and set all the sequencers to control rate
         if(clearToken>0){
@@ -78,7 +78,7 @@ void pdsp::SequencerProcessor::process(int const &bufferSize) noexcept{
                 sect.clearBuffers();
                 if(clearToken==2){ sect.allNoteOff(0.0, 0.5); } //0.5 * 0.0 = 0.0 the message will be on the first sample
                 sect.processBuffersDestinations(bufferSize);
-            } 
+            }
             clearToken--;
         }
     }
@@ -86,6 +86,7 @@ void pdsp::SequencerProcessor::process(int const &bufferSize) noexcept{
 
 void pdsp::SequencerProcessor::prepareToPlay( int expectedBufferSize, double sampleRate ){
     this->sampleRate = sampleRate;
+    barsPerSample = static_cast<double>(tempo) / ((60.0 * 4.0) * sampleRate);
 }
 
 
@@ -124,13 +125,13 @@ void pdsp::SequencerProcessor::stop(){
         sect.atomic_meter_playhead.store(0.0f);
         sect.launchCell(sect.atomic_meter_next);
         sect.resetCounterOnStop();
-    } 
-}    
+    }
+}
 
 
 void pdsp::SequencerProcessor::play(){
     playing.store(true);
-    Clockable::playing = true;    
+    Clockable::playing = true;
 }
 
 float pdsp::SequencerProcessor::meter_playhead(){
@@ -147,15 +148,15 @@ bool pdsp::SequencerProcessor::isPlaying(){
 
 
 void pdsp::SequencerProcessor::init ( int sections, int sequences, float tempo ){
-    
+
     this->sections.resize( sections );
     for ( int s=0; s<sections; ++s ){
         this->sections[s].resizeCells(sequences);
         this->sections[s].autoInitCells();
     }
-    
+
     setTempo(tempo);
-    
+
 }
 
 void pdsp::SequencerProcessor::launchMultipleCells(int index, bool quantizeLaunch, double quantizeGrid) {
