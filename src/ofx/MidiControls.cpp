@@ -24,11 +24,15 @@ void pdsp::midi::Controls::setCCSlew(float slewTimeMs){
     }
 }
 
-void pdsp::midi::Controls::setMaxCCNum(int ccNum){
+void pdsp::midi::Controls::setMaxCCNum(int ccNum) {
 }
 
-int pdsp::midi::Controls::getMaxCCNum(){
-    return midiCC.getCCSize();
+int pdsp::midi::Controls::getMinCCNum() {
+    return outs_cc.begin()->first;
+}
+
+int pdsp::midi::Controls::getMaxCCNum() {
+    return outs_cc.rbegin()->first;
 }
 
 int pdsp::midi::Controls::getCCSize() {

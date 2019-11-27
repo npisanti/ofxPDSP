@@ -35,6 +35,16 @@ public:
     void setCCSlew(float slewTimeMs);
 
     /*!
+    @brief returns the min CC out
+    */
+    int  getMinCCNum();
+
+    /*!
+    @brief returns the max CC out
+    */
+    int  getMaxCCNum();
+
+    /*!
     @brief returns number of CC outs
     */
     int getCCSize();
@@ -57,11 +67,6 @@ public:
     @param[in] ccNum
     */
     void setMaxCCNum(int ccNum);
-
-    /*!
-    @brief returns the number of CC outs
-    */
-    int  getMaxCCNum();
 /*!
     @endcond
 */
