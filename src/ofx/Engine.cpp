@@ -120,6 +120,7 @@ void pdsp::Engine::setChannels( int inputChannels, int outputChannels ){
     
     if(this->outputChannels != outputChannels){
         this->outputChannels = outputChannels;
+        processor.resize(outputChannels);
     }
 
 }
