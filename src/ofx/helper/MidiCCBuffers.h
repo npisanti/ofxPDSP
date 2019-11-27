@@ -10,6 +10,7 @@
 
 #include "ofxMidi.h"
 #include "../messages/header.h"
+#include <map>
 #include "PositionedMidiMessage.h"
 
 namespace pdsp{ namespace helper {
@@ -19,22 +20,26 @@ public:
     MidiCCBuffers();
 
     void processMidi (const std::vector<_PositionedMidiMessage> & readVector, const int &bufferSize );
-    
+
     void clearAll();
-    
+
+    pdsp::MessageBuffer & out(int cc);
+
+    int getCCSize();
+
+    std::map<int, pdsp::MessageBuffer> ccMessages;
+
+    /*!
+        @cond HIDDEN_SYMBOLS
+    */
     void setMaxCCNum(int maxCC);
-    
-    int getCCSize(){ return ccSize; }
-
-    std::vector<pdsp::MessageBuffer>     ccMessages;
-
-
+    /*!
+        @endcond
+    */
 
 private:
+    bool sendClearMessages;
 
-    bool    sendClearMessages; 
-    int     ccSize;
-    
 };
 
 }}
