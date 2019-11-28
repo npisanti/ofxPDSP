@@ -45,7 +45,7 @@ public:
 
     PatchNode();
     PatchNode(const PatchNode& other);
-    PatchNode(PatchNode && other);
+    PatchNode(PatchNode && other) noexcept;
     PatchNode& operator=(const PatchNode& other);
     ~PatchNode();
     
