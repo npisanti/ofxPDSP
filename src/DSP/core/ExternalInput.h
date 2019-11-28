@@ -23,7 +23,7 @@ class ExternalInput : public Unit  {
 public:
         ExternalInput();
         ExternalInput(const ExternalInput & other);
-        ExternalInput(ExternalInput && other);
+        ExternalInput(ExternalInput && other) noexcept;
         ~ExternalInput();
         
         /*!
