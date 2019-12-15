@@ -84,12 +84,12 @@ void pdsp::Amp::process (int bufferSize) noexcept {
     const float* modBuffer = processInput(input_mod, modState);
     meter.store(modBuffer[0]);
         
-    if ( modBuffer[0] == 0.0f && modState != AudioRate ){
+//    if ( modBuffer[0] == 0.0f && modState != AudioRate ) {
 
-        setOutputToZero(output);
-        meterOut.store(0.0f);   
+//        setOutputToZero(output);
+//        meterOut.store(0.0f);
              
-    }else{        
+//    }else{
            
         int signalState;
         const float* signalBuffer = processInput(input_signal, signalState);
@@ -130,6 +130,6 @@ void pdsp::Amp::process (int bufferSize) noexcept {
 
         
         
-    }
+//    }
     
 }
