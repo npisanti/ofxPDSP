@@ -676,7 +676,7 @@ const int pdsp::OutputNode::getState() const {
     return state;
 }
 
-std::vector<pdsp::InputNode *> pdsp::OutputNode::getOutputs()
+const std::vector<pdsp::InputNode *> & pdsp::OutputNode::getOutputs() const
 {
     return outputs;
 }

@@ -407,7 +407,7 @@ public:
     /*!
     @brief get the outputs vector
     */
-    std::vector<InputNode*> getOutputs();
+    const std::vector<InputNode*> & getOutputs() const;
 
     /*!
     @brief returns true if this OutputNode is connected to at least an InputNode
