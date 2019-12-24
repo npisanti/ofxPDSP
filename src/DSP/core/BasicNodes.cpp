@@ -510,7 +510,6 @@ const int pdsp::InputNode::getState() const {
     return state;
 }
 
-
 void pdsp::InputNode::setDefaultValue( float newDefault ) {
     defaultValue = newDefault;
 }
@@ -675,6 +674,11 @@ const float* pdsp::OutputNode::getBuffer() const {
 
 const int pdsp::OutputNode::getState() const {
     return state;
+}
+
+const std::vector<pdsp::InputNode *> & pdsp::OutputNode::getOutputs() const
+{
+    return outputs;
 }
 
 bool pdsp::OutputNode::isConnected() {
