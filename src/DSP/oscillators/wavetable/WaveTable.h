@@ -4,6 +4,7 @@
 
 
 #include "../../samplers/SampleBuffer.h"
+#include <map>
 
 namespace pdsp {
     
@@ -201,7 +202,7 @@ private:
     bool verbose;
 
     int maxPartials;
-    float ** partialsTable;    
+    static std::map<int, std::vector<float*>> partialsTable;
         
     SampleBuffer loader;
 };    
