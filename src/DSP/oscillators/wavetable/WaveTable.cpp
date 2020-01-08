@@ -1,6 +1,8 @@
 
 #include "WaveTable.h"
 
+std::map<int, std::vector<float*>> pdsp::WaveTable::partialsTable;
+
 
 pdsp::WaveTable::WaveTable() {
     length = -1;
@@ -38,19 +40,24 @@ void pdsp::WaveTable::setup( int len, int maxPartials ) {
     if(length==-1){
         
         length = len;
-        this->maxPartials = maxPartials;
-        
-        // init partials table
-        double divider = 1.0 / (double) length;
-        
-        partialsTable = new float*[maxPartials];
-         
-        for( int i=0; i<maxPartials; ++i){
-            ofx_allocate_aligned(partialsTable[i], length+1);     // guard point   
 
-            for( int n=0; n<length; ++n){
-                double theta = static_cast<double>(n) * (double)(i+1) * M_TAU_DOUBLE * divider ;
-                partialsTable[i][n] = sin( theta );
+        this->maxPartials = maxPartials;
+
+        if (maxPartials > partialsTable[len].size()) {
+
+            int oldMaxPartials = partialsTable[len].size();
+
+            double divider = 1.0 / (double) length;
+
+            partialsTable[len].resize(maxPartials);
+
+            for( int i=oldMaxPartials; i<maxPartials; ++i){
+                ofx_allocate_aligned(partialsTable[len][i], length+1);     // guard point
+
+                for( int n=0; n<length; ++n){
+                    double theta = static_cast<double>(n) * (double)(i+1) * M_TAU_DOUBLE * divider ;
+                    partialsTable[len][i][n] = sin( theta );
+                }
             }
         }
     
@@ -186,7 +193,7 @@ void pdsp::WaveTable::setAdditiveWave(int index, const std::vector<float> & part
             harmonic_amp *= harmonic;  
         }
         
-        ofx_Aeq_Badd_CmulS( buffer[index], buffer[index], partialsTable[partial_i-1], harmonic_amp, length );
+        ofx_Aeq_Badd_CmulS( buffer[index], buffer[index], partialsTable[length][partial_i-1], harmonic_amp, length );
         signalMax += std::abs( harmonic_amp );
         
         partial_i++;
@@ -236,7 +243,7 @@ void pdsp::WaveTable::setAdditiveWave(int index, std::initializer_list<float> pa
         }
         if(partial_i%2 == 0) harmonic_amp = -harmonic_amp;
         
-        ofx_Aeq_Badd_CmulS( buffer[index], buffer[index], partialsTable[partial_i-1], harmonic_amp, length );
+        ofx_Aeq_Badd_CmulS( buffer[index], buffer[index], partialsTable[length][partial_i-1], harmonic_amp, length );
         signalMax += std::abs( harmonic_amp );
         
         partial_i++;
@@ -285,9 +292,12 @@ void pdsp::WaveTable::setSawWave(int index, int partials ) {
         double harmonic_amp = 1.0 / partial;
         if(partial_i%2 == 0) harmonic_amp = -harmonic_amp;
         
-        ofx_Aeq_Badd_CmulS( buffer[index], buffer[index], partialsTable[partial_i-1], harmonic_amp, length );
-        signalMax += std::abs( harmonic_amp );
+        ofx_Aeq_Badd_CmulS( buffer[index], buffer[index], partialsTable[length][partial_i-1], harmonic_amp, length );
         
+    }
+
+    for (int k = 0; k < length; ++k) {
+        signalMax = fmax(buffer[index][k], signalMax);
     }
 
     float div = 1.0 / signalMax;
@@ -326,9 +336,12 @@ void pdsp::WaveTable::setSquareWave (int index, int partials ) {
 
         double harmonic_amp = 1.0 / partial;
         
-        ofx_Aeq_Badd_CmulS( buffer[index], buffer[index], partialsTable[partial_i-1], harmonic_amp, length );
-        signalMax += std::abs( harmonic_amp );
+        ofx_Aeq_Badd_CmulS( buffer[index], buffer[index], partialsTable[length][partial_i-1], harmonic_amp, length );
         
+    }
+
+    for (int k = 0; k < length; ++k) {
+        signalMax = fmax(buffer[index][k], signalMax);
     }
 
     float div = 1.0 / signalMax;
@@ -368,9 +381,12 @@ void pdsp::WaveTable::setTriangleWave (int index, int partials ) {
         double harmonic_amp = 1.0 / partial;
         harmonic_amp *= harmonic_amp;
         
-        ofx_Aeq_Badd_CmulS( buffer[index], buffer[index], partialsTable[partial_i-1], harmonic_amp, length );
-        signalMax += std::abs( harmonic_amp );
+        ofx_Aeq_Badd_CmulS( buffer[index], buffer[index], partialsTable[length][partial_i-1], harmonic_amp, length );
     
+    }
+
+    for (int k = 0; k < length; ++k) {
+        signalMax = fmax(buffer[index][k], signalMax);
     }
 
     float div = 1.0 / signalMax;
@@ -396,7 +412,7 @@ void pdsp::WaveTable::setSineWave ( int index ) {
     if(index<0 ) index = 0;
     if(index >= tableSize ) index = tableSize-1;
 
-    ofx_Aeq_B(buffer[index], partialsTable[0], length);
+    ofx_Aeq_B(buffer[index], partialsTable[length][0], length);
     
     buffer[index][length] = buffer[index][0];  
             

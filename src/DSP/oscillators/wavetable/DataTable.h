@@ -6,6 +6,7 @@
 #define PDSP_OSC_DATATABLE_H_INCLUDED
 
 #include "../pdspCore.h"
+#include <map>
 
 namespace pdsp {
     
@@ -86,7 +87,7 @@ private:
     int length;
 
     int maxPartials;
-    float ** partialsTable;    
+    static std::map<int, std::vector<float*>> partialsTable;
 
     float * bufferNew;            
 	std::vector<float> vData;

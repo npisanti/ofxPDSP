@@ -1,6 +1,8 @@
 
 #include "DataTable.h"
 
+std::map<int, std::vector<float*>> pdsp::DataTable::partialsTable;
+
 pdsp::DataTable::DataTable() {
     length = -1;
     buffer = nullptr;
@@ -43,19 +45,23 @@ void pdsp::DataTable::setup( int len, int maxPartials, bool harmonicAdditive ) {
 	this->maxPartials = maxPartials;
 	bHarmonic = harmonicAdditive;
 	
-	// init partials table
-	double divider = 1.0 / (double) length;
-	
-	partialsTable = new float*[maxPartials];
-	 
-	for( int i=0; i<maxPartials; ++i){
-		ofx_allocate_aligned(partialsTable[i], length+1);     // guard point   
+    if (maxPartials > partialsTable[len].size()) {
 
-		for( int n=0; n<length; ++n){
-			double theta = static_cast<double>(n) * (double)(i+1) * M_TAU_DOUBLE * divider ;
-			partialsTable[i][n] = sin( theta );
-		}
-	}
+        int oldMaxPartials = partialsTable[len].size();
+
+        double divider = 1.0 / (double) length;
+
+        partialsTable[len].resize(maxPartials);
+
+        for( int i=oldMaxPartials; i<maxPartials; ++i){
+            ofx_allocate_aligned(partialsTable[len][i], length+1);     // guard point
+
+            for( int n=0; n<length; ++n){
+                double theta = static_cast<double>(n) * (double)(i+1) * M_TAU_DOUBLE * divider ;
+                partialsTable[len][i][n] = sin( theta );
+            }
+        }
+    }
 
 	ofx_allocate_aligned(buffer,    length+1);     // guard point 
 	ofx_allocate_aligned(bufferNew, length+1);     // guard point 
@@ -139,9 +145,12 @@ void pdsp::DataTable::additive() {
 		}
 		if(partial_i%2 == 0) harmonic_amp = -harmonic_amp;
 		
-		ofx_Aeq_Badd_CmulS( bufferNew, bufferNew, partialsTable[i], harmonic_amp, length );
-		signalMax += std::abs( harmonic_amp );
+		ofx_Aeq_Badd_CmulS( bufferNew, bufferNew, partialsTable[length][i], harmonic_amp, length );
 	}
+
+    for (int k = 0; k < length; ++k) {
+        signalMax = fmax(bufferNew[k], signalMax);
+    }
 
 	if(signalMax>0.0f){
 		float div = 1.0 / signalMax;
