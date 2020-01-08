@@ -405,6 +405,11 @@ public:
     const int getState() const;
     
     /*!
+    @brief get the outputs vector
+    */
+    const std::vector<InputNode*> & getOutputs() const;
+
+    /*!
     @brief returns true if this OutputNode is connected to at least an InputNode
     */
     bool isConnected();
