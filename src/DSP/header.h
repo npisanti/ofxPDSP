@@ -67,6 +67,9 @@
 
 #include "filters/biquads/BiquadLPF2.h"
 #include "filters/biquads/BiquadHPF2.h"
+#include "filters/biquads/BiquadBPF2.h"
+#include "filters/biquads/BiquadNotch2.h"
+#include "filters/biquads/BiquadAPF2.h"
 #include "filters/biquads/BiquadLowShelf.h"
 #include "filters/biquads/BiquadHighShelf.h"
 #include "filters/biquads/BiquadPeakEQ.h"
