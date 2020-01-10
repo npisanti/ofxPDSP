@@ -53,11 +53,11 @@ protected:
     */
     virtual void audioProcess(float *input, int bufferSize, int nChannels) = 0;
 
+    void prepareUnit(int expectedBufferSize, double sampleRate) override;
+    void releaseResources() override;
+
 private:
     void process(int bufferSize) noexcept override;
-
-    void prepareUnit( int expectedBufferSize, double sampleRate ) override;
-    void releaseResources() override;
     
     int bufferLength;
     int maxChannels;
