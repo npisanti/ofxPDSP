@@ -93,7 +93,7 @@ void pdsp::BiquadBase::process (int bufferSize) noexcept {
             //direct form 1
             float xn = inputBuffer[n];
 
-            float yn = b0*xn + b1*x_z1 + b2*x_z1 
+            float yn = b0*xn + b1*x_z1 + b2*x_z2
                              - a1*y_z1 - a2*y_z2;
                                
             x_z2 = x_z1;

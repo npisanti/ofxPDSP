@@ -1,19 +1,18 @@
 
-#include "BiquadLPF2.h"
+#include "BiquadNotch2.h"
 
 
 
-void pdsp::BiquadLPF2::cookCoefficients(const float &sampleRate, const float &frequency, const float &Q, const float dBgain){
+void pdsp::BiquadNotch2::cookCoefficients(const float &sampleRate, const float &frequency, const float &Q, const float dBgain){
 
     float omega = (M_TAU * frequency) / sampleRate;
     float sinW = sinf(omega);
     float cosW = cosf(omega);
     float alpha = sinW / (Q*2.0f);
 
-    b1 = 1.0f - cosW;
-    b0 = b2 = b1*0.5f;
+    b0 = b2 = 1.0f;
+    b1 = a1 = -2.0f*cosW;
     float a0 = 1.0f + alpha;
-    a1 = -2.0f*cosW; 
     a2 = 1.0f - alpha;
 
     //then divide everything for a0
@@ -23,5 +22,5 @@ void pdsp::BiquadLPF2::cookCoefficients(const float &sampleRate, const float &fr
     b2 *= oneSlashA0;
     a1 *= oneSlashA0;
     a2 *= oneSlashA0;
-    
+
 }
