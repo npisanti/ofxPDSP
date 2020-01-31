@@ -48,10 +48,7 @@ class ofApp : public ofBaseApp{
         ofxPanel gui;
         
         int caHeight;
-        
-        ofParameter<bool> masterplanRandomize;
-        ofParameter<int> randomizeBars;
-        
+
         ofColor brightColor;
         ofColor darkColor;
         

@@ -118,6 +118,20 @@ void pdsp::Function::process( double playhead, double barsPerSample, int bufferS
     sample = 0;
 }
 
+
+void pdsp::Function::clear( int bufferSize ){
+    for(size_t i=0; i<outputs.size(); ++i ){
+        if( outputs[i].messageBuffer != nullptr ){
+            outputs[i].messageBuffer->clearMessages();
+        }              
+    } 
+    for(size_t i=0; i<outputs.size(); ++i ){
+        if( outputs[i].messageBuffer != nullptr ){
+            outputs[i].messageBuffer->processDestination( bufferSize );
+        }              
+    } 
+}
+
 // 32766.f is the MAX - 1
 
 bool pdsp::Function::chance( float probablility ){

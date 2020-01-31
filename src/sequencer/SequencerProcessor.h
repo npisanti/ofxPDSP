@@ -16,8 +16,7 @@
 namespace pdsp{
     /*!
     @brief Contains all the needed framework for generating and sequencing messages for the DSPs
-    
-    This class owns a vector of SequencerSection and it is also responsible of updating the global transport for the Clockable units. Remember that the SequencerSections inside a SequencerProcessor are processed from the first to the last so it could be possible for the data generated from the first SequencerSections in the vector to influence the others (in a thread-safe manner).
+
     */ 
     
 class SequencerProcessor : public Preparable {

@@ -59,7 +59,7 @@ namespace pdsp{
         std::atomic<bool> active;
         
         /*!
-        @brief use this method inside the assigned code to bang a value to a given output
+        @brief use this method inside the assigned code to send a value to a given output
         */ 
         void send( std::string name, float value ) noexcept;
 
@@ -97,6 +97,8 @@ namespace pdsp{
         } 
     
         void process( double playhead, double barsPerSample, int bufferSize );
+        
+        void clear( int bufferSize );
 
         std::vector<Out> outputs;            
         static pdsp::SequencerGateOutput invalidGate;

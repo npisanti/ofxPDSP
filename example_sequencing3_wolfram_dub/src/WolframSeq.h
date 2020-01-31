@@ -3,63 +3,41 @@
 
 #include "ofMain.h"
 #include "ofxPDSP.h"
-#include "1D.h"
+#include "flags.h"
+#include "Automaton1D.h"
 
+#define NUMSYNTHS 4
 
 class WolframSeq : public pdsp::Sequence {
-    
+
 public:
     WolframSeq();
 
-    void setup( int maxSteps, int maxOutputs, int rule, int generations, int caSide, int totalHeight, bool sendGateOff=false );
-    
-    void draw(int x, int y);
-    
-    atomic<int>     actionCode; // 0 advance | 1 clear | 2 random | 3 random & fill
-    
+    ofParameterGroup parameters;
     ofParameter<int>     threshold;
     ofParameter<int>     activeOuts;
     ofParameter<int>     steps;
     ofParameter<int>     rule;
-    ofParameter<int>     division;
-    ofParameter<float>   seedsDensity;
-    ofParameter<bool>    reverse;
-    ofParameter<float>   limiting;
-    ofParameter<int>     dbRange;
-    ofParameter<float>   gateLen;
-    ofParameter<bool>    remake;
+    ofParameter<float>   density;
+    ofParameter<bool>    regenerate;
+
+
     
-    bool                 gateOff;
+    void draw( int ca_side, int bars_h, ofColor fg, ofColor bg );
+    void setRule(int rule){ ca.setRule( rule); }
+    int currentStep() const;
+    float getStep( int step, int out ) const;
 
-    std::vector<float>   stepbars;    
-    Automaton1D     ca;
-
-    ofParameterGroup parameters;
-
+    pdsp::SequencerGateOutput& out_trig( int index );
+    
+    vector<float>   stepbars;    
+    
 private:
-
-    ofFbo   stepbarsFbo;
-
-    int     cah;
-    int     caSide;
-    int     barHeight;
+    pdsp::Function seq;
+    std::vector<std::string> numbers;
+    Automaton1D     ca;
+    int ruleMem;
     
-    float   gate;
+    std::atomic<int> meter_step;
 
-    int     storedRule;
-
-    int     activeOutsStored;     
-
-    int     maxSteps; // number of steps for each output
-    int     maxOutputs;
-    
-    int     thresholdStored;
-    
-    double  sequenceLength; // division * steps
-    float   scaling;
-
-    std::vector<float> values; // support structure for calculating linear max
-
-    static int number;
 };
-

@@ -1,6 +1,5 @@
 #include "ofApp.h"
 
-#define ZAPS_NUMBER 4
 #define MAX_GENERATIONS 8
 #define SIDE 16
 
@@ -11,10 +10,9 @@
 // instead of hardcoding your values you should write your own
 // generative sequences or code to parse value from files
 
-// ideally you should have your pdsp::Sequence classes, your synth and effect classes with their ofParameterGroups 
+// ideally you should have your sequencer classes, your synth and effect classes with their ofParameterGroups 
 
 // patch them together in your app and fine tune them in the ui
-// also it is always handy to use a masterplan sequence to launch other sequences and change parameters
 
 // the included impulse response come from:
 // dubshot.blogspot.com/2008/10/free-download-60-classic-and-king-tubby.html
@@ -32,80 +30,21 @@ void ofApp::setup(){
     ofSetWindowTitle( "wolfram dub d(-_-)b" );
     caHeight = SIDE*MAX_GENERATIONS;
 
-    //----------------- SEQUENCING ---------------------
+    //----------------- ---------------------
     // Setting up sequencer
     //engine.sequencer.stop();    // decomment if you want to start the app from stopped state
     engine.sequencer.setTempo(172.0f);
-    engine.sequencer.sections.resize(2);
-    
-    engine.sequencer.sections[0].setCell( 0, &masterplan );
-    
-    // masterplan coding
-    masterplan.bars = 1.0; // 1 bar loop
-    
-    masterplan.code = [&] () {
-        if(masterplan.counter() >= randomizeBars){
-            masterplan.resetCount();
-        }
-        // our masterplan sequence is used to randomize wolframSeq parameters
-        if(masterplan.counter()==0 && masterplanRandomize){
         
-            wolframSeq.remake = true; // generate the sequence again
-            wolframSeq.activeOuts = pdsp::dice( 2, 5 );
-            wolframSeq.threshold = pdsp::dice(2, 6);
-            wolframSeq.seedsDensity = 0.2f + pdsp::urand()*0.4f;
-            dub.lDelayTimeControl.getOFParameterInt() = pdsp::dice(1,9);
-            dub.rDelayTimeControl.getOFParameterInt()  = pdsp::dice(1,9);
-            dub.lFeedbackControl.getOFParameterFloat() = 0.2f + pdsp::urand()*0.5f;
-            dub.rFeedbackControl.getOFParameterFloat() = 0.2f + pdsp::urand()*0.5f;
-            
-            switch( pdsp::dice(6) ){
-                case 0:
-                    wolframSeq.rule = 90;
-                    wolframSeq.reverse = false;
-                    wolframSeq.threshold = pdsp::dice(0, 4);
-                    break;
-                case 1:
-                    wolframSeq.rule = 124;
-                    wolframSeq.reverse = pdsp::chance(0.5f);
-                    break;
-                case 2:
-                    wolframSeq.rule = 126;
-                    wolframSeq.reverse = pdsp::chance(0.5f);
-                    break;
-                case 3:
-                    wolframSeq.rule = 150;
-                    wolframSeq.reverse = pdsp::chance(0.5f);
-                    break;
-                case 4:
-                    wolframSeq.rule = 60;
-                    wolframSeq.reverse = false;
-                    break;
-                case 5:
-                    wolframSeq.rule = 110;
-                    wolframSeq.reverse = true;
-                    break;
-            }
-        }
-    }; // masterplan end
-
-    // sets up wolfram sequence
-    wolframSeq.setup( 16, ZAPS_NUMBER, 60, MAX_GENERATIONS, SIDE, 300 );      
-    engine.sequencer.sections[1].setCell( 0, &wolframSeq );
-    
-    engine.sequencer.launchMultipleCells(0); // launch the sequences with index 0 of all the sections
-    
-    
     // ----------- PATCHING -----------
     
     // loads reverb impulse response
-    reverb.loadIR( "data/kingtubby-fl1.wav");
+    reverb.loadIR(ofToDataPath( "kingtubby-fl1.wav" ));
     
-    zaps.setup(ZAPS_NUMBER);
-    scopes.resize(ZAPS_NUMBER + 2);
+    zaps.setup(NUMSYNTHS);
+    scopes.resize(NUMSYNTHS + 2);
     
-    for ( int i=0; i<ZAPS_NUMBER; ++i ) {
-        engine.sequencer.sections[1].out_trig(i) >> zaps.voices[i]; // patch the sequence outputs to the zaps
+    for ( int i=0; i<NUMSYNTHS; ++i ) {
+        wolframSeq.out_trig(i) >> zaps.voices[i]; // patch the sequence outputs to the zaps
         zaps.voices[i] >> scopes[i] >> engine.blackhole();
     }
     
@@ -130,25 +69,21 @@ void ofApp::setup(){
     zaps.fader.ch(1) >> dub.ch(1);
                         dub.ch(0) >> engine.audio_out(0);
                         dub.ch(1) >> engine.audio_out(1);
-                        dub.ch(0) * dB(12.0f) >> scopes[ZAPS_NUMBER]   >> engine.blackhole();
-                        dub.ch(1) * dB(12.0f) >> scopes[ZAPS_NUMBER+1] >> engine.blackhole();
+                        dub.ch(0) * dB(12.0f) >> scopes[NUMSYNTHS]   >> engine.blackhole();
+                        dub.ch(1) * dB(12.0f) >> scopes[NUMSYNTHS+1] >> engine.blackhole();
 
      
     // ------------ GUI ------------
     gui.setup("", "wolframdub.xml", ofGetWidth()-220, 40);
     gui.setName( "WOLFRAM DUB" );
-    gui.add( masterplanRandomize.set("masterplan randomize", false) );
-    gui.add( randomizeBars.set("num bars", 16, 1, 32) );
     gui.add( wolframSeq.parameters );
     gui.add( zaps.parameters );
     gui.add( dub.parameters );
     
-    
     //---------------------- audio setup -------------
     engine.listDevices();
-    engine.setDeviceID(0); // REMEMBER TO SET THIS AT THE RIGHT INDEX!!!!
+    engine.setDeviceID(0); // <--- remember to set your index
     engine.setup( 44100, 512, 3); 
-
 }
 
 //--------------------------------------------------------------
@@ -163,9 +98,10 @@ void ofApp::draw(){
     
     gui.draw();
 
-    ofSetColor( brightColor ); 
-    wolframSeq.draw( 20, 50 );
-    
+    ofPushMatrix();
+    ofTranslate( 20, 50 );
+    wolframSeq.draw( SIDE, 120, brightColor, darkColor );
+    ofPopMatrix();
     
     // draw the scopes
     ofPushMatrix();
