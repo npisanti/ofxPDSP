@@ -25,11 +25,9 @@ class ofApp : public ofBaseApp{
 
         // pdsp modules
         pdsp::Engine            engine;
+        
+        pdsp::Function          seq;
         SineBleep               lead;
         KickSynth               kick;
-
-        int                     seq_mode;        
-        std::atomic<bool>       quantize;
-        std::atomic<double>     quantime;
 
 };

@@ -9,10 +9,12 @@
 #include "Sequence.h"
 #include "../math/random/random.h"
 
-namespace pdsp{
 /*!
     @cond HIDDEN_SYMBOLS
 */
+
+namespace pdsp{
+
 struct SeqChangeSelf : public pdsp::SeqChange{
     int getNextPattern( int currentPattern, int size ) noexcept override;
 };
@@ -42,9 +44,7 @@ struct SeqChangeRandomWalk : public pdsp::SeqChange{
     int walk;
 };
 
-/*!
-    @endcond
-*/
+
 
 
     /*!
@@ -112,8 +112,10 @@ public:
     static SeqChange*              OneShot;
 };
 
-
-
 }//END NAMESPACE
+
+/*!
+    @endcond
+*/
 
 #endif //PDSPSTOCKBEHAVIORS_H_INCLUDED

@@ -12,15 +12,11 @@ pdsp::SequencerProcessor::SequencerProcessor(){
     playHeadEnd = 0.0;
     newPlayHead = 0.0f;
 
-    maxBars = 32000.0;
+    maxBars = 32768.0;
 
     clearToken = 0;
 
     playhead_meter.store(0.0f);
-
-    sections.clear();
-    sections.reserve(16);
-    sections.clear();
 
     playing.store(true);
 
@@ -49,7 +45,7 @@ void pdsp::SequencerProcessor::process(int const &bufferSize) noexcept{
         Clockable::setTempo(tempo);
     }
 
-    if( playing.load() ){
+    if( playing ){
 
         if(newPlayHead >= 0.0f){
             playHeadEnd = newPlayHead;
@@ -66,6 +62,12 @@ void pdsp::SequencerProcessor::process(int const &bufferSize) noexcept{
         //now process sections-----------------
         for(SequencerSection &sect : sections){
             sect.processSection(playHead, playHeadEnd, playHeadDifference, maxBars, barsPerSample, bufferSize);
+        }
+        //---------------------------------
+
+        //now process lambdas-----------------
+        for( size_t i=0; i<pdsp::Function::instances.size(); ++i ){
+            pdsp::Function::instances[i]->process( playHead, barsPerSample, bufferSize );
         }
         //---------------------------------
 

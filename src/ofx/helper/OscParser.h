@@ -13,7 +13,6 @@
 #include "../DSP/pdspCore.h"
 #include "../sequencer/SequencerSection.h"
 #include "ofxOsc.h"
-#include "helper/OscParser.h"
 
 namespace pdsp{ namespace osc {
 

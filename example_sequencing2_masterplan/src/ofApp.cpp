@@ -3,159 +3,118 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     
-    // ---------------------SEQUENCING------------------------
-    engine.sequencer.init( 3, 5, 200.0f); 
-    //              sections, sequences, tempo
-   
+    ofBackground(0);
+    ofSetWindowTitle("pdsp example-scoring2-masterplan");
+    
+    // ----------------------
+    engine.sequencer.setTempo( 200 );
+    
+    // ---- drums seq ----
     states.resize(16);
-    
-    // a good tecnique for arranging with pdsp is using the first sequence as "masterplan"
-    // as the sequence codes are executed from the first to the last a sequence can launch the successive sequence
-    // remember to launch the other sequences with some quantization for correct timing
-    // this example runs the first sequence each 1/8th, but you can also use slower masterplan
-    // the masterplan has just to be as fast as the granularity of control you want to have on the sequencing
-    // (in this case the masterplan controls the beatslicing, so it has to be fast)
-        
-    // pdsp::Sequence counter() returns how many time the sequence has restarted
-    // and pdsp::Sequence resetCount() resets the counter
 
-    engine.sequencer.sections[0].resizeCells(1);        
-    engine.sequencer.sections[0].sequence(0).label = "masterplan";
-    
-    engine.sequencer.sections[0].sequence(0).bars =  1.0 / 8.0;
-    engine.sequencer.sections[0].sequence(0).code = [&] () noexcept { // masterplan sequence
-        
-        pdsp::Sequence & seq = engine.sequencer.sections[0].sequence(0); // defining variable into the lambda is fine
-        
-        if(seq.counter()==64){ // 64 8th = 8 bars
-            seq.resetCount();
-        }
-        
-        if(seq.counter()==0){  // here we generate some random numbers to select the drums cells
-            states[0] = 0; // the first state is always a kick
+    dseq.timing = 16;
+    dseq.code = [&] ( int frame ) noexcept { 
+        // generates the seq every 4 bars + fills
+        if( frame % 64 == 0 || frame % 128 == 112 ){ 
+            states[0] = 0; 
             for(size_t i=1; i<states.size();++i){
-                states[i] = pdsp::dice(5);
+                if( i%2==0 ){
+                    states[i] = pdsp::dice(4);
+                }else{
+                    if( dseq.chance(0.5) ){
+                        states[i] = 4; // ghost
+                    }else{
+                        states[i] = 6; // nothing
+                    }
+                }
+                
             }
         }
         
-        int index = seq.counter()%16; // we repeat the same states four time, so each pattern is 2 bars
-
-        // launch the drum sequence, quantized to this masterplan
-        engine.sequencer.sections[1].launchCell( states[index], true, seq.bars );
-        
-        // on the first six bars the main riff will run
-        if(seq.counter()==0)   engine.sequencer.sections[2].launch( 0, true, seq.bars );
-        // on the last two bars we will use a fill choosen at random
-        if(seq.counter()==48)  engine.sequencer.sections[2].launch( pdsp::dice(1, 5), true, seq.bars ); 
+        switch( states[frame%16] ){
+            case 0: // kick 
+                dseq.send( "bang", 0.7f );
+                dseq.send( "sample", 0.0f );
+            break;
+            
+            case 1: // snare 
+                dseq.send( "bang", 0.7f );
+                dseq.send( "sample", 1.0f );
+            break;
+            
+            case 2: // hh
+                dseq.send( "bang", 1.0f );
+                dseq.send( "sample", 2.0f );
+            break;
+            
+            case 3: // hh soft
+                dseq.send( "bang", 0.5f );
+                dseq.send( "sample", 2.0f );
+            break;
+            
+            case 4: // shuffle
+                dseq.send( "bang", 0.7f );
+                dseq.send( "sample", 3.0f );
+            break;
+            
+            default: break;
+        }
     };
-    
-    // P.S. obviously we could have done all the beatslicing by coding a single sequence,
-    // but this is not the point of this example
 
+    dseq.out_trig( "bang" ) >> drums.in("trig");
+    dseq.out_value( "sample" ) >> drums.in("select");
     
-    // drums sequence "cells" 
-    // first out is trigger, second is sample index select
-    engine.sequencer.sections[1].sequence(0).label = "kick";
-    engine.sequencer.sections[1].sequence(0).begin()
-        .out(0).bang(0.7f)
-        .out(1).bang(0.0f)
-    .end();
+    
+    // ---- sub seq ----
+    rmode = 0;
+    rseq.timing = 4;
 
-    engine.sequencer.sections[1].sequence(1).label = "snare";
-    engine.sequencer.sections[1].sequence(1).begin()
-        .out(0).bang(0.7f)
-        .out(1).bang(1.0f)
-    .end();
+    rseq.code = [&] ( int frame ) noexcept { 
+        if( frame%32==0 ){
+            rmode = 0;
+        }
         
-    engine.sequencer.sections[1].sequence(2).label = "hh";
-    engine.sequencer.sections[1].sequence(2).begin()
-        .out(0).bang(1.0f)
-        .out(1).bang(2.0f)
-    .end();
-    
-    engine.sequencer.sections[1].sequence(3).label = "hh soft";
-    engine.sequencer.sections[1].sequence(3).begin()
-        .out(0).bang(0.5f)
-        .out(1).bang(2.0f)
-    .end();
-    
-    engine.sequencer.sections[1].sequence(4).label = "shuffle";
-    engine.sequencer.sections[1].sequence(4).begin()
-        .out(0).bang(0.7f)
-        .out(1).bang(3.0f)
-    .end();
-    
-    // reese bass loops ----------------
-    engine.sequencer.sections[2].sequence(0).label = "main";
-    engine.sequencer.sections[2].sequence(0).bars = 2.0;
-    engine.sequencer.sections[2].sequence(0).begin()
-        .out(0).bang(1.0f)
-        .out(1).bang(29.f)
-        .delay( 6.0/4.0 ).out(1).bang( 31.f )
-        .delay( 7.0/4.0 ).out(0).bang( 0.0f )
-    .end();
-                                                    
-    engine.sequencer.sections[2].sequence(1).label = "fill 1";
-    engine.sequencer.sections[2].sequence(1).bars = 2.0;
-    engine.sequencer.sections[2].sequence(1).begin()
-        .out(0).bang( 1.0f )
-        .out(1).bang( 29.f )
-        .delay( 1.0 ).out(0).bang( 0.0f )
-    .end();
-                                                    
-    engine.sequencer.sections[2].sequence(2).label = "fill 2";
-    engine.sequencer.sections[2].sequence(2).bars = 2.0;
-    engine.sequencer.sections[2].sequence(2).begin()
-        .out(0).bang( 0.0f )
-        .delay( 2.0 / 4.0 ).out(0).bang( 1.0f )
-        .delay( 2.0 / 4.0 ).out(1).bang( 32.0f )
-        .delay( 4.0 / 4.0 ).out(1).bang( 31.0f )
-        .delay( 6.0 / 4.0 ).out(1).bang( 30.0f )
-        // any order is fine, but bang goes to the end
-    .end();
-                                                
-    engine.sequencer.sections[2].sequence(3).label = "fill 3";
-    engine.sequencer.sections[2].sequence(3).bars = 2.0;
-    engine.sequencer.sections[2].sequence(3).begin()
-        .out(0)
-            .bang( 1.0f )
-            .delay( 2.0 / 4.0 ).bang( 0.0f )
-            .delay( 3.0 / 4.0 ).bang( 1.0f )
-            .delay( 6.0 / 4.0 ).bang( 0.0f )
-        .out(1)
-            .bang( 29.0f )
-            .delay( 4.0 / 4.0 ).bang( 34.f )
-            .delay( 6.0 / 4.0 ).bang( 33.f )
-        // messages don't need to be in chronological order
-    .end();
-                                                    
-    engine.sequencer.sections[2].sequence(4).label = "fill 4";
-    engine.sequencer.sections[2].sequence(4).bars = 2.0;
-    engine.sequencer.sections[2].sequence(4).begin()
-        .out(0).bang( 0.0f )
-        .out(1).bang( 32.f )
-        .delay( 6.0 / 4.0 ).out(1).bang( 31.f )
-        .delay( 7.0 / 4.0 ).out(0).bang( 0.0f )
-    .end();
-                                    
-    // launch masterplan
-    engine.sequencer.sections[0].launchCell(0);
-    
-    
-    // ---------------------PATCHING------------------------
+        if( frame%32==24 ){ // random fill in the last two of 8 bars
+            rmode = 1 + rseq.dice(3);
+        }
+
+        static float tracks[4][2][8]= {
+            {   // main
+                { 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f },
+                { 29.f, 29.f, 29.f, 29.f, 29.f, 29.f, 31.f, 31.f }
+            },
+            {   // fill 1
+                { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },
+                { 29.f, 29.f, 29.f, 29.f, 29.f, 29.f, 31.f, 31.f }
+            },
+            {   // fill 2
+                { 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f },
+                { 29.f, 29.f, 32.f, 32.f, 31.f, 31.f, 30.f, 30.f }
+            },
+            {   // fill 3
+                { 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f },
+                { 29.f, 29.f, 29.f, 29.f, 34.f, 34.f, 33.f, 33.f }
+            }
+        };
+        
+        rseq.send("gate", tracks[rmode][0][frame%8] );
+        rseq.send("pitch", tracks[rmode][1][frame%8] );
+    };
+   
+    rseq.out_trig("gate")  >> reese.in("trig");
+    rseq.out_value("pitch") >> reese.in("pitch");
+       
+    // ---------------------   
+       
     drums.add( ofToDataPath("break_kick.wav") );
     drums.add( ofToDataPath("break_snare.wav") );
     drums.add( ofToDataPath("break_hh.wav") );
     drums.add( ofToDataPath("break_ghost.wav") );
     3.0f >> drums.in("pitch");
 
-    engine.sequencer.sections[1].out_trig(0)  >> drums.in("trig");
-    engine.sequencer.sections[1].out_value(1) >> drums.in("select");
     drums * dB(9.0f) >> engine.audio_out(0);
     drums * dB(9.0f)  >> engine.audio_out(1);
     
-    engine.sequencer.sections[2].out_trig(0)  >> reese.in("trig");
-    engine.sequencer.sections[2].out_value(1) >> reese.in("pitch");
     reese * dB(-8.0f) >> engine.audio_out(0);
     reese * dB(-8.0f) >> engine.audio_out(1);
 
@@ -163,21 +122,9 @@ void ofApp::setup(){
     drums * dB(9.0f)  >> drumScope  >> engine.blackhole(); // scopes need to be patched to engine.blackhole()
     reese * dB(-6.0f) >> reeseScope >> engine.blackhole(); // blackhole() process module without outputting sound
     
-    // -------------------GRAPHIC SETUP--------------
-    ofBackground(0);
-    ofSetFrameRate(60);
-    ofDisableAntiAliasing();
-    
-    engine.graphics.setup( 600, 600,  { 0,   0 }, 
-                                      { 0,   0 }  );
-    engine.graphics.setPosition( 10, 10 );
-    engine.graphics.setColor (ofColor( 255 ) );
-    
-    ofSetWindowTitle("pdsp example-scoring2-masterplan");
-    
-    // ------------SETUPS AND START AUDIO-------------
+    // ------------ setups and starts audio -------------
     engine.listDevices();
-    engine.setDeviceID(0); // REMEMBER TO SET THIS AT THE RIGHT INDEX!!!!
+    engine.setDeviceID(0); // <----- remember to set your index
     engine.setup( 44100, 512, 3); 
     
 }
@@ -190,10 +137,8 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     
-    engine.graphics.draw();
-    
-    drumScope.draw(  10,  100, 290, 80);
-    reeseScope.draw( 320, 100, 290, 80);
+    drumScope.draw(  20,  20, 290, 80);
+    reeseScope.draw( 320, 20, 290, 80);
     
 }
 

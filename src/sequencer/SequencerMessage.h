@@ -12,6 +12,10 @@
 #include <assert.h>
 #include "../DSP/pdspFunctions.h"
 
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
+
 namespace pdsp{
 
     /*!
@@ -67,9 +71,10 @@ public:
 
 bool messageSort(const SequencerMessage &lhs, const SequencerMessage &rhs );
 
-
-
 }//END NAMESPACE
 
+/*!
+    @endcond
+*/
 
 #endif //PDSP_SCOREMESSAGE_H_INCLUDED

@@ -26,10 +26,14 @@ class ofApp : public ofBaseApp{
         // pdsp modules
         pdsp::Engine   engine;
         
+        pdsp::Function  rseq;
+        pdsp::Function  dseq;
+        
         MultiSampler    drums;
         Reese           reese;
 
         std::vector<int>     states;
+        int rmode;
         
         pdsp::Scope drumScope;
         pdsp::Scope reeseScope;

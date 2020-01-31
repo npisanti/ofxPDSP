@@ -58,7 +58,7 @@ bool pdsp::MessageBuffer::empty(){
     return messages.empty();
 }
 
-//---------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------
 
 
 void pdsp::linkSelectedOutputToExtSequencer (pdsp::MessageBuffer& messageBuffer, pdsp::ExtSequencer& ext){

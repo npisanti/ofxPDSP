@@ -12,6 +12,10 @@
 #include <iostream>
 #include "../DSP/pdspCore.h"
 
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
+
 namespace pdsp{
     
     /*!
@@ -103,9 +107,6 @@ namespace pdsp{
 
 
 
-/*!
-    @cond HIDDEN_SYMBOLS
-*/
         // --------------------------- API TO DEPRECATE --------------
     
         //[[deprecated("deprecated, use the new sequence API as in the examples")]]
@@ -168,10 +169,6 @@ namespace pdsp{
 
         // this is not deprecated, just hidden from docs!
         int getChangeID() const;
-        
-/*!
-    @endcond 
-*/
 
     private:
         std::atomic<float> atomic_meter_percent;
@@ -221,7 +218,8 @@ namespace pdsp{
 
 }
 
-
-
+/*!
+    @endcond 
+*/
 
 #endif // PDSP_SEQUENCE_H_INCLUDED

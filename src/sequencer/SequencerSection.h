@@ -18,6 +18,10 @@
 #include <mutex>
 #include "../flags.h"
 
+/*!
+    @cond HIDDEN_SYMBOLS
+*/
+
 namespace pdsp{
     
     /*!
@@ -32,10 +36,8 @@ class SequencerSection {
     
 private:
 
-    //---------------------------------------INNER CLASS------------------------
-    /*!
-        @cond HIDDEN_SYMBOLS
-    */
+    //---------------------------------------INNER CLASS--------------
+
     class SeqCell{
     public:
         SeqCell() : sequence(nullptr), nextCell(Behavior::Loop), quantizeLaunch(false), quantizeGrid(0.0) {};
@@ -45,11 +47,8 @@ private:
         bool            quantizeLaunch;
         double          quantizeGrid;
     };    
-    /*!
-        @endcond
-    */    
 
-    //--------------------------------------------------------------------------
+    //----------------------------------------------------------------
     
 public:
 
@@ -255,10 +254,6 @@ public:
     */     
     void autoInitCells();
   
-    
-/*!
-    @cond HIDDEN_SYMBOLS
-*/
     inline void launchCell(int index, bool quantizeLaunch=false, double quantizeGrid=1.0){
         launch(index, quantizeLaunch, quantizeGrid );
     }    
@@ -306,9 +301,7 @@ public:
     
     [[deprecated("Replaced by setCell() for a less ambigous nomenclature")]]
     void setPattern( int index, Sequence* sequence, SeqChange* behavior = nullptr );
-/*!
-    @endcond
-*/
+
 private:
 
     
@@ -387,4 +380,8 @@ private:
 
 }//END NAMESPACE
 
+
+/*!
+    @endcond
+*/
 #endif //PDSP_SCOREROW_H_INCLUDED
