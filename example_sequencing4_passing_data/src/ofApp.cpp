@@ -3,53 +3,48 @@
 // before looking at this check out the basics examples
 
 // often you want to give the sequences some data from the main thread
-// you should avoid absolutely using locks and instead use circular buffers
-// and std::atomic values instead
+// you should avoid absolutely using locks and use
+// std::atomic values and circular buffers instead 
+// (or even better, SPSC queues, but for hacky things a circular buffer is fine )
+
+// remember: real audio waits for nothing!
+// http://www.rossbencina.com/code/real-time-audio-programming-101-time-waits-for-nothing
 
 //--------------------------------------------------------------
 void ofApp::setup(){
     
     ofBackground(0);
 
+    engine.sequencer.setTempo(  200.0f); 
+
     chance = 1.0f;
     
-    //--------PATCHING-------
-    engine.sequencer.init( 1, 1, 200.0f); 
-    engine.sequencer.sections[0].out_trig(0)  >> lead.in("trig"); 
-    engine.sequencer.sections[0].out_value(1) >> lead.in("pitch"); 
-    lead * dB(-6.0f) >> engine.audio_out(0);
-    lead * dB(-6.0f) >> engine.audio_out(1);
-    engine.sequencer.sections[0].launch(0); // launch seq
-
     //-------- buffer init ----------
     buffer.resize( 12 ); // a number big enough for the number of changes before running the sequence code
     index = 0;
 
-
     circularWrite(); // no problem running this while the engine runs
 
-    // ------- this code runs in the audio thread -------------
-    engine.sequencer.sections[0].sequence(0).code = [&] () noexcept { 
-        pdsp::Sequence & seq = engine.sequencer.sections[0].sequence(0);
-       
-        seq.begin( );        
-            // we save the index for reading, so there is no problem if it changes while this code is running
-            int read = index; 
-            
-            for (size_t i=0; i<buffer[read].size(); ++i){
-                if(pdsp::chance( chance) ){ // chance could also be changed while this code runs, no problem
-                    seq.delay( i / 8.0 ).out(0).bang( 1.0f );
-                    seq.delay( i / 8.0 ).out(1).bang( buffer[read][i] );
-                }
-            }
-        seq.end();
+    // ---- this code runs in the audio thread ----
+    seq.code = [&] ( int frame ) noexcept {
+        int read = index; // is important to memorize thi index 
+        
+        int steps = buffer[read].size();
+        if( seq.chance( chance) ){
+            seq.send( "gate", 1.0f );
+            seq.send( "pitch", buffer[read][frame%steps] );
+        }
     };
-    // ---------------------------------------------------------
+    
+    // ---------- patching -----------------------
+    seq.out_trig("gate")  >> lead.in("trig"); 
+    seq.out_value("pitch") >> lead.in("pitch"); 
+    lead * dB(-6.0f) >> engine.audio_out(0);
+    lead * dB(-6.0f) >> engine.audio_out(1);
 
-
-    //------------SETUPS AND START AUDIO-------------
+    //------------ setups and starts audio -------------
     engine.listDevices();
-    engine.setDeviceID(0); // REMEMBER TO SET THIS AT THE RIGHT INDEX!!!!
+    engine.setDeviceID(0); // <--- remember to set your index 
     engine.setup( 44100, 512, 3); 
     
 }
@@ -63,7 +58,7 @@ void ofApp::circularWrite(){
     if( write >= (int) buffer.size() ){ write = 0; } // rebounds index
     
     // now we generate or copy some data
-    buffer[write].resize( rand()%5 + 3 );
+    buffer[write].resize( (rand()%8)*2 + 8 );
     for( size_t i=0; i<buffer[write].size(); ++i ){
         // random notes from akebono scale
         static float akebono[] = { 72.0f, 74.0f, 75.0f, 79.0f, 80.0f,  84.0f, 86.0f, 87.0f }; // akebono scale

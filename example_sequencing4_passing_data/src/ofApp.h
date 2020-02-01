@@ -27,8 +27,7 @@ class ofApp : public ofBaseApp{
         // pdsp modules
         pdsp::Engine            engine;
         SineBleep               lead;
-        std::vector<pdsp::Sequence>  lead_seqs;
-
+        pdsp::Function          seq;
 
         std::atomic<int> index;
         std::vector<std::vector<float>> buffer;

@@ -12,8 +12,12 @@ void ofApp::setup(){
  
     engine.sequencer.setTempo( 108 );
     
-    // pdsp::FUnction execute an assignable function, clocked by the engine sequencer  
+    // pdsp::FUnction execute an assignable function, 
+    // clocked by the engine sequencer  
+    
     seq.code = [&]( int frame ) noexcept { 
+        // frame is the step number since the start
+        
         // synth -------
         if( seq.chance( 0.5f ) ){
             seq.send("gate", 1.0f ); // note on 
@@ -31,6 +35,8 @@ void ofApp::setup(){
         const float o = 0.0f;
         static float ks[] = { x,x,x,o, o,o,o,o, x,o,o,o, o,o,o,o };
         
+        // you can use modulo operations 
+        // to get the step index for a sequence
         seq.send( "kick", ks[frame%16] );
     };
     

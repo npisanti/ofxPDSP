@@ -13,6 +13,7 @@ class WolframSeq : public pdsp::Sequence {
 public:
     WolframSeq();
 
+    // if you want to make something less hacky you should use proper std::atomic values instead of ofParameter(s)
     ofParameterGroup parameters;
     ofParameter<int>     threshold;
     ofParameter<int>     activeOuts;
