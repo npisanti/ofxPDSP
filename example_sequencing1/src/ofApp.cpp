@@ -12,7 +12,7 @@ void ofApp::setup(){
  
     engine.sequencer.setTempo( 108 );
     
-    // pdsp::FUnction can be used to make generative sequencers
+    // pdsp::Function can be used to make generative sequencers
     
     // this assignable function is executed each 16th
     // frame is the step number since the start of engine timeline
