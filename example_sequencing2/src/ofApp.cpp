@@ -1,15 +1,14 @@
+
 #include "ofApp.h"
 
 //--------------------------------------------------------------
-void ofApp::setup(){
-    
+void ofApp::setup(){    
     ofBackground(0);
-    ofSetWindowTitle("pdsp example-scoring2-masterplan");
-    
+
     // ----------------------
     engine.sequencer.setTempo( 200 );
     
-    // ---- drums seq ----
+    // ---- drums sequencer ----
     states.resize(16);
 
     dseq.timing = 16;
@@ -65,10 +64,9 @@ void ofApp::setup(){
     dseq.out_value( "sample" ) >> drums.in("select");
     
     
-    // ---- sub seq ----
+    // ---- sub reese sequencer ----
     rmode = 0;
     rseq.timing = 4;
-
     rseq.code = [&] ( int frame ) noexcept { 
         if( frame%32==0 ){
             rmode = 0;

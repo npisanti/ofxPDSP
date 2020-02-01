@@ -12,15 +12,15 @@ void ofApp::setup(){
  
     engine.sequencer.setTempo( 108 );
     
-    // pdsp::FUnction execute an assignable function, 
-    // clocked by the engine sequencer  
+    // pdsp::FUnction can be used to make generative sequencers
     
+    // this assignable function is executed each 16th
+    // frame is the step number since the start of engine timeline
+    // ( you can change the variable name, but it has to be int )
     seq.code = [&]( int frame ) noexcept { 
-        // frame is the step number since the start
-        
         // synth -------
         if( seq.chance( 0.5f ) ){
-            seq.send("gate", 1.0f ); // note on 
+            seq.send("gate", 1.0f ); // sends note on to "gate" out
         }else{
             seq.send("gate", 0.0f ); // note off
         }
