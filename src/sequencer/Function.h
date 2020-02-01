@@ -21,6 +21,7 @@ namespace pdsp{
 
         struct Out {
             std::string name;
+            int number;
             pdsp::MessageBuffer* messageBuffer;
             pdsp::SequencerGateOutput* gate_out;
             pdsp::SequencerValueOutput* value_out;
@@ -35,12 +36,24 @@ namespace pdsp{
         @param[in] name output name tag
         */       
         pdsp::SequencerGateOutput& out_trig( std::string name );
+        
+        /*!
+        @brief get a trigger output for the given name.
+        @param[in] number output number id
+        */       
+        pdsp::SequencerGateOutput& out_trig( int number );
 
         /*!
         @brief get a value output for the given name. 
         @param[in] name output name tag
         */    
         pdsp::SequencerValueOutput& out_value( std::string name  );
+
+        /*!
+        @brief get a value output for the given name. 
+        @param[in]  number output number id
+        */    
+        pdsp::SequencerValueOutput& out_value( int number );
 
         /*!
         @brief this lambda function is executed each step, at the timing assigned to the class. Assign your own functions to it.
@@ -59,9 +72,18 @@ namespace pdsp{
         std::atomic<bool> active;
         
         /*!
-        @brief use this method inside the assigned code to send a value to a given output
+        @brief use this method inside the assigned code to send a value to a given output name
+        @param[in] name output name
+        @param[in] value value to send
         */ 
         void send( std::string name, float value ) noexcept;
+        
+        /*!
+        @brief use this method inside the assigned code to send a value to a given output number id
+        @param[in] name output name
+        @param[in] value value to send
+        */ 
+        void send( int number, float value ) noexcept;
 
         /*!
         @brief internal random, returns a value from 0.0f to 1.0f ( included ).
@@ -100,6 +122,7 @@ namespace pdsp{
         
         void clear( int bufferSize );
 
+        std::vector<int> numbers;
         std::vector<Out> outputs;            
         static pdsp::SequencerGateOutput invalidGate;
         static pdsp::SequencerValueOutput invalidValue;

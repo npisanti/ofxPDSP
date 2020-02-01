@@ -105,7 +105,7 @@ void ofApp::draw(){
     
     // draw the scopes
     ofPushMatrix();
-        ofTranslate( 20, 420 );
+        ofTranslate( 20, 370 );
         ofSetColor( brightColor );
         
         for(int y=0; y<2; ++y){

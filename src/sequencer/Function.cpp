@@ -42,6 +42,7 @@ pdsp::SequencerGateOutput& pdsp::Function::out_trig( std::string name ){
     
     outputs.emplace_back();
     outputs.back().name = name;
+    outputs.back().number = -1;
     outputs.back().messageBuffer = new pdsp::MessageBuffer();
     outputs.back().gate_out = new pdsp::SequencerGateOutput();
     outputs.back().gate_out->link( *(outputs.back().messageBuffer) );
@@ -50,8 +51,36 @@ pdsp::SequencerGateOutput& pdsp::Function::out_trig( std::string name ){
     
 }
 
-pdsp::SequencerValueOutput& pdsp::Function::out_value( std::string name ){
+pdsp::SequencerGateOutput& pdsp::Function::out_trig( int number ){
+    if( number < 0 ){
+        std::cout<<"[pdsp] warning! pdsp::Function number id given is less than 0, returning dummy gate output\n";
+        pdsp::pdsp_trace();
+        return invalidGate;
+    }
     
+    for( size_t i=0; i<outputs.size(); ++i ){
+        if( outputs[i].number == number ){
+            if(outputs[i].value_out!=nullptr){
+                std::cout<<"[pdsp] warning! this lambda output number id was already used as value output, returning dummy gate output\n";
+                pdsp::pdsp_trace();
+                return invalidGate;
+            }else{
+                return *(outputs[i].gate_out);
+            }
+        }
+    }
+    
+    outputs.emplace_back();
+    outputs.back().name = std::to_string( number );
+    outputs.back().number = number;
+    outputs.back().messageBuffer = new pdsp::MessageBuffer();
+    outputs.back().gate_out = new pdsp::SequencerGateOutput();
+    outputs.back().gate_out->link( *(outputs.back().messageBuffer) );
+    
+    return *(outputs.back().gate_out);
+}
+
+pdsp::SequencerValueOutput& pdsp::Function::out_value( std::string name ){
     for( size_t i=0; i<outputs.size(); ++i ){
         if( outputs[i].name == name ){
             if(outputs[i].gate_out!=nullptr){
@@ -66,17 +95,57 @@ pdsp::SequencerValueOutput& pdsp::Function::out_value( std::string name ){
     
     outputs.emplace_back();
     outputs.back().name = name;
+    outputs.back().number = -1;
     outputs.back().messageBuffer = new pdsp::MessageBuffer();
     outputs.back().value_out = new pdsp::SequencerValueOutput();
     outputs.back().value_out->link( *(outputs.back().messageBuffer) );
     
     return *(outputs.back().value_out);
+}
 
+pdsp::SequencerValueOutput& pdsp::Function::out_value( int number ){
+    if( number < 0 ){
+        std::cout<<"[pdsp] warning! pdsp::Function number id given is less than 0, returning dummy gate output\n";
+        pdsp::pdsp_trace();
+        return invalidValue;
+    }
+    
+    for( size_t i=0; i<outputs.size(); ++i ){
+        if( outputs[i].number == number ){
+            if(outputs[i].gate_out!=nullptr){
+                std::cout<<"[pdsp] warning! this lambda output number id was already used as value output, returning dummy gate output\n";
+                pdsp::pdsp_trace();
+                return invalidValue;
+            }else{
+                return *(outputs[i].value_out);
+            }
+        }
+    }
+    
+    outputs.emplace_back();
+    outputs.back().name = std::to_string(number);
+    outputs.back().number = number;
+    outputs.back().messageBuffer = new pdsp::MessageBuffer();
+    outputs.back().value_out = new pdsp::SequencerValueOutput();
+    outputs.back().value_out->link( *(outputs.back().messageBuffer) );
+    
+    return *(outputs.back().value_out);
 }
 
 void pdsp::Function::send( std::string name, float value ) noexcept{
     for( size_t i=0; i<outputs.size(); ++i ){
         if( outputs[i].name == name ){
+            outputs[i].messageBuffer->addMessage( value, sample );
+            return;
+        }
+    }
+    std::cout<<"[pdsp] warning! sending message to non-existent output into pdsp::Function.code\n";
+    pdsp::pdsp_trace();
+}
+
+void pdsp::Function::send( int number, float value ) noexcept{
+    for( size_t i=0; i<outputs.size(); ++i ){
+        if( outputs[i].number == number ){
             outputs[i].messageBuffer->addMessage( value, sample );
             return;
         }

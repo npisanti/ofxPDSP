@@ -38,12 +38,12 @@ void Automaton1D::advance() noexcept{ // update the automaton
     }
 }
 
-void Automaton1D::random( float density ) noexcept{
+void Automaton1D::random( float density, pdsp::Function & seq ) noexcept{
     clear();
     for( int x=0; x<CA_WIDTH; ++x ){
         if(x%2==0){
             // pdsp has its own random generator 
-            CA[0][x] = pdsp::chance(density) ? 1 : 0;  // just odd    
+            CA[0][x] = seq.chance(density) ? 1 : 0;  // just odd    
         }else{
             CA[0][x] = 0;         
         }

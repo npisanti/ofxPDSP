@@ -21,8 +21,6 @@ public:
     ofParameter<float>   density;
     ofParameter<bool>    regenerate;
 
-
-    
     void draw( int ca_side, int bars_h, ofColor fg, ofColor bg );
     void setRule(int rule){ ca.setRule( rule); }
     int currentStep() const;
@@ -34,7 +32,6 @@ public:
     
 private:
     pdsp::Function seq;
-    std::vector<std::string> numbers;
     Automaton1D     ca;
     int ruleMem;
     

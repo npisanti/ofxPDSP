@@ -1,7 +1,9 @@
 
 #pragma once
 
-#include "flags.h"
+#include "ofMain.h"
+#include "ofxPDSP.h"
+
 #define MWR 8
 
 
@@ -17,7 +19,7 @@ public:
 
     Automaton1D();
         
-    void random( float density ) noexcept;
+    void random( float density, pdsp::Function & seq ) noexcept;
     void clear() noexcept;
 
     void advance() noexcept;

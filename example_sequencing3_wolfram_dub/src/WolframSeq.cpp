@@ -14,11 +14,6 @@ WolframSeq::WolframSeq(){
     ruleMem = -1;
     
     stepbars.resize( CA_WIDTH );
-
-    numbers.resize(NUMSYNTHS);
-    for( size_t i=0; i<numbers.size(); ++i ){
-        numbers[i] = ofToString(i);
-    }
     
     seq.code = [&] ( int frame ) noexcept {
         
@@ -29,7 +24,7 @@ WolframSeq::WolframSeq(){
             }
             
             if(regenerate){
-                ca.random( density );
+                ca.random( density, seq );
                 regenerate = false;
             }else{
                 ca.advance();
@@ -67,13 +62,13 @@ WolframSeq::WolframSeq(){
         
         for(int o=0; o < activeOuts; ++o) { 
             float outval = stepbars[ (o*steps) + s ];
-            seq.send( numbers[o], outval );
+            seq.send( o, outval );
         }
     };    
 }
 
 pdsp::SequencerGateOutput& WolframSeq::out_trig( int index ){
-    return seq.out_trig( numbers[index] );
+    return seq.out_trig( index );
 }
 
 int WolframSeq::currentStep() const {
