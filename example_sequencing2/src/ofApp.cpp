@@ -12,13 +12,13 @@ void ofApp::setup(){
     states.resize(16);
 
     dseq.timing = 16;
-    dseq.code = [&] ( int frame ) noexcept { 
+    dseq.code = [&]() noexcept { 
         // generates the seq every 4 bars + fills
-        if( frame % 64 == 0 || frame % 128 == 112 ){ 
+        if( dseq.frame() % 64 == 0 || dseq.frame() % 128 == 112 ){ 
             states[0] = 0; 
             for(size_t i=1; i<states.size();++i){
                 if( i%2==0 ){
-                    states[i] = pdsp::dice(4);
+                    states[i] = dseq.dice(4);
                 }else{
                     if( dseq.chance(0.5) ){
                         states[i] = 4; // ghost
@@ -30,7 +30,7 @@ void ofApp::setup(){
             }
         }
         
-        switch( states[frame%16] ){
+        switch( states[dseq.frame()%16] ){
             case 0: // kick 
                 dseq.send( "bang", 0.7f );
                 dseq.send( "sample", 0.0f );
@@ -67,12 +67,12 @@ void ofApp::setup(){
     // ---- sub reese sequencer ----
     rmode = 0;
     rseq.timing = 4;
-    rseq.code = [&] ( int frame ) noexcept { 
-        if( frame%32==0 ){
+    rseq.code = [&]() noexcept { 
+        if( rseq.frame()%32==0 ){
             rmode = 0;
         }
         
-        if( frame%32==24 ){ // random fill in the last two of 8 bars
+        if( dseq.frame()%32==24 ){ // random fill in the last two of 8 bars
             rmode = 1 + rseq.dice(3);
         }
 
@@ -95,8 +95,8 @@ void ofApp::setup(){
             }
         };
         
-        rseq.send("gate", tracks[rmode][0][frame%8] );
-        rseq.send("pitch", tracks[rmode][1][frame%8] );
+        rseq.send("gate", tracks[rmode][0][rseq.frame()%8] );
+        rseq.send("pitch", tracks[rmode][1][rseq.frame()%8] );
     };
    
     rseq.out_trig("gate")  >> reese.in("trig");

@@ -32,7 +32,7 @@ class ofApp : public ofBaseApp{
         std::atomic<int> index;
         std::vector<std::vector<float>> buffer;
         
-        std::atomic<float> chance;
+        std::atomic<float> probability;
         
 
 };

@@ -15,9 +15,9 @@ void ofApp::setup(){
     
     ofBackground(0);
 
-    engine.sequencer.setTempo(  200.0f); 
+    engine.sequencer.setTempo( 200.0f ); 
 
-    chance = 1.0f;
+    probability = 1.0f;
     
     //-------- buffer init ----------
     buffer.resize( 12 ); // a number big enough for the number of changes before running the sequence code
@@ -26,13 +26,14 @@ void ofApp::setup(){
     circularWrite(); // no problem running this while the engine runs
 
     // ---- this code runs in the audio thread ----
-    seq.code = [&] ( int frame ) noexcept {
+    seq.code = [&]() noexcept {
         int read = index; // is important to memorize thi index 
         
         int steps = buffer[read].size();
-        if( seq.chance( chance) ){
+        if( seq.chance( probability) ){
+            int s = seq.frame()%steps;
             seq.send( "gate", 1.0f );
-            seq.send( "pitch", buffer[read][frame%steps] );
+            seq.send( "pitch", buffer[read][s] );
         }
     };
     
@@ -77,8 +78,8 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     string info = "press r to change the sequence data\n";
-    info += "note chance = ";
-    info += ofToString( chance );
+    info += "note probability = ";
+    info += ofToString( probability );
     info += "\n";
     info += "click with the mouse to change, mapped to x axis";
     
@@ -108,13 +109,13 @@ void ofApp::mouseMoved(int x, int y ){
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
     // chance is thread safe to set
-    chance = ofMap(x, 50, ofGetWidth()-50, 0.0f, 1.0f, true );
+    probability = ofMap(x, 50, ofGetWidth()-50, 0.0f, 1.0f, true );
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
     // chance is thread safe to set
-    chance = ofMap(x, 50, ofGetWidth()-50, 0.0f, 1.0f, true );
+    probability = ofMap(x, 50, ofGetWidth()-50, 0.0f, 1.0f, true );
 }
 
 //--------------------------------------------------------------

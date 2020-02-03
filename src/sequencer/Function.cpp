@@ -173,7 +173,8 @@ void pdsp::Function::process( double playhead, double barsPerSample, int bufferS
             double delta = f-next;
             if ( delta >= 0.0 && delta < step ){
                 sample = i;
-                code( (int) f );
+                fi = f;
+                code();
             }
             f += step;
         }

@@ -15,9 +15,7 @@ void ofApp::setup(){
     // pdsp::Function can be used to make generative sequencers
     
     // this assignable function is executed each 16th
-    // frame is the step number since the start of engine timeline
-    // ( you can change the variable name, but it has to be int )
-    seq.code = [&]( int frame ) noexcept { 
+    seq.code = [&]() noexcept { 
         // synth -------
         if( seq.chance( 0.5f ) ){
             seq.send("gate", 1.0f ); // sends note on to "gate" out
@@ -35,9 +33,9 @@ void ofApp::setup(){
         const float o = 0.0f;
         static float ks[] = { x,x,x,o, o,o,o,o, x,o,o,o, o,o,o,o };
         
-        // you can use modulo operations 
-        // to get the step index for a sequence
-        seq.send( "kick", ks[frame%16] );
+        // frame returns the playback in bars multiplied for timing
+        // as int, use modulo operations for getting the step 
+        seq.send( "kick", ks[seq.frame()%16] );
     };
     
     seq.out_trig("gate") >> lead.in("trig");

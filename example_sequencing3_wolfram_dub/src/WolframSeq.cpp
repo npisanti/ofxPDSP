@@ -15,9 +15,9 @@ WolframSeq::WolframSeq(){
     
     stepbars.resize( CA_WIDTH );
     
-    seq.code = [&] ( int frame ) noexcept {
+    seq.code = [&]() noexcept {
         
-        if( frame%steps == 0 ){
+        if( seq.frame()%steps == 0 ){
             if( ruleMem!= rule ){
                 setRule( rule );
                 ruleMem = rule;
@@ -57,7 +57,7 @@ WolframSeq::WolframSeq(){
             }             
         }
     
-        int s = frame % steps;
+        int s = seq.frame() % steps;
         meter_step = s;
         
         for(int o=0; o < activeOuts; ++o) { 

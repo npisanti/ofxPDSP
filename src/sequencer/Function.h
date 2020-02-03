@@ -59,7 +59,7 @@ namespace pdsp{
         @brief this lambda function is executed each step, at the timing assigned to the class. Assign your own functions to it.
         The step number is passed to the function as int value. Remember that this function will be executed into the audio-thread so the access to some variable used also into the main thread could cause race conditions.
         */
-        std::function<void(int)> code;
+        std::function<void()> code;
 
         /*!
         @brief timing for the function frames, defaults to 16 ( 1/16th of a bar ). Thread-safe to set.
@@ -86,6 +86,11 @@ namespace pdsp{
         void send( int number, float value ) noexcept;
 
         /*!
+        @brief returns the playback timepoint in bars, multiplied by the timing, as integer.
+        */ 
+        int frame(){ return fi; }
+        
+        /*!
         @brief internal random, returns a value from 0.0f to 1.0f ( included ).
         */ 
         float urand();
@@ -110,6 +115,8 @@ namespace pdsp{
     private:
         std::atomic<int> sample;
     
+        int fi;
+        
         // random from https://software.intel.com/en-us/articles/fast-random-number-generator-on-the-intel-pentiumr-4-processor/
         // the max number is not RAND_MAX but a short int max
         int seed;
