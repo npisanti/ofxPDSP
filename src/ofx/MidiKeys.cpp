@@ -1,6 +1,8 @@
 
 #include "MidiKeys.h"
 
+#include "ofxPDSPFunctions.h"
+
 #ifndef __ANDROID__
 
 #define OFXPDSP_MIDIKEYSPROCESSOR_MESSAGERESERVE 128
@@ -251,6 +253,33 @@ pdsp::SequencerValueOutput & pdsp::midi::Keys::out_pitch_bend() {
   
 pdsp::SequencerValueOutput  & pdsp::midi::Keys::out_aftertouch() {
     return out_pressure;
+}
+
+void pdsp::midi::Keys::setTuning( int i, float value ){
+    if( i >= 0 && i <128 ){
+        midiConverter.tuning[i] = f2p( value );
+    }else{
+        std::cout<<"[pdsp] warning! setTuning index outside range, returning 0.0f\n";
+        pdsp_trace();
+    }
+}
+void pdsp::midi::Keys::setTuningByPitch( int i, float value ){
+    if( i >= 0 && i <128 ){
+        midiConverter.tuning[i] = value;
+    }else{
+        std::cout<<"[pdsp] warning! setTuningByPitch index outside range, returning 0.0f\n";
+        pdsp_trace();
+    }
+}
+
+float pdsp::midi::Keys::getTuning( int i ) const {
+    if( i >= 0 && i <128 ){
+        return p2f( midiConverter.tuning[i] );
+    }else{
+        std::cout<<"[pdsp] warning! getTuning index outside range, returning 0.0f\n";
+        pdsp_trace();
+    }
+    return 0.0f;
 }
 
 #endif

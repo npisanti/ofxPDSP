@@ -60,6 +60,8 @@ public:
         pdsp::MessageBuffer             pitchBendMessages;
         pdsp::MessageBuffer             pressureMessages;
 
+        float tuning [128];
+
 private:
 
         void processPolyMidiNoteOn( const _PositionedMidiMessage& midi) noexcept;

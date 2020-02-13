@@ -32,6 +32,9 @@ MidiKeysBuffers::MidiKeysBuffers(){
         portamentoMode = On;
         setMaxNotes(8);
         
+        for ( int i=0; i<128; ++i ){
+            tuning[i] = i;
+        }
 }
 
 void MidiKeysBuffers::setPitchBend( float down, float up ){
@@ -320,7 +323,7 @@ void MidiKeysBuffers::processPolyMidiNoteOn(const _PositionedMidiMessage& midi )
         gateMessages[noteIndex].addMessage(gateValue, midi.sample);
 
         if(!retrigger){ //with retrigger the pitch is always the same
-                pitchMessages[noteIndex].addMessage(static_cast<float>(noteNumber), midi.sample);
+                pitchMessages[noteIndex].addMessage( tuning[noteNumber], midi.sample);
 
                 switch(portamentoMode){
                 case Off:
@@ -449,7 +452,7 @@ void MidiKeysBuffers::processMonoMidiNoteOn(const _PositionedMidiMessage& midi )
         }
 
         if(monoNoteIndex!=lastMonoNoteIndex){ //if mono note index is changed
-                pitchMessages[0].addMessage(static_cast<float>(notes[monoNoteIndex].note), midi.sample);
+                pitchMessages[0].addMessage( tuning[notes[monoNoteIndex].note], midi.sample);
                 switch(portamentoMode){
                 case Off:
                         portaMessages[0].addMessage(0.0f, midi.sample);  
@@ -503,7 +506,7 @@ void MidiKeysBuffers::processMonoMidiNoteOff(const _PositionedMidiMessage& midi 
                             
                                 //we released the active mono note index, but we can switch to another note
                                 monoNoteIndex = getHighestPriorityMono();
-                                pitchMessages[0].addMessage(static_cast<float>(notes[monoNoteIndex].note), midi.sample);
+                                pitchMessages[0].addMessage(tuning[notes[monoNoteIndex].note], midi.sample);
                               
                                 switch(portamentoMode){
                                 case Off:

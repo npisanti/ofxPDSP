@@ -91,6 +91,26 @@ public:
     */
     int getVoicesNumber() const;
     
+    /*!
+    @brief sets the tuning in hertz for the given note
+    @param[in] i index of the note, must be 0-127
+    @param[in] value frequency value in hertz
+    */
+    void setTuning( int i, float value );
+    
+    /*!
+    @brief sets the tuning in semitones for the given note
+    @param[in] i index of the note, must be 0-127
+    @param[in] value value in semitones for that note, floating point
+    */
+    void setTuningByPitch( int i, float value );
+    
+    /*!
+    @brief gets the tuning in hertz for the given note
+    @param[in] i index of the note, must be 0-127
+    */
+    float getTuning( int i ) const;
+    
 
     /*!
     @brief returns the trigger output of the given voice
