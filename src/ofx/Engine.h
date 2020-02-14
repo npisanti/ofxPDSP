@@ -104,6 +104,8 @@ public:
     */
     void addOscInput( pdsp::osc::Input & oscInput );
 
+    void removeOscInput( pdsp::osc::Input & oscInput );
+
 #ifndef __ANDROID__
     /*!
     @brief adds a midi controller and a relative midi input to the engine, making them active.
@@ -113,11 +115,15 @@ public:
     */
     void addMidiController( pdsp::Controller & controller, pdsp::midi::Input & midiIn );
 
+    void removeMidiController( pdsp::Controller & controller, pdsp::midi::Input & midiIn );
+
     /*!
     @brief adds a midi output to the engine, making it active.
     @param[in] midiOut midi out object to activate
     */
     void addMidiOut( pdsp::midi::Output & midiOut );
+
+    void removeMidiOut( pdsp::midi::Output & midiOut );
 
 #ifndef TARGET_OF_IOS
     /*!
@@ -125,6 +131,8 @@ public:
     @param[in] serialOut serial out object to activate
     */
     void addSerialOut( pdsp::serial::Output & serialOut );
+
+    void removeSerialOut( pdsp::serial::Output & serialOut );
 #endif // TARGET_OF_IOS
 #endif // __ANDROID__
     
@@ -133,6 +141,8 @@ public:
     @param[in] externalOut external out object to activate
     */
     void addExternalOut( pdsp::ExtSequencer & externalOut );
+
+    void removeExternalOut( pdsp::ExtSequencer & externalOut );
 
     /*!
     @brief returns a Patchable object that represent the audio out of the system. Patch your module to this for connecting them to the selected device audio output.

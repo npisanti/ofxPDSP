@@ -382,7 +382,6 @@ void pdsp::Engine::audioIn (ofSoundBuffer &inBuffer) {
 
 #ifndef __ANDROID__
 void pdsp::Engine::addMidiController( pdsp::Controller & controller, pdsp::midi::Input & midiIn ){
-    
     bool midiInFound = false;
     for( pdsp::midi::Input * &ptr : midiIns ){
         if( ptr == &midiIn ){
@@ -407,11 +406,38 @@ void pdsp::Engine::addMidiController( pdsp::Controller & controller, pdsp::midi:
         controllerLinkedMidis.push_back( &midiIn );
     }    
     hasMidiIn = true;
-    
+}
+
+void pdsp::Engine::removeMidiController(pdsp::Controller & controller, pdsp::midi::Input & midiIn) {
+    for (int i = 0; i < controllers.size(); ++i) {
+        if (controllers[i] == &controller && controllerLinkedMidis[i] == &midiIn) {
+            std::iter_swap(controllers.begin() + i, controllers.end() - 1);
+            std::iter_swap(controllerLinkedMidis.begin() + i, controllerLinkedMidis.end() - 1);
+            controllers.pop_back();
+            controllerLinkedMidis.pop_back();
+            break;
+        }
+    }
+
+    if (std::find(controllerLinkedMidis.begin(), controllerLinkedMidis.end(), &midiIn) == controllerLinkedMidis.end()) {
+        auto it = std::find(midiIns.begin(), midiIns.end(), &midiIn);
+        if (it != midiIns.end()) {
+            std::iter_swap(it, midiIns.end() - 1);
+            midiIns.pop_back();
+        }
+    }
+
+    if (midiIns.empty()) {
+        hasMidiIn = false;
+    }
 }
 
 void  pdsp::Engine::addMidiOut( pdsp::midi::Output & midiOut ){
     addExternalOut( midiOut );
+}
+
+void pdsp::Engine::removeMidiOut( pdsp::midi::Output & midiOut ){
+    removeExternalOut( midiOut );
 }
 #endif
 
@@ -420,11 +446,14 @@ void  pdsp::Engine::addMidiOut( pdsp::midi::Output & midiOut ){
 void pdsp::Engine::addSerialOut( pdsp::serial::Output & serialOut ) {
     addExternalOut( serialOut ); 
 }
+
+void pdsp::Engine::removeSerialOut( pdsp::serial::Output & serialOut ) {
+    removeExternalOut( serialOut );
+}
 #endif
 #endif
 
 void pdsp::Engine::addExternalOut( pdsp::ExtSequencer & externalOut ) {
-   
     bool externalOutFound = false;
     for( pdsp::ExtSequencer * &ptr : externalOuts ){
         if( ptr == &externalOut ){
@@ -437,6 +466,17 @@ void pdsp::Engine::addExternalOut( pdsp::ExtSequencer & externalOut ) {
         externalOuts.push_back( &externalOut );
     }
     hasExternalOut = true;
+}
+
+void pdsp::Engine::removeExternalOut(pdsp::ExtSequencer & externalOut) {
+    auto it = std::find(externalOuts.begin(), externalOuts.end(), &externalOut);
+    if (it != externalOuts.end()) {
+        std::iter_swap(it, externalOuts.end() - 1);
+        externalOuts.pop_back();
+    }
+    if (externalOuts.empty()) {
+        hasExternalOut = false;
+    }
 }
 
 void pdsp::Engine::addOscInput( pdsp::osc::Input & oscInput ) {
@@ -452,6 +492,17 @@ void pdsp::Engine::addOscInput( pdsp::osc::Input & oscInput ) {
         oscIns.push_back( &oscInput );
     }
     hasOscIn = true;    
+}
+
+void pdsp::Engine::removeOscInput(pdsp::osc::Input & oscInput) {
+    auto it = std::find(oscIns.begin(), oscIns.end(), &oscInput);
+    if (it != oscIns.end()) {
+        std::iter_swap(it, oscIns.end() - 1);
+        oscIns.pop_back();
+    }
+    if (oscIns.empty()) {
+        hasOscIn = false;
+    }
 }
 
 void pdsp::Engine::test( bool testingActive, float testingDB ){
