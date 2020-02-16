@@ -18,18 +18,12 @@ pdsp::Engine::Engine() : score( sequencer ){
     
     api = ofSoundDevice::Api::UNSPECIFIED;
 
-    externalOuts.reserve(10);
-    hasExternalOut = false;
-    hasOscIn = false;
-
 #ifndef __ANDROID__
-    midiIns.reserve(10);
     controllers.reserve(20);
     controllerLinkedMidis.reserve(20);
 
-    midiIns.clear();
     controllers.clear();
-    hasMidiIn = false;
+    controllerLinkedMidis.clear();
 #endif
 
     bBackgroundAudio = false;
@@ -298,24 +292,19 @@ void pdsp::Engine::close(){
     stop();
 
 #ifndef __ANDROID__
-    if(hasMidiIn){
-        for( pdsp::midi::Input * &in : midiIns ){
-            in->closePort();
-        } 
+    for (pdsp::midi::Input * &in : pdsp::midi::Input::instances) {
+        in->closePort();
     }
 #endif
 
-    if(hasOscIn){
-        for( pdsp::osc::Input * &in : oscIns){
-            in->close();
-        } 
+    for (pdsp::osc::Input * &in : pdsp::osc::Input::instances) {
+        in->close();
     }
-    
-    if(hasExternalOut){
-        for( pdsp::ExtSequencer * &out : externalOuts ){
-            out->close();
-        } 
+
+    for (pdsp::ExtSequencer * &out : ExtSequencer::instances) {
+        out->close();
     }
+
     if( inStreamActive ){
         inputStream.close();
     }
@@ -339,33 +328,27 @@ void pdsp::Engine::audioOut(ofSoundBuffer &outBuffer) {
 
 #ifndef __ANDROID__
     // midi input processing
-    if(hasMidiIn){
-        for( pdsp::midi::Input * &in : midiIns){
-            in->processMidi( bufferSize );
-        } 
-        for(int i=0; i<(int)controllers.size(); ++i){
-            controllers[i]->processMidi( *(controllerLinkedMidis[i]), bufferSize );
-        }
+    for(pdsp::midi::Input * &in : pdsp::midi::Input::instances) {
+        in->processMidi( bufferSize );
+    }
+    for (int i = 0; i < (int)controllers.size(); ++i) {
+        controllers[i]->processMidi(*(controllerLinkedMidis[i]), bufferSize);
     }
 #endif
 
-    if(hasOscIn){
-        for( pdsp::osc::Input * &in : oscIns){
-            in->processOsc( bufferSize );
-            if( in->hasTempoChange() ){
-                sequencer.setTempo( in->getTempo() );
-            }
-        } 
+    for(pdsp::osc::Input * &in : pdsp::osc::Input::instances) {
+        in->processOsc(bufferSize);
+        if (in->hasTempoChange()) {
+            sequencer.setTempo(in->getTempo());
+        }
     }
    
     // score and playhead processing
     sequencer.process( bufferSize );
  
     // external outputs processing
-    if(hasExternalOut){
-        for( pdsp::ExtSequencer * &out : externalOuts){
-            out->process( bufferSize );
-        }
+    for (pdsp::ExtSequencer * &out : ExtSequencer::instances) {
+        out->process(bufferSize);
     }
     
     //DSP processing
@@ -382,17 +365,6 @@ void pdsp::Engine::audioIn (ofSoundBuffer &inBuffer) {
 
 #ifndef __ANDROID__
 void pdsp::Engine::addMidiController( pdsp::Controller & controller, pdsp::midi::Input & midiIn ){
-    
-    bool midiInFound = false;
-    for( pdsp::midi::Input * &ptr : midiIns ){
-        if( ptr == &midiIn ){
-            midiInFound = true;
-        } 
-    }
-    if( ! midiInFound ){
-        midiIns.push_back( &midiIn );
-    }
-    
     bool midiControllerFound = false;
     
     for( pdsp::Controller * &ptr : controllers ){
@@ -405,54 +377,33 @@ void pdsp::Engine::addMidiController( pdsp::Controller & controller, pdsp::midi:
     if( ! midiControllerFound ){
         controllers.push_back( &controller );
         controllerLinkedMidis.push_back( &midiIn );
-    }    
-    hasMidiIn = true;
-    
+    }
 }
 
-void  pdsp::Engine::addMidiOut( pdsp::midi::Output & midiOut ){
-    addExternalOut( midiOut );
+void pdsp::Engine::removeMidiController( pdsp::Controller & controller, pdsp::midi::Input & midiIn ) {
+    for (int i = 0; i < controllers.size(); ++i) {
+        if (controllers[i] == &controller && controllerLinkedMidis[i] == &midiIn) {
+            std::iter_swap(controllers.begin() + i, controllers.end() - 1);
+            std::iter_swap(controllerLinkedMidis.begin() + i, controllerLinkedMidis.end() - 1);
+            controllers.pop_back();
+            controllerLinkedMidis.pop_back();
+            break;
+        }
+    }
 }
+
+void pdsp::Engine::addMidiOut( pdsp::midi::Output & midiOut ) {}
 #endif
 
 #ifndef TARGET_OF_IOS
 #ifndef __ANDROID__
-void pdsp::Engine::addSerialOut( pdsp::serial::Output & serialOut ) {
-    addExternalOut( serialOut ); 
-}
+void pdsp::Engine::addSerialOut( pdsp::serial::Output & serialOut ) {}
 #endif
 #endif
 
-void pdsp::Engine::addExternalOut( pdsp::ExtSequencer & externalOut ) {
-   
-    bool externalOutFound = false;
-    for( pdsp::ExtSequencer * &ptr : externalOuts ){
-        if( ptr == &externalOut ){
-            externalOutFound = true;
-            std::cout<<"[pdsp] warning! you have already added this external output to the engine, you shouldn't add it twice\n";
-            pdsp::pdsp_trace();
-        } 
-    }
-    if( ! externalOutFound ){
-        externalOuts.push_back( &externalOut );
-    }
-    hasExternalOut = true;
-}
+void pdsp::Engine::addExternalOut( pdsp::ExtSequencer & externalOut ) {}
 
-void pdsp::Engine::addOscInput( pdsp::osc::Input & oscInput ) {
-    bool oscInputFound = false;
-    for( pdsp::osc::Input * &ptr : oscIns ){
-        if( ptr == &oscInput ){
-            oscInputFound = true;
-            std::cout<<"[pdsp] warning! you have already added this OSC input to the engine, you shouldn't add it twice\n";
-            pdsp::pdsp_trace();
-        } 
-    }
-    if( ! oscInputFound ){
-        oscIns.push_back( &oscInput );
-    }
-    hasOscIn = true;    
-}
+void pdsp::Engine::addOscInput( pdsp::osc::Input & oscInput ) {}
 
 void pdsp::Engine::test( bool testingActive, float testingDB ){
     if( testingActive ){

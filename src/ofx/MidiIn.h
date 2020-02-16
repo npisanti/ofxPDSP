@@ -17,10 +17,15 @@
 @brief utility class manage midi input ports and collect midi input messages
 */
 
+namespace pdsp {
+class Engine;
+}
+
 namespace pdsp { namespace midi {
     
 class Input : public ofxMidiListener, public pdsp::Preparable {
-    
+    friend class pdsp::Engine;
+
 public:
     Input();
     ~Input();
@@ -105,6 +110,8 @@ private:
     bool connected;
     
     void initPort();
+
+    static std::vector<Input*> instances;
         
 };
 

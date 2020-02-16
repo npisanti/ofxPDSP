@@ -98,10 +98,7 @@ public:
     */
     void setOutputDeviceID(int deviceID);
 
-    /*!
-    @brief adds an OSC input to the engine, making it active.
-    @param[in] oscInput osc input object to activate
-    */
+    [[deprecated("deprecated, handled automatically between construction and destruction")]]
     void addOscInput( pdsp::osc::Input & oscInput );
 
 #ifndef __ANDROID__
@@ -113,25 +110,18 @@ public:
     */
     void addMidiController( pdsp::Controller & controller, pdsp::midi::Input & midiIn );
 
-    /*!
-    @brief adds a midi output to the engine, making it active.
-    @param[in] midiOut midi out object to activate
-    */
+    void removeMidiController( pdsp::Controller & controller, pdsp::midi::Input & midiIn );
+
+    [[deprecated("deprecated, handled automatically between construction and destruction")]]
     void addMidiOut( pdsp::midi::Output & midiOut );
 
 #ifndef TARGET_OF_IOS
-    /*!
-    @brief adds a serial output to the engine, making it active.
-    @param[in] serialOut serial out object to activate
-    */
+    [[deprecated("deprecated, handled automatically between construction and destruction")]]
     void addSerialOut( pdsp::serial::Output & serialOut );
 #endif // TARGET_OF_IOS
 #endif // __ANDROID__
     
-    /*!
-    @brief adds an external output to the engine ( for example an pdsp::serial::Output or an pdsp::midi::Output ) making it active.
-    @param[in] externalOut external out object to activate
-    */
+    [[deprecated("deprecated, handled automatically between construction and destruction")]]
     void addExternalOut( pdsp::ExtSequencer & externalOut );
 
     /*!
@@ -206,17 +196,9 @@ private:
     std::vector<pdsp::ExternalInput> inputs;
 
 #ifndef __ANDROID__
-    std::vector<pdsp::midi::Input*> midiIns;
     std::vector<pdsp::Controller*>  controllers;
     std::vector<pdsp::midi::Input*> controllerLinkedMidis;
-    bool                            hasMidiIn;
 #endif
-
-    std::vector<pdsp::osc::Input*>      oscIns;
-    bool                                hasOscIn;
-
-    std::vector<pdsp::ExtSequencer*>    externalOuts;  
-    bool                                hasExternalOut;
     
     int state;
 

@@ -4,6 +4,8 @@
 #define OFXPDSP_OSCINPUT_MESSAGERESERVE 128
 #define OFXPDSP_OSCCIRCULARBUFFER_SIZE 10000
 
+std::vector<pdsp::osc::Input*> pdsp::osc::Input::instances;
+
 pdsp::osc::Input::Input() {
     
     parsers.clear();
@@ -22,10 +24,14 @@ pdsp::osc::Input::Input() {
     
     receiver.circularBuffer = &circularBuffer;
     receiver.index = &index;
-}   
+
+    instances.push_back(this);
+}
 
 
 pdsp::osc::Input::~Input(){
+    instances.erase(std::remove(instances.begin(), instances.end(), this), instances.end());
+
     if(connected){
         close();
     }

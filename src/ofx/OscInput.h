@@ -30,11 +30,16 @@ typedef osc::IpEndpointName _PDSPIpEndpointName_t;
 typedef osc::osc_bundle_element_size_t _PDSPosc_bundle_element_size_t;
 /*!
     @endcond
-*/   
+*/
+
+namespace pdsp {
+class Engine;
+}
 
 namespace pdsp{ namespace osc {
 
 class Input : public pdsp::Preparable {
+    friend class pdsp::Engine;
 
 private:
     
@@ -57,10 +62,11 @@ private:
         void ProcessMessage(const _PDSPOscReceivedMessage_t &m, const _PDSPIpEndpointName_t &remoteEndpoint) override;
     };
 
+    static std::vector<Input*> instances;
+
 public:
-    Input();    
-    ~Input();      
-    
+    Input();
+    ~Input();
 
     /*!
     @brief open the port with the given index
@@ -72,7 +78,6 @@ public:
     @brief shuts down the output
     */   
     void close();
-
 
     /*!
     @brief return true if the port has been sucessfully opened

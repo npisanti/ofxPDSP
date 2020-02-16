@@ -6,6 +6,8 @@
 #define OFXPDSP_MIDIREADVECTOR_MESSAGERESERVE 128
 #define OFXPDSP_MIDICIRCULARBUFFER_SIZE 4096
 
+std::vector<pdsp::midi::Input*> pdsp::midi::Input::instances;
+
 pdsp::midi::Input::Input(){
 
     midiIn_p = nullptr;
@@ -15,9 +17,13 @@ pdsp::midi::Input::Input(){
     
     lastread = 0;
     index = 0;
+
+    instances.push_back(this);
 }
 
 pdsp::midi::Input::~Input(){
+    instances.erase(std::remove(instances.begin(), instances.end(), this), instances.end());
+
     closePort();
 }
 
