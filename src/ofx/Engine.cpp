@@ -421,6 +421,14 @@ void pdsp::Engine::setBackgroundAudio( bool active ){
     bBackgroundAudio = active;
 }
 
+void pdsp::Engine::notifyDisconnectedInput() {
+    inStreamActive = false;
+}
+
+void pdsp::Engine::notifyDisconnectedOutput() {
+    outStreamActive = false;
+}
+
 void pdsp::Engine::setApi( ofSoundDevice::Api api ){
     this->api = api;
 }
