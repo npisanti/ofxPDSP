@@ -113,25 +113,16 @@ public:
     */
     void addMidiController( pdsp::Controller & controller, pdsp::midi::Input & midiIn );
 
-    /*!
-    @brief adds a midi output to the engine, making it active.
-    @param[in] midiOut midi out object to activate
-    */
+    [[deprecated("deprecated, handled automatically between construction and destruction")]]
     void addMidiOut( pdsp::midi::Output & midiOut );
 
 #ifndef TARGET_OF_IOS
-    /*!
-    @brief adds a serial output to the engine, making it active.
-    @param[in] serialOut serial out object to activate
-    */
+    [[deprecated("deprecated, handled automatically between construction and destruction")]]
     void addSerialOut( pdsp::serial::Output & serialOut );
 #endif // TARGET_OF_IOS
 #endif // __ANDROID__
     
-    /*!
-    @brief adds an external output to the engine ( for example an pdsp::serial::Output or an pdsp::midi::Output ) making it active.
-    @param[in] externalOut external out object to activate
-    */
+    [[deprecated("deprecated, handled automatically between construction and destruction")]]
     void addExternalOut( pdsp::ExtSequencer & externalOut );
 
     /*!

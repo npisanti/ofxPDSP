@@ -6,13 +6,17 @@
 #ifndef PDSP_MESSAGES_EXTSEQUENCER_H_INCLUDED
 #define PDSP_MESSAGES_EXTSEQUENCER_H_INCLUDED
 
-namespace pdsp{
+#include <vector>
+
+namespace pdsp {
 /*!
     @cond HIDDEN_SYMBOLS
 */ 
 class MessageBuffer;
+class Engine;
 
-class ExtSequencer{
+class ExtSequencer {
+    friend class Engine;
     
 public:
     virtual void linkToMessageBuffer(MessageBuffer &messageBuffer) = 0;
@@ -20,6 +24,9 @@ public:
     
     virtual void process( int bufferSize ) = 0;
     virtual void close() = 0;
+
+private:
+    static std::vector<ExtSequencer*> instances;
 };
 /*!
     @endcond
