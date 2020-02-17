@@ -18,8 +18,6 @@ pdsp::Engine::Engine() : score( sequencer ){
     
     api = ofSoundDevice::Api::UNSPECIFIED;
 
-    externalOuts.reserve(10);
-    hasExternalOut = false;
     hasOscIn = false;
 
 #ifndef __ANDROID__

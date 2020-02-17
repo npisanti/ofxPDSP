@@ -205,9 +205,6 @@ private:
 
     std::vector<pdsp::osc::Input*>      oscIns;
     bool                                hasOscIn;
-
-    std::vector<pdsp::ExtSequencer*>    externalOuts;  
-    bool                                hasExternalOut;
     
     int state;
 
