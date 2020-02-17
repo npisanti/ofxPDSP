@@ -19,6 +19,9 @@ class ExtSequencer {
     friend class Engine;
     
 public:
+    ExtSequencer();
+    ~ExtSequencer();
+
     virtual void linkToMessageBuffer(MessageBuffer &messageBuffer) = 0;
     virtual void unlinkMessageBuffer(MessageBuffer &messageBuffer) = 0;
     
