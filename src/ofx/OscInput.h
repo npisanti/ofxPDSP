@@ -30,11 +30,16 @@ typedef osc::IpEndpointName _PDSPIpEndpointName_t;
 typedef osc::osc_bundle_element_size_t _PDSPosc_bundle_element_size_t;
 /*!
     @endcond
-*/   
+*/
+
+namespace pdsp {
+class Engine;
+}
 
 namespace pdsp{ namespace osc {
 
 class Input : public pdsp::Preparable {
+    friend class pdsp::Engine;
 
 private:
     
@@ -168,6 +173,8 @@ private:
     
     void pushToReadVector( _PositionedOscMessage & message );
     int checkParser( std::string oscAddress );
+
+    static std::vector<Input*> instances;
 };
 
 }}

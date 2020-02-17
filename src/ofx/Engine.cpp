@@ -20,7 +20,6 @@ pdsp::Engine::Engine() : score( sequencer ){
 
     externalOuts.reserve(10);
     hasExternalOut = false;
-    hasOscIn = false;
 
 #ifndef __ANDROID__
     midiIns.reserve(10);
@@ -305,10 +304,8 @@ void pdsp::Engine::close(){
     }
 #endif
 
-    if(hasOscIn){
-        for( pdsp::osc::Input * &in : oscIns){
-            in->close();
-        } 
+    for (pdsp::osc::Input * &in : pdsp::osc::Input::instances) {
+        in->close();
     }
     
     if(hasExternalOut){
@@ -349,13 +346,11 @@ void pdsp::Engine::audioOut(ofSoundBuffer &outBuffer) {
     }
 #endif
 
-    if(hasOscIn){
-        for( pdsp::osc::Input * &in : oscIns){
-            in->processOsc( bufferSize );
-            if( in->hasTempoChange() ){
-                sequencer.setTempo( in->getTempo() );
-            }
-        } 
+    for (pdsp::osc::Input * &in : pdsp::osc::Input::instances) {
+        in->processOsc(bufferSize);
+        if (in->hasTempoChange()) {
+            sequencer.setTempo(in->getTempo());
+        }
     }
    
     // score and playhead processing
@@ -439,20 +434,7 @@ void pdsp::Engine::addExternalOut( pdsp::ExtSequencer & externalOut ) {
     hasExternalOut = true;
 }
 
-void pdsp::Engine::addOscInput( pdsp::osc::Input & oscInput ) {
-    bool oscInputFound = false;
-    for( pdsp::osc::Input * &ptr : oscIns ){
-        if( ptr == &oscInput ){
-            oscInputFound = true;
-            std::cout<<"[pdsp] warning! you have already added this OSC input to the engine, you shouldn't add it twice\n";
-            pdsp::pdsp_trace();
-        } 
-    }
-    if( ! oscInputFound ){
-        oscIns.push_back( &oscInput );
-    }
-    hasOscIn = true;    
-}
+void pdsp::Engine::addOscInput( pdsp::osc::Input & oscInput ) {}
 
 void pdsp::Engine::test( bool testingActive, float testingDB ){
     if( testingActive ){
