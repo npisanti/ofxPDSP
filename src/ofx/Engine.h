@@ -98,10 +98,7 @@ public:
     */
     void setOutputDeviceID(int deviceID);
 
-    /*!
-    @brief adds an OSC input to the engine, making it active.
-    @param[in] oscInput osc input object to activate
-    */
+    [[deprecated("deprecated, handled automatically between construction and destruction")]]
     void addOscInput( pdsp::osc::Input & oscInput );
 
 #ifndef __ANDROID__
@@ -202,9 +199,6 @@ private:
     std::vector<pdsp::midi::Input*> controllerLinkedMidis;
     bool                            hasMidiIn;
 #endif
-
-    std::vector<pdsp::osc::Input*>      oscIns;
-    bool                                hasOscIn;
     
     int state;
 
