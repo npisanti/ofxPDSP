@@ -175,6 +175,16 @@ public:
     */   
     void setBackgroundAudio( bool active );
 
+    /*!
+    @brief notify the engine that input has been disconnected
+    */
+    void notifyDisconnectedInput();
+
+    /*!
+    @brief notify the engine that output has been disconnected
+    */
+    void notifyDisconnectedOutput();
+
 /*!
     @cond HIDDEN_SYMBOLS
 */
