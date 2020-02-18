@@ -21,6 +21,7 @@
 #include "interpolation/cosine.h"
 #include "interpolation/smooth.h"
 #include "interpolation/hermite.h"
+#include "interpolation/cubic.h"
 
 #include "dsphelpers/nonlinear1.h"
 #include "dsphelpers/phazorShifter.h"
