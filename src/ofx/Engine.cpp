@@ -132,6 +132,7 @@ void pdsp::Engine::setup( int sampleRate, int bufferSize, int nBuffers){
     if(state!=closedState){ 
         ofLogNotice()<<"[pdsp] engine: changing setup, shutting down stream";
         stop();
+        handleDisconnectedDevices();
         if( inStreamActive ){
             inputStream.close();
         }
@@ -260,6 +261,7 @@ void pdsp::Engine::setup( int sampleRate, int bufferSize, int nBuffers){
 }
 
 void pdsp::Engine::start(){
+    handleDisconnectedDevices();
     if(inStreamActive && state < startedState){
         inputStream.start();
     }
@@ -274,6 +276,7 @@ void pdsp::Engine::start(){
 
 void pdsp::Engine::stop(){
     if(state==startedState){
+        handleDisconnectedDevices();
         if( inStreamActive ){
             inputStream.stop();
         }
@@ -308,6 +311,8 @@ void pdsp::Engine::close(){
     for(pdsp::ExtSequencer * &out : ExtSequencer::instances) {
         out->close();
     }
+
+    handleDisconnectedDevices();
 
     if( inStreamActive ){
         inputStream.close();
@@ -430,4 +435,53 @@ void pdsp::Engine::setBackgroundAudio( bool active ){
 
 void pdsp::Engine::setApi( ofSoundDevice::Api api ){
     this->api = api;
+}
+
+void pdsp::Engine::handleDisconnectedDevices() {
+    if (inStreamActive) {
+        bool inDeviceFound = false;
+        bool outDeviceFound = false;
+        if (inputStream.getSoundStream()->getNumInputChannels() > 0) {
+            ofSoundDevice inDevice = inputStream.getSoundStream()->getInDevice();
+            for (ofSoundDevice device : inputStream.getDeviceList()) {
+                if (inDevice.name == device.name) {
+                    inDeviceFound = true;
+                }
+            }
+        }
+        if (inputStream.getSoundStream()->getNumOutputChannels() > 0) {
+            ofSoundDevice outDevice = inputStream.getSoundStream()->getOutDevice();
+            for (ofSoundDevice device : inputStream.getDeviceList()) {
+                if (outDevice.name == device.name) {
+                    outDeviceFound = true;
+                }
+            }
+        }
+        if (!inDeviceFound && !outDeviceFound) {
+            inStreamActive = false;
+        }
+    }
+    if (outStreamActive) {
+        bool inDeviceFound = false;
+        bool outDeviceFound = false;
+        if (outputStream.getSoundStream()->getNumInputChannels() > 0) {
+            ofSoundDevice inDevice = outputStream.getSoundStream()->getInDevice();
+            for (ofSoundDevice device : outputStream.getDeviceList()) {
+                if (inDevice.name == device.name) {
+                    inDeviceFound = true;
+                }
+            }
+        }
+        if (outputStream.getSoundStream()->getNumOutputChannels() > 0) {
+            ofSoundDevice outDevice = outputStream.getSoundStream()->getOutDevice();
+            for (ofSoundDevice device : outputStream.getDeviceList()) {
+                if (outDevice.name == device.name) {
+                    outDeviceFound = true;
+                }
+            }
+        }
+        if (!inDeviceFound && !outDeviceFound) {
+            outStreamActive = false;
+        }
+    }
 }
