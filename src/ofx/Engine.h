@@ -177,12 +177,14 @@ public:
 
 private:
 
+    void handleDisconnectedDevices();
+
     ofSoundStream inputStream;
     ofSoundStream outputStream;
     ofSoundDevice::Api api;
     
     bool inStreamActive;
-    bool outStreamActive;    
+    bool outStreamActive;
     
     int inputID;
     int outputID;
