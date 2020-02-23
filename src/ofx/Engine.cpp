@@ -448,9 +448,9 @@ void pdsp::Engine::handleDisconnectedDevices() {
                 }
             }
         }
-        if (outputStream.getSoundStream()->getNumOutputChannels() > 0) {
-            ofSoundDevice outDevice = outputStream.getSoundStream()->getOutDevice();
-            for (ofSoundDevice device : outputStream.getDeviceList()) {
+        if (inputStream.getSoundStream()->getNumOutputChannels() > 0) {
+            ofSoundDevice outDevice = inputStream.getSoundStream()->getOutDevice();
+            for (ofSoundDevice device : inputStream.getDeviceList()) {
                 if (outDevice.name == device.name) {
                     outDeviceFound = true;
                 }
