@@ -27,7 +27,7 @@ void ofApp::setup(){
                                         delaySend >> delayR >> engine.audio_out(1);
    
     d1_time_ctrl >> delayL.in_time();
-    d2_time_ctrl >> delayL.in_time();
+    d2_time_ctrl >> delayR.in_time();
    
     d_fb_ctrl >> fb_node >> delayL.in_feedback();
                  fb_node >> delayR.in_feedback();
