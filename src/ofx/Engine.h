@@ -177,6 +177,8 @@ public:
 
 private:
 
+    void handleDisconnectedDevices();
+
     ofSoundStream inputStream;
     ofSoundStream outputStream;
     ofSoundDevice::Api api;
