@@ -298,17 +298,17 @@ void pdsp::Engine::close(){
 
 #ifndef __ANDROID__
     if(hasMidiIn){
-        for( pdsp::midi::Input * &in : midiIns ){
+        for( pdsp::midi::Input* & in : midiIns ){
             in->closePort();
         } 
     }
 #endif
 
-    for (pdsp::osc::Input * &in : pdsp::osc::Input::instances) {
+    for (pdsp::osc::Input* & in : pdsp::osc::Input::instances) {
         in->close();
     }
 
-    for(pdsp::ExtSequencer * &out : ExtSequencer::instances) {
+    for(pdsp::ExtSequencer* & out : ExtSequencer::instances) {
         out->close();
     }
 
@@ -338,7 +338,7 @@ void pdsp::Engine::audioOut(ofSoundBuffer &outBuffer) {
 #ifndef __ANDROID__
     // midi input processing
     if(hasMidiIn){
-        for( pdsp::midi::Input * &in : midiIns){
+        for( pdsp::midi::Input* & in : midiIns){
             in->processMidi( bufferSize );
         } 
         for(int i=0; i<(int)controllers.size(); ++i){
@@ -347,7 +347,7 @@ void pdsp::Engine::audioOut(ofSoundBuffer &outBuffer) {
     }
 #endif
 
-    for (pdsp::osc::Input * &in : pdsp::osc::Input::instances) {
+    for (pdsp::osc::Input* & in : pdsp::osc::Input::instances) {
         in->processOsc(bufferSize);
         if (in->hasTempoChange()) {
             sequencer.setTempo(in->getTempo());
@@ -358,7 +358,7 @@ void pdsp::Engine::audioOut(ofSoundBuffer &outBuffer) {
     sequencer.process( bufferSize );
  
     // external outputs processing
-    for(pdsp::ExtSequencer * &out : ExtSequencer::instances) {
+    for(pdsp::ExtSequencer* & out : ExtSequencer::instances) {
         out->process(bufferSize);
     }
     
@@ -378,7 +378,7 @@ void pdsp::Engine::audioIn (ofSoundBuffer &inBuffer) {
 void pdsp::Engine::addMidiController( pdsp::Controller & controller, pdsp::midi::Input & midiIn ){
     
     bool midiInFound = false;
-    for( pdsp::midi::Input * &ptr : midiIns ){
+    for( pdsp::midi::Input* & ptr : midiIns ){
         if( ptr == &midiIn ){
             midiInFound = true;
         } 
@@ -389,7 +389,7 @@ void pdsp::Engine::addMidiController( pdsp::Controller & controller, pdsp::midi:
     
     bool midiControllerFound = false;
     
-    for( pdsp::Controller * &ptr : controllers ){
+    for( pdsp::Controller* & ptr : controllers ){
         if( ptr == &controller ){
             midiControllerFound = true;
             std::cout<<"[pdsp] warning! you have already added this controller, you shouldn't add it twice\n";
@@ -442,16 +442,16 @@ void pdsp::Engine::handleDisconnectedDevices() {
         bool inDeviceFound = false;
         bool outDeviceFound = false;
         if (inputStream.getSoundStream()->getNumInputChannels() > 0) {
-            ofSoundDevice inDevice = inputStream.getSoundStream()->getInDevice();
-            for (ofSoundDevice device : inputStream.getDeviceList()) {
+            const ofSoundDevice & inDevice = inputStream.getSoundStream()->getInDevice();
+            for (ofSoundDevice & device : inputStream.getDeviceList()) {
                 if (inDevice.name == device.name) {
                     inDeviceFound = true;
                 }
             }
         }
         if (inputStream.getSoundStream()->getNumOutputChannels() > 0) {
-            ofSoundDevice outDevice = inputStream.getSoundStream()->getOutDevice();
-            for (ofSoundDevice device : inputStream.getDeviceList()) {
+            const ofSoundDevice & outDevice = inputStream.getSoundStream()->getOutDevice();
+            for (ofSoundDevice & device : inputStream.getDeviceList()) {
                 if (outDevice.name == device.name) {
                     outDeviceFound = true;
                 }
@@ -465,16 +465,16 @@ void pdsp::Engine::handleDisconnectedDevices() {
         bool inDeviceFound = false;
         bool outDeviceFound = false;
         if (outputStream.getSoundStream()->getNumInputChannels() > 0) {
-            ofSoundDevice inDevice = outputStream.getSoundStream()->getInDevice();
-            for (ofSoundDevice device : outputStream.getDeviceList()) {
+            const ofSoundDevice & inDevice = outputStream.getSoundStream()->getInDevice();
+            for (ofSoundDevice & device : outputStream.getDeviceList()) {
                 if (inDevice.name == device.name) {
                     inDeviceFound = true;
                 }
             }
         }
         if (outputStream.getSoundStream()->getNumOutputChannels() > 0) {
-            ofSoundDevice outDevice = outputStream.getSoundStream()->getOutDevice();
-            for (ofSoundDevice device : outputStream.getDeviceList()) {
+            const ofSoundDevice & outDevice = outputStream.getSoundStream()->getOutDevice();
+            for (ofSoundDevice & device : outputStream.getDeviceList()) {
                 if (outDevice.name == device.name) {
                     outDeviceFound = true;
                 }
