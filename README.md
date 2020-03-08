@@ -1,6 +1,5 @@
 ofxPDSP
 ==============
-[![Build status](https://travis-ci.org/npisanti/ofxPDSP.svg?branch=master)](https://travis-ci.org/npisanti/ofxPDSP) [![Build status](https://ci.appveyor.com/api/projects/status/7iv8fc8870mkwnwv?svg=true)](https://ci.appveyor.com/project/npisanti/ofxpdsp)
 
 ofxPDSP is an [openFrameworks](https://openframeworks.cc/) addon for audio synthesis and generative music. It is based on those design principles:
 - Native c++, made to be tightly integrated into c++ projects.
@@ -13,7 +12,6 @@ ofxPDSP is an [openFrameworks](https://openframeworks.cc/) addon for audio synth
 It includes [a good selection of modules ready to be used](http://npisanti.com/ofxPDSP/md__modules.html), like antialiasied oscillators and VA filters, an FFT convolver, analog-sounding envelopes, a delay, a noise generator, a sampler and a graincloud module, biquad equalizers (normal and 2x oversampled), modules for dynamic processing, units for oversampling/downsampling and a framework for writing and sequencing generative music.
 On top of that some other classes that uses openFrameworks for adding midi and OSC in/out, serial output, sequencer monitoring, waveform plotting and scopes, other audio addon wrapping and ofParameter-compatible control.
 
-
 Documentation
 ------------
 [Here is the reference page](http://npisanti.com/ofxPDSP/md__modules.html) for a selection of the most high level classes and function (probably you won't ever need more than that).   
@@ -21,7 +19,7 @@ To learn how to use ofxPDSP also be sure to check out all the included examples,
 
 Dependencies
 ------------
-ofxPDSP requires the latest stable release of openFrameworks (0.10.1) or the master release, [ofxMidi](https://github.com/danomatika/ofxMidi), [ofxAudioFile](https://github.com/npisanti/ofxAudioFile) and ofxOsc.
+ofxPDSP requires the latest stable or master release of openFrameworks, [ofxMidi](https://github.com/danomatika/ofxMidi), [ofxAudioFile](https://github.com/npisanti/ofxAudioFile) and ofxOsc.
 
 Donate
 ------------ 

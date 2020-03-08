@@ -3,8 +3,8 @@
 // ofxPDSP
 // Nicola Pisanti, MIT License, 2016 - 2020
 
-#ifndef PDSP_LAMBDA_H_INCLUDED
-#define PDSP_LAMBDA_H_INCLUDED
+#ifndef PDSP_FUNCTIONSEQ_H_INCLUDED
+#define PDSP_FUNCTIONSEQ_H_INCLUDED
 
 #include <functional>
 #include <atomic>
@@ -15,7 +15,11 @@
 #include "../DSP/control/SequencerValueOutput.h"
 
 namespace pdsp{
-
+    
+    /*!
+    @brief powerful class for sequencing.
+    Function executed a given code with a rate defined by timing variable and by pdsp::Engine  sequencer tempo. Into the executed assignable lambda you can send out triggers or value messages to the pdsp::Function outputs
+    */    
     class Function {
         friend class SequencerProcessor;
 
@@ -141,4 +145,4 @@ namespace pdsp{
 }
 
 
-#endif // PDSP_LAMBDA_H_INCLUDED
+#endif // PDSP_FUNCTIONSEQ_H_INCLUDED
