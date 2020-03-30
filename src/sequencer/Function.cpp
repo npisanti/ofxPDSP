@@ -1,6 +1,7 @@
 
 #include "Function.h"
 
+#include <string>
 
 pdsp::SequencerGateOutput pdsp::Function::invalidGate = pdsp::SequencerGateOutput();
 
