@@ -21,11 +21,6 @@ Dependencies
 ------------
 ofxPDSP requires the latest stable or master release of openFrameworks, [ofxMidi](https://github.com/danomatika/ofxMidi), [ofxAudioFile](https://github.com/npisanti/ofxAudioFile) and ofxOsc.
 
-Donate
------------- 
-I support you, you support me!    
-If you find this code useful, consider [fueling me with coffee](https://ko-fi.com/npisanti)!
-
 Examples
 ------------    
 Check out the videos of some included examples:    
