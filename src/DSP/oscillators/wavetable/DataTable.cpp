@@ -62,7 +62,7 @@ void pdsp::DataTable::setup( int len, int maxPartials, bool harmonicAdditive ) {
 
 	int max = (len > maxPartials) ? len : maxPartials;
 	vData.resize( max );
-	for (size_t i=0; i<vData.size(); ++i){
+	for (std::size_t i=0; i<vData.size(); ++i){
 		vData[i] = 0.0f;
 	}
 }
@@ -75,7 +75,7 @@ void pdsp::DataTable::begin() {
 	if( ready() ) {
 		bSetting = true;
 		bLoaded = false;
-		for (size_t i=0; i<vData.size(); ++i){
+		for (std::size_t i=0; i<vData.size(); ++i){
 			vData[i] = 0.0f;
 		}
 		lastIndex = 0;

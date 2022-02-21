@@ -94,7 +94,7 @@ public:
     @brief Uses the selected channel as output for the patching operation. 0 is for the left channel (default output) and 1 is for the right channel. Index values outside of range are remapped to 0 or 1. The input channel remains the in_signal() as pdsp::BasiVerb has mono input.
     @param[in] index channel index
     */  
-    Patchable& ch( size_t index );
+    Patchable& ch( std::size_t index );
     
     /*!
     @brief returns a value between 0.0f and 1.0f that rapresent the mod LFO signal. This method is thread-safe.

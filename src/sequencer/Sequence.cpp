@@ -119,7 +119,7 @@ void pdsp::Sequence::executeGenerateScore() noexcept {
     if(modified){
         score.swap( nextScore ); // swap score in a thread-safe section
         std::sort (score.begin(), score.end(), messageSort); //sort the messages
-        for( size_t i=0; i<score.size(); ++i){
+        for( std::size_t i=0; i<score.size(); ++i){
             score[i].time *= steplen;
         }
         id = (id == 1) ? 2 : 1;

@@ -21,11 +21,11 @@ void pdsp::Wrapper::setChannels ( int inputs, int outputs ) {
     }
 
     addOutput( "silent", dummyOut);    
-    for ( size_t i = 0; i < this->outputs.size(); ++i) {
+    for ( std::size_t i = 0; i < this->outputs.size(); ++i) {
         addOutput( ofToString(i).c_str(), this->outputs[i] );
     }
             
-    for ( size_t i = 0; i < this->inputs.size(); ++i) {
+    for ( std::size_t i = 0; i < this->inputs.size(); ++i) {
         addInput( ofToString(i).c_str(), this->inputs[i] );
     }
             

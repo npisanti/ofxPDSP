@@ -41,13 +41,13 @@ void ofApp::setup(){
   
     sequence.steplen = 1.0 / 16.0;
     sequence.begin();
-        for(size_t i=0; i<channel1.size(); ++i){
+        for(std::size_t i=0; i<channel1.size(); ++i){
             if( channel1[i]>0.0f){
                 sequence.out( 0 ).delay( i/16.0 ).bang( channel1[i] ); 
                 sequence.out( 0 ).delay( (i+duration)/16.0 ).bang( 0.0f); 
             }
         }
-        for(size_t i=0; i<channel2.size(); ++i){
+        for(std::size_t i=0; i<channel2.size(); ++i){
             if( channel2[i]>0.0f){
                 sequence.out( 1 ).delay( i/16.0 ).bang( channel2[i] ); 
                 sequence.out( 1 ).delay( (i+duration)/16.0 ).bang( 0.0f ); 

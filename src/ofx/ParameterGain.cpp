@@ -25,23 +25,23 @@ void pdsp::ParameterGain::patch(){
     value >> dBtoLin;
 }
 
-void pdsp::ParameterGain::channels( size_t size ){
-    size_t oldsize = amps.size();
+void pdsp::ParameterGain::channels( std::size_t size ){
+    std::size_t oldsize = amps.size();
     if( size >= oldsize ){
         amps.resize( size );
-        for( size_t i=oldsize; i<amps.size(); ++i ){
+        for( std::size_t i=oldsize; i<amps.size(); ++i ){
             amps[i] = new Amp();
             dBtoLin >> amps[i]->in_mod();
         }        
     }else{
-        for( size_t i=size; i<oldsize; ++i ){
+        for( std::size_t i=size; i<oldsize; ++i ){
             delete amps[i];
         }
         amps.resize( size );
     }
 }
 
-pdsp::Patchable& pdsp::ParameterGain::ch( size_t index ){
+pdsp::Patchable& pdsp::ParameterGain::ch( std::size_t index ){
     if( index >= amps.size() ){
         channels(index+1);
     }
@@ -130,7 +130,7 @@ float pdsp::ParameterGain::meter_mod() const {
 
 
 // ------------------ backward compatibility ------------------------
-pdsp::Patchable& pdsp::ParameterGain::operator[]( size_t index ){
+pdsp::Patchable& pdsp::ParameterGain::operator[]( std::size_t index ){
     return ch( index );
 }
 

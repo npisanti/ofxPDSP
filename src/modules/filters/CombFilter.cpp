@@ -21,25 +21,25 @@ pdsp::CombFilter::~CombFilter(){
     channels(0);
 }
 
-void pdsp::CombFilter::channels( size_t size ){
-    size_t oldsize = delays.size();
+void pdsp::CombFilter::channels( std::size_t size ){
+    std::size_t oldsize = delays.size();
     if( size >= oldsize ){
         delays.resize( size );
-        for( size_t i=oldsize; i<delays.size(); ++i ){
+        for( std::size_t i=oldsize; i<delays.size(); ++i ){
             delays[i] = new Delay();
             p2f >> f2ms >> delays[i]->in_time();
             fbcontrol >> delays[i]->in_feedback();
             dampcontrol >> delays[i]->in_damping();
         }        
     }else{
-        for( size_t i=size; i<oldsize; ++i ){
+        for( std::size_t i=size; i<oldsize; ++i ){
             delete delays[i];
         }
         delays.resize( size );
     }
 }
 
-pdsp::Patchable& pdsp::CombFilter::ch( size_t index ){
+pdsp::Patchable& pdsp::CombFilter::ch( std::size_t index ){
     if( index >= delays.size() ){
         channels(index+1);
     }
@@ -72,7 +72,7 @@ float pdsp::CombFilter::meter_pitch() const{
 
 //------------------ legacy -----------------------------------------
 
-pdsp::Patchable& pdsp::CombFilter::operator[]( size_t index ){
+pdsp::Patchable& pdsp::CombFilter::operator[]( std::size_t index ){
     return ch( index );
 }
 

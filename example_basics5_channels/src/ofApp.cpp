@@ -25,7 +25,7 @@ void ofApp::setup(){
     drift_lfo.resize( oscillators.size() );
     
 
-    for(size_t i=0; i<oscillators.size(); ++i){
+    for(std::size_t i=0; i<oscillators.size(); ++i){
         float pan = pdsp::spread( i, oscillators.size(), 0.5f );
         // ch() method let you access signal channels of the filter
         oscillators[i].out_saw() * pdsp::panL(pan) >> filter.ch(0); 
@@ -48,7 +48,7 @@ void ofApp::setup(){
     // --------------- GUI -------------------------- 
     gui.setup("gui", "settings.xml", 20, 20);
     
-    for(size_t i=0; i<pitches.size(); ++i){
+    for(std::size_t i=0; i<pitches.size(); ++i){
         gui.add(pitches[i].set("pitch "+ofToString(i)+" coarse", 36 + 5*i, 24, 96) );
         gui.add(pitches[i].set("pitch "+ofToString(i)+" fine", 0.0f, -0.5f, 0.5f) );
     }

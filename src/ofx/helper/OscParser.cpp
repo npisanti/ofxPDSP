@@ -31,7 +31,7 @@ pdsp::osc::OscParser::OscParser(){
     
     
 pdsp::osc::OscParser::~OscParser(){    
-    for (size_t i = 0; i < channels.size(); ++i){
+    for (std::size_t i = 0; i < channels.size(); ++i){
         channels[i]->deallocate();
         delete channels[i];
         channels[i] = nullptr;
@@ -51,9 +51,9 @@ pdsp::SequencerGateOutput& pdsp::osc::OscParser::out_trig( int out ){
             }
         }
     }else{
-        size_t oldsize = channels.size();
+        std::size_t oldsize = channels.size();
         channels.resize( out+1 );
-        for( size_t i=oldsize; i<channels.size(); ++i ){
+        for( std::size_t i=oldsize; i<channels.size(); ++i ){
             channels[i] = new OscChannel();
         }
     }
@@ -78,9 +78,9 @@ pdsp::SequencerValueOutput& pdsp::osc::OscParser::out_value( int out ){
             }
         }
     }else{
-        size_t oldsize = channels.size();
+        std::size_t oldsize = channels.size();
         channels.resize( out+1 );
-        for( size_t i=oldsize; i<channels.size(); ++i ){
+        for( std::size_t i=oldsize; i<channels.size(); ++i ){
             channels[i] = new OscChannel();
         }
     }
@@ -94,9 +94,9 @@ pdsp::SequencerValueOutput& pdsp::osc::OscParser::out_value( int out ){
 
 std::function<float(float)> & pdsp::osc::OscParser::parser( int argument ){
     if( argument >= (int) channels.size() ){
-        size_t oldsize = channels.size();
+        std::size_t oldsize = channels.size();
         channels.resize( argument+1 );
-        for( size_t i=oldsize; i<channels.size(); ++i ){
+        for( std::size_t i=oldsize; i<channels.size(); ++i ){
             channels[i] = new OscChannel();
         }
     }
@@ -156,9 +156,9 @@ void pdsp::osc::OscParser::process( ofxOscMessage msg, int sample ){
 void pdsp::osc::OscParser::initTo( int argument, float value ){
     
     if( argument >= (int) channels.size() ){
-        size_t oldsize = channels.size();
+        std::size_t oldsize = channels.size();
         channels.resize( argument+1 );
-        for( size_t i=oldsize; i<channels.size(); ++i ){
+        for( std::size_t i=oldsize; i<channels.size(); ++i ){
             channels[i] = new OscChannel();
         }
     }
@@ -166,7 +166,7 @@ void pdsp::osc::OscParser::initTo( int argument, float value ){
 }
 
 void pdsp::osc::OscParser::clear( bool sendClearMessage ){
-    for( size_t i=0; i<channels.size(); ++i ){
+    for( std::size_t i=0; i<channels.size(); ++i ){
         if( channels[i]->messageBuffer != nullptr ){
             channels[i]->messageBuffer->clearMessages();
 
@@ -181,7 +181,7 @@ void pdsp::osc::OscParser::clear( bool sendClearMessage ){
 }
 
 void pdsp::osc::OscParser::processDestinations( int bufferSize ) {     
-    for(size_t i=0; i<channels.size(); ++i ){
+    for(std::size_t i=0; i<channels.size(); ++i ){
         if( channels[i]->messageBuffer != nullptr ){
             channels[i]->messageBuffer->processDestination(bufferSize);
         }              

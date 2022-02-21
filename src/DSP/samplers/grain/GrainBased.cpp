@@ -12,7 +12,7 @@ pdsp::GrainBased::GrainBased() {
 pdsp::GrainBased::~GrainBased(){
     unitCount--;
     if(unitCount == 0){
-        for (size_t i=0; i<tables.size(); ++i){
+        for (std::size_t i=0; i<tables.size(); ++i){
             delete tables[i];
             tables[i] = nullptr;
         }

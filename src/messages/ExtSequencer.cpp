@@ -8,7 +8,7 @@ pdsp::ExtSequencer::ExtSequencer() {
 }
 
 pdsp::ExtSequencer::~ExtSequencer() {
-    for (size_t i = 0; i < instances.size(); ++i) {
+    for (std::size_t i = 0; i < instances.size(); ++i) {
         if (instances[i] == this) {
             instances.erase(instances.begin() + i);
             break;

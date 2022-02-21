@@ -28,28 +28,28 @@ void pdsp::AAPeakEQ::patch(){
 
 
 
-void pdsp::AAPeakEQ::channels( size_t size ){
+void pdsp::AAPeakEQ::channels( std::size_t size ){
     
-    size_t oldsize = submodules.size();
+    std::size_t oldsize = submodules.size();
     
     if( size >= oldsize ){
         submodules.resize( size );
                 
-        for (size_t i=oldsize; i<submodules.size(); ++i ){
+        for (std::size_t i=oldsize; i<submodules.size(); ++i ){
             submodules[i] = new pdsp::AAPeakEQ::Submodule();
             freq >> submodules[i]->in("freq");
             Q >> submodules[i]->in("Q");
             gain >> submodules[i]->in("gain");            
         }        
     }else{
-        for (size_t i=size; i<oldsize; ++i ){
+        for (std::size_t i=size; i<oldsize; ++i ){
             delete submodules[i];
         }
         submodules.resize( size );
     }
 }
 
-pdsp::Patchable& pdsp::AAPeakEQ::ch( size_t index ){
+pdsp::Patchable& pdsp::AAPeakEQ::ch( std::size_t index ){
     if( index >= submodules.size() ){
         channels(index+1);
     }
@@ -80,7 +80,7 @@ pdsp::Patchable& pdsp::AAPeakEQ::in_gain(){
 
 // ----------------- backward compatibility -------------------------
 
-pdsp::Patchable& pdsp::AAPeakEQ::operator[]( size_t index ){
+pdsp::Patchable& pdsp::AAPeakEQ::operator[]( std::size_t index ){
     return ch( index );
 }
 

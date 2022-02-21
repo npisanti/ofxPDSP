@@ -183,7 +183,7 @@ pdsp::Patchable& pdsp::GrainCloud::in_direction(){
     return in("direction");
 }
 
-pdsp::Patchable& pdsp::GrainCloud::ch( size_t index ){
+pdsp::Patchable& pdsp::GrainCloud::ch( std::size_t index ){
     wrapChannelIndex( index, 2, "pdsp::GrainCloud" );
     
     switch( index ){

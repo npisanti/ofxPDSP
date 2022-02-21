@@ -56,7 +56,7 @@ pdsp::Patchable& pdsp::BitNoise::in_trig(){
     return in("trig");
 }
 
-pdsp::Patchable& pdsp::BitNoise::ch( size_t index ){
+pdsp::Patchable& pdsp::BitNoise::ch( std::size_t index ){
     
     wrapChannelIndex( index, 2, "pdsp::BitNoise" );
     
@@ -68,7 +68,7 @@ pdsp::Patchable& pdsp::BitNoise::ch( size_t index ){
     return out("decimated_L");
 }
 
-pdsp::Patchable& pdsp::BitNoise::ch_noise( size_t index ){
+pdsp::Patchable& pdsp::BitNoise::ch_noise( std::size_t index ){
     
     wrapChannelIndex( index );
     

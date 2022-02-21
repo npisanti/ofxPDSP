@@ -19,7 +19,7 @@ pdsp::Function::Function(){
 }
 
 pdsp::Function::~Function(){
-    for( size_t i=0; i<instances.size(); ++i ){
+    for( std::size_t i=0; i<instances.size(); ++i ){
         if( instances[i] == this ){
             instances.erase(instances.begin() + i);
             break;
@@ -29,7 +29,7 @@ pdsp::Function::~Function(){
 
 pdsp::SequencerGateOutput& pdsp::Function::out_trig( std::string name ){
     
-    for( size_t i=0; i<outputs.size(); ++i ){
+    for( std::size_t i=0; i<outputs.size(); ++i ){
         if( outputs[i].name == name ){
             if(outputs[i].value_out!=nullptr){
                 std::cout<<"[pdsp] warning! this lambda output name was already used as value output, returning dummy gate output\n";
@@ -59,7 +59,7 @@ pdsp::SequencerGateOutput& pdsp::Function::out_trig( int number ){
         return invalidGate;
     }
     
-    for( size_t i=0; i<outputs.size(); ++i ){
+    for( std::size_t i=0; i<outputs.size(); ++i ){
         if( outputs[i].number == number ){
             if(outputs[i].value_out!=nullptr){
                 std::cout<<"[pdsp] warning! this lambda output number id was already used as value output, returning dummy gate output\n";
@@ -82,7 +82,7 @@ pdsp::SequencerGateOutput& pdsp::Function::out_trig( int number ){
 }
 
 pdsp::SequencerValueOutput& pdsp::Function::out_value( std::string name ){
-    for( size_t i=0; i<outputs.size(); ++i ){
+    for( std::size_t i=0; i<outputs.size(); ++i ){
         if( outputs[i].name == name ){
             if(outputs[i].gate_out!=nullptr){
                 std::cout<<"[pdsp] warning! this lambda output name was already used as value output, returning dummy gate output\n";
@@ -111,7 +111,7 @@ pdsp::SequencerValueOutput& pdsp::Function::out_value( int number ){
         return invalidValue;
     }
     
-    for( size_t i=0; i<outputs.size(); ++i ){
+    for( std::size_t i=0; i<outputs.size(); ++i ){
         if( outputs[i].number == number ){
             if(outputs[i].gate_out!=nullptr){
                 std::cout<<"[pdsp] warning! this lambda output number id was already used as value output, returning dummy gate output\n";
@@ -134,7 +134,7 @@ pdsp::SequencerValueOutput& pdsp::Function::out_value( int number ){
 }
 
 void pdsp::Function::send( std::string name, float value ) noexcept{
-    for( size_t i=0; i<outputs.size(); ++i ){
+    for( std::size_t i=0; i<outputs.size(); ++i ){
         if( outputs[i].name == name ){
             outputs[i].messageBuffer->addMessage( value, sample );
             return;
@@ -145,7 +145,7 @@ void pdsp::Function::send( std::string name, float value ) noexcept{
 }
 
 void pdsp::Function::send( int number, float value ) noexcept{
-    for( size_t i=0; i<outputs.size(); ++i ){
+    for( std::size_t i=0; i<outputs.size(); ++i ){
         if( outputs[i].number == number ){
             outputs[i].messageBuffer->addMessage( value, sample );
             return;
@@ -157,7 +157,7 @@ void pdsp::Function::send( int number, float value ) noexcept{
 
 void pdsp::Function::process( double playhead, double barsPerSample, int bufferSize ){
     
-    for(size_t i=0; i<outputs.size(); ++i ){
+    for(std::size_t i=0; i<outputs.size(); ++i ){
         if( outputs[i].messageBuffer != nullptr ){
             outputs[i].messageBuffer->clearMessages();
         }              
@@ -181,7 +181,7 @@ void pdsp::Function::process( double playhead, double barsPerSample, int bufferS
         }
     }
     
-    for(size_t i=0; i<outputs.size(); ++i ){
+    for(std::size_t i=0; i<outputs.size(); ++i ){
         if( outputs[i].messageBuffer != nullptr ){
             outputs[i].messageBuffer->processDestination( bufferSize );
         }              
@@ -191,12 +191,12 @@ void pdsp::Function::process( double playhead, double barsPerSample, int bufferS
 
 
 void pdsp::Function::clear( int bufferSize ){
-    for(size_t i=0; i<outputs.size(); ++i ){
+    for(std::size_t i=0; i<outputs.size(); ++i ){
         if( outputs[i].messageBuffer != nullptr ){
             outputs[i].messageBuffer->clearMessages();
         }              
     } 
-    for(size_t i=0; i<outputs.size(); ++i ){
+    for(std::size_t i=0; i<outputs.size(); ++i ){
         if( outputs[i].messageBuffer != nullptr ){
             outputs[i].messageBuffer->processDestination( bufferSize );
         }              

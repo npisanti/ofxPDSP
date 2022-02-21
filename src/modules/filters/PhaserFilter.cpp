@@ -21,25 +21,25 @@ pdsp::PhaserFilter::~PhaserFilter(){
     channels(0);
 }
 
-void pdsp::PhaserFilter::channels( size_t size ){
-    size_t oldsize = phasers.size();
+void pdsp::PhaserFilter::channels( std::size_t size ){
+    std::size_t oldsize = phasers.size();
     if( size >= oldsize ){
         phasers.resize( size );
-        for( size_t i=oldsize; i<phasers.size(); ++i ){
+        for( std::size_t i=oldsize; i<phasers.size(); ++i ){
             phasers[i] = new APF4();
             p2f >> phasers[i]->in_freq();
             fbcontrol >> phasers[i]->in_feedback();
             spreadcontrol >> phasers[i]->in_spread();
         }        
     }else{
-        for( size_t i=size; i<oldsize; ++i ){
+        for( std::size_t i=size; i<oldsize; ++i ){
             delete phasers[i];
         }
         phasers.resize( size );
     }
 }
 
-pdsp::Patchable& pdsp::PhaserFilter::ch( size_t index ){
+pdsp::Patchable& pdsp::PhaserFilter::ch( std::size_t index ){
     if( index >= phasers.size() ){
         channels(index+1);
     }
@@ -75,7 +75,7 @@ float pdsp::PhaserFilter::meter_pitch() const{
 }
 
         
-pdsp::Patchable& pdsp::PhaserFilter::operator[]( size_t index ){
+pdsp::Patchable& pdsp::PhaserFilter::operator[]( std::size_t index ){
     return ch( index );
 }
 

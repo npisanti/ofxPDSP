@@ -30,7 +30,7 @@ pdsp::osc::Input::Input() {
 
 
 pdsp::osc::Input::~Input(){
-    for (size_t i = 0; i < instances.size(); ++i) {
+    for (std::size_t i = 0; i < instances.size(); ++i) {
         if (instances[i] == this) {
             instances.erase(instances.begin() + i);
             break;
@@ -40,7 +40,7 @@ pdsp::osc::Input::~Input(){
     if(connected){
         close();
     }
-    for( size_t i=0; i<parsers.size(); ++i ){
+    for( std::size_t i=0; i<parsers.size(); ++i ){
         delete parsers[i];
     }
 }
@@ -80,7 +80,7 @@ void pdsp::osc::Input::linkTempo( string oscAddress, int argument ){
 }
 
 int pdsp::osc::Input::checkParser( std::string oscAddress ){
-    for( size_t i=0; i<parsers.size(); ++i ){
+    for( std::size_t i=0; i<parsers.size(); ++i ){
         if( parsers[i]->address == oscAddress ){
             return i;
         }
@@ -109,7 +109,7 @@ std::function<float(float)> & pdsp::osc::Input::parser( string oscAddress, int a
 }
 
 void pdsp::osc::Input::initTo( string oscAddress, int argument, float value  ){
-    for( size_t i=0; i<parsers.size(); ++i ){
+    for( std::size_t i=0; i<parsers.size(); ++i ){
         if( parsers[i]->address == oscAddress ){
             parsers[i]->initTo( argument, value );
             return;
@@ -167,13 +167,13 @@ void pdsp::osc::Input::processOsc( int bufferSize ) noexcept {
         }
         
         // clean the message buffers
-        for (size_t i = 0; i < parsers.size(); ++i){
+        for (std::size_t i = 0; i < parsers.size(); ++i){
             parsers[i]->clear( sendClearMessages );
         }
         
         // adds the messages to the buffers, only the first arg of each osc message is read, as float
         for(_PositionedOscMessage &osc : readVector){
-            for( size_t k=0; k<parsers.size(); ++k){
+            for( std::size_t k=0; k<parsers.size(); ++k){
                 if( parsers[k]->address == osc.message.getAddress() ){
                     parsers[k]->process( osc.message, osc.sample );
                 }
@@ -201,7 +201,7 @@ void pdsp::osc::Input::processOsc( int bufferSize ) noexcept {
         }
         
         // now process all the linked sequencers
-        for (size_t i = 0; i < parsers.size(); ++i){
+        for (std::size_t i = 0; i < parsers.size(); ++i){
             parsers[i]->processDestinations( bufferSize );
         }   
     }

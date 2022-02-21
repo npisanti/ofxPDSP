@@ -24,26 +24,26 @@ void pdsp::HighCut::patch(){
 
 }
 
-void pdsp::HighCut::channels( size_t size ){
+void pdsp::HighCut::channels( std::size_t size ){
     
-    size_t oldsize = submodules.size();
+    std::size_t oldsize = submodules.size();
     
     if( size >= oldsize ){
         submodules.resize( size );
                 
-        for (size_t i=oldsize; i<submodules.size(); ++i ){
+        for (std::size_t i=oldsize; i<submodules.size(); ++i ){
             submodules[i] = new pdsp::HighCut::Submodule();
             freq >> submodules[i]->in("freq");          
         }        
     }else{
-        for( size_t i=size; i<oldsize; ++i ){
+        for( std::size_t i=size; i<oldsize; ++i ){
             delete submodules[i];
         }
         submodules.resize( size );
     }
 }
 
-pdsp::Patchable& pdsp::HighCut::ch( size_t index ){
+pdsp::Patchable& pdsp::HighCut::ch( std::size_t index ){
     if( index >= submodules.size() ){
         channels(index+1);
     }
@@ -65,7 +65,7 @@ pdsp::Patchable& pdsp::HighCut::out_signal(){
 
 // ----------------- backward compatibility -------------------------
 
-pdsp::Patchable& pdsp::HighCut::operator[]( size_t index ){
+pdsp::Patchable& pdsp::HighCut::operator[]( std::size_t index ){
     return ch( index );
 }
 

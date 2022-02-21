@@ -29,7 +29,7 @@ public:
     @brief Uses the selected channel as input/output for the patching operation. 0 is for the left channel (default input/output) and 1 is for the right channel. Index values outside of range are remapped to 0 or 1.
     @param[in] index channel index
     */  
-    Patchable& ch( size_t index );
+    Patchable& ch( std::size_t index );
 
     /*!
     @brief Sets "speed" as selected input and returns this module ready to be patched. This is the chorus modulation rate in hertz. Init default value is 0.25hz.

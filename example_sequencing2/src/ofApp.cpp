@@ -16,7 +16,7 @@ void ofApp::setup(){
         // generates the seq every 4 bars + fills
         if( dseq.frame() % 64 == 0 || dseq.frame() % 128 == 112 ){ 
             states[0] = 0; 
-            for(size_t i=1; i<states.size();++i){
+            for(std::size_t i=1; i<states.size();++i){
                 if( i%2==0 ){
                     states[i] = dseq.dice(4);
                 }else{

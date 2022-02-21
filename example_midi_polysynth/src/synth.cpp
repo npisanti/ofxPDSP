@@ -5,7 +5,7 @@ void PolySynth::setup(int numVoices ){
     
     voices.resize( numVoices );
     
-    for( size_t i=0; i<voices.size(); ++i ){
+    for( std::size_t i=0; i<voices.size(); ++i ){
         voices[i].setup( *this, i );
     }   
     

@@ -178,7 +178,7 @@ pdsp::Patchable& pdsp::BasiVerb::in_mod_amount(){
     return in("mod_amount");
 }
 
-pdsp::Patchable& pdsp::BasiVerb::ch( size_t index ){
+pdsp::Patchable& pdsp::BasiVerb::ch( std::size_t index ){
     
     wrapChannelIndex( index, 2, "pdsp::BasiVerb" );
     

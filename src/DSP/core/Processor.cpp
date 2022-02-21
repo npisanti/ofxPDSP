@@ -15,7 +15,7 @@ void pdsp::Processor::process(const int &bufferSize) noexcept{
         OutputNode::nextTurn();
         Preparable::setTurnBufferSize(bufferSize);
 
-        for (size_t i=0; i<channels.size(); ++i){
+        for (std::size_t i=0; i<channels.size(); ++i){
                 channels[i].process(bufferSize);
         }
 }

@@ -30,24 +30,24 @@ pdsp::Ducker::~Ducker(){
     channels( 0 );
 }
     
-void pdsp::Ducker::channels( size_t size ){
-    size_t oldsize = amps.size();
+void pdsp::Ducker::channels( std::size_t size ){
+    std::size_t oldsize = amps.size();
     if( size >= oldsize ){
         amps.resize( size );
-        for (size_t i=oldsize; i<amps.size(); ++i ){
+        for (std::size_t i=oldsize; i<amps.size(); ++i ){
             amps[i] = new Amp();
             envAmt    >> amps[i]->in_mod();
             cleanPart >> amps[i]->in_mod();
         }        
     }else{
-        for( size_t i=size; i<oldsize; ++i ){
+        for( std::size_t i=size; i<oldsize; ++i ){
             delete amps[i];
         }
         amps.resize( size );
     }
 }
 
-pdsp::Patchable& pdsp::Ducker::ch( size_t index ){
+pdsp::Patchable& pdsp::Ducker::ch( std::size_t index ){
     if( index >= amps.size() ){
         channels(index+1);
     }
@@ -92,7 +92,7 @@ void pdsp::Ducker::setReleaseCurve(float hardness) {
 
 // ----------------- backward compatibility -------------------------
 
-pdsp::Patchable& pdsp::Ducker::operator[]( size_t index ){
+pdsp::Patchable& pdsp::Ducker::operator[]( std::size_t index ){
     return ch( index );
 }
 

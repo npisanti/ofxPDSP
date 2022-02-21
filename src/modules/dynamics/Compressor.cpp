@@ -133,7 +133,7 @@ void pdsp::Compressor::peak(){
     repatch(); 
 }
 
-pdsp::Patchable& pdsp::Compressor::ch( size_t index ){
+pdsp::Patchable& pdsp::Compressor::ch( std::size_t index ){
     wrapChannelIndex( index, 2, "pdsp::Compressor" );
     
     switch( index ){

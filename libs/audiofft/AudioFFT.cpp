@@ -55,22 +55,22 @@ namespace audiofft
       AudioFFTImpl(const AudioFFTImpl&) = delete;
       AudioFFTImpl& operator=(const AudioFFTImpl&) = delete;
       virtual ~AudioFFTImpl() = default;
-      virtual void init(size_t size) = 0;
+      virtual void init(std::size_t size) = 0;
       virtual void fft(const float* data, float* re, float* im) = 0;
       virtual void ifft(float* data, const float* re, const float* im) = 0;
     };
 
 
-    constexpr bool IsPowerOf2(size_t val)
+    constexpr bool IsPowerOf2(std::size_t val)
     {
       return (val == 1 || (val & (val-1)) == 0);
     }
 
 
     template<typename TypeDest, typename TypeSrc>
-    void ConvertBuffer(TypeDest* dest, const TypeSrc* src, size_t len)
+    void ConvertBuffer(TypeDest* dest, const TypeSrc* src, std::size_t len)
     {
-      for (size_t i=0; i<len; ++i)
+      for (std::size_t i=0; i<len; ++i)
       {
         dest[i] = static_cast<TypeDest>(src[i]);
       }
@@ -78,9 +78,9 @@ namespace audiofft
 
 
     template<typename TypeDest, typename TypeSrc, typename TypeFactor>
-    void ScaleBuffer(TypeDest* dest, const TypeSrc* src, const TypeFactor factor, size_t len)
+    void ScaleBuffer(TypeDest* dest, const TypeSrc* src, const TypeFactor factor, std::size_t len)
     {
-      for (size_t i=0; i<len; ++i)
+      for (std::size_t i=0; i<len; ++i)
       {
         dest[i] = static_cast<TypeDest>(static_cast<TypeFactor>(src[i]) * factor);
       }
@@ -114,7 +114,7 @@ namespace audiofft
     OouraFFT(const OouraFFT&) = delete;
     OouraFFT& operator=(const OouraFFT&) = delete;
 
-    virtual void init(size_t size) override
+    virtual void init(std::size_t size) override
     {
       if (_size != size)
       {
@@ -148,7 +148,7 @@ namespace audiofft
           *(i++) = static_cast<float>(-(*(b++)));
         }
       }
-      const size_t size2 = _size / 2;
+      const std::size_t size2 = _size / 2;
       re[size2] = -im[0];
       im[0] = 0.0;
       im[size2] = 0.0;
@@ -177,7 +177,7 @@ namespace audiofft
     }
 
   private:
-    size_t _size;
+    std::size_t _size;
     std::vector<int> _ip;
     std::vector<double> _w;
     std::vector<double> _buffer;
@@ -801,7 +801,7 @@ namespace audiofft
       init(0);
     }
 
-    virtual void init(size_t size) override
+    virtual void init(std::size_t size) override
     {
       if (_fftSetup)
       {
@@ -829,7 +829,7 @@ namespace audiofft
 
     virtual void fft(const float* data, float* re, float* im) override
     {
-      const size_t size2 = _size / 2;
+      const std::size_t size2 = _size / 2;
       DSPSplitComplex splitComplex;
       splitComplex.realp = re;
       splitComplex.imagp = im;
@@ -845,7 +845,7 @@ namespace audiofft
 
     virtual void ifft(float* data, const float* re, const float* im) override
     {
-      const size_t size2 = _size / 2;
+      const std::size_t size2 = _size / 2;
       ::memcpy(_re.data(), re, size2 * sizeof(float));
       ::memcpy(_im.data(), im, size2 * sizeof(float));
       _im[0] = re[size2];
@@ -859,8 +859,8 @@ namespace audiofft
     }
 
   private:
-    size_t _size;
-    size_t _powerOf2;
+    std::size_t _size;
+    std::size_t _powerOf2;
     FFTSetup _fftSetup;
     std::vector<float> _re;
     std::vector<float> _im;
@@ -911,7 +911,7 @@ namespace audiofft
       init(0);
     }
 
-    virtual void init(size_t size) override
+    virtual void init(std::size_t size) override
     {
       if (_size != size)
       {
@@ -947,7 +947,7 @@ namespace audiofft
         {
           _size = size;
           _complexSize = AudioFFT::ComplexSize(_size);
-          const size_t complexSize = AudioFFT::ComplexSize(_size);
+          const std::size_t complexSize = AudioFFT::ComplexSize(_size);
           _data = reinterpret_cast<float*>(fftwf_malloc(_size * sizeof(float)));
           _re = reinterpret_cast<float*>(fftwf_malloc(complexSize * sizeof(float)));
           _im = reinterpret_cast<float*>(fftwf_malloc(complexSize * sizeof(float)));
@@ -979,8 +979,8 @@ namespace audiofft
     }
 
   private:
-    size_t _size;
-    size_t _complexSize;
+    std::size_t _size;
+    std::size_t _complexSize;
     fftwf_plan _planForward;
     fftwf_plan _planBackward;
     float* _data;
@@ -1013,7 +1013,7 @@ namespace audiofft
   }
 
 
-  void AudioFFT::init(size_t size)
+  void AudioFFT::init(std::size_t size)
   {
     assert(detail::IsPowerOf2(size));
     _impl->init(size);
@@ -1032,7 +1032,7 @@ namespace audiofft
   }
 
 
-  size_t AudioFFT::ComplexSize(size_t size)
+  std::size_t AudioFFT::ComplexSize(size_t size)
   {
     return (size / 2) + 1;
   }

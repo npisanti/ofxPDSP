@@ -42,7 +42,7 @@ void Zaps::setup( int numVoices ) {
 
     float panWidth = 0.30f;
     
-    for( size_t i=0; i<voices.size(); ++i){
+    for( std::size_t i=0; i<voices.size(); ++i){
         veloToEnv >> voices[i].in("mod_env_velo");
         envAmtControl >> voices[i].in("pitch_mod_amount");
         envDecayControl >> voices[i].in("mod_env_time");

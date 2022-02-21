@@ -85,13 +85,13 @@ public:
     @brief Allocate a number of channels for processing different inputs. This is automatically called if you query for a channel outside the allocated range. You can access different channels with the ch() method.
     @param[in] size number of channels
     */        
-    void channels( size_t size );    
+    void channels( std::size_t size );    
 
     /*!
     @brief Uses the selected channel as input/output for the patching operation.
     @param[in] index channel index
     */  
-    Patchable& ch( size_t index );
+    Patchable& ch( std::size_t index );
             
     /*!
     @brief Returns the cutoff pitch value.
@@ -108,7 +108,7 @@ public:
     @cond HIDDEN_SYMBOLS
 */
     [[deprecated("operator[] deprecated, use the ch( int index ) method instead")]]    
-    Patchable& operator[]( size_t index );
+    Patchable& operator[]( std::size_t index );
     
     [[deprecated("in_0() deprecated for this module, use the ch( 0 ) method instead")]]
     Patchable& in_0();

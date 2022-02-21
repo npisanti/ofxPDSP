@@ -60,7 +60,7 @@ void ofApp::circularWrite(){
     
     // now we generate or copy some data
     buffer[write].resize( (rand()%8)*2 + 8 );
-    for( size_t i=0; i<buffer[write].size(); ++i ){
+    for( std::size_t i=0; i<buffer[write].size(); ++i ){
         // random notes from akebono scale
         static float akebono[] = { 72.0f, 74.0f, 75.0f, 79.0f, 80.0f,  84.0f, 86.0f, 87.0f }; // akebono scale
         buffer[write][i] = akebono[rand()%8];

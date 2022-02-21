@@ -28,28 +28,28 @@ void pdsp::AALowShelfEQ::patch(){
 
 
 
-void pdsp::AALowShelfEQ::channels( size_t size ){
+void pdsp::AALowShelfEQ::channels( std::size_t size ){
     
-    size_t oldsize = submodules.size();
+    std::size_t oldsize = submodules.size();
     
     if( size >= oldsize ){
         submodules.resize( size );
                 
-        for( size_t i=oldsize; i<submodules.size(); ++i ){
+        for( std::size_t i=oldsize; i<submodules.size(); ++i ){
             submodules[i] = new pdsp::AALowShelfEQ::Submodule();
             freq >> submodules[i]->in("freq");
             Q >> submodules[i]->in("Q");
             gain >> submodules[i]->in("gain");            
         }        
     }else{
-        for( size_t i=size; i<oldsize; ++i ){
+        for( std::size_t i=size; i<oldsize; ++i ){
             delete submodules[i];
         }
         submodules.resize( size );
     }
 }
 
-pdsp::Patchable& pdsp::AALowShelfEQ::ch( size_t index ){
+pdsp::Patchable& pdsp::AALowShelfEQ::ch( std::size_t index ){
     if( index >= submodules.size() ){
         channels(index+1);
     }
@@ -80,7 +80,7 @@ pdsp::Patchable& pdsp::AALowShelfEQ::in_gain(){
 
 // ----------------- backward compatibility -------------------------
 
-pdsp::Patchable& pdsp::AALowShelfEQ::operator[]( size_t index ){
+pdsp::Patchable& pdsp::AALowShelfEQ::operator[]( std::size_t index ){
     return ch( index );
 }
 

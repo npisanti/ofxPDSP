@@ -193,11 +193,11 @@ void pdsp::Engine::setup( int sampleRate, int bufferSize, int nBuffers){
     // OF MASTER VERSION
     
 	ofSoundStreamSettings settings;
-	settings.sampleRate = (size_t)  sampleRate;
-	settings.bufferSize = (size_t)  bufferSize;
-    settings.numBuffers = (size_t)  nBuffers;
-	settings.numOutputChannels = (size_t) outputChannels;
-	settings.numInputChannels = (size_t)  inputChannels;
+	settings.sampleRate = (std::size_t)  sampleRate;
+	settings.bufferSize = (std::size_t)  bufferSize;
+    settings.numBuffers = (std::size_t)  nBuffers;
+	settings.numOutputChannels = (std::size_t) outputChannels;
+	settings.numInputChannels = (std::size_t)  inputChannels;
     
     if( api != ofSoundDevice::Api::UNSPECIFIED ){
         settings.setApi( api );

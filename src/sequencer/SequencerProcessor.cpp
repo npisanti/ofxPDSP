@@ -66,7 +66,7 @@ void pdsp::SequencerProcessor::process(int const &bufferSize) noexcept{
         //---------------------------------
 
         //now process lambdas-----------------
-        for( size_t i=0; i<pdsp::Function::instances.size(); ++i ){
+        for( std::size_t i=0; i<pdsp::Function::instances.size(); ++i ){
             pdsp::Function::instances[i]->process( playHead, barsPerSample, bufferSize );
         }
         //---------------------------------
@@ -82,7 +82,7 @@ void pdsp::SequencerProcessor::process(int const &bufferSize) noexcept{
                 sect.processBuffersDestinations(bufferSize);
             }
             // needed for clearing message buffers to avoid AR stuck retriggering
-            for( size_t i=0; i<pdsp::Function::instances.size(); ++i ){
+            for( std::size_t i=0; i<pdsp::Function::instances.size(); ++i ){
                 pdsp::Function::instances[i]->clear(bufferSize);
             }
             clearToken--;

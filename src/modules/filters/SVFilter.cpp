@@ -36,28 +36,28 @@ pdsp::SVFilter::Submodule::Submodule(){
     filter.out_notch() >> fswitch.input(3);
 }
 
-void pdsp::SVFilter::channels( size_t size ){
+void pdsp::SVFilter::channels( std::size_t size ){
     
-    size_t oldsize = submodules.size();
+    std::size_t oldsize = submodules.size();
     
     if( size >= oldsize ){
         submodules.resize( size );
                 
-        for (size_t i=oldsize; i<submodules.size(); ++i ){
+        for (std::size_t i=oldsize; i<submodules.size(); ++i ){
             submodules[i] = new pdsp::SVFilter::Submodule();
             p2f >> submodules[i]->in("freq");
             reso >> submodules[i]->in("reso");
             mode >> submodules[i]->in("select");            
         }        
     }else{
-        for( size_t i=size; i<oldsize; ++i ){
+        for( std::size_t i=size; i<oldsize; ++i ){
             delete submodules[i];
         }
         submodules.resize( size );
     }
 }
 
-pdsp::Patchable& pdsp::SVFilter::ch( size_t index ){
+pdsp::Patchable& pdsp::SVFilter::ch( std::size_t index ){
     if( index >= submodules.size() ){
         channels(index+1);
     }
@@ -181,7 +181,7 @@ float pdsp::SVFilter::meter_cutoff() const {
     return p2f.meter_input();
 }      
     
-pdsp::Patchable& pdsp::SVFilter::operator[]( size_t index ){
+pdsp::Patchable& pdsp::SVFilter::operator[]( std::size_t index ){
     return ch( index );
 }
     

@@ -50,7 +50,7 @@ void pdsp::DimensionChorus::patch(){
     filter2.set(500.0f); // set default cutoff                              
 }
 
-pdsp::Patchable& pdsp::DimensionChorus::ch( size_t index ){
+pdsp::Patchable& pdsp::DimensionChorus::ch( std::size_t index ){
     wrapChannelIndex( index, 2, "pdsp::DimensionChorus" );
     
     switch( index ){

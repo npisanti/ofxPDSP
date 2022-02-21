@@ -31,7 +31,7 @@ public:
     @brief Uses the selected channel as input/output for the patching operation. 0 is for the left channel (default input/output) and 1 is for the right channel. Index values outside of range are remapped to 0 or 1.
     @param[in] index channel index
     */  
-    Patchable& ch( size_t index );
+    Patchable& ch( std::size_t index );
 
     /*!
     @brief sets the impulse response for the reverb

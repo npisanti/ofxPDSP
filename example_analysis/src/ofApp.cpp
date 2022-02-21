@@ -22,7 +22,7 @@ void ofApp::setup(){
     gui.setName("MULTIBAND ANALYZER");
 
     bands.resize( 3 );        
-    for (size_t i=0; i<bands.size(); ++i){ 
+    for (std::size_t i=0; i<bands.size(); ++i){ 
         
         string name = "band ";
         name+= ofToString(i+1);
@@ -67,7 +67,7 @@ void ofApp::draw(){
 
     ofTranslate(    gui.getPosition().x + 20 + gui.getWidth(), 
                     gui.getPosition().y );
-    for (size_t i=0; i<bands.size(); ++i){
+    for (std::size_t i=0; i<bands.size(); ++i){
         ofSetColor(255);
         string name = "band ";
         name+= ofToString(i+1);

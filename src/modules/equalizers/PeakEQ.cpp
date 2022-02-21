@@ -16,28 +16,28 @@ void pdsp::PeakEQ::patch(){
 
 }
 
-void pdsp::PeakEQ::channels( size_t size ){
+void pdsp::PeakEQ::channels( std::size_t size ){
     
-    size_t oldsize = eqs.size();
+    std::size_t oldsize = eqs.size();
     
     if( size >= oldsize ){
         eqs.resize( size );
                 
-        for( size_t i=oldsize; i<eqs.size(); ++i ){
+        for( std::size_t i=oldsize; i<eqs.size(); ++i ){
             eqs[i] = new pdsp::BiquadPeakEQ();
             freq >> eqs[i]->in_freq();   
             Q >> eqs[i]->in_Q();   
             gain >> eqs[i]->in_gain();
         }        
     }else{
-        for( size_t i=size; i<oldsize; ++i ){
+        for( std::size_t i=size; i<oldsize; ++i ){
             delete eqs[i];
         }
         eqs.resize( size );
     }
 }
 
-pdsp::Patchable& pdsp::PeakEQ::ch( size_t index ){
+pdsp::Patchable& pdsp::PeakEQ::ch( std::size_t index ){
     if( index >= eqs.size() ){
         channels(index+1);
     }
@@ -67,7 +67,7 @@ pdsp::Patchable& pdsp::PeakEQ::out_signal(){
 
 // ----------------- backward compatibility -------------------------
 
-pdsp::Patchable& pdsp::PeakEQ::operator[]( size_t index ){
+pdsp::Patchable& pdsp::PeakEQ::operator[]( std::size_t index ){
     return ch( index );
 }
 

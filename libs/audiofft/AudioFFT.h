@@ -71,7 +71,7 @@
 *
 * void Example()
 * {
-*   const size_t fftSize = 1024; // Needs to be power of 2!
+*   const std::size_t fftSize = 1024; // Needs to be power of 2!
 *
 *   std::vector<float> input(fftSize, 0.0f);
 *   std::vector<float> re(audiofft::AudioFFT::ComplexSize(fftSize));
@@ -127,7 +127,7 @@ namespace audiofft
      * @brief Initializes the FFT object
      * @param size Size of the real input (must be power 2)
      */
-    void init(size_t size);
+    void init(std::size_t size);
 
     /**
      * @brief Performs the forward FFT
@@ -150,7 +150,7 @@ namespace audiofft
      * @param size The size of the real data
      * @return The size of the real/imaginary complex arrays
      */
-    static size_t ComplexSize(size_t size);
+    static std::size_t ComplexSize(size_t size);
 
   private:
     std::unique_ptr<detail::AudioFFTImpl> _impl;

@@ -17,7 +17,7 @@ void pdsp::IRVerb::patch(){
 }
 
 
-pdsp::Patchable& pdsp::IRVerb::ch( size_t index ){
+pdsp::Patchable& pdsp::IRVerb::ch( std::size_t index ){
     wrapChannelIndex( index, 2, "pdsp::IRVerb" );
     
     switch( index ){
