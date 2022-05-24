@@ -89,8 +89,8 @@ bool pdsp::Sampler::setSample(SampleBuffer* newSample, int index, int channel){
 }
 
 void pdsp::Sampler::prepareUnit( int expectedBufferSize, double sampleRate ) {
-        readIndex = 0.0f;
-        incBase = 1.0f / sampleRate;
+        readIndex = 0.0;
+        incBase = 1.0 / sampleRate;
 }
 
 
@@ -148,7 +148,9 @@ void pdsp::Sampler::process(int bufferSize) noexcept {
 template<bool pitchModChange>
 void pdsp::Sampler::process_once( const float* pitchModBuffer)noexcept{
         if(pitchModChange){
-                vect_calculateIncrement(&inc, pitchModBuffer, incBase * sample->fileSampleRate, 1);
+        		float incf = (float) inc;
+                vect_calculateIncrement(&incf, pitchModBuffer, incBase * sample->fileSampleRate, 1);
+                inc = (double) incf;
                 //in this way is always correct even with oversample
         }
 }
@@ -176,16 +178,16 @@ void pdsp::Sampler::process_audio( const float* pitchModBuffer, const float* tri
                 }
 
                 if(pitchModAR){
-                        inc = outputBuffer[n];  //we have the calculated pitchs inside outputbuffer
+                        inc = (double) outputBuffer[n];  //we have the calculated pitchs inside outputbuffer
                 }
 
-                int readIndex_int = static_cast<int>(readIndex);
+                long readIndex_int = static_cast<long>(readIndex);
                 if(readIndex_int>=0 && readIndex_int < sample->length){
                     
-                        int index_int = static_cast<int> (readIndex);
-                        float mu = readIndex - index_int;
-                        float x1 = sample->buffer[channel][index_int];
-                        float x2 = sample->buffer[channel][index_int+1];
+                        long index_int = static_cast<long> (readIndex);
+                        double mu = readIndex - index_int;
+                        double x1 = sample->buffer[channel][index_int];
+                        double x2 = sample->buffer[channel][index_int+1];
 
                         outputBuffer[n] = interpolate_smooth( x1, x2, mu );
                 }else{
@@ -256,9 +258,9 @@ void pdsp::Sampler::selectSample( int n, int bufferSize, float trigger )noexcept
         //SET FORWARD OR REVERSE
         float directionControl = processAndGetSingleValue( input_direction, n ); 
         if(directionControl<0.0f){
-            direction = -1.0f;
+            direction = -1.0;
         }else{
-            direction = 1.0f;
+            direction = 1.0;
         }
 
 }

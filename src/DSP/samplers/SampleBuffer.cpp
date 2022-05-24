@@ -98,7 +98,7 @@ bool pdsp::SampleBuffer::loaded(){
 }
 
 
-void pdsp::SampleBuffer::load( float* interleavedBuffer, double sampleRate, int channelLength, int channels ){
+void pdsp::SampleBuffer::load( float* interleavedBuffer, double sampleRate, long channelLength, int channels ){
     
     float ** toReturn;
     toReturn = new float*[channels];
@@ -156,7 +156,7 @@ void pdsp::SampleBuffer::load( std::string filePath ){
     
     if( audiofile.loaded() ){
         double sampleRate = audiofile.samplerate();
-        int waveLength = audiofile.length();
+        long waveLength = audiofile.length();
         int channels = audiofile.channels();
         this->load( audiofile.data(), sampleRate, waveLength, channels);
         this->filePath = filePath;
@@ -171,7 +171,7 @@ void pdsp::SampleBuffer::load( std::string filePath ){
 }
 
 
-void pdsp::SampleBuffer::init( int tableLen, int numTables ){
+void pdsp::SampleBuffer::init( long tableLen, int numTables ){
     
     float ** newTables;
     newTables = new float*[numTables];
@@ -194,7 +194,7 @@ void pdsp::SampleBuffer::init( int tableLen, int numTables ){
     if(verbose) std::cout <<"[pdsp] done array allocations for SampleBuffer init\n";
    
     for(int i=0; i<numTables; ++i){
-        for(int n=0; n<=tableLen; ++n){
+        for(long n=0; n<=tableLen; ++n){
             newTables[i][n] = 0.0f;
         }       
     }
@@ -218,7 +218,7 @@ void pdsp::SampleBuffer::normalize( ){
         
         double max = -1.0f;
         for(int c=0; c<channels; ++c){
-            for(int n=0; n<length; ++n){
+            for(long n=0; n<length; ++n){
                 double absolute = std::abs(buffer[c][n]);
                 if( absolute > max){
                     max = absolute;

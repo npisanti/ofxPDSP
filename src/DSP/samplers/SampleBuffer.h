@@ -46,7 +46,7 @@ public:
     @param[in] length length of a single channel, NOT the lenght of the full interleaved buffer
     @param[in] channels number of channels interleaved in the buffer, if not specified 1
     */
-    void    load( float* interleavedBuffer, double sampleRate, int length, int channels=1 );
+    void    load( float* interleavedBuffer, double sampleRate, long length, int channels=1 );
 
     /*!
     @brief unload the data from the buffer and free the allocated memory
@@ -63,7 +63,7 @@ public:
     @param[in] tableLen size of the table in samples
     @param[in] numTables number of tables to init
     */
-    void    init( int tableLen, int numTables=1 );
+    void    init( long tableLen, int numTables=1 );
     
     /*!
     @brief scales all the sample values of all the channels so that the absolute maximum value is 1.0f
@@ -106,7 +106,7 @@ public:
     /*!
     @brief length of each buffer
     */    
-    int             length;
+    long            length;
     
     /*!
     @brief sample rate of the loaded channels
