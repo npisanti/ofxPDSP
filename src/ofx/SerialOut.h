@@ -38,14 +38,14 @@ private:
     class ScheduledSerialMessage{
     public:
         ScheduledSerialMessage();
-        ScheduledSerialMessage(int channel, float message, chrono::high_resolution_clock::time_point schedule);
+        ScheduledSerialMessage(int channel, float message, std::chrono::high_resolution_clock::time_point schedule);
         ScheduledSerialMessage(const ScheduledSerialMessage &other);
         ScheduledSerialMessage& operator= (const ScheduledSerialMessage &other);
         ~ScheduledSerialMessage();
         
         signed char channel;
         signed char message;
-        chrono::high_resolution_clock::time_point   scheduledTime;
+        std::chrono::high_resolution_clock::time_point   scheduledTime;
     };
     
     
@@ -142,7 +142,7 @@ private:
     std::atomic<bool>                                   runDaemon;
     
     //serial output processing members
-    std::chrono::time_point<chrono::high_resolution_clock>   bufferChrono;     
+    std::chrono::time_point<std::chrono::high_resolution_clock>   bufferChrono;     
     bool                                                chronoStarted;
     double                                              usecPerSample;
     std::vector<ScheduledSerialMessage>                 circularBuffer;

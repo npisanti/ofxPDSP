@@ -35,13 +35,13 @@ private:
     class ScheduledOscMessage{
     public:
         ScheduledOscMessage();
-        ScheduledOscMessage(ofxOscMessage message, chrono::high_resolution_clock::time_point schedule);
+        ScheduledOscMessage(ofxOscMessage message, std::chrono::high_resolution_clock::time_point schedule);
         ScheduledOscMessage(const ScheduledOscMessage &other);
         ScheduledOscMessage& operator= (const ScheduledOscMessage &other);
         ~ScheduledOscMessage();
         
         ofxOscMessage message;
-        chrono::high_resolution_clock::time_point   scheduledTime;
+		std::chrono::high_resolution_clock::time_point   scheduledTime;
     };
     
     
@@ -126,7 +126,7 @@ private:
     void                                                daemonFunction() noexcept;
     static void                                         daemonFunctionWrapper(Output* parent);
     
-    thread                                              daemonThread;
+	std::thread                                              daemonThread;
     std::atomic<bool>                                   runDaemon;
     
     //serial output processing members

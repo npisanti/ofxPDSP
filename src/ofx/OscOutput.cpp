@@ -12,7 +12,7 @@ pdsp::osc::Output::ScheduledOscMessage::ScheduledOscMessage(){
     this->scheduledTime = std::chrono::time_point<std::chrono::high_resolution_clock>::min();
  };
 
-pdsp::osc::Output::ScheduledOscMessage::ScheduledOscMessage(ofxOscMessage message,  chrono::high_resolution_clock::time_point schedule) {
+pdsp::osc::Output::ScheduledOscMessage::ScheduledOscMessage(ofxOscMessage message,  std::chrono::high_resolution_clock::time_point schedule) {
     this->message = message;
     this->scheduledTime = schedule;
 };
@@ -141,10 +141,10 @@ void pdsp::osc::Output::process( int bufferSize ) noexcept{
         
         //add note messages
         if(chronoStarted){
-            chrono::nanoseconds bufferOffset = chrono::nanoseconds (static_cast<long> ( bufferSize * usecPerSample ));
+			std::chrono::nanoseconds bufferOffset = std::chrono::nanoseconds (static_cast<long> ( bufferSize * usecPerSample ));
             bufferChrono = bufferChrono + bufferOffset;
         }else{
-            bufferChrono = chrono::high_resolution_clock::now();
+            bufferChrono = std::chrono::high_resolution_clock::now();
             chronoStarted = true;
         }
         
@@ -158,8 +158,8 @@ void pdsp::osc::Output::process( int bufferSize ) noexcept{
                 float msg_value = messageBuffer->messages[n].value;
                 int msg_sample = messageBuffer->messages[n].sample;
                 
-                chrono::nanoseconds offset = chrono::nanoseconds (static_cast<long> ( msg_sample * usecPerSample ));
-                chrono::high_resolution_clock::time_point scheduleTime = bufferChrono + offset;
+				std::chrono::nanoseconds offset = std::chrono::nanoseconds (static_cast<long> ( msg_sample * usecPerSample ));
+				std::chrono::high_resolution_clock::time_point scheduleTime = bufferChrono + offset;
                 
                 ofxOscMessage osc;
                 osc.setAddress( addresses[i] );
@@ -185,7 +185,7 @@ void pdsp::osc::Output::process( int bufferSize ) noexcept{
 void pdsp::osc::Output::startDaemon(){ // OK
     
     runDaemon = true;
-    daemonThread = thread( daemonFunctionWrapper, this );   
+    daemonThread = std::thread( daemonFunctionWrapper, this );   
     
 }
    
@@ -199,7 +199,7 @@ void pdsp::osc::Output::daemonFunction() noexcept{
     
     while (runDaemon){
 
-        while( send!=writeindex && circularBuffer[send].scheduledTime < chrono::high_resolution_clock::now() ){
+        while( send!=writeindex && circularBuffer[send].scheduledTime < std::chrono::high_resolution_clock::now() ){
             
             #ifndef NDEBUG
                 if(verbose) cout << "[pdsp] OSC message: address = "<< circularBuffer[send].message.getAddress() << " | value = "<<(int)circularBuffer[send].message.getArgAsFloat(0)<<"\n";

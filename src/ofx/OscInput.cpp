@@ -57,7 +57,7 @@ void pdsp::osc::Input::openPort( int port ) {
     
     receiver.setup( port );
     connected = true;
-    bufferChrono = chrono::high_resolution_clock::now();
+    bufferChrono = std::chrono::high_resolution_clock::now();
 }
 
 

@@ -6,7 +6,7 @@ pdsp::ValueControl::ValueControl(){
     updateOutputNodes();
     slewInitValue = 0.0f;
     value = 0.0f;
-    lastValue = numeric_limits<float>::infinity();
+    lastValue = std::numeric_limits<float>::infinity();
     this->deactivateSlew();
     
     if(dynamicConstruction){

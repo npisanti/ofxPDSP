@@ -6,10 +6,9 @@
 
 #define OFXPDSP_SERIALOUTPUTCIRCULARBUFFERSIZE 4096
 
-
 pdsp::serial::Output::ScheduledSerialMessage::ScheduledSerialMessage(){  };
 
-pdsp::serial::Output::ScheduledSerialMessage::ScheduledSerialMessage(int channel, float message,  chrono::high_resolution_clock::time_point schedule) {
+pdsp::serial::Output::ScheduledSerialMessage::ScheduledSerialMessage(int channel, float message,  std::chrono::high_resolution_clock::time_point schedule) {
     if (channel<1) channel = 1;
     if (channel>127) channel = 127;
     int msg = (int) message;
@@ -172,7 +171,6 @@ void pdsp::serial::Output::releaseResources() {}
 // OK -----------------------------------------------^^^^^^^^^^^-------------
 
 void pdsp::serial::Output::process( int bufferSize ) noexcept{
-    
     if(connected){
         //clear messages
         messagesToSend.clear();
@@ -181,10 +179,10 @@ void pdsp::serial::Output::process( int bufferSize ) noexcept{
         int maxBuffer = inputs.size();
         
         if(chronoStarted){
-            chrono::nanoseconds bufferOffset = chrono::nanoseconds (static_cast<long> ( bufferSize * usecPerSample ));
+            std::chrono::nanoseconds bufferOffset = std::chrono::nanoseconds (static_cast<long> ( bufferSize * usecPerSample ));
             bufferChrono = bufferChrono + bufferOffset;
         }else{
-            bufferChrono = chrono::high_resolution_clock::now();
+            bufferChrono = std::chrono::high_resolution_clock::now();
             chronoStarted = true;
         }
         
@@ -204,8 +202,8 @@ void pdsp::serial::Output::process( int bufferSize ) noexcept{
                 float msg_value = messageBuffer->messages[n].value;
                 int msg_sample = messageBuffer->messages[n].sample;
                 
-                chrono::nanoseconds offset = chrono::nanoseconds (static_cast<long> ( msg_sample * usecPerSample ));
-                chrono::high_resolution_clock::time_point scheduleTime = bufferChrono + offset;
+				std::chrono::nanoseconds offset = std::chrono::nanoseconds (static_cast<long> ( msg_sample * usecPerSample ));
+				std::chrono::high_resolution_clock::time_point scheduleTime = bufferChrono + offset;
                 
                 messagesToSend.push_back( ScheduledSerialMessage(msg_channel, msg_value, scheduleTime) );
             }
@@ -227,7 +225,7 @@ void pdsp::serial::Output::process( int bufferSize ) noexcept{
 void pdsp::serial::Output::startDaemon(){ // OK
     
     runDaemon = true;
-    daemonThread = thread( daemonFunctionWrapper, this );   
+    daemonThread = std::thread( daemonFunctionWrapper, this );   
     
 }
     
